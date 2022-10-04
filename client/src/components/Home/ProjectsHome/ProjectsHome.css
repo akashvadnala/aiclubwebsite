@@ -1,4 +1,4 @@
-.project-container{
+.project-home-container{
     width: 65%;
     margin-left: 17.5%;
     padding: 25px 0;
@@ -22,7 +22,7 @@
     font-weight: 600;
 }
 
-.project-container .header{
+.project-home-container .header{
     padding-bottom: 10px;
     font-weight: 700;
 }
@@ -36,10 +36,10 @@
     color: rgba(0,0,0,0.7);
 }
 
-.project-container a{
+.project-home-container a{
     text-decoration: none;
 }
 
-.project-container a:hover{
+.project-home-container a:hover{
     text-decoration: underline;
 }

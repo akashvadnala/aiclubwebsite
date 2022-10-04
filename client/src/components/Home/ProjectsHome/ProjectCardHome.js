@@ -1,7 +1,7 @@
 import React from 'react';
 import TextTruncate from 'react-text-truncate';
 
-const ProjectCard = props => {
+const ProjectCardHome = props => {
   return (
     <>
         <div className='col-lg-6 col-md-12'>
@@ -17,4 +17,4 @@ const ProjectCard = props => {
   )
 }
 
-export default ProjectCard
+export default ProjectCardHome
