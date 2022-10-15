@@ -1,0 +1,12 @@
+.project-container .row .col-xs-12 p:nth-child(3){
+    text-align: end;
+    color: rgba(0,0,0.7);
+}
+
+.project-container .row .col-xs-12{
+    padding-top: 12px;
+}
+
+.project-container .row .col-xs-12:last-child hr{
+    display: none;
+}
