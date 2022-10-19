@@ -1,0 +1,41 @@
+#main{
+    margin: 0 auto;
+    width: 1080px;
+}
+
+.title{
+    border: 1px solid;
+    margin-top: 10px;
+}
+
+.heading{
+    background-color: aquamarine;
+    background-image: url("./aibg.webp");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+}
+
+.options{
+    display: flex;
+    /* background-color: rgb(115, 173, 195); */
+    justify-content: space-evenly;
+    
+}
+
+a{
+    text-decoration: none;
+}
+
+.overview{
+    display: flex;
+}
+
+.sidenav{
+    border: 2px solid;
+}
+
+.describe{
+    border: 2px solid;
+    margin: 5px auto;
+}
