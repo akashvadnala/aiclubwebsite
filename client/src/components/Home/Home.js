@@ -1,13 +1,13 @@
 import React from 'react';
 import Slider from './Slider/Slider';
-import ProjectsHome from './ProjectsHome/ProjectsHome';
 import './Home.css';
+import Activities from './Activities/Activities';
 
 const Home = () => {
   return (
     <>
       <Slider />
-      <ProjectsHome />
+      <Activities />
     </>
   )
 }
