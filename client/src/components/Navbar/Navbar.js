@@ -3,37 +3,67 @@ import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
-
+    
     const RenderMenu = () =>{
+        const navs = [
+            {
+                'show':true,
+                'link':'/team',
+                'name':'Team'
+            },
+            {
+                'show':true,
+                'link':'/projects',
+                'name':'projects'
+            },
+            {
+                'show':true,
+                'link':'/blogs',
+                'name':'Blogs'
+            },
+            {
+                'show':true,
+                'link':'/events',
+                'name':'Past Events'
+            },
+            {
+                'show':true,
+                'link':'/inductions',
+                'name':'Inductions'
+            },
+            {
+                'show':true,
+                'link':'/about',
+                'name':'About'
+            },
+            {
+                'show':true,
+                'link':'#contact-us',
+                'name':'Contact Us'
+            },
+            {
+                'show':true,
+                'link':'/login',
+                'name':'Login'
+            }
+        ]
         return(
         <>
             <li>
                 <NavLink className="navbar-brand" to='/'>AI CLUB</NavLink>
             </li>
-            <li className="nav-item">
-                <NavLink className="nav-link" to="/team">Our Team</NavLink>
-            </li>
-            <li className="nav-item">
-                <NavLink className="nav-link" to="/projects">Projects</NavLink>
-            </li>
-            <li className="nav-item">
-                <NavLink className="nav-link" to="/blogs">Blogs</NavLink>
-            </li>
-            <li className="nav-item">
-                <NavLink className="nav-link" to="/events">Past Events</NavLink>
-            </li>
-            <li className="nav-item">
-                <NavLink className="nav-link" to="/inductions">Inductions</NavLink>
-            </li>
-            <li className="nav-item">
-                <NavLink className="nav-link" to="/about">About</NavLink>
-            </li>
-            <li className="nav-item">
-                <a className="nav-link" href="#contactus">Contact Us</a>
-            </li>
-            <li className="nav-item">
-                <NavLink className="nav-link" to="/login">Login</NavLink>
-            </li>
+            {
+                navs.map((nav)=>{
+                    if(nav.show)
+                        return(
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to={nav.link}>{nav.name}</NavLink>
+                            </li>
+                        )
+                    else
+                        return null;
+                })
+            }
         </>
         )
     }

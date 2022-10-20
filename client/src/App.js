@@ -6,6 +6,8 @@ import Footer from './components/Footer/Footer';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
+import ScrollToTop from './ScrollToTop';
+import React from 'react';
 
 const Routing = () => {
   return(
@@ -17,11 +19,15 @@ const Routing = () => {
   )
 }
 
+
 function App() {
   return (
     <>
       <Navbar />
-      <Routing />
+      <React.Suspense fallback="loading...">
+        <ScrollToTop />
+        <Routing />
+      </React.Suspense>
       <Footer />
     </>
   );
