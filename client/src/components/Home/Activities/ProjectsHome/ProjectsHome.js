@@ -22,7 +22,6 @@ const ProjectsHome = () => {
     }
   ]
   return (
-    <>
       <div className='projects-home-container'>
         <h3 className='header'>Projects</h3>
           {
@@ -34,7 +33,6 @@ const ProjectsHome = () => {
           }
         <p><NavLink to='/projects'>Know More About Projects<span className='small'> ❯</span></NavLink></p>
       </div>
-    </>
   )
 }
 

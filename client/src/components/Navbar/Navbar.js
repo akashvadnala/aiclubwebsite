@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
+import 'bootstrap/dist/css/bootstrap.css';
 
 const Navbar = () => {
     
@@ -69,7 +70,6 @@ const Navbar = () => {
     }
 
   return (
-    <>
         <nav variant="primary" className="navbar navbar-expand-lg">
             <div className="container-fluid">
                 <NavLink className="navbar-brand title" to='/'>Navbar</NavLink>
@@ -83,7 +83,6 @@ const Navbar = () => {
                 </div>
             </div>
         </nav>
-    </>
   )
 }
 

@@ -2,7 +2,6 @@ import React from 'react';
 
 function TeamCard({ src, name, title, text, email }) {
   return (
-    <>
         <div className=' col-lg-3 col-md-4 col-sm-6 col-6'>
             <div className='card'>
               <img className='card-img-top' src={src} alt={name} />
@@ -14,7 +13,6 @@ function TeamCard({ src, name, title, text, email }) {
               </div>   
             </div>
         </div>
-    </>
   )
 }
 

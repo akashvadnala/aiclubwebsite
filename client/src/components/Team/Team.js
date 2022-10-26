@@ -27,7 +27,6 @@ function Team() {
     }
   ]
   return (
-    <>
       <div className='team-container'>
         <div className='head-img'>
           <h1>Team Members</h1>
@@ -46,7 +45,6 @@ function Team() {
               </div>
           </div>
       </div>
-    </>
   )
 }
 

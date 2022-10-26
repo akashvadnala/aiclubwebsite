@@ -24,7 +24,6 @@ const EventsHome = () => {
         }
     ]
   return (
-    <>
         <div className='events-home-container'>
             <h3 className='header'>Events</h3>
             {
@@ -36,7 +35,6 @@ const EventsHome = () => {
             }
             <p><NavLink to='/events'>Know More About Events<span className='small'> ❯</span></NavLink></p>
         </div>
-    </>
   )
 }
 

@@ -30,7 +30,6 @@ const Projects = () => {
     }
   ]
   return (
-    <>
       <div className='project-container'>
           <div className='adjust'>
               <h2>Projects</h2>
@@ -45,7 +44,6 @@ const Projects = () => {
               </div>
           </div>
       </div>
-    </>
   )
 }
 
