@@ -9,21 +9,30 @@ function Team() {
       'text':'Assistant Professor at NIT Calicut CSED',
       'name':'Jayaraj PB',
       'title':'Faculty Advisor',
-      'email':'jayarajpb@nitc.ac.in'
+      'email':'jayarajpb@nitc.ac.in',
+      'username':'jayrajpb',
+      'show':true,
+      'isadmin':false
     },
     {
       'imgsrc':'https://aiclub.nitc.ac.in/img/drive/pournamimam.jpg',
       'text':'Assistant Professor at NIT Calicut CSED',
       'name':'Dr. Pournami P.N.',
       'title':'Faculty Advisor',
-      'email':'pournamipn@nitc.ac.in'
+      'email':'pournamipn@nitc.ac.in',
+      'username':'pournamipn',
+      'show':true,
+      'isadmin':false
     },
     {
       'imgsrc':'https://aiclub.nitc.ac.in/img/drive/BHANUPRAKASH%20PEBBETI.jpeg',
       'text':'Assistant Professor at NIT Calicut CSED',
       'name':'Bhanu Prakash Pebbeti',
       'title':'Secretary',
-      'email':'pebbetibhanu2017@gmail.com'
+      'email':'pebbetibhanu2017@gmail.com',
+      'username':'bhanu',
+      'show':true,
+      'isadmin':true
     }
   ]
   return (
@@ -38,7 +47,7 @@ function Team() {
                 {
                   teams.map((team)=>{
                     return(
-                      <TeamCard src={team.imgsrc} text={team.text} name={team.name} title={Team.title} email={teams.email}/>
+                      <TeamCard team={team}/>
                     )
                   })
                 }

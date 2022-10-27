@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import {islogin,user} from '../../EditableStuff/Config';
 
 const Navbar = () => {
     
@@ -18,7 +19,7 @@ const Navbar = () => {
                 'name':'projects'
             },
             {
-                'show':true,
+                'show':false,
                 'link':'/blogs',
                 'name':'Blogs'
             },
@@ -41,13 +42,9 @@ const Navbar = () => {
                 'show':true,
                 'link':'#contact-us',
                 'name':'Contact Us'
-            },
-            {
-                'show':true,
-                'link':'/login',
-                'name':'Login'
             }
         ]
+        
         return(
         <>
             <li>
@@ -65,6 +62,17 @@ const Navbar = () => {
                         return null;
                 })
             }
+            {
+                islogin?
+                <li className="nav-item">
+                    <NavLink className="nav-link" to='/'>Hello {user.firstname}</NavLink>
+                </li>
+                :
+                <li className="nav-item">
+                    <NavLink className="nav-link" to='/login'>Login</NavLink>
+                </li>
+            }
+            
         </>
         )
     }
