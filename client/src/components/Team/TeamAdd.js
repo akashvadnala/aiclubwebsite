@@ -1,11 +1,7 @@
 import React, {useState} from 'react';
-import { useLocation } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
-const ProfileUpdate = () => {
-    const { search } = useLocation();
-    const username = new URLSearchParams(search).get("username");
-    console.log(username);
+const TeamAdd = () => {
     const navigate = useNavigate();
     const [user,setUser] = useState({
         firstname:"",
@@ -14,10 +10,12 @@ const ProfileUpdate = () => {
         description:"",
         username:"",
         email:"",
+        year:"",
+        photo:"",
         password:"",
         cpassword:"",
         isadmin:false,
-        draft:true
+        ismember:false
     });
     let name, value;
     const handleInputs = (e) => {
@@ -27,20 +25,27 @@ const ProfileUpdate = () => {
         console.log(value);
         setUser({...user, [name]:value});
     }
+    const handlePhoto = (e) => {
+        setUser({...user, photo: e.target.files});
+        console.log(e.target.files);
+    }
+    const handleCheck = (e) =>{
+        setUser({...user, [e.target.name] : e.target.checked});
+    }
     
     const PostTeam = async (e) => {
         e.preventDefault();
         console.log('Postteam');
-        const {firstname,lastname,profession,description,username,email,password,cpassword} = user;
-        console.log(firstname,lastname,profession,description,username,email,password,cpassword);
+        const {firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember} = user;
+        console.log(firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember);
         // const res = await 
-        fetch("/teamupdate",{
+        fetch("/teamadd",{
         method: "POST",
         headers: {
             "Content-Type" : "application/json"
         },
         body: JSON.stringify({
-            firstname,lastname,profession,description,username,email,password,cpassword
+            firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember
         })
         })
         .then(res => {
@@ -53,7 +58,6 @@ const ProfileUpdate = () => {
         }
         else{
             console.log(data);
-            window.alert("Regsitration Successfull");
             console.log("Regsitration Successfull");
             navigate('/');
         }
@@ -107,6 +111,12 @@ const ProfileUpdate = () => {
             'val':user.email
         },
         {
+            'type':'number',
+            'id':'year',
+            'des':'Graduation Year',
+            'val':user.year
+        },
+        {
             'type':'password',
             'id':'password',
             'des':'Password',
@@ -123,7 +133,7 @@ const ProfileUpdate = () => {
     <>
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
-                <h1>You are editing {username} profile</h1>
+                <h1>Add Team Member</h1>
                 <form method='POST'>
                     {
                         forms.map((f)=>{
@@ -137,12 +147,18 @@ const ProfileUpdate = () => {
                             )
                         })
                     }
+                     <div class="form-group my-3 row">
+                        <label for='photo' className='col-sm-2 text-end'>Upload Photo :</label>
+                        <div className='col-sm-10'>
+                            <input type='file' accept=".png, .jpg, .jpeg" name='photo' onChange={handlePhoto} class="form-control" id='photo' aria-describedby='photo' />
+                        </div>
+                    </div>
                     <div class="form-group form-check my-3">
-                        <input type="checkbox" name="admin" onChange={handleInputs} class="form-check-input" id="admin" />
+                        <input type="checkbox" checked={user.isadmin} name="isadmin" onChange={handleCheck} class="form-check-input" id="admin" />
                         <label class="form-check-label" for="admin">Make Admin</label>
                     </div>
                     <div class="form-group form-check my-3">
-                        <input type="checkbox" name="member" onChange={handleInputs} class="form-check-input" id="member" />
+                        <input type="checkbox" checked={user.ismember} name="ismember" onChange={handleCheck} class="form-check-input" id="member" />
                         <label class="form-check-label" for="member">Make Member</label>
                     </div>
                     <button type="submit" name="submit" id="submit" onClick={PostTeam} class="btn btn-primary">Submit</button>
@@ -153,4 +169,4 @@ const ProfileUpdate = () => {
   )
 }
 
-export default ProfileUpdate
+export default TeamAdd;

@@ -5,10 +5,10 @@ import Activities from './Activities/Activities';
 
 const Home = () => {
   return (
-    <div>
+    <>
       <Slider />
       <Activities />
-    </div>
+    </>
   )
 }
 
