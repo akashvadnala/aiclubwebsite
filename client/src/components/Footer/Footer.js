@@ -3,7 +3,6 @@ import './Footer.css';
 
 const Footer = () => {
   return (
-    <>
     <div className='footer' id='contactus'>
       <div className='adjust'>
         <div className='row'>
@@ -33,7 +32,6 @@ const Footer = () => {
         </div>
       </div>
     </div>
-    </>
   )
 }
 

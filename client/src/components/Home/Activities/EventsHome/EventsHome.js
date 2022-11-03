@@ -1,35 +1,40 @@
 import React from 'react';
 import EventCardHome from './EventCardHome';
+import { NavLink } from 'react-router-dom';
 
 const EventsHome = () => {
     const events=[
         {
-            'name':'GAN Workshop'
+            'name':'A 3 Day All India Workshop on Generative Adversarial Networks'
         },
         {
-            'name':'GAN Workshop'
+            'name':'Dr. Aditya Bhaskara on “How ML has changed computing'
         },
         {
-            'name':'GAN Workshop'
+            'name':'Dr. S M Mizanoor Rahman on “The need of AI in robotics for Rehabilitation'
         },
         {
-            'name':'GAN Workshop'
+            'name':'Dr. Ayush Jaiswal on “Class-Agnostic Object Detection'
+        },
+        {
+            'name':'Mr. Raghav Mani on “AI in Healthcare and Life Science'
+        },
+        {
+            'name':'Mr.Syed Shahnawazuddin on “The Basics of X-Vector-Based Automatic Speaker Verification'
         }
     ]
   return (
-    <>
         <div className='events-home-container'>
             <h3 className='header'>Events</h3>
             {
-                events.map((event)=>{
+                events.map((e)=>{
                 return(
-                    <EventCardHome />
+                    <EventCardHome event={e.name} />
                 )
                 })
             }
-            {/* <p><NavLink to='/projects'>Know More About Projects<span className='small'> ❯</span></NavLink></p> */}
+            <p><NavLink to='/events'>Know More About Events<span className='small'> ❯</span></NavLink></p>
         </div>
-    </>
   )
 }
 

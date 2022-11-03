@@ -24,6 +24,17 @@
     padding: 15px 0 0 0;
 }
 
+.team-container .team .card .card-menu{
+    position: relative;
+    top: -30%;
+}
+
+.team-container .team .card .card-body .admin-opt{
+    font-size: 0.8rem;
+    color: rgb(100,100,100);
+    text-align: center;
+}
+
 .head-img{
     
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(https://miro.medium.com/max/657/1*MdInuEHHzcTQvjlzs8wpKA.png);
