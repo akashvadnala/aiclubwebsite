@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -7,18 +8,21 @@ const TeamUpdate = () => {
     const username = params.username;
     // console.log(username);
     const [user,setUser] = useState([]);
+    const [Img, setImg] = useState();
     const getUserDataForEdit = async () =>{
         try{
-            const res = await fetch(`/getUserDataForEdit/${username}`,{
-                method:"GET",
-                headers:{
-                    "Content-Type":"application/json"
-                }
-            });
-            const data = await res.json();
+            // const res = await fetch(`/getUserDataForEdit/${username}`,{
+            //     method:"GET",
+            //     headers:{
+            //         "Content-Type":"application/json"
+            //     }
+            // });
+            const res = await axios.get(`http://localhost:5000/getUserDataForEdit/${username}`);
+            // const data = await res.json();
+            console.log('data',res);
             console.log('Data');
-            console.log(data);
-            setUser(data);
+            console.log(res.data);
+            setUser(res.data);
             if(!res.status===201){
                 console.log('err');
                 const error = new Error(res.error);
@@ -40,9 +44,15 @@ const TeamUpdate = () => {
         console.log(value);
         setUser({...user, [name]:value});
     }
+
+    
+    const handleCheck = (e) =>{
+        setUser({...user, [e.target.name] : e.target.checked});
+        console.log('checked',e.target.checked);
+    }
     
     const handlePhoto = (e) => {
-        setUser({...user, photo: e.target.files[0]});
+        setImg(e.target.files[0]);
     }
 
     const UpdateTeam = async (e) => {
@@ -60,48 +70,56 @@ const TeamUpdate = () => {
         const isadmin = user.isadmin;
         const ismember = user.ismember;
         console.log(firstname,lastname,profession,description,username,photo,email,isadmin,ismember);
-        // const res = await 
-        fetch(`/teamupdate/${username}`,{
-        method: "PUT",
-        headers: {
-            "Content-Type" : "application/json"
-        },
-        body: JSON.stringify({
-            firstname,lastname,profession,description,username,photo,email,isadmin,ismember
-        })
-        }).then((data) =>{
-            console.log(data);
-            if(data.status===422 || !data){
+        
+        var imgurl;
+        if(Img){
+            const data = new FormData();
+            const photoname = Date.now() + Img.name;
+            data.append("name",photoname);
+            data.append("photo",Img);
+    
+            try{
+                const img = await axios.post('http://localhost:5000/imgupload',data);
+                console.log('img',img);
+                imgurl = img.data;
+            }catch(err){
+                console.log('photoerr',err);
+            }
+        }
+        else{
+            imgurl = photo;
+        }
+        console.log('imgurl',imgurl); 
+        try{
+            const teamdata = await axios.put(`http://localhost:5000/teamupdate/${username}`,
+                {
+                    'firstname':firstname,
+                    'lastname':lastname,
+                    'profession':profession,
+                    'description':description,
+                    'username':username,
+                    'photo':imgurl,
+                    'email':email,
+                    'isadmin':isadmin,
+                    'ismember':ismember
+                },
+                {
+                    headers:{"Content-Type" : "application/json"}
+                }
+            );
+            console.log('teamdata',teamdata);
+            if(teamdata.status===422 || !teamdata){
                 console.log('Username not found');
             }
             else{
                 navigate('/team');
             }
-        });
-        
-        // .then((data)=>{
-        // if(data.status === 422 || !data){
-        //     window.alert("Invalid Regsitration");
-        //     console.log("Invalid Regsitration");
-        // }
-        // else{
-        //     console.log(data);
-        //     window.alert("Regsitration Successfull");
-        //     console.log("Regsitration Successfull");
-        //     navigate('/');
-        // }
-        // });
-        // const data = await res.json();
-        // if(data.status === 422 || !data){
-        //   window.alert("Invalid Regsitration");
-        //   console.log("Invalid Regsitration");
-        // }
-        // else{
-        //   window.alert("Regsitration Successfull");
-        //   console.log("Regsitration Successfull");
-        //   history.push('/')
-        // }
+        }catch(err){
+            console.log('err',err);
+        }
     }
+
+    
     const forms=[
         {
             'type':'text',
@@ -170,14 +188,21 @@ const TeamUpdate = () => {
                             <input type='file' accept=".png, .jpg, .jpeg" name='photo' onChange={handlePhoto} class="form-control" id='photo' aria-describedby='photo' />
                         </div>
                     </div>
-                    <div class="form-group form-check my-3">
-                        <input type="checkbox" defaultChecked={user.isadmin} name="admin" onChange={handleInputs} class="form-check-input" id="admin" />
-                        <label class="form-check-label" for="admin">Make Admin</label>
-                    </div>
-                    <div class="form-group form-check my-3">
-                        <input type="checkbox" defaultChecked={user.ismember} name="member" onChange={handleInputs} class="form-check-input" id="member" />
-                        <label class="form-check-label" for="member">Make Member</label>
-                    </div>
+                    {
+                        user.isadmin?
+                            null
+                        :
+                            <>
+                                <div class="form-group form-check my-3">
+                                    <input type="checkbox" checked={user.isadmin} name="isadmin" onChange={handleCheck} class="form-check-input" id="admin" />
+                                    <label class="form-check-label" for="admin">Make Admin</label>
+                                </div>
+                                <div class="form-group form-check my-3">
+                                    <input type="checkbox" checked={user.ismember} name="ismember" onChange={handleCheck} class="form-check-input" id="member" />
+                                    <label class="form-check-label" for="member">Make Member</label>
+                                </div>
+                            </>
+                    }
                     <button type="submit" name="submit" id="submit" onClick={UpdateTeam} class="btn btn-primary">Submit</button>
                 </form>
             </div>

@@ -1,35 +1,66 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
+import { NavLink } from 'react-router-dom';
 import './Team.css';
 import TeamCard from './TeamCard';
 
 function Team() {
   const [ teams, setTeams] = useState([]);
+  const [ archTeam, setArchTeam ] = useState(false);
+  const [ teamHeading, setTeamHeading ] = useState('Team Members');
+  const [ archStat, setArchStat ] = useState('Archived');
+
   const getTeamData = async() => {
     try{
-      const res = await fetch('/getTeam',{
-        method:"GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type":"application/json"
-        }
-      });
-      const data = await res.json();
-      setTeams(data);
-      console.log(teams.length);
-      if(!res.status===201){
-        console.log('err');
-        const error = new Error(res.error);
-        throw error;
-      }
+      axios.get('http://localhost:5000/getTeam')
+      .then(data => {
+        console.log('data');
+        console.log(data.data[0].firstname);
+        setTeams(data.data);
+        setTeamHeading('Team Members');
+        setArchTeam(false);
+        setArchStat('Archived');
+      })
     }catch(err){
       console.log(err);
     }
   }
+
+  const getArchTeamData = async() => {
+    try{
+      axios.get('http://localhost:5000/getArchTeam')
+      .then(data => {
+        console.log('data');
+        console.log(data.data[0].firstname);
+        setTeams(data.data);
+        setTeamHeading('Archived Team Members');
+        setArchTeam(true);
+        setArchStat('Team');
+      })
+    }catch(err){
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
-    getTeamData();
- });
-  // const teams=[
+    if(archTeam){
+        getArchTeamData();
+    }
+    else{
+        getTeamData();
+    }
+  },[]);
+
+   const toggleArchived = () =>{
+    if(archTeam){
+      getTeamData();
+    }
+    else{
+      getArchTeamData();
+    }
+   } 
+  //  const teams=[
   //   {
   //     'imgsrc':'https://aiclub.nitc.ac.in/img/drive/jayaraj%20sir.jpg',
   //     'text':'Assistant Professor at NIT Calicut CSED',
@@ -72,21 +103,29 @@ function Team() {
           {/* <img src='https://miro.medium.com/max/657/1*MdInuEHHzcTQvjlzs8wpKA.png' /> */}
         </div>
           <div className='team adjust'>
+              <div className='row'>
+                <div className='col-sm-5'>
+                  <h2>{teamHeading}</h2>
+                </div>
+                <div className='right-panel col-sm-7'>
+                  <NavLink className='teamadd' onClick={toggleArchived}>{archStat}</NavLink>
+                  <NavLink className='teamadd' to='/team/add'>Add +</NavLink>
+                </div>
+              </div>
+              
               {/* <h4>Team Members</h4> */}
               <div className='row'>
                 {
-                  teams.map((team) => {
+                  teams.map(team => {
                     return(
-                      <>
-                        <TeamCard team={team} />
-                      </>
+                      <TeamCard team={team} />
                     )
                   })
                 }
               </div>
           </div>
       </div>
-      </>
+  </>
   )
 }
 

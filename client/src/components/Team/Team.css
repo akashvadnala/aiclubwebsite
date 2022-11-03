@@ -34,6 +34,11 @@
     color: rgb(100,100,100);
     text-align: center;
 }
+.team-container .team .card .card-img-top
+{
+    height: 18rem;
+    object-fit: fill;
+}
 
 .head-img{
     
