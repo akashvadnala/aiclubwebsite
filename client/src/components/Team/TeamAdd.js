@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const TeamAdd = () => {
     const navigate = useNavigate();
@@ -21,58 +22,79 @@ const TeamAdd = () => {
     const handleInputs = (e) => {
         name = e.target.name;
         value = e.target.value;
-        console.log(name);
-        console.log(value);
         setUser({...user, [name]:value});
     }
     const handlePhoto = (e) => {
-        setUser({...user, photo: e.target.files});
-        console.log(e.target.files);
+        console.log('photo name',e.target.name);
+        setUser({...user, [e.target.name]: e.target.files[0]});
+        console.log('photo');
+        console.log(e.target.files[0]);
+        console.log('User');
+        console.log(user);
     }
     const handleCheck = (e) =>{
         setUser({...user, [e.target.name] : e.target.checked});
     }
+
     
     const PostTeam = async (e) => {
         e.preventDefault();
         console.log('Postteam');
         const {firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember} = user;
         console.log(firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember);
-        // const res = await 
-        fetch("/teamadd",{
-        method: "POST",
-        headers: {
-            "Content-Type" : "application/json"
-        },
-        body: JSON.stringify({
-            firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember
-        })
-        })
-        .then(res => {
-        return res.json();
-        })
-        .then((data)=>{
-        if(data.status === 422 || !data){
-            window.alert("Invalid Regsitration");
-            console.log("Invalid Regsitration");
+        console.log('photo',photo);
+
+        const data = new FormData();
+        const photoname = Date.now() + photo.name;
+        data.append("name",photoname);
+        data.append("photo",photo);
+        var imgurl;
+
+        try{
+            const img = await axios.post('http://localhost:5000/imgupload',data);
+            console.log('img',img);
+            imgurl = img.data;
+        }catch(err){
+            console.log('photoerr',err);
         }
-        else{
-            console.log(data);
-            console.log("Regsitration Successfull");
-            navigate('/');
+           console.log('imgurl',imgurl);
+        
+        try{
+            const teamdata = await axios.post('http://localhost:5000/teamadd',
+                {
+                    'firstname':firstname,
+                    'lastname':lastname,
+                    'profession':profession,
+                    'description':description,
+                    'username':username,
+                    'email':email,
+                    'year':year,
+                    'photo':imgurl,
+                    'password':password,
+                    'cpassword':cpassword,
+                    'isadmin':isadmin,
+                    'ismember':ismember
+                },
+                {
+                    headers:{"Content-Type" : "application/json"}
+                }
+            );
+            console.log('teamdata',teamdata);
+            if(teamdata.status === 422 || !teamdata){
+                window.alert("Invalid Regsitration");
+                console.log("Invalid Regsitration");
+            }
+            else{
+                console.log('data');
+                console.log(teamdata);
+                console.log("Regsitration Successfull");
+                navigate('/team');
+            }
+        }catch(err){
+            console.log('err',err);
         }
-        });
-        // const data = await res.json();
-        // if(data.status === 422 || !data){
-        //   window.alert("Invalid Regsitration");
-        //   console.log("Invalid Regsitration");
-        // }
-        // else{
-        //   window.alert("Regsitration Successfull");
-        //   console.log("Regsitration Successfull");
-        //   history.push('/')
-        // }
     }
+
     const forms=[
         {
             'type':'text',
@@ -134,7 +156,7 @@ const TeamAdd = () => {
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
                 <h1>Add Team Member</h1>
-                <form method='POST'>
+                <form onSubmit={PostTeam} method="POST" encType="multipart/form-data">
                     {
                         forms.map((f)=>{
                             return(
@@ -150,7 +172,7 @@ const TeamAdd = () => {
                      <div class="form-group my-3 row">
                         <label for='photo' className='col-sm-2 text-end'>Upload Photo :</label>
                         <div className='col-sm-10'>
-                            <input type='file' accept=".png, .jpg, .jpeg" name='photo' onChange={handlePhoto} class="form-control" id='photo' aria-describedby='photo' />
+                            <input type='file' accept="image/*" name="photo" onChange={handlePhoto} class="form-control" id='photo' aria-describedby='photo' />
                         </div>
                     </div>
                     <div class="form-group form-check my-3">
@@ -161,7 +183,7 @@ const TeamAdd = () => {
                         <input type="checkbox" checked={user.ismember} name="ismember" onChange={handleCheck} class="form-check-input" id="member" />
                         <label class="form-check-label" for="member">Make Member</label>
                     </div>
-                    <button type="submit" name="submit" id="submit" onClick={PostTeam} class="btn btn-primary">Submit</button>
+                    <button type="submit" name="submit" id="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>

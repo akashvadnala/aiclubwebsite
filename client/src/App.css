@@ -8,6 +8,19 @@ body{
   background-color: rgb(250,250,250);
 }
 
+.right-panel{
+  text-align: center;
+  padding-top: 1rem;
+}
+
+.right-panel a{
+  background: rgb(220,220,220);
+  padding: 7px 12px;
+  border-radius: 18px;
+  color: black;
+  margin-left: 1rem;
+}
+
 .adjust{
   margin-left: 10px !important;
   width: calc(100% - 20px) !important;
@@ -18,6 +31,11 @@ body{
   .adjust{
     margin-left: 2.5% !important;
     width: 95% !important;
+  }
+  
+  .right-panel{
+    text-align: right;
+    padding-top: 0;
   }
 }
 

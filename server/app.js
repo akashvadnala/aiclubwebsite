@@ -3,16 +3,19 @@ const app = express();
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const path = require('path');
+dotenv.config({ path:'./config.env' });
 
-// Cookie Parser
+require('./db/conn');
+
 app.use(cookieParser());
 
-// Body parser
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true }));
-
-dotenv.config({ path:'./config.env' });
-require('./db/conn');
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+app.use(cors());
+app.use('/uploads',express.static(path.resolve('uploads')));
+console.log('dir',path.resolve('uploads'));
 app.use(require('./router/auth'));
 
 app.get('/',(req,res) => {

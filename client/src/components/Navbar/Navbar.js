@@ -65,7 +65,17 @@ const Navbar = () => {
             {
                 islogin?
                 <li className="nav-item">
-                    <NavLink className="nav-link" to='/'>Hello {user.firstname}</NavLink>
+                
+                    <div className="dropdown show">
+                        <a className="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Hello {user.firstname}
+                        </a>
+                    
+                        <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a className="dropdown-item" href="/addproject">Add Project</a>
+                            <a className="dropdown-item" href="/myprojects">My Projects</a>
+                        </div>
+                    </div>
                 </li>
                 :
                 <li className="nav-item">
@@ -85,7 +95,7 @@ const Navbar = () => {
                 <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav ml-auto">
+                    <ul className="adjust navbar-nav">
                         <RenderMenu />
                     </ul>
                 </div>

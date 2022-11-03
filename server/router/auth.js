@@ -2,19 +2,90 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
 let path = require('path');
 // const authenticate = require('../middleware/authenticate');
 
 require('../db/conn');
 const Team = require('../model/teamSchema');
+const File = require('../model/fileSchema');
 
-router.get('/',(req,res)=>{
+router.route('/').get((req,res)=>{
     res.send(`Hello world from the server router js`);
 });
 
-router.post('/teamadd', async (req,res) => {
+const mime = require("mime-types");
+const { Readable } = require("stream");
+
+const fs = require('fs');
+const { google } = require('googleapis');
+
+const GOOGLE_API_FOLDER_ID = '1K5UVYYZS6PrDEJRX6QfVj8d7Ng-tBtY0';
+
+const bufferToStream = (buffer) => {
+    var stream = new Readable();
+    stream.push(buffer);
+    stream.push(null);
+  
+    return stream;
+};
+
+const { InitFileUpload } = require('../file_upload');
+const multer = require('multer');
+const { json } = require('stream/consumers');
+
+const fileUpload = InitFileUpload();
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb)=>{
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb)=> {
+        cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname)
+    }
+})
+
+const fileFilter = (req, file, cb)=>{
+    if( file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg'){
+        cb(null, true)
+    }else {
+        cb(null, false)
+    }
+}
+
+const upload = multer({ storage, fileFilter }).single('photo');
+
+const imgupload = async (req, res) => {
+    if(req.file === null){
+        return res.status(400).json({ msg: "No file uploaded" });
+    }
+    console.log('files',req.body);
+    const file = req.file.path;
+    const name = req.file.filename;
+    console.log('name',name);
+    console.log('file',file);
+    const mimeType = req.file.mimetype;
+
+    try{
+        const key = await fileUpload.uploadFile({ name, file, mimeType });
+        const url = fileUpload.getUrl(key);
+
+        const fileDoc = new File({
+            'key':key,
+            'name':name,
+            'url':url
+        });
+        await fileDoc.save();
+
+        return res.status(200).send(url);
+    }catch(err){
+        console.log(err);
+    }
+}
+
+router.route('/imgupload').post(upload, imgupload);
+
+const teamadd = async (req,res) => {
     // const {  firstname,lastname,profession,description,username,email,password,cpassword } = req.body;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
@@ -28,15 +99,13 @@ router.post('/teamadd', async (req,res) => {
     const isadmin = req.body.isadmin;
     const ismember = req.body.ismember;
     console.log('body');
-    console.log(req.body);
-    console.log(req.files);
-    const photo = req.files.photo;
+    const photo = req.body.photo;
+    console.log('photo',photo);
     if( !firstname || !lastname || !profession || !description || !username || !email || !year || !password || !cpassword || !photo){
         return res.status(400).json({ error: "Plz fill the field properly" });
     }
     console.log("Registering..");
     try{
-        
         const teamExist = await Team.findOne({email:email});
         
         if(teamExist){
@@ -69,17 +138,29 @@ router.post('/teamadd', async (req,res) => {
         res.status(201).json({ message: "user Login Successfully" });
         
     }catch(err){
-        console.log(err);
+        console.log('err',err);
     }  
-});
+}
 
-router.get('/getTeam', async (req,res)=>{
-    const teamData = await Team.find();
-    // console.log(teamData);
+router.route('/teamadd').post(teamadd);
+
+const getTeam = async (req,res)=>{
+    const teamData = await Team.find({ismember:true});
+    console.log(teamData);
     res.status(201).json(teamData);
-})
+}
 
-router.get('/getUserDataForEdit/:username', async (req,res)=>{
+router.route('/getTeam').get(getTeam);
+
+const getArchTeam = async (req,res)=>{
+    const teamData = await Team.find({ismember:false});
+    console.log(teamData);
+    res.status(201).json(teamData);
+}
+
+router.route('/getArchTeam').get(getArchTeam);
+
+getusernameforedit_username = async (req,res)=>{
     const {username} = req.params;
     try{    
         
@@ -90,29 +171,11 @@ router.get('/getUserDataForEdit/:username', async (req,res)=>{
         console.log(err);
         res.status(422).send(`${username} not found`);
     }
-})
-
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'images');
-    },
-    filename: function(req, file, cb) {   
-        cb(null, uuidv4() + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
-
-const fileFilter = (req, file, cb) => {
-    const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    if(allowedFileTypes.includes(file.mimetype)) {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
 }
 
-let upload = multer({ storage, fileFilter });
+router.route('/getUserDataForEdit/:username').get(getusernameforedit_username);
 
-router.put('/teamupdate/:username',upload.single('photo'), async (req,res)=>{
+const teamupdate_username = async (req,res)=>{
     try {
         const {username} = req.params;
 
@@ -120,13 +183,15 @@ router.put('/teamupdate/:username',upload.single('photo'), async (req,res)=>{
             new:true
         });
 
-        console.log(updateduser);
+        console.log('Team Updated!');
         res.status(201).json(updateduser);
 
     } catch (error) {
         res.status(422).json(error);
     }
-})
+}
+
+router.route('/teamupdate/:username').put(teamupdate_username);
 
 // router.post('/signin', async (req, res) => {
 //     try{
