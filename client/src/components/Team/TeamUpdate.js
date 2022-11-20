@@ -1,14 +1,23 @@
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { useNavigate, useParams } from "react-router-dom";
+import { Context } from '../../Context/Context';
+import { SERVER_URL } from '../../EditableStuff/Config';
 
 const TeamUpdate = () => {
     const navigate = useNavigate();
     const params = new useParams();
     const username = params.username;
     // console.log(username);
-    const [user,setUser] = useState([]);
+    const [team,setTeam] = useState([]);
+    const [checkbox,setCheckbox] = useState(false);
     const [Img, setImg] = useState();
+    const [submit,setSubmit] = useState('Update');
+    const [submit2,setSubmit2] = useState();
+    const { user } = useContext(Context);
+    if(!user || !user.isadmin){
+        navigate('/team');
+    }
     const getUserDataForEdit = async () =>{
         try{
             // const res = await fetch(`/getUserDataForEdit/${username}`,{
@@ -17,12 +26,17 @@ const TeamUpdate = () => {
             //         "Content-Type":"application/json"
             //     }
             // });
-            const res = await axios.get(`http://localhost:5000/getUserDataForEdit/${username}`);
+            const res = await axios.get(`${SERVER_URL}/getUserDataForEdit/${username}`);
             // const data = await res.json();
             console.log('data',res);
             console.log('Data');
             console.log(res.data);
-            setUser(res.data);
+            setTeam(res.data);
+            if(user && user.isadmin){
+                if(user.username!==res.data.username){
+                    setCheckbox(true);
+                }
+            }
             if(!res.status===201){
                 console.log('err');
                 const error = new Error(res.error);
@@ -34,7 +48,7 @@ const TeamUpdate = () => {
     }
     useEffect(() => {
         getUserDataForEdit();
-    },[]);
+    },[user]);
     
     let name, value;
     const handleInputs = (e) => {
@@ -42,13 +56,15 @@ const TeamUpdate = () => {
         value = e.target.value;
         console.log(name);
         console.log(value);
-        setUser({...user, [name]:value});
+        setTeam({...team, [name]:value});
+        console.log('team',team.isadmin,team.ismember);
     }
 
     
     const handleCheck = (e) =>{
-        setUser({...user, [e.target.name] : e.target.checked});
-        console.log('checked',e.target.checked);
+        const name = e.target.name;
+        const checked=e.target.checked
+        setTeam({...team,[name]:checked});
     }
     
     const handlePhoto = (e) => {
@@ -57,20 +73,22 @@ const TeamUpdate = () => {
 
     const UpdateTeam = async (e) => {
         e.preventDefault();
+        setSubmit('Updating');
+        setSubmit2(<i class="fa fa-spinner fa-spin"></i>);
         console.log('Postteam');
         // const {firstname,lastname,profession,description,username,photo,email,password,cpassword,isadmin,ismember} = user;
     
-        const firstname = user.firstname;
-        const lastname = user.lastname;
-        const profession = user.profession;
-        const description = user.description;
-        const username = user.username;
-        const photo = user.photo;
-        const email = user.email;
-        const isadmin = user.isadmin;
-        const ismember = user.ismember;
-        console.log(firstname,lastname,profession,description,username,photo,email,isadmin,ismember);
-        
+        // const firstname = user.firstname;
+        // const lastname = user.lastname;
+        // const profession = user.profession;
+        // const description = user.description;
+        // const username = user.username;
+        const photo = team.photo;
+        // const email = user.email;
+        // const isadmin = user.isadmin;
+        // const ismember = user.ismember;
+        // console.log(firstname,lastname,profession,description,username,photo,email,isadmin,ismember);
+        team.ismember = team.ismember || team.isadmin;
         var imgurl;
         if(Img){
             const data = new FormData();
@@ -79,9 +97,10 @@ const TeamUpdate = () => {
             data.append("photo",Img);
     
             try{
-                const img = await axios.post('http://localhost:5000/imgupload',data);
+                const img = await axios.post(`${SERVER_URL}/imgupload`,data);
                 console.log('img',img);
                 imgurl = img.data;
+                team.photo = imgurl;
             }catch(err){
                 console.log('photoerr',err);
             }
@@ -91,18 +110,8 @@ const TeamUpdate = () => {
         }
         console.log('imgurl',imgurl); 
         try{
-            const teamdata = await axios.put(`http://localhost:5000/teamupdate/${username}`,
-                {
-                    'firstname':firstname,
-                    'lastname':lastname,
-                    'profession':profession,
-                    'description':description,
-                    'username':username,
-                    'photo':imgurl,
-                    'email':email,
-                    'isadmin':isadmin,
-                    'ismember':ismember
-                },
+            const teamdata = await axios.put(`${SERVER_URL}/teamupdate/${username}`,
+                team,
                 {
                     headers:{"Content-Type" : "application/json"}
                 }
@@ -125,43 +134,43 @@ const TeamUpdate = () => {
             'type':'text',
             'id':'firstname',
             'des':'First Name',
-            'val':user.firstname
+            'val':team.firstname
         },
         {
             'type':'text',
             'id':'lastname',
             'des':'Last Name',
-            'val':user.lastname
+            'val':team.lastname
         },
         {
             'type':'text',
             'id':'profession',
             'des':'Profession',
-            'val':user.profession
+            'val':team.profession
         },
         {
             'type':'text',
             'id':'description',
             'des':'Description',
-            'val':user.description
+            'val':team.description
         },
         {
             'type':'text',
             'id':'username',
             'des':'Username',
-            'val':user.username
+            'val':team.username
         },
         {
             'type':'email',
             'id':'email',
             'des':'EMail',
-            'val':user.email
+            'val':team.email
         },
         {
             'type':'number',
             'id':'year',
             'des':'Graduation Year',
-            'val':user.year
+            'val':team.year
         }
     ]
   return (
@@ -189,21 +198,21 @@ const TeamUpdate = () => {
                         </div>
                     </div>
                     {
-                        user.isadmin?
-                            null
-                        :
+                        checkbox?
                             <>
                                 <div class="form-group form-check my-3">
-                                    <input type="checkbox" checked={user.isadmin} name="isadmin" onChange={handleCheck} class="form-check-input" id="admin" />
+                                    <input type="checkbox" checked={team.isadmin} name="isadmin" onChange={handleCheck} class="form-check-input" id="admin" />
                                     <label class="form-check-label" for="admin">Make Admin</label>
                                 </div>
                                 <div class="form-group form-check my-3">
-                                    <input type="checkbox" checked={user.ismember} name="ismember" onChange={handleCheck} class="form-check-input" id="member" />
+                                    <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} class="form-check-input" id="member" />
                                     <label class="form-check-label" for="member">Make Member</label>
                                 </div>
                             </>
+                        :
+                            null
                     }
-                    <button type="submit" name="submit" id="submit" onClick={UpdateTeam} class="btn btn-primary">Submit</button>
+                    <button type="submit" name="submit" id="submit" onClick={UpdateTeam} class="btn btn-primary">{submit} {submit2}</button>
                 </form>
             </div>
         </div>

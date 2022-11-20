@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 let path = require('path');
-// const authenticate = require('../middleware/authenticate');
+const authenticate = require('../middleware/authenticate');
 
 require('../db/conn');
 const Team = require('../model/teamSchema');
@@ -146,7 +146,7 @@ router.route('/teamadd').post(teamadd);
 
 const getTeam = async (req,res)=>{
     const teamData = await Team.find({ismember:true});
-    console.log(teamData);
+    // console.log(teamData);
     res.status(201).json(teamData);
 }
 
@@ -154,7 +154,7 @@ router.route('/getTeam').get(getTeam);
 
 const getArchTeam = async (req,res)=>{
     const teamData = await Team.find({ismember:false});
-    console.log(teamData);
+    // console.log(teamData);
     res.status(201).json(teamData);
 }
 
@@ -193,53 +193,47 @@ const teamupdate_username = async (req,res)=>{
 
 router.route('/teamupdate/:username').put(teamupdate_username);
 
-// router.post('/signin', async (req, res) => {
-//     try{
-//         let token;
-//         const { email, password } = req.body;
-//         console.log(email, password);
-//         if(!email || !password){
-//             return res.status(400).json({ error: "Plz fill the field properly" });
-//         }
-//         const userLogin = await User.findOne({ email:email });
-//         console.log(userLogin);
-//         if(!userLogin){
-//             return res.status(200).json({ error: "User error" });
-//         }
+router.post('/login', async (req, res) => {
+    try{
+        let token;
+        const { username, password } = req.body;
+        console.log(username, password);
+        if(!username || !password){
+            return res.status(400).json({ error: "Plz fill the field properly" });
+        }
+        var team = await Team.findOne({ username:username });
+        if(!team){
+            console.log(team);
+            team = await Team.findOne({ email:username });
+            if(!team){
+                return res.status(200).json({ error: "Team error" });
+            }
+        }
         
-//         const saltRounds = 10;
-//         const pass = await bcrypt.hash(password,saltRounds);
-//         console.log(userLogin.password);
-//         console.log(pass);
-//         bcrypt.compare(password, userLogin.password,(err,res) => {
-//             if(err){
-//                 console.log(err);
-//                 return res.status(400).json({ error: "Invalid Credentials" });
-//             }
-//             else{
-//                 console.log("No error");
-//             }
-//         });
+        bcrypt.compare(password, team.password,(err,isMatch) => {
+            console.log('isMatch',isMatch);
+            if(!isMatch){
+                console.log('password not matched');
+                res.status(400).json({ error: "Invalid Credentials" });
+            }
+            else{
+                console.log('No error');
+            }
+        });
         
-//         token = await userLogin.generateAuthToken();
-//         console.log(token);
-//         res.cookie("jwtoken",token,{  // jwtoken->name
-//             expires: new Date(Date.now() + 258920000000), //30 days
-//             httpOnly: true
-//         });
+        token = await team.generateAuthToken();
+        console.log('token',token);
+        res.cookie('jwtoken',token,{  // jwtoken->name
+            expires: new Date(Date.now() + 258920000000), //30 days
+            httpOnly: true
+        });
+        console.log('Logged in');
+        res.status(201).json({ message: "User Signin Successfully", user:team });
 
-//         res.status(201).json({ message: "user Signin Successfully" });
-        
-
-//         // if(!userLogin){
-//         //     res.status(200).json({ error: "User error" });
-//         // } else {
-//         //     res.status(201).json({ message: "user Signin Successfully" });
-//         // }
-//     }catch(err){
-//         console.log(err);
-//     }
-// });
+    }catch(err){
+        console.log('Invalid Credentials');
+    }
+});
 
 // router.get('/about', authenticate, (req,res)=>{
 //     console.log(`Hello my About`);
@@ -252,16 +246,15 @@ router.route('/teamupdate/:username').put(teamupdate_username);
 // });
 
 
-// router.get('/getData', authenticate, (req,res)=>{
-//     console.log(`Hello my Home`);
-//     res.send(req.rootUser);
-// });
+router.get('/getUserData', authenticate, (req,res)=>{
+    console.log(`Hello ${req.rootUser?req.rootUser.username:'Not logged in'}`);
+    res.send(req.rootUser);
+});
 
-// router.get('/logout', (req,res)=>{
-//     console.log(`Hello my Logout Page`);
-//     res.clearCookie('jwtoken',{path:'/'});
-//     res.status(200).send('User Logout');
-// });
+router.get('/logout', (req,res)=>{
+    res.clearCookie('jwtoken',{path:'/'});
+    res.status(200).send({msg:'Logged Out Succesfully'});
+});
 
 
 module.exports = router;

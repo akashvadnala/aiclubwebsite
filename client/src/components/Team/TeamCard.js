@@ -1,7 +1,6 @@
 import React from 'react';
-import {islogin,user} from '../../EditableStuff/Config';
 
-function TeamCard({ team }) {
+function TeamCard({ team, isadmin }) {
   return (
         <div className=' col-lg-3 col-md-4 col-sm-6 col-6'>
             <div className='card'>
@@ -12,17 +11,14 @@ function TeamCard({ team }) {
                 <p>{team.description}</p>
                 <a href={`mailto:${team.email}`} >{team.email}</a>
                 {
-                  islogin?
-                    user.isadmin?
-                    <div className='admin-opt'>
-                      <span>
-                        <a href={`/team/edit/${team.username}`}>Edit</a>    
-                     </span>
-                      ·
-                      <span> Delete</span>
-                    </div>
-                    :
-                    ''
+                  isadmin?
+                  <div className='admin-opt'>
+                    <span>
+                      <a href={`/team/edit/${team.username}`}>Edit</a>    
+                    </span>
+                    ·
+                    <span> Delete</span>
+                  </div>
                   :
                   ''
                 }

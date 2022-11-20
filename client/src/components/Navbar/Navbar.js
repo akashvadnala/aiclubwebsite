@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import {islogin,user} from '../../EditableStuff/Config';
+import {SERVER_URL} from '../../EditableStuff/Config';
+import MyVerticallyCenteredModal from './MyVerticallyCenteredModal';
+import { Context } from '../../Context/Context';
+import axios from 'axios';
 
 const Navbar = () => {
     
@@ -44,7 +47,20 @@ const Navbar = () => {
                 'name':'Contact Us'
             }
         ]
-        
+        const { user } = useContext(Context);
+        console.log('user',user);
+        const [modalShow, setModalShow] = React.useState(false);
+        const Logout = async () => {
+            try{
+                const res = await axios.get(`${SERVER_URL}/logout`,
+                    {withCredentials:true}
+                );
+                console.log(res.msg);
+            }catch(err){
+                console.log('Unable to logout..')
+            }
+            window.location.reload(true);
+        }
         return(
         <>
             <li>
@@ -63,7 +79,7 @@ const Navbar = () => {
                 })
             }
             {
-                islogin?
+                user?
                 <li className="nav-item">
                 
                     <div className="dropdown show">
@@ -74,15 +90,22 @@ const Navbar = () => {
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <a className="dropdown-item" href="/addproject">Add Project</a>
                             <a className="dropdown-item" href="/myprojects">My Projects</a>
+                            {user?user.isadmin?<a className="dropdown-item" href="/admin">Admin</a>:null:null}
+                            <a className="dropdown-item" href="#" onClick={Logout}>Logout</a>
                         </div>
                     </div>
                 </li>
                 :
                 <li className="nav-item">
-                    <NavLink className="nav-link" to='/login'>Login</NavLink>
+                    <NavLink className="nav-link" variant="primary" onClick={() => setModalShow(true)}>
+                        Login
+                    </NavLink>
                 </li>
             }
-            
+            <MyVerticallyCenteredModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+            />
         </>
         )
     }
