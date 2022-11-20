@@ -1,9 +1,11 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { NavLink } from 'react-router-dom';
 import './Team.css';
-import TeamCard from './TeamCard';
+import {Context} from '../../Context/Context';
+
+const TeamCard = React.lazy(() => import('./TeamCard'));
 
 function Team() {
   const [ teams, setTeams] = useState([]);
@@ -60,6 +62,7 @@ function Team() {
       getArchTeamData();
     }
    } 
+   const { user } = useContext(Context);
   //  const teams=[
   //   {
   //     'imgsrc':'https://aiclub.nitc.ac.in/img/drive/jayaraj%20sir.jpg',
@@ -107,21 +110,27 @@ function Team() {
                 <div className='col-sm-5'>
                   <h2>{teamHeading}</h2>
                 </div>
-                <div className='right-panel col-sm-7'>
-                  <NavLink className='teamadd' onClick={toggleArchived}>{archStat}</NavLink>
-                  <NavLink className='teamadd' to='/team/add'>Add +</NavLink>
-                </div>
+                {
+                  user?user.isadmin?
+                  <div className='right-panel col-sm-7'>
+                    <NavLink className='teamadd' onClick={toggleArchived}>{archStat}</NavLink>
+                    <NavLink className='teamadd' to='/team/add'>Add +</NavLink>
+                  </div>
+                  :'':''
+                }
               </div>
               
               {/* <h4>Team Members</h4> */}
               <div className='row'>
-                {
-                  teams.map(team => {
-                    return(
-                      <TeamCard team={team} />
-                    )
-                  })
-                }
+                <Suspense fallback={<div>Loading...</div>}>
+                  {
+                    teams.map(team => {
+                      return(
+                        <TeamCard team={team} isadmin={user?user.isadmin:false} />
+                      )
+                    })
+                  }
+                </Suspense>
               </div>
           </div>
       </div>

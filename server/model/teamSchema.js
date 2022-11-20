@@ -65,7 +65,7 @@ const teamSchema = new mongoose.Schema({
 teamSchema.pre('save', async function(next){
     console.log("Hi from inside");
     if(this.isModified('password')){
-        this.password = bcrypt.hash(this.password, 12);
+        this.password = bcrypt.hash(this.password, 10);
         this.cpassword = this.password;
     }
     next();

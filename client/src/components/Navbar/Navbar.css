@@ -11,7 +11,7 @@
     position: sticky !important;
     top: 0 !important;
     backdrop-filter: saturate(180%) blur(10px) !important;
-    z-index: 100000 !important;
+    z-index: 1000 !important;
     border-bottom: solid 1px rgba(220,220,220,.9);
     padding: 0 !important;
 }
@@ -27,6 +27,31 @@
 ul{
     margin-block-start: 0 !important;
     margin-block-end: 0 !important;
+}
+
+.modal{
+    z-index: 10000;
+}
+
+.modal-dialog{
+    width: 30% !important;
+
+}
+
+.modal-dialog .modal-content{
+    padding: 10px;
+}
+
+.modal-dialog .modal-content .modal-header{
+    border-bottom: none;
+}
+
+.modal-dialog .modal-content .modal-header .btn-close{
+    padding: 10px 10px 0 0;
+}
+.modal-dialog .modal-content .modal-body{
+    padding: 0 40px 20px 40px;
+    text-align: center;
 }
 
 

@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import Register from './components/Inductions/Register';
 import TeamUpdate from './components/Team/TeamUpdate';
 import TeamAdd from './components/Team/TeamAdd';
+import Error from './components/Error';
 
 const Routing = () => {
     return(
@@ -17,7 +18,7 @@ const Routing = () => {
         <Route exact path='/inductions/register' element={<Register />} />
         <Route exact path='/team/edit/:username' element={<TeamUpdate />} />
         <Route exact path='/team/add' element={<TeamAdd />} />
-        <Route exact path='/team/archived' element={<Team />} />
+        <Route path='*' element={<Error />} />
   
   
       </Routes>
