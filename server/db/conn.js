@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-const DB = process.env.DATABASE;
+const config = require('../Config');
+
+const DB = config.DATABASE;
 
 // const DB='mongodb://127.0.0.1:27017/';
 

@@ -12,6 +12,7 @@ function Team() {
   const [ archTeam, setArchTeam ] = useState(false);
   const [ teamHeading, setTeamHeading ] = useState('Team Members');
   const [ archStat, setArchStat ] = useState('Archived');
+  const [ msg, setMsg ] = useState();
 
   const getTeamData = async() => {
     try{
@@ -119,14 +120,21 @@ function Team() {
                   :'':''
                 }
               </div>
-              
+              <div className='msg'>
+                {
+                  msg?
+                  <span>{msg}</span>
+                  :
+                  null
+                }
+              </div>
               {/* <h4>Team Members</h4> */}
               <div className='row'>
                 <Suspense fallback={<div>Loading...</div>}>
                   {
                     teams.map(team => {
                       return(
-                        <TeamCard team={team} isadmin={user?user.isadmin:false} />
+                        <TeamCard team={team} isadmin={user?user.isadmin:false} isdelete={user.username===team.username}/>
                       )
                     })
                   }

@@ -27,6 +27,7 @@ body{
   padding: 1.2rem 0.75rem 1.2rem 0.75rem;
 }
 
+
 @media (min-width: 576px){
   .adjust{
     margin-left: 2.5% !important;
@@ -65,4 +66,10 @@ body{
     margin-left: 17.5% !important;
     width: 65% !important;
   }
+}
+
+
+
+.navbar-nav{
+  margin-left: 0 !important;
 }

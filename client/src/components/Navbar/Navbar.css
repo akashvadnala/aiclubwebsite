@@ -34,8 +34,43 @@ ul{
 }
 
 .modal-dialog{
-    width: 30% !important;
+    width: 100% !important;
+}
 
+@media (min-width: 100px){
+    .modal-dialog{
+        width:calc(100% - 15px) !important;
+    }
+}
+
+@media (min-width: 576px){
+    .modal-dialog{
+        width: 70% !important;
+    }
+}
+
+@media (min-width: 768px){
+    .modal-dialog{
+        width: 60% !important;
+    }
+}
+
+@media (min-width: 992px){
+    .modal-dialog{
+        width: 50% !important;
+    }
+}
+
+@media (min-width: 1220px){
+    .modal-dialog{
+        width: 40% !important;
+    }
+}
+
+@media (min-width: 1300px){
+    .modal-dialog{
+        width: 30% !important;
+    }
 }
 
 .modal-dialog .modal-content{
