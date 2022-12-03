@@ -14,4 +14,4 @@ const ProjectSpace = ({title, text, authors, url}) => {
   )
 }
 
-export default ProjectSpace
+export default ProjectSpace;

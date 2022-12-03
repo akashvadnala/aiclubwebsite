@@ -193,47 +193,60 @@ const teamupdate_username = async (req,res)=>{
 
 router.route('/teamupdate/:username').put(teamupdate_username);
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
     try{
         let token;
         const { username, password } = req.body;
         console.log(username, password);
         if(!username || !password){
-            return res.status(400).json({ error: "Plz fill the field properly" });
+            return res.status(200).json({ error: "Plz fill the field properly" });
         }
         var team = await Team.findOne({ username:username });
         if(!team){
-            console.log(team);
+            console.log('team',team);
             team = await Team.findOne({ email:username });
+            console.log('team',team);
             if(!team){
-                return res.status(200).json({ error: "Team error" });
+                return res.status(200).json({ error: "Invalid Credentials" });
             }
         }
         
-        bcrypt.compare(password, team.password,(err,isMatch) => {
+        bcrypt.compare(password, team.password, async (err,isMatch) => {
             console.log('isMatch',isMatch);
             if(!isMatch){
                 console.log('password not matched');
-                res.status(400).json({ error: "Invalid Credentials" });
+                return res.status(200).json({ error: "Invalid Credentials" });
             }
             else{
                 console.log('No error');
+                if(team){
+                    token = await team.generateAuthToken();
+                    console.log('token',token);
+                    res.cookie('jwtoken',token,{  // jwtoken->name
+                        expires: new Date(Date.now() + 258920000000), //30 days
+                        httpOnly: true
+                    });
+                    console.log('Logged in');
+                }
+                return res.status(201).json({ message: "User Signin Successfully", user:team });
             }
         });
         
-        token = await team.generateAuthToken();
-        console.log('token',token);
-        res.cookie('jwtoken',token,{  // jwtoken->name
-            expires: new Date(Date.now() + 258920000000), //30 days
-            httpOnly: true
-        });
-        console.log('Logged in');
-        res.status(201).json({ message: "User Signin Successfully", user:team });
-
     }catch(err){
         console.log('Invalid Credentials');
     }
 });
+
+router.route('/team/delete/:username').delete(async (req, res) => {
+    const {username} = req.params;
+    try{
+        await Team.deleteOne({ username: username });
+        return res.status(201).json({ message: "Team Member Deleted Successfully"});
+    }
+    catch{
+        return res.status(200).json({ error: "Cannot Delete Team Member"});
+    }
+})
 
 // router.get('/about', authenticate, (req,res)=>{
 //     console.log(`Hello my About`);
@@ -247,7 +260,7 @@ router.post('/login', async (req, res) => {
 
 
 router.get('/getUserData', authenticate, (req,res)=>{
-    console.log(`Hello ${req.rootUser?req.rootUser.username:'Not logged in'}`);
+    // console.log(`Hello ${req.rootUser?req.rootUser.username:'Not logged in'}`);
     res.send(req.rootUser);
 });
 

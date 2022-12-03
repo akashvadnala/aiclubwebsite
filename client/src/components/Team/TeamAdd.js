@@ -51,11 +51,11 @@ const TeamAdd = () => {
         const {firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember} = team;
         // console.log(firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember);
         console.log('photo',photo);
-        if(!firstname || !lastname || !profession || !description || !username || !email || !year || !photo || !password || !cpassword || !isadmin || !ismember){
+        if(!firstname || !lastname || !profession || !description || !username || !email || !year || !photo || !password || !cpassword ){
             console.log('Fill required Details');
         }
         else{
-            setAdd('submitting ');
+            setAdd('Submitting ');
             setAdd2(<i class="fa fa-spinner fa-spin"></i>);
             const data = new FormData();
             const photoname = Date.now() + photo.name;
@@ -171,34 +171,34 @@ const TeamAdd = () => {
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
                 <h1>Add Team Member</h1>
-                <form onSubmit={PostTeam} method="POST" encType="multipart/form-data">
+                <form method="POST" encType="multipart/form-data">
                     {
                         forms.map((f)=>{
                             return(
-                                <div class="form-group my-3 row">
+                                <div className="form-group my-3 row">
                                     <label for={f.id} className='col-sm-2 text-end'>{f.des} :</label>
                                     <div className='col-sm-10'>
-                                        <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} class="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} required/>
+                                        <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} className="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} required/>
                                     </div>
                                 </div>
                             )
                         })
                     }
-                     <div class="form-group my-3 row">
+                     <div className="form-group my-3 row">
                         <label for='photo' className='col-sm-2 text-end'>Upload Photo :</label>
                         <div className='col-sm-10'>
-                            <input type='file' accept="image/*" name="photo" onChange={handlePhoto} class="form-control" id='photo' aria-describedby='photo' />
+                            <input type='file' accept="image/*" name="photo" onChange={handlePhoto} className="form-control" id='photo' aria-describedby='photo' required/>
                         </div>
                     </div>
-                    <div class="form-group form-check my-3">
-                        <input type="checkbox" checked={team.isadmin} name="isadmin" onChange={handleCheck} class="form-check-input" id="admin" />
+                    <div className="form-group form-check my-3">
+                        <input type="checkbox" checked={team.isadmin} name="isadmin" onChange={handleCheck} className="form-check-input" id="admin" />
                         <label class="form-check-label" for="admin">Make Admin</label>
                     </div>
-                    <div class="form-group form-check my-3">
-                        <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} class="form-check-input" id="member" />
+                    <div className="form-group form-check my-3">
+                        <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
                         <label class="form-check-label" for="member">Make Member</label>
                     </div>
-                    <button type="submit" name="submit" id="submit" class="btn btn-primary">{add}{add2}</button>
+                    <button type="submit" name="submit" id="submit" onClick={PostTeam} className="btn btn-primary">{add}{add2}</button>
                 </form>
             </div>
         </div>

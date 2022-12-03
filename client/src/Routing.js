@@ -7,6 +7,8 @@ import Register from './components/Inductions/Register';
 import TeamUpdate from './components/Team/TeamUpdate';
 import TeamAdd from './components/Team/TeamAdd';
 import Error from './components/Error';
+import AddProject from './components/AddProject/AddProject';
+import Events from './components/Events/Events';
 
 const Routing = () => {
     return(
@@ -14,10 +16,12 @@ const Routing = () => {
         <Route exact path='/' element={<Home />} />
         <Route exact path='/team' element={<Team />} />
         <Route exact path='/projects' element={<Projects />} />
+        <Route exact path='/events' element={<Events />} />
         <Route exact path='/inductions' element={<Induct />} />
         <Route exact path='/inductions/register' element={<Register />} />
         <Route exact path='/team/edit/:username' element={<TeamUpdate />} />
         <Route exact path='/team/add' element={<TeamAdd />} />
+        <Route exact path='/addproject' element={<AddProject />} />
         <Route path='*' element={<Error />} />
   
   

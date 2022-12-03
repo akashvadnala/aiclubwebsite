@@ -15,9 +15,6 @@ const TeamUpdate = () => {
     const [submit,setSubmit] = useState('Update');
     const [submit2,setSubmit2] = useState();
     const { user } = useContext(Context);
-    if(!user || !user.isadmin){
-        navigate('/team');
-    }
     const getUserDataForEdit = async () =>{
         try{
             // const res = await fetch(`/getUserDataForEdit/${username}`,{
@@ -31,17 +28,15 @@ const TeamUpdate = () => {
             console.log('data',res);
             console.log('Data');
             console.log(res.data);
+            if(!res.status===201){
+                navigate('/team');
+            }
             setTeam(res.data);
             if(user && user.isadmin){
                 if(user.username!==res.data.username){
                     setCheckbox(true);
                 }
             }
-            if(!res.status===201){
-                console.log('err');
-                const error = new Error(res.error);
-                throw error;
-              }
         }catch(err){
             console.log(err);
         }
@@ -182,37 +177,37 @@ const TeamUpdate = () => {
                     {
                         forms.map((f)=>{
                             return(
-                                <div class="form-group my-3 row">
+                                <div className="form-group my-3 row">
                                     <label for={f.id} className='col-sm-2 text-end'>{f.des} :</label>
                                     <div className='col-sm-10'>
-                                        <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} class="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} />
+                                        <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} className="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} />
                                     </div>
                                 </div>
                             )
                         })
                     }
-                    <div class="form-group my-3 row">
+                    <div className="form-group my-3 row">
                         <label for='photo' className='col-sm-2 text-end'>Upload Photo :</label>
                         <div className='col-sm-10'>
-                            <input type='file' accept=".png, .jpg, .jpeg" name='photo' onChange={handlePhoto} class="form-control" id='photo' aria-describedby='photo' />
+                            <input type='file' accept=".png, .jpg, .jpeg" name='photo' onChange={handlePhoto} className="form-control" id='photo' aria-describedby='photo' />
                         </div>
                     </div>
                     {
                         checkbox?
                             <>
-                                <div class="form-group form-check my-3">
-                                    <input type="checkbox" checked={team.isadmin} name="isadmin" onChange={handleCheck} class="form-check-input" id="admin" />
-                                    <label class="form-check-label" for="admin">Make Admin</label>
+                                <div className="form-group form-check my-3">
+                                    <input type="checkbox" checked={team.isadmin} name="isadmin" onChange={handleCheck} className="form-check-input" id="admin" />
+                                    <label className="form-check-label" for="admin">Make Admin</label>
                                 </div>
-                                <div class="form-group form-check my-3">
-                                    <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} class="form-check-input" id="member" />
-                                    <label class="form-check-label" for="member">Make Member</label>
+                                <div className="form-group form-check my-3">
+                                    <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
+                                    <label className="form-check-label" for="member">Make Member</label>
                                 </div>
                             </>
                         :
                             null
                     }
-                    <button type="submit" name="submit" id="submit" onClick={UpdateTeam} class="btn btn-primary">{submit} {submit2}</button>
+                    <button type="submit" name="submit" id="submit" onClick={UpdateTeam} className="btn btn-primary">{submit} {submit2}</button>
                 </form>
             </div>
         </div>
