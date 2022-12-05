@@ -1,5 +1,5 @@
 import React from "react";
-import './induct.css'
+import './induct.css';
 
 const Overview=()=>{
     return(
