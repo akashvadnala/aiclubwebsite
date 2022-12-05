@@ -15,7 +15,10 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
 app.use('/uploads',express.static(path.resolve('uploads')));
 console.log('dir',path.resolve('uploads'));
+
+//routes
 app.use(require('./router/auth'));
+app.use(require('./router/inductions'));
 
 app.get('/',(req,res) => {
     res.send(`Hello from server..`);

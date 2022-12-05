@@ -2,7 +2,7 @@ import React from 'react'
 import InductionsHeader from './InductionsHeader';
 import './Inductions.css';
 
-const Overview = () => {
+const Inductions = () => {
   return (
     <div className='inductions-container'>
         <div className='adjust'>
@@ -15,4 +15,4 @@ const Overview = () => {
   )
 }
 
-export default Overview;
+export default Inductions

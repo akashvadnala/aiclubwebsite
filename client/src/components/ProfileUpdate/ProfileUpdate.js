@@ -123,7 +123,7 @@ const ProfileUpdate = () => {
     <>
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
-                <h1>You are editing {username} profile</h1>
+                <h3>You are editing {username} profile</h3>
                 <form method='POST'>
                     {
                         forms.map((f)=>{

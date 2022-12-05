@@ -1,3 +1,14 @@
+.inductions-navbar {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.inductions-navbar div {
+    margin: 0.5rem 2rem 1rem 0;
+    font-size: 14px;
+}
+
 #main{
     margin: 0 auto;
     width: 1080px;

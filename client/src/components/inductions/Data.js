@@ -1,13 +1,18 @@
-import React from "react";
-import "./induct.css";
+import React from 'react'
+import InductionsHeader from './InductionsHeader';
+import './Inductions.css';
 
-const Data = () => {
-    return(
-        <div>
-            <h1>This is Data section</h1>
+const Overview = () => {
+  return (
+    <div className='inductions-container'>
+        <div className='adjust'>
+            <InductionsHeader />
+            <div className='inductions-body'>
+                This is Data Section
+            </div>
         </div>
-    );
+    </div>
+  )
 }
 
-export default Data;
-
+export default Overview;

@@ -109,7 +109,7 @@ function Team() {
           <div className='team adjust'>
               <div className='row'>
                 <div className='col-sm-5'>
-                  <h2>{teamHeading}</h2>
+                  <h3>{teamHeading}</h3>
                 </div>
                 {
                   user?user.isadmin?
