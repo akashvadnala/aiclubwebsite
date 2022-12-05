@@ -26,7 +26,7 @@ const ProjectsHome = () => {
   ]
   return (
       <div className='projects-home-container'>
-        <h3 className='header'>Projects</h3>
+        <h4 className='header'>Projects</h4>
           {
             projects.map((project)=>{
               return(

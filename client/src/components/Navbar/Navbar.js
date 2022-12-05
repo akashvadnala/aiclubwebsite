@@ -33,7 +33,7 @@ const Navbar = () => {
             },
             {
                 'show':true,
-                'link':'/inductions',
+                'link':'/inductions-b21-b20',
                 'name':'Inductions'
             },
             {

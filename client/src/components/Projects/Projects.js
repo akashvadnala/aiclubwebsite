@@ -32,7 +32,7 @@ const Projects = () => {
   return (
       <div className='project-container'>
           <div className='adjust'>
-              <h2>Projects</h2>
+              <h3>Projects</h3>
               <div className='row'>
                 {
                   projects.map((project)=>{

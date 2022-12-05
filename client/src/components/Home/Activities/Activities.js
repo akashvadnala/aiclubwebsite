@@ -6,7 +6,7 @@ const Activities = () => {
   return (
       <div className='activities-container adjust'>
           <div className='row'>
-              <h2 className='text-center py-3'>Activities</h2>
+              <h3 className='text-center py-3'>Activities</h3>
               <div className='col-md-6 col-xs-12'>
                 <EventsHome />
               </div>
