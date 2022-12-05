@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar";
-import "./induct.css";
+import "./Inductions.css";
 
 
 const Induct=()=>{

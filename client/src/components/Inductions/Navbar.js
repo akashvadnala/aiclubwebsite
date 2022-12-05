@@ -1,5 +1,5 @@
 import React from "react";
-import "./induct.css";
+import "./Inductions.css";
 import {Link} from "react-router-dom";
 
 const Navbar=()=>{
