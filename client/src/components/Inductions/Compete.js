@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Data from './Data';
 import Leaderboard from './Leaderboard';
 import Overview from './Overview';
@@ -10,8 +10,9 @@ import Competitions from '../../EditableStuff/Competitions';
 
 
 const Compete = () => {
+    const navigate = useNavigate();
     const params = new useParams();
-    const path = params.path;
+    var path = params.path;
     const spath = params.spath;
     console.log("spath",spath);
     console.log("path",path);
@@ -20,36 +21,39 @@ const Compete = () => {
     var page=null;
     const c = Competitions.hasOwnProperty(spath);
     var c1=null;
+    var p=true;
     console.log('c',c);
     if(c){
         c1 = Competitions[spath];
         console.log('c1',c1);
-        const p = c1.navs.hasOwnProperty(path);
+        if(path){
+            p = c1.navs.hasOwnProperty(path);
+        }
         console.log('p',p);
         if(p){
-            page = path;
+            switch (path) {
+                case undefined:
+                    page = <Overview title={c1.title} />
+                    break;
+                case "data":
+                    page = <Data title={c1.title} />
+                    break;
+                case "leaderboard":
+                    page = <Leaderboard title={c1.title} />
+                    break;
+                case "submissions":
+                    page = <Overview title={c1.title} />
+                    break;
+                case "register":
+                    page = <Register title={c1.title} />
+                    break;
+                            
+                default:
+                    break;
+            }
         }
     }
-    switch (path) {
-        case undefined:
-            page = <Overview title={c1.title} />
-            break;
-        case "data":
-            page = <Data title={c1.title} />
-            break;
-        case "leaderboard":
-            page = <Leaderboard title={c1.title} />
-            break;
-        case "submissions":
-            page = <Overview title={c1.title} />
-            break;
-        case "register":
-            page = <Register title={c1.title} />
-            break;
-                    
-        default:
-            break;
-    }
+    
     
   return (
     <>

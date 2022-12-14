@@ -1,5 +1,4 @@
 import React from 'react';
-import InductionsHeader from './InductionsHeader';
 
 const Register = (props) => {
     const forms=[

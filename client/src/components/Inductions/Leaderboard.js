@@ -1,6 +1,4 @@
 import React from "react";
-import InductionsHeader from "./InductionsHeader";
-
 
 const Leaderboard = (props) => {
     const title = props.title;
