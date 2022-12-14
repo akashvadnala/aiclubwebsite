@@ -19,7 +19,7 @@ const Navbar = () => {
             {
                 'show':true,
                 'link':'/projects',
-                'name':'projects'
+                'name':'Projects'
             },
             {
                 'show':false,

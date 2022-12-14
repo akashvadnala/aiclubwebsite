@@ -9,9 +9,14 @@ import TeamAdd from './components/Team/TeamAdd';
 import Error from './components/Error';
 import AddProject from './components/AddProject/AddProject';
 import Events from './components/Events/Events';
+import Inductions from './components/Inductions/Inductions';
+import Leaderboard from './components/Inductions/Leaderboard';
 import Overview from './components/Inductions/Overview';
 
+import Compete from './components/Inductions/Compete';
+
 const Routing = () => {
+
     return(
       <Routes>
         {/* Home */}
@@ -30,10 +35,13 @@ const Routing = () => {
         <Route exact path='/events' element={<Events />} />
 
         {/* Inductions */}
-        <Route exact path='/inductions-b21-b20' element={<Overview />} />
-        <Route exact path='/inductions-b21-b20/register' element={<Register />} />
-        <Route exact path='/inductions-b21-b20/data' element={<Data />} />
-        
+        {/* <Route exact path='/inductions-b21-b20' element={<Inductions />} /> */}
+        {/* <Route exact path='/inductions-b21-b20/data' element={<Data />} /> */}
+        {/* <Route exact path='/inductions-b21-b20/leaderboard' element={<Leaderboard />} /> */}
+        {/* <Route exact path='/inductions-b21-b20/register' element={<Register />} /> */}
+        <Route path='/:spath/:path' element={<Compete />} />
+        <Route path='/:spath' element={<Compete />} />
+
         {/* Others */}
         <Route path='*' element={<Error />} />
   

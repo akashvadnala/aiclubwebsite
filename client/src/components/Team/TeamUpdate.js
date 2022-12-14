@@ -28,10 +28,10 @@ const TeamUpdate = () => {
             console.log('data',res);
             console.log('Data');
             console.log(res.data);
-            if(!res.status===201){
+            setTeam(res.data);
+            if(res.status!==200){
                 navigate('/team');
             }
-            setTeam(res.data);
             if(user && user.isadmin){
                 if(user.username!==res.data.username){
                     setCheckbox(true);
@@ -41,9 +41,17 @@ const TeamUpdate = () => {
             console.log(err);
         }
     }
+    
+    useEffect(() => {
+        if(!user || !user.isadmin){
+            navigate('/team');
+        }
+    },[user]);
+
     useEffect(() => {
         getUserDataForEdit();
     },[user]);
+
     
     let name, value;
     const handleInputs = (e) => {

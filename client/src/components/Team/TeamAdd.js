@@ -171,7 +171,7 @@ const TeamAdd = () => {
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
                 <h1>Add Team Member</h1>
-                <form method="POST" encType="multipart/form-data">
+                <form method="POST" onSubmit={PostTeam} encType="multipart/form-data">
                     {
                         forms.map((f)=>{
                             return(
@@ -198,7 +198,7 @@ const TeamAdd = () => {
                         <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
                         <label class="form-check-label" for="member">Make Member</label>
                     </div>
-                    <button type="submit" name="submit" id="submit" onClick={PostTeam} className="btn btn-primary">{add}{add2}</button>
+                    <button type="submit" name="submit" id="submit" className="btn btn-primary">{add}{add2}</button>
                 </form>
             </div>
         </div>
