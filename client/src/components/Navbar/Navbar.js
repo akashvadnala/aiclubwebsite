@@ -6,6 +6,7 @@ import {SERVER_URL} from '../../EditableStuff/Config';
 import MyVerticallyCenteredModal from './MyVerticallyCenteredModal';
 import { Context } from '../../Context/Context';
 import axios from 'axios';
+import CList from '../../EditableStuff/CList';
 
 const Navbar = () => {
     
@@ -19,7 +20,7 @@ const Navbar = () => {
             {
                 'show':true,
                 'link':'/projects',
-                'name':'projects'
+                'name':'Projects'
             },
             {
                 'show':false,
@@ -31,21 +32,21 @@ const Navbar = () => {
                 'link':'/events',
                 'name':'Past Events'
             },
-            {
-                'show':true,
-                'link':'/inductions-b21-b20',
-                'name':'Inductions'
-            },
-            {
-                'show':true,
-                'link':'/about',
-                'name':'About'
-            },
-            {
-                'show':true,
-                'link':'#contact-us',
-                'name':'Contact Us'
-            }
+            // {
+            //     'show':true,
+            //     'link':'/inductions-b21-b20',
+            //     'name':'Inductions'
+            // },
+            // {
+            //     'show':true,
+            //     'link':'/about',
+            //     'name':'About'
+            // },
+            // {
+            //     'show':true,
+            //     'link':'#contact-us',
+            //     'name':'Contact Us'
+            // }
         ]
         const { user } = useContext(Context);
         console.log('user',user);
@@ -78,19 +79,43 @@ const Navbar = () => {
                         return null;
                 })
             }
+                <li className="nav-item">
+                    
+                    <div className="dropdown show">
+                        <NavLink className="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Competitions
+                        </NavLink>
+                    
+                        <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            {
+                                CList.map((c) => {
+                                    return(
+                                        <NavLink className="dropdown-item" to={`/${c}`}>{c}</NavLink>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                </li>
+                <li className="nav-item">
+                    <NavLink className="nav-link" to="/about">About</NavLink>
+                </li>
+                <li className="nav-item">
+                    <NavLink className="nav-link" to="#contact-us">Contact Us</NavLink>
+                </li>
             {
                 user?
                 <li className="nav-item">
                 
                     <div className="dropdown show">
-                        <a className="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <NavLink className="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Hello {user.firstname}
-                        </a>
+                        </NavLink>
                     
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a className="dropdown-item" href="/addproject">Add Project</a>
-                            <a className="dropdown-item" href="/myprojects">My Projects</a>
-                            {user?user.isadmin?<a className="dropdown-item" href="/admin">Admin</a>:null:null}
+                            <NavLink className="dropdown-item" to="/addproject">Add Project</NavLink>
+                            <NavLink className="dropdown-item" to="/myprojects">My Projects</NavLink>
+                            {user?user.isadmin?<NavLink className="dropdown-item" to="/admin">Admin</NavLink>:null:null}
                             <a className="dropdown-item" href="#" onClick={Logout}>Logout</a>
                         </div>
                     </div>

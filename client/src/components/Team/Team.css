@@ -56,3 +56,7 @@
     font-size: 60px;
     text-align: center;
 }
+
+.team-container a{
+    color: #0d6efd !important;
+}

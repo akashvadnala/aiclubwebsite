@@ -1,17 +1,17 @@
-import React from 'react'
-import InductionsHeader from './InductionsHeader';
+import React from 'react';
 import './Inductions.css';
+import InductionsHeader from './InductionsHeader';
 
-const Overview = () => {
+const Overview = (props) => {
+  const title = props.title;
   return (
-    <div className='inductions-container'>
-        <div className='adjust'>
-            <InductionsHeader />
-            <div className='inductions-body'>
-                This is Data Section
-            </div>
-        </div>
-    </div>
+    <>
+      {
+        <div className='data-container'>
+          This is {title} Data Tab
+      </div>
+      }
+    </>
   )
 }
 

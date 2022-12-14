@@ -166,7 +166,12 @@ getusernameforedit_username = async (req,res)=>{
         
         const user = await Team.findOne({username:username});
         // console.log(teamData);
-        res.status(201).json(user);
+        if(user){
+            return res.status(200).json(user);
+        }
+        else{
+            return res.status(201).json(user);
+        }
     }catch(err){
         console.log(err);
         res.status(422).send(`${username} not found`);
@@ -237,13 +242,15 @@ router.post('/login', async (req, res, next) => {
     }
 });
 
-router.route('/team/delete/:username').delete(async (req, res) => {
+router.route('/team/delete/:username').post(async (req, res) => {
     const {username} = req.params;
-    try{
+    const team = await Team.findOne({ username: username });
+    if(team){
         await Team.deleteOne({ username: username });
+        console.log('Deleted..');
         return res.status(201).json({ message: "Team Member Deleted Successfully"});
     }
-    catch{
+    else{
         return res.status(200).json({ error: "Cannot Delete Team Member"});
     }
 })

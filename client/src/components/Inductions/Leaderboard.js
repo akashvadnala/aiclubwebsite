@@ -1,12 +1,15 @@
 import React from "react";
-import "./Inductions.css";
 
-
-const Leaderboard = () => {
+const Leaderboard = (props) => {
+    const title = props.title;
     return(
-        <div>
-            <h1>This is Data section</h1>
-        </div>
+        <>
+            {
+                <div className="leaderboard-container">
+                    This is {title} Leaderboard Tab
+                </div>
+            }
+        </>
     );
 }
 

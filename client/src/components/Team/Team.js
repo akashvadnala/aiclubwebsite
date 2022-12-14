@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { NavLink } from 'react-router-dom';
 import './Team.css';
 import {Context} from '../../Context/Context';
+import {SERVER_URL} from '../../EditableStuff/Config';
 
 const TeamCard = React.lazy(() => import('./TeamCard'));
 
@@ -19,7 +20,7 @@ function Team() {
       axios.get('http://localhost:5000/getTeam')
       .then(data => {
         console.log('data');
-        console.log(data.data[0].firstname);
+        console.log(data.data);
         setTeams(data.data);
         setTeamHeading('Team Members');
         setArchTeam(false);
@@ -35,7 +36,7 @@ function Team() {
       axios.get('http://localhost:5000/getArchTeam')
       .then(data => {
         console.log('data');
-        console.log(data.data[0].firstname);
+        console.log(data.data);
         setTeams(data.data);
         setTeamHeading('Archived Team Members');
         setArchTeam(true);
@@ -64,6 +65,7 @@ function Team() {
     }
    } 
    const { user } = useContext(Context);
+
   //  const teams=[
   //   {
   //     'imgsrc':'https://aiclub.nitc.ac.in/img/drive/jayaraj%20sir.jpg',
@@ -96,6 +98,16 @@ function Team() {
   //     'isadmin':true
   //   }
   // ]
+  const PostDelete = async (username) => {
+    const res = await axios.post(`${SERVER_URL}/team/delete/${username}`);
+    if(res.status===200){
+      console.log('User not deleted');
+    }
+    else if(res.status===201){
+      // navigate('/team');
+      setTeams(Team.filter((item) => item.username !== username));
+    }
+  }
   return (
     <>
     <Helmet>
@@ -130,7 +142,6 @@ function Team() {
               </div>
               {/* <h4>Team Members</h4> */}
               <div className='row'>
-                <Suspense fallback={<div>Loading...</div>}>
                   {
                     teams.map(team => {
                       return(
@@ -138,7 +149,6 @@ function Team() {
                       )
                     })
                   }
-                </Suspense>
               </div>
           </div>
       </div>

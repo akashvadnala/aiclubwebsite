@@ -1,13 +1,5 @@
 import React, { Suspense } from "react";
 import Navbar from './components/Navbar/Navbar';
-
-import Home from './components/Home/Home';
-import Team from './components/Team/Team';
-import Projects from './components/Projects/Projects';
-import Induct from './components/Inductions/Induct';
-import Overview from "./components/Inductions/Overview";
-import Data from "./components/Inductions/Data";
-import Leaderboard from "./components/Inductions/Leaderboard";
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import ScrollToTop from './ScrollToTop';
@@ -44,7 +36,6 @@ function App() {
       <Suspense fallback={<div>Loading...</div>}>
         <Routing />
       </Suspense>
-        <Routing />
       <Footer />
     </>
   );

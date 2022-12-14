@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Register = () => {
+const Register = (props) => {
     const forms=[
         {
             'type':'text',
@@ -31,24 +31,22 @@ const Register = () => {
   return (
     <>
         <div className='register-container'>
-            <div className='register adjust'>
-                <h1>Register</h1>
-                <form>
-                    {
-                        forms.map((f)=>{
-                            return(
-                                <div class="form-group my-3 row">
-                                    <label for={f.id} className='col-sm-2 text-end'>{f.des} :</label>
-                                    <div className='col-sm-10'>
-                                        <input type={f.type} class="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} />
-                                    </div>
+            <h3>Register</h3>
+            <form>
+                {
+                    forms.map((f)=>{
+                        return(
+                            <div class="form-group my-3 row">
+                                <label for={f.id} className='col-sm-2 text-end'>{f.des} :</label>
+                                <div className='col-sm-10'>
+                                    <input type={f.type} class="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} />
                                 </div>
-                            )
-                        })
-                    }
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
+                            </div>
+                        )
+                    })
+                }
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         </div>
     </>
   )

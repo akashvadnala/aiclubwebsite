@@ -6,12 +6,16 @@ import {SERVER_URL} from '../../EditableStuff/Config';
 function TeamCard({ team, isadmin, isdelete }) {
   const navigate = useNavigate();
   const PostDelete = async (username) => {
-    const res = await axios.delete(`${SERVER_URL}/team/delete/${username}`);
-    if(res.status===200){
-      
-    }
-    else if(res.status===201){
-      navigate('/team');
+    const confirmed = window.confirm(`Are you sure to delete the user ${username}?`);
+    if(confirmed){
+      const res = await axios.post(`${SERVER_URL}/team/delete/${username}`);
+      if(res.status===200){
+        console.log('User not deleted');
+      }
+      else if(res.status===201){
+        // navigate('/team');
+        window.location.reload(true);
+      }
     }
   }
   return (
@@ -27,7 +31,7 @@ function TeamCard({ team, isadmin, isdelete }) {
                   isadmin?
                   <div className='admin-opt'>
                     <span>
-                      <a href={`/team/edit/${team.username}`}>Edit </a>    
+                      <a href={`/team/edit/${team.username}`}>Edit </a> 
                     </span>
                     {
                       isdelete?
@@ -36,7 +40,7 @@ function TeamCard({ team, isadmin, isdelete }) {
                         <>
                           ·
                           <span> 
-                            <a href="#" onClick={PostDelete(team.username)}> Delete</a>
+                            <a type="button" onClick={() => {PostDelete(team.username)}}>&nbsp;Delete</a>
                           </span>
                         </>
                     }
