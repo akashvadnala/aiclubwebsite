@@ -29,24 +29,23 @@ const TeamUpdate = () => {
             console.log('Data');
             console.log(res.data);
             setTeam(res.data);
-            if(res.status!==200){
-                navigate('/team');
-            }
             if(user && user.isadmin){
                 if(user.username!==res.data.username){
                     setCheckbox(true);
                 }
             }
+            else{
+                navigate('/team');
+            }
         }catch(err){
             console.log(err);
         }
     }
-    
-    useEffect(() => {
-        if(!user || !user.isadmin){
-            navigate('/team');
-        }
-    },[user]);
+    // useEffect(() => {
+    //     if(!user || !user.isadmin){
+    //         navigate('/team');
+    //     }
+    // },[user]);
 
     useEffect(() => {
         getUserDataForEdit();
@@ -79,7 +78,7 @@ const TeamUpdate = () => {
         setSubmit('Updating');
         setSubmit2(<i class="fa fa-spinner fa-spin"></i>);
         console.log('Postteam');
-        // const {firstname,lastname,profession,description,username,photo,email,password,cpassword,isadmin,ismember} = user;
+        // const {firstname,lastname,profession,description,username,photo,email,password,cpassword,isadmin,ismember,canCreateCompetitions} = user;
     
         // const firstname = user.firstname;
         // const lastname = user.lastname;
@@ -90,7 +89,7 @@ const TeamUpdate = () => {
         // const email = user.email;
         // const isadmin = user.isadmin;
         // const ismember = user.ismember;
-        // console.log(firstname,lastname,profession,description,username,photo,email,isadmin,ismember);
+        // console.log(firstname,lastname,profession,description,username,photo,email,isadmin,ismember,canCreateCompetitions);
         team.ismember = team.ismember || team.isadmin;
         var imgurl;
         if(Img){
@@ -210,6 +209,10 @@ const TeamUpdate = () => {
                                 <div className="form-group form-check my-3">
                                     <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
                                     <label className="form-check-label" for="member">Make Member</label>
+                                </div>
+                                <div className="form-group form-check my-3">
+                                    <input type="checkbox" checked={team.canCreateCompetitions} name="canCreateCompetitions" onChange={handleCheck} className="form-check-input" id="canCreateCompetitions" />
+                                    <label className="form-check-label" for="canCreateCompetitions">Can Create Competitions</label>
                                 </div>
                             </>
                         :

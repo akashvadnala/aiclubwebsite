@@ -43,6 +43,10 @@ const teamSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
+    canCreateCompetitions:{
+        type: Boolean,
+        required: true
+    },
     password: {
         type: String,
         required: true
@@ -73,7 +77,8 @@ teamSchema.pre('save', async function(next){
 
 teamSchema.methods.generateAuthToken = async function(){
     try{
-        let token_d = jwt.sign({ _id: this._id }, process.env.SECRET_kEY);
+        console.log(process.env.SECRET_KEY);
+        let token_d = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
         this.tokens = this.tokens.concat({ token: token_d });
         await this.save();
         return token_d;

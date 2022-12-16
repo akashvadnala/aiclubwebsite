@@ -9,6 +9,7 @@ import AddProject from './components/AddProject/AddProject';
 import Events from './components/Events/Events';
 
 import Compete from './components/Inductions/Compete';
+import CreateCompetition from './components/CreateCompetition/CreateCompetition';
 
 const Routing = () => {
 
@@ -34,6 +35,7 @@ const Routing = () => {
         {/* <Route exact path='/inductions-b21-b20/data' element={<Data />} /> */}
         {/* <Route exact path='/inductions-b21-b20/leaderboard' element={<Leaderboard />} /> */}
         {/* <Route exact path='/inductions-b21-b20/register' element={<Register />} /> */}
+        <Route exact path='/create-competition' element={<CreateCompetition />} />
         <Route path='/:spath/:path' element={<Compete />} />
         <Route path='/:spath' element={<Compete />} />
 

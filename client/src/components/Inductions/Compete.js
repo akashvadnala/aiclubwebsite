@@ -30,27 +30,37 @@ const Compete = () => {
             p = c1.navs.hasOwnProperty(path);
         }
         console.log('p',p);
+        if(path===undefined){
+            path="overview";
+        }
         if(p){
             switch (path) {
                 case undefined:
-                    page = <Overview title={c1.title} />
-                    break;
-                case "data":
-                    page = <Data title={c1.title} />
-                    break;
-                case "leaderboard":
-                    page = <Leaderboard title={c1.title} />
-                    break;
-                case "submissions":
-                    page = <Overview title={c1.title} />
+                    page = <Data title={c1.title} info={c1[path]} path='Overview' />
                     break;
                 case "register":
-                    page = <Register title={c1.title} />
+                    page = <Register title={c1.title} info={c1[path]} path={c1.navs[path]} />
                     break;
-                            
                 default:
+                    page = <Data title={c1.title} info={c1[path]} path={c1.navs[path]} />
                     break;
             }
+                // case "data":
+                //     page = <Data title={c1.title} info={c1[path]} />
+                //     break;
+                // case "leaderboard":
+                //     page = <Leaderboard c={c1} />
+                //     break;
+                // case "submissions":
+                //     page = <Overview c={c1} />
+                //     break;
+                // case "register":
+                //     page = <Register c={c1} />
+                //     break;
+                            
+                // default:
+                //     break;
+            // }
         }
     }
     
@@ -67,7 +77,7 @@ const Compete = () => {
             </div>
         :
             <Error />
-    }
+        }
         
     </>
   )

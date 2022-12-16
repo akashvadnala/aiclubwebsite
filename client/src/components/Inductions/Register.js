@@ -31,7 +31,8 @@ const Register = (props) => {
   return (
     <>
         <div className='register-container'>
-            <h3>Register</h3>
+            <p>This is {props.title}</p>
+            <h4>{props.path}</h4>
             <form>
                 {
                     forms.map((f)=>{

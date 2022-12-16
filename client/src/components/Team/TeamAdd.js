@@ -17,7 +17,8 @@ const TeamAdd = () => {
         password:"",
         cpassword:"",
         isadmin:false,
-        ismember:false
+        ismember:false,
+        canCreateCompetitions:false
     });
     const [ add, setAdd ] = useState('Submit');
     const [ add2, setAdd2 ] =useState();
@@ -48,7 +49,7 @@ const TeamAdd = () => {
     
     const PostTeam = async (e) => {
         e.preventDefault();
-        const {firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember} = team;
+        const {firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember,canCreateCompetitions} = team;
         // console.log(firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember);
         console.log('photo',photo);
         if(!firstname || !lastname || !profession || !description || !username || !email || !year || !photo || !password || !cpassword ){
@@ -87,7 +88,8 @@ const TeamAdd = () => {
                         'password':password,
                         'cpassword':cpassword,
                         'isadmin':isadmin,
-                        'ismember':ismember
+                        'ismember':ismember,
+                        'canCreateCompetitions':canCreateCompetitions
                     },
                     {
                         headers:{"Content-Type" : "application/json"}
@@ -197,6 +199,10 @@ const TeamAdd = () => {
                     <div className="form-group form-check my-3">
                         <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
                         <label class="form-check-label" for="member">Make Member</label>
+                    </div>
+                    <div className="form-group form-check my-3">
+                        <input type="checkbox" checked={team.canCreateCompetitions} name="canCreateCompetitions" onChange={handleCheck} className="form-check-input" id="canCreateCompetitions" />
+                        <label class="form-check-label" for="canCreateCompetitions">Can Create Competitions</label>
                     </div>
                     <button type="submit" name="submit" id="submit" className="btn btn-primary">{add}{add2}</button>
                 </form>

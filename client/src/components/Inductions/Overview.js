@@ -1,16 +1,16 @@
 import React from 'react';
 import './Inductions.css';
-import InductionsHeader from './InductionsHeader';
 
 const Overview = (props) => {
-  const title = props.title;
+  const title = props.c.title;
+  const overview = props.c.overview;
   return (
     <>
-      {
-        <div className='overview-container'>
-          This is {title} Overview Tab
+      <div className='overview-container'>
+        This is {title} Overview Tab
+        <h4>Overview</h4>
+        <p>{overview}</p>
       </div>
-      }
     </>
   )
 }

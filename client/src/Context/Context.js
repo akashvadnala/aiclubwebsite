@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import Reducer from './Reducer';
+import { SERVER_URL } from '../EditableStuff/Config';
 
 const INIT_STATE = {
     user: null
@@ -12,7 +13,7 @@ const ContextProvider = ({ children }) => {
     let [state, dispatch] = useReducer(Reducer, INIT_STATE);
     const newState = async () => {
         try{
-            const res = await axios.get(`http://localhost:5000/getUserData`,
+            const res = await axios.get(`${SERVER_URL}/getUserData`,
             {withCredentials: true});
             console.log('usercontext',res);
             dispatch({
