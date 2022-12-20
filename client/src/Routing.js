@@ -11,6 +11,8 @@ import Blogs from './components/Blogs/Blogs';
 import BlogDisplay from './components/Blogs/BlogDisplay';
 import Compete from './components/Inductions/Compete';
 import TextEditor from './components/Blogs/Editor/TextEditor'
+import CreateCompetition from './components/CreateCompetition/CreateCompetition';
+
 
 const Routing = () => {
 
@@ -45,8 +47,9 @@ const Routing = () => {
         {/* <Route exact path='/inductions-b21-b20/data' element={<Data />} /> */}
         {/* <Route exact path='/inductions-b21-b20/leaderboard' element={<Leaderboard />} /> */}
         {/* <Route exact path='/inductions-b21-b20/register' element={<Register />} /> */}
-        <Route path='/:spath/:path' element={<Compete />} />
-        <Route path='/:spath' element={<Compete />} />
+        <Route exact path='/create-competition' element={<CreateCompetition />} />
+        <Route exact path='/competitions/:spath/:path' element={<Compete />} />
+        <Route exact path='/competitions/:spath' element={<Compete />} />
 
         {/* Others */}
         <Route path='*' element={<Error />} />

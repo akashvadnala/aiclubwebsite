@@ -33,7 +33,7 @@ const Events = () => {
   return (
       <div className='events-container'>
           <div className='adjust'>
-              <h2>Past Events</h2>
+              <h3>Past Events</h3>
               <div className='row'>
                 {
                   events.map((event)=>{

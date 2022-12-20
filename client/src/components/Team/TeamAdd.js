@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Context } from '../../Context/Context';
+import { SERVER_URL } from '../../EditableStuff/Config';
 
 const TeamAdd = () => {
     const navigate = useNavigate();
@@ -17,17 +18,18 @@ const TeamAdd = () => {
         password:"",
         cpassword:"",
         isadmin:false,
-        ismember:false
+        ismember:false,
+        canCreateCompetitions:false
     });
+    const { user } = useContext(Context);
     const [ add, setAdd ] = useState('Submit');
     const [ add2, setAdd2 ] =useState();
-    const { user } = useContext(Context);
     useEffect(()=>{
         if(!user || !user.isadmin){
             navigate('/team');
         }
     },[user]);
-    let name, value;
+    let name, value, checked;
     const handleInputs = (e) => {
         name = e.target.name;
         value = e.target.value;
@@ -42,13 +44,15 @@ const TeamAdd = () => {
         console.log(team);
     }
     const handleCheck = (e) =>{
-        setTeam({...team, [e.target.name] : e.target.checked});
+        name = e.target.name;
+        checked = e.target.checked;
+        setTeam({...team, [name] : checked});
     }
 
     
     const PostTeam = async (e) => {
         e.preventDefault();
-        const {firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember} = team;
+        const {firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember,canCreateCompetitions} = team;
         // console.log(firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember);
         console.log('photo',photo);
         if(!firstname || !lastname || !profession || !description || !username || !email || !year || !photo || !password || !cpassword ){
@@ -64,7 +68,7 @@ const TeamAdd = () => {
             var imgurl;
 
             try{
-                const img = await axios.post('http://localhost:5000/imgupload',data);
+                const img = await axios.post(`${SERVER_URL}/imgupload`,data);
                 console.log('img',img);
                 imgurl = img.data;
                 team.photo=imgurl
@@ -74,21 +78,23 @@ const TeamAdd = () => {
             console.log('imgurl',imgurl);
             
             try{
-                const teamdata = await axios.post('http://localhost:5000/teamadd',
-                    {
-                        'firstname':firstname,
-                        'lastname':lastname,
-                        'profession':profession,
-                        'description':description,
-                        'username':username,
-                        'email':email,
-                        'year':year,
-                        'photo':imgurl,
-                        'password':password,
-                        'cpassword':cpassword,
-                        'isadmin':isadmin,
-                        'ismember':ismember
-                    },
+                const teamdata = await axios.post(`${SERVER_URL}/teamadd`,
+                    // {
+                    //     'firstname':firstname,
+                    //     'lastname':lastname,
+                    //     'profession':profession,
+                    //     'description':description,
+                    //     'username':username,
+                    //     'email':email,
+                    //     'year':year,
+                    //     'photo':imgurl,
+                    //     'password':password,
+                    //     'cpassword':cpassword,
+                    //     'isadmin':isadmin,
+                    //     'ismember':ismember,
+                    //     'canCreateCompetitions':canCreateCompetitions
+                    // },
+                    team,
                     {
                         headers:{"Content-Type" : "application/json"}
                     }
@@ -170,7 +176,7 @@ const TeamAdd = () => {
     <>
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
-                <h1>Add Team Member</h1>
+                <h3>Add Team Member</h3>
                 <form method="POST" onSubmit={PostTeam} encType="multipart/form-data">
                     {
                         forms.map((f)=>{
@@ -197,6 +203,10 @@ const TeamAdd = () => {
                     <div className="form-group form-check my-3">
                         <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
                         <label class="form-check-label" for="member">Make Member</label>
+                    </div>
+                    <div className="form-group form-check my-3">
+                        <input type="checkbox" checked={team.canCreateCompetitions} name="canCreateCompetitions" onChange={handleCheck} className="form-check-input" id="canCreateCompetitions" />
+                        <label class="form-check-label" for="canCreateCompetitions">Can Create Competitions</label>
                     </div>
                     <button type="submit" name="submit" id="submit" className="btn btn-primary">{add}{add2}</button>
                 </form>
