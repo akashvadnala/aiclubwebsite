@@ -1,18 +1,18 @@
 import React from 'react';
 import './Inductions.css';
-import InductionsHeader from './InductionsHeader';
 
-const Overview = (props) => {
-  const title = props.title;
+const Data = (props) => {
+  const title = props.c.title;
+  const info = props.c.description;
   return (
     <>
-      {
-        <div className='data-container'>
-          This is {title} Data Tab
+      <div className='data-container'>
+        This is {title} Data Tab
+        <h4>Data</h4>
+        <p>{info}</p>
       </div>
-      }
     </>
   )
 }
 
-export default Overview;
+export default Data;

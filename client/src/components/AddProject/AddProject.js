@@ -5,7 +5,7 @@ const AddProject = () => {
     <>
         <div className='addproject-container'>
             <div className='adjust'>
-                <h2>Add Project</h2>
+               <h3>Add Project</h3>
             </div>
         </div>
     </>

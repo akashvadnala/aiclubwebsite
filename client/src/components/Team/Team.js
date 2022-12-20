@@ -15,9 +15,10 @@ function Team() {
   const [ archStat, setArchStat ] = useState('Archived');
   const [ msg, setMsg ] = useState();
 
+  const { user } = useContext(Context);
   const getTeamData = async() => {
     try{
-      axios.get('http://localhost:5000/getTeam')
+      axios.get(`${SERVER_URL}/getTeam`)
       .then(data => {
         console.log('data');
         console.log(data.data);
@@ -33,7 +34,7 @@ function Team() {
 
   const getArchTeamData = async() => {
     try{
-      axios.get('http://localhost:5000/getArchTeam')
+      axios.get(`${SERVER_URL}/getArchTeam`)
       .then(data => {
         console.log('data');
         console.log(data.data);
@@ -64,7 +65,6 @@ function Team() {
       getArchTeamData();
     }
    } 
-   const { user } = useContext(Context);
 
   //  const teams=[
   //   {
