@@ -1,0 +1,13 @@
+/* .card:hover {
+        transform: translate3D(0, -1px, 0) scale(1.03);
+        transition: all .5s ease;
+    } */
+
+.card{
+    max-width:414px;
+    }
+    
+.card-img-top{
+    height: 200px;
+    width: 100%;
+}
