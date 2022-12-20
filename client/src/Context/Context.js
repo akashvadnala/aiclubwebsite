@@ -15,7 +15,7 @@ const ContextProvider = ({ children }) => {
         try{
             const res = await axios.get(`${SERVER_URL}/getUserData`,
             {withCredentials: true});
-            console.log('usercontext',res);
+            // console.log('usercontext',res);
             dispatch({
                 type: "LOGGED_IN",
                 payload: {

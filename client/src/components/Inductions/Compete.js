@@ -1,86 +1,88 @@
-import React, { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import Data from './Data';
 import Leaderboard from './Leaderboard';
 import Overview from './Overview';
 import Register from './Register';
 import Error from '../Error';
 import InductionsHeader from './InductionsHeader';
-import Competitions from '../../EditableStuff/Competitions';
+import axios from 'axios';
+import { SERVER_URL } from '../../EditableStuff/Config';
+// import Competitions from '../../EditableStuff/Competitions';
 
 
 const Compete = () => {
-    const navigate = useNavigate();
     const params = new useParams();
     var path = params.path;
     const spath = params.spath;
     console.log("spath",spath);
     console.log("path",path);
-    console.log('competitions',Competitions);
-    // if(!path) path=null;
-    var page=null;
-    const c = Competitions.hasOwnProperty(spath);
-    var c1=null;
-    var p=true;
-    console.log('c',c);
-    if(c){
-        c1 = Competitions[spath];
-        console.log('c1',c1);
-        if(path){
-            p = c1.navs.hasOwnProperty(path);
-        }
-        console.log('p',p);
-        if(path===undefined){
-            path="overview";
-        }
-        if(p){
-            switch (path) {
-                case undefined:
-                    page = <Data title={c1.title} info={c1[path]} path='Overview' />
-                    break;
-                case "register":
-                    page = <Register title={c1.title} info={c1[path]} path={c1.navs[path]} />
-                    break;
-                default:
-                    page = <Data title={c1.title} info={c1[path]} path={c1.navs[path]} />
-                    break;
-            }
-                // case "data":
-                //     page = <Data title={c1.title} info={c1[path]} />
-                //     break;
-                // case "leaderboard":
-                //     page = <Leaderboard c={c1} />
-                //     break;
-                // case "submissions":
-                //     page = <Overview c={c1} />
-                //     break;
-                // case "register":
-                //     page = <Register c={c1} />
-                //     break;
-                            
-                // default:
-                //     break;
-            // }
+    const [ page, setPage ] = useState(null);
+    const [ comp, setComp ] = useState([]);
+
+    const getCompete = async () => {
+        try{
+            axios.get(`${SERVER_URL}/getCompete/${spath}`)
+            .then(data => {
+                if(data.status===201){
+                    setComp(data.data);
+                }
+                else{
+                    console.log('Competition not found');
+                }
+            })
+        }catch(err){
+            console.log('Connot get Compete data');
         }
     }
     
-    
+    useEffect(() => {
+        getCompete();
+    },[]);
+
+    const getPage = async (path) => {
+        console.log('comp',comp);
+        // window.history.replaceState()
+        switch (path) {
+            case undefined:
+                setPage(<Overview c={comp} />);
+                break;
+            case 'overview':
+                setPage(<Overview c={comp} />);
+                break;
+            case 'data':
+                setPage(<Data c={comp} />);
+                break;
+            default:
+                break;
+        }
+        console.log('page',page);
+    }
+
+    useEffect(() => {
+        getPage(path);
+    },[comp,path]);
+
+    const keys = {
+        'overview':'Overview',
+        'data':'Data',
+    }
+
   return (
     <>
         {
-        page?
-            <div className='compete-container'>
-                <div className='adjust'>
-                    <InductionsHeader c={c1}/>
-                    {page}
+            page?
+                <div className='compete-container'>
+                    <div className='adjust'>
+                        <InductionsHeader url={spath} title={comp.title} description={comp.description} />
+                        {page}
+                    </div>
                 </div>
-            </div>
-        :
-            <Error />
+            :
+                <Error />
         }
-        
     </>
   )
 }
 
-export default Compete
+export default Compete;

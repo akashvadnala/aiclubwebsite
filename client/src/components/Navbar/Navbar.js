@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -6,9 +6,27 @@ import {SERVER_URL} from '../../EditableStuff/Config';
 import MyVerticallyCenteredModal from './MyVerticallyCenteredModal';
 import { Context } from '../../Context/Context';
 import axios from 'axios';
-import CList from '../../EditableStuff/CList';
+// import CList from '../../EditableStuff/CList';
 
 const Navbar = () => {
+
+    const [compete,setCompete] = useState([]);
+
+    const getCompeteNames = async () => {
+        try{
+            axios.get(`${SERVER_URL}/getCompeteNames`)
+            .then(data => {
+                console.log('competenames',data.data);
+                setCompete(data.data);
+            })
+        }catch(err){
+            console.log('Cannot get Compete Names');
+        }
+    }
+
+    useEffect(() => {
+        getCompeteNames();
+    },[]);
     
     const RenderMenu = () =>{
         const navs = [
@@ -90,9 +108,9 @@ const Navbar = () => {
                     
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             {
-                                CList.map((c) => {
+                                compete.map((c) => {
                                     return(
-                                        <NavLink className="dropdown-item" to={`/${c}`}>{c}</NavLink>
+                                        <NavLink className="dropdown-item" to={`/competitions/${c.url}`}>{c.title}</NavLink>
                                     )
                                 })
                             }
@@ -115,7 +133,7 @@ const Navbar = () => {
                         </NavLink>
                     
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            {user?user.canCreateCompetitions?<NavLink className="dropdown-item" to="/create-competition">Create Competition</NavLink>:null:null}
+                            {user?(user.canCreateCompetitions || user.isadmin)?<NavLink className="dropdown-item" to="/create-competition">Create Competition</NavLink>:null:null}
                             <NavLink className="dropdown-item" to="/addproject">Add Project</NavLink>
                             <NavLink className="dropdown-item" to="/myprojects">My Projects</NavLink>
                             {user?user.isadmin?<NavLink className="dropdown-item" to="/admin">Admin</NavLink>:null:null}

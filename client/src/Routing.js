@@ -36,8 +36,8 @@ const Routing = () => {
         {/* <Route exact path='/inductions-b21-b20/leaderboard' element={<Leaderboard />} /> */}
         {/* <Route exact path='/inductions-b21-b20/register' element={<Register />} /> */}
         <Route exact path='/create-competition' element={<CreateCompetition />} />
-        <Route path='/:spath/:path' element={<Compete />} />
-        <Route path='/:spath' element={<Compete />} />
+        <Route exact path='/competitions/:spath/:path' element={<Compete />} />
+        <Route exact path='/competitions/:spath' element={<Compete />} />
 
         {/* Others */}
         <Route path='*' element={<Error />} />

@@ -41,15 +41,15 @@ const TeamUpdate = () => {
             console.log(err);
         }
     }
-    // useEffect(() => {
-    //     if(!user || !user.isadmin){
-    //         navigate('/team');
-    //     }
-    // },[user]);
+    useEffect(() => {
+        if(!user || !user.isadmin){
+            navigate('/team');
+        }
+    },[user]);
 
     useEffect(() => {
         getUserDataForEdit();
-    },[user]);
+    },[team]);
 
     
     let name, value;

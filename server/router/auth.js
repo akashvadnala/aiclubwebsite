@@ -8,6 +8,60 @@ const authenticate = require('../middleware/authenticate');
 require('../db/conn');
 const Team = require('../model/teamSchema');
 const File = require('../model/fileSchema');
+const Competitions = require('../model/competitionSchema');
+// console.log('Competitions',Competitions.obj);
+// console.log('Team',Team.findOne({email:'akashvadanala123@gmail.com'}));
+
+router.route('/getCompete/:url').get(async (req,res) => {
+    console.log('params',req.params);
+    const url = req.params.url;
+    // const path = req.params.path;
+    const data = await Competitions.findOne({url:url});
+    console.log('compete',data);
+    if(data){
+        res.status(201).json(data);
+    }
+    else{
+        res.status(200).json(null);
+    }
+});
+
+router.route('/competitions').post(async (req,res) => {
+    const title = req.body.title;
+    const description = req.body.description;
+    const url = req.body.url;
+    const public = req.body.public;
+    const navs=[];
+    const competeExist = await Competitions.findOne({url:url});
+    console.log('exist',competeExist);
+    if(competeExist){
+        return res.status(422).json({error:"Competition Already Exist"});
+    }
+    try{
+        const compete = new Competitions({
+            url:url,
+            title:title,
+            description:description,
+            public:public,
+            navs:navs
+        });
+        await compete.save();
+
+        console.log(`Competition Created`);
+        // res.send(`${url} created`);
+        res.status(201).json({message:"Competition Created"});
+    }catch(err){
+        console.log('Cannot create competition');
+        res.status(200).json({message:"Connot create competition"});
+
+    }
+});
+
+router.route('/getCompeteNames').get(async (req,res)=>{
+    const data = await Competitions.find({public:true});
+    console.log('data',data);
+    res.status(201).json(data);
+});
 
 router.route('/').get((req,res)=>{
     res.send(`Hello world from the server router js`);
@@ -126,7 +180,8 @@ const teamadd = async (req,res) => {
             password:password,
             cpassword:cpassword,
             isadmin:isadmin,
-            ismember:ismember
+            ismember:ismember,
+            canCreateCompetitions:canCreateCompetitions
         });
 
         const saltRounds = 10;
@@ -146,7 +201,6 @@ router.route('/teamadd').post(teamadd);
 
 const getTeam = async (req,res)=>{
     const teamData = await Team.find({ismember:true});
-    // console.log(teamData);
     res.status(201).json(teamData);
 }
 
