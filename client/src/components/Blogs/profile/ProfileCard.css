@@ -1,0 +1,84 @@
+.ProfileCard {
+    margin: 2rem;
+    padding: 0;
+}
+
+.ProfileCard .card {
+    width: 350px;
+    background-color: #efefef;
+    border: none;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.ProfileCard .image img {
+    transition: all 0.5s
+}
+
+.ProfileCard .card:hover .image img {
+    transform: scale(1.5)
+}
+
+.ProfileCard .btn {
+    height: 140px;
+    width: 140px;
+    border-radius: 50%
+}
+
+.ProfileCard .name {
+    font-size: 22px;
+    font-weight: bold
+}
+
+.ProfileCard .idd {
+    font-size: 14px;
+    font-weight: 600
+}
+
+.ProfileCard .idd1 {
+    font-size: 12px
+}
+
+.ProfileCard .number {
+    font-size: 22px;
+    font-weight: bold
+}
+
+.ProfileCard .follow {
+    font-size: 12px;
+    font-weight: 500;
+    color: #444444
+}
+
+.ProfileCard .btn1 {
+    height: 40px;
+    width: 150px;
+    border: none;
+    background-color: #000;
+    color: #aeaeae;
+    font-size: 15px
+}
+
+.ProfileCard .text span {
+    font-size: 13px;
+    color: #545454;
+    font-weight: 500
+}
+
+.ProfileCard .icons i {
+    font-size: 19px
+}
+
+.ProfileCard hr .new1 {
+    border: 1px solid
+}
+
+.ProfileCard .join {
+    font-size: 14px;
+    color: #313030;
+    font-weight: bold
+}
+
+.ProfileCard .date {
+    background-color: #ccc
+}

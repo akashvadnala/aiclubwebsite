@@ -9,21 +9,6 @@ import Footer from './components/Footer/Footer';
 
 const Routing = React.lazy(() => import("./Routing.js"))
 
-
-// const Routing = () => {
-//   return(
-//     <Routes>
-//       <Route path='/' element={<Home />} />
-//       <Route path='/team' element={<Team />} />
-//       <Route path='/projects' element={<Projects />} />
-//       <Route path='/inductions' element={<Induct />} />
-//       <Route exact path='/inductions/overview' element={<Overview />} />
-//       <Route exact path='/inductions/data' element={<Data />} />
-//       <Route exact path='/inductions/leaderboard' element={<Leaderboard />} />
-//     </Routes>
-//   )
-// }
-
 function App() {
   
   return (

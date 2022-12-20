@@ -23,7 +23,7 @@ const Navbar = () => {
                 'name':'Projects'
             },
             {
-                'show':false,
+                'show':true,
                 'link':'/blogs',
                 'name':'Blogs'
             },
@@ -71,7 +71,7 @@ const Navbar = () => {
                 navs.map((nav)=>{
                     if(nav.show)
                         return(
-                            <li className="nav-item">
+                            <li className="nav-item" key={nav.link}>
                                 <NavLink className="nav-link" to={nav.link}>{nav.name}</NavLink>
                             </li>
                         )
@@ -90,7 +90,7 @@ const Navbar = () => {
                             {
                                 CList.map((c) => {
                                     return(
-                                        <NavLink className="dropdown-item" to={`/${c}`}>{c}</NavLink>
+                                        <NavLink key={c} className="dropdown-item" to={`/${c}`}>{c}</NavLink>
                                     )
                                 })
                             }
@@ -138,7 +138,7 @@ const Navbar = () => {
   return (
         <nav variant="primary" className="navbar navbar-expand-lg">
             <div className="container-fluid">
-                <NavLink className="navbar-brand title" to='/'>Navbar</NavLink>
+                <NavLink className="navbar-brand title" to='/'>AI CLUB</NavLink>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
                 </button>

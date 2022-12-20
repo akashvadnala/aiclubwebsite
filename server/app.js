@@ -19,6 +19,7 @@ console.log('dir',path.resolve('uploads'));
 //routes
 app.use(require('./router/auth'));
 app.use(require('./router/inductions'));
+// app.use(require('./router/blogs'));
 
 app.get('/',(req,res) => {
     res.send(`Hello from server..`);
