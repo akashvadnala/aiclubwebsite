@@ -7,9 +7,12 @@ import TeamAdd from './components/Team/TeamAdd';
 import Error from './components/Error';
 import AddProject from './components/AddProject/AddProject';
 import Events from './components/Events/Events';
-
+import Blogs from './components/Blogs/Blogs';
+import BlogDisplay from './components/Blogs/BlogDisplay';
 import Compete from './components/Inductions/Compete';
+import TextEditor from './components/Blogs/Editor/TextEditor'
 import CreateCompetition from './components/CreateCompetition/CreateCompetition';
+
 
 const Routing = () => {
 
@@ -30,6 +33,15 @@ const Routing = () => {
         {/* Events */}
         <Route exact path='/events' element={<Events />} />
 
+        {/* Blogs */}
+        <Route exact path='/blogs' element={<Blogs />} />
+
+        {/* Blog Display */}
+        <Route path='/blogs/:id' element={<BlogDisplay />} />
+
+        {/* Blog Editor */}
+        <Route path='/blogs/editor/add' element={<TextEditor />} />
+        
         {/* Inductions */}
         {/* <Route exact path='/inductions-b21-b20' element={<Inductions />} /> */}
         {/* <Route exact path='/inductions-b21-b20/data' element={<Data />} /> */}
