@@ -48,7 +48,7 @@ const TeamUpdate = () => {
 
     useEffect(() => {
         getUserDataForEdit();
-    },[team]);
+    },[]);
 
     
     let name, value;
@@ -154,12 +154,6 @@ const TeamUpdate = () => {
             'id':'description',
             'des':'Description',
             'val':team.description
-        },
-        {
-            'type':'text',
-            'id':'username',
-            'des':'Username',
-            'val':team.username
         },
         {
             'type':'email',
