@@ -34,7 +34,7 @@ const Blogitem = (props) => {
           </p>
           <NavLink
             rel="noreferrer"
-            to={`/blogs/${props.blog.id}`}
+            to={`/blogs/${props.blog.url}`}
             className="btn btn-sm btn-dark"
           >
             Read More

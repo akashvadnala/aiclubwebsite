@@ -6,6 +6,7 @@ import Overview from './Overview';
 import Register from './Register';
 import Error from '../Error';
 import InductionsHeader from './InductionsHeader';
+import Submissions from './Submissions';
 import axios from 'axios';
 import { SERVER_URL } from '../../EditableStuff/Config';
 // import Competitions from '../../EditableStuff/Competitions';
@@ -52,6 +53,15 @@ const Compete = () => {
                 break;
             case 'data':
                 setPage(<Data c={comp} />);
+                break;
+            case 'leaderboard':
+                setPage(<Leaderboard c={comp} />);
+                break;
+            case 'submissions':
+                setPage(<Submissions c={comp} />);
+                break;
+            case 'register':
+                setPage(<Register c={comp} />);
                 break;
             default:
                 break;

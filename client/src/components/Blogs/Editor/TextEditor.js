@@ -4,6 +4,7 @@ import JoditEditor from "jodit-react";
 import { NavLink } from "react-router-dom";
 import axios from 'axios';
 import { Context } from "../../../Context/Context";
+import { SERVER_URL } from "../../../EditableStuff/Config";
 
 const TextEditor = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const TextEditor = () => {
   const editor = useRef(null);
   const [post, setPost] = useState({
     title: "",
+    url:"",
     tags: [],
     content: "",
     authorName: user.firstname + " " + user.lastname,
@@ -27,21 +29,25 @@ const TextEditor = () => {
   }, [user]);
 
   const handlePhoto = (e) => {
-    setPost({ ...post, cover: e.target.files[0] });
+    setPost({ ...post, ['cover']: e.target.files[0] });
+    console.log('post',post);
   };
 
   const contentFieldChanaged = (data) => {
-    setPost({ ...post, content: data });
+    setPost({ ...post, ['content']: data });
+    console.log('post',post);
   };
-  const titleFieldChanaged = (event) => {
-    setPost({ ...post, title: event.target.value });
+  const handleInputs = (event) => {
+    setPost({ ...post, [event.target.name]: event.target.value });
+    console.log('post',post);
   };
 
   const handleClearClick = () => {
-    setPost({ ...post, title: "", tags: [], content: "", cover: "" });
+    setPost({ ...post, ['title']: "", ['tags']: [], ['content']: "", ['cover']: "" });
   };
 
-  const handleSubmitClick = async () => {
+  const handleSubmitClick = async (e) => {
+    e.preventDefault();
     setAdd("Posting ");
     setAdd2(<i class="fa fa-spinner fa-spin"></i>);
     console.log(post);
@@ -52,25 +58,28 @@ const TextEditor = () => {
     var imgurl;
 
     try {
-      const img = await axios.post("http://localhost:5000/imgupload", data);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
       console.log("img", img);
       imgurl = img.data;
-      console.log(imgurl);
-      setPost({ ...post, cover: imgurl });
+      console.log('img-url',imgurl);
+      // setPost({ ...post, ['cover']: imgurl });
+      post.cover = imgurl;
       console.log("final post",post);
     } catch (err) {
       console.log("photoerr", err);
     }
     try{
-      const blogdata = await axios.post('http://localhost:5000/blogadd',
-          {
-            'authorName':post.authorName, 
-            'title':post.title,  
-            'content':post.content,
-            'tag':post.tags,
-            'authorAvatar':post.authorAvatar,
-            'cover':imgurl,
-          },
+      console.log('blogs');
+      const blogdata = await axios.post(`${SERVER_URL}/blogadd`,
+          // {
+          //   'authorName':post.authorName, 
+          //   'title':post.title,  
+          //   'content':post.content,
+          //   'tag':post.tags,
+          //   'authorAvatar':post.authorAvatar,
+          //   'cover':imgurl,
+          // },
+          post,
           {
               headers:{"Content-Type" : "application/json"}
           }
@@ -93,68 +102,66 @@ const TextEditor = () => {
 
   return (
     <div className="container texteditor">
-      <div className="mb-3 my-4">
-        <label htmlFor="exampleFormControlInput1" className="form-label">
-          Blog Title
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="exampleFormControlInput1"
-          placeholder="Title"
-          value={post.title}
-          onChange={titleFieldChanaged}
-        />
-      </div>
-      <div className="mb-3 my-4">
-        <label htmlFor="cover" className="form-label">
-          Upload Cover photo
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          name="photo"
-          onChange={handlePhoto}
-          className="form-control"
-          id="photo"
-          aria-describedby="photo"
-          required
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlTextarea1" className="form-label">
-          Blog Content
-        </label>
-        <JoditEditor
-          ref={editor}
-          value={post.content}
-          onChange={(newContent) => contentFieldChanaged(newContent)}
-        />
-      </div>
-      <div className="d-flex justify-content-center">
-        <NavLink
-          type="button"
-          className="btn btn-secondary btn-sm mx-2 my-4"
-          to="/blogs"
-        >
-          Back
-        </NavLink>
-        <button
-          type="button"
-          className="btn btn-primary btn-sm mx-2 my-4"
-          onClick={handleSubmitClick}
-        >
-          {add}
-          {add2}
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm mx-2 my-4"
-          onClick={handleClearClick}
-        >
-          Clear Content
-        </button>
-      </div>
+      <form method="POST" onSubmit={handleSubmitClick} encType="multipart/form-data">
+        <div className="mb-3 my-4">
+          <label for="title" className="form-label">
+            Blog Title
+          </label>
+          <input
+            type="text"
+            name="title"
+            className="form-control"
+            id="title"
+            placeholder="Enter Blog Title"
+            value={post.title}
+            onChange={handleInputs}
+          />
+        </div>
+        <div className="mb-3 my-4">
+          <label for="url" className="form-label">
+            Blog Url
+          </label>
+          <input
+            type="text"
+            name="url"
+            className="form-control"
+            id="url"
+            placeholder="Enter Blog url"
+            value={post.url}
+            onChange={handleInputs}
+          />
+        </div>
+        <div className="mb-3 my-4">
+          <label htmlFor="cover" className="form-label">
+            Upload Cover photo
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            name="photo"
+            onChange={handlePhoto}
+            className="form-control"
+            id="photo"
+            aria-describedby="photo"
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="exampleFormControlTextarea1" className="form-label">
+            Blog Content
+          </label>
+          <JoditEditor
+            ref={editor}
+            value={post.content}
+            onChange={(newContent) => contentFieldChanaged(newContent)}
+          />
+        </div>
+        <div className="d-flex justify-content-center">
+          {/* <NavLink className="btn btn-secondary btn-sm mx-2 my-4" to="/blogs">Back</NavLink> */}
+          <button type="submit" name="submit" id="submit" className="btn btn-primary btn-sm mx-2 my-4">{add}{add2}</button>
+          {/* <button type="reset" className="btn btn-secondary btn-sm mx-2 my-4" onClick={handleClearClick}>Clear Content</button> */}
+        </div>
+      </form>
     </div>
   );
 };

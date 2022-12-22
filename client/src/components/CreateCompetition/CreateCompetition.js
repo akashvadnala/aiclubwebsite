@@ -13,21 +13,28 @@ const CreateCompetition = () => {
     public:true,
     navs:[]
   });
-  // const { user } = useContext(Context);
-  let user=null;
-  const getUser = async () =>{
-    const res = await axios.get(`${SERVER_URL}/getUserData`,
-    {withCredentials: true});
-    user = res.data;
-    if(!user || !user.canCreateCompetitions){
+  const { user } = useContext(Context);
+  // const [user,setUser] = useState(null);
+  // const getUser = async () =>{
+  //   const res = await axios.get(`${SERVER_URL}/getUserData`,
+  //   {withCredentials: true});
+  //   setUser(res.data);
+  //   let u=res.data;
+  //   if(!u || (!u.canCreateCompetitions && !u.isadmin)){
+  //     navigate('/');
+  //   }
+  // }
+
+  // useEffect(()=>{
+  //   getUser();
+  // },[user]);
+  useEffect(() => {
+    if(!user || (!user.canCreateCompetitions && !user.isadmin)){
+      console.log('navigate');
       navigate('/');
     }
-  }
-  
-
-  useEffect(()=>{
-    getUser();
-  },[]);
+  });
+    
 
   let name, value;
   const handleInputs = (e) => {

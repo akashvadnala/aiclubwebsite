@@ -7,7 +7,7 @@
 }
 
 .navbar{
-    background-color: rgba(240,240,240,.8);
+    background-color: rgba(240,240,240,.6);
     position: sticky !important;
     top: 0 !important;
     backdrop-filter: saturate(180%) blur(10px) !important;
