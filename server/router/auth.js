@@ -130,7 +130,7 @@ const imgupload = async (req, res) => {
             'url':url
         });
         await fileDoc.save();
-
+        console.log('img-url',fileDoc.url);
         return res.status(200).send(url);
     }catch(err){
         console.log(err);
@@ -224,7 +224,7 @@ getusernameforedit_username = async (req,res)=>{
             return res.status(200).json(user);
         }
         else{
-            return res.status(201).json(user);
+            return res.status(201).json(null);
         }
     }catch(err){
         console.log(err);
@@ -329,7 +329,6 @@ router.get('/logout', (req,res)=>{
     res.clearCookie('jwtoken',{path:'/'});
     res.status(200).send({msg:'Logged Out Succesfully'});
 });
-
 
 module.exports = router;
 

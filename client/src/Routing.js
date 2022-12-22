@@ -36,11 +36,11 @@ const Routing = () => {
         {/* Blogs */}
         <Route exact path='/blogs' element={<Blogs />} />
 
-        {/* Blog Display */}
-        <Route path='/blogs/:id' element={<BlogDisplay />} />
-
         {/* Blog Editor */}
-        <Route path='/blogs/editor/add' element={<TextEditor />} />
+        <Route exact path='/blogs/editor/add' element={<TextEditor />} />
+
+        {/* Blog Display */}
+        <Route exact path='/blogs/:url' element={<BlogDisplay />} />
         
         {/* Inductions */}
         {/* <Route exact path='/inductions-b21-b20' element={<Inductions />} /> */}

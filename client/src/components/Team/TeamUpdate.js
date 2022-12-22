@@ -25,7 +25,6 @@ const TeamUpdate = () => {
             // });
             const res = await axios.get(`${SERVER_URL}/getUserDataForEdit/${username}`);
             // const data = await res.json();
-            console.log('data',res);
             console.log('Data');
             console.log(res.data);
             setTeam(res.data);
@@ -179,7 +178,7 @@ const TeamUpdate = () => {
     <>
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
-                <h1>You are editing '{username}' profile</h1>
+                <h3>You are editing '{username}' profile</h3>
                 <form method='POST' encType='multipart/form-data'>
                     {
                         forms.map((f)=>{
