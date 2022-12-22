@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Context } from '../../Context/Context';
 import { SERVER_URL } from '../../EditableStuff/Config';
+import Error from '../Error';
 
 const TeamAdd = () => {
     const navigate = useNavigate();
@@ -24,11 +25,6 @@ const TeamAdd = () => {
     const { user } = useContext(Context);
     const [ add, setAdd ] = useState('Submit');
     const [ add2, setAdd2 ] =useState();
-    useEffect(()=>{
-        if(!user || !user.isadmin){
-            navigate('/team');
-        }
-    },[user]);
     let name, value, checked;
     const handleInputs = (e) => {
         name = e.target.name;
@@ -48,7 +44,6 @@ const TeamAdd = () => {
         checked = e.target.checked;
         setTeam({...team, [name] : checked});
     }
-
     
     const PostTeam = async (e) => {
         e.preventDefault();
@@ -174,6 +169,7 @@ const TeamAdd = () => {
     ]
   return (
     <>
+        {user?
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
                 <h3>Add Team Member</h3>
@@ -212,6 +208,7 @@ const TeamAdd = () => {
                 </form>
             </div>
         </div>
+        :<Error />}
     </>
   )
 }

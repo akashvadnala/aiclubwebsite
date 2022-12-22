@@ -19,8 +19,7 @@ const projectSchema = new mongoose.Schema({
         }
     ],
     content:{
-        type:String,
-        required:true
+        type:String
     },
     public:{
         type:Boolean,

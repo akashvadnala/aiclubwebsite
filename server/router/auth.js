@@ -181,6 +181,7 @@ router.route('/getUserDataForEdit/:username').get(getusernameforedit_username);
 
 const teamupdate_username = async (req,res)=>{
     try {
+        console.log('updatess',req.body.username);
         const {username} = req.params;
 
         const updateduser = await Team.findOneAndUpdate({username:username},req.body,{

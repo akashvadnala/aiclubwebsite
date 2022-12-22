@@ -18,7 +18,7 @@ const BlogSchema = new Schema({
         type: String,
         required: true, 
     },
-    tag:[{
+    tags:[{
         type: String
     }],
     authorAvatar:{
