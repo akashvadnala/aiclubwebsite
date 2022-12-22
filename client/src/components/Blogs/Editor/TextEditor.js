@@ -4,7 +4,6 @@ import JoditEditor from "jodit-react";
 import axios from "axios";
 import { Context } from "../../../Context/Context";
 import { SERVER_URL } from "../../../EditableStuff/Config";
-import BlogItem from "../card/BlogCard";
 
 const TextEditor = () => {
   const navigate = useNavigate();
@@ -61,7 +60,7 @@ const TextEditor = () => {
   const handleSubmitClick = async (e) => {
     e.preventDefault();
     setAdd("Posting ");
-    setAdd2(<i class="fa fa-spinner fa-spin"></i>);
+    setAdd2(<i className="fa fa-spinner fa-spin"></i>);
     console.log(post);
     const data = new FormData();
     const photoname = Date.now() + post.cover.name;

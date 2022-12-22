@@ -16,15 +16,6 @@ router.route('/blogadd').post(async (req,res) => {
     console.log("Posting..");
     try{
         const blog = new Blog(
-        //     { 
-        //     authorName:authorName, 
-        //     title:title,  
-        //     url:url,
-        //     content:content,
-        //     tags:tags,
-        //     authorAvatar:authorAvatar,
-        //     cover:cover,
-        // }
         req.body
         );
         await blog.save();
