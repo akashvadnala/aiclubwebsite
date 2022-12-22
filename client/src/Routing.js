@@ -12,6 +12,7 @@ import BlogDisplay from './components/Blogs/BlogDisplay';
 import Compete from './components/Inductions/Compete';
 import TextEditor from './components/Blogs/Editor/TextEditor'
 import CreateCompetition from './components/CreateCompetition/CreateCompetition';
+import ProjectDisplay from './components/Projects/ProjectDisplay';
 
 
 const Routing = () => {
@@ -29,6 +30,7 @@ const Routing = () => {
         {/* Projects */}
         <Route exact path='/projects' element={<Projects />} />
         <Route exact path='/addproject' element={<AddProject />} />
+        <Route exact path='/projects/:url' element={<ProjectDisplay />} />
 
         {/* Events */}
         <Route exact path='/events' element={<Events />} />

@@ -17,6 +17,7 @@ const AddProject = () => {
   const [authorsCount,setAuthorsCount] = useState(1);
   const [ proj, setProj ] = useState({
     'title':'',
+    'url':'',
     'authors':[user?user.username:''],
     'content':''
   })
@@ -79,6 +80,22 @@ const AddProject = () => {
                             id="title" 
                             aria-describedby="title" 
                             placeholder="Enter Project Title" 
+                          required/>
+                        </div>
+
+                        <div className="form-group mb-1">
+                          <label for="url">Project Url :</label>
+                        </div>
+                        <div className="form-group mb-4">
+                          <input 
+                            type='text' 
+                            name="url" 
+                            value={proj.url} 
+                            onChange={handleInputs} 
+                            className="form-control" 
+                            id="url" 
+                            aria-describedby="url" 
+                            placeholder="Enter Project Url" 
                           required/>
                         </div>
                         
