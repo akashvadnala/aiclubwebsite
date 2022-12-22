@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import { blogList } from "./config/data";
 import Search from "./search/Search";
 import BlogsList from "./BlogsList";
 import EmptyList from "./search/EmptyList";
@@ -9,8 +8,8 @@ import { SERVER_URL } from "../../EditableStuff/Config";
 import axios from "axios";
 
 const Blogs = () => {
+  var blogList;
   const { user } = useContext(Context);
-  // const [blogs, setBlogs] = useState(blogList);
   const [blogs, setBlogs] = useState([]);
   const [searchKey, setSearchKey] = useState("");
 
@@ -20,6 +19,7 @@ const Blogs = () => {
       .then(data => {
         console.log('data',data.data);
         setBlogs(data.data);
+        blogList = data.data;
       })
     }catch(err){
       console.log(err);
@@ -60,6 +60,15 @@ const Blogs = () => {
     setBlogs(blogList);
     setSearchKey("");
   };
+
+  const filterMyblogs = () =>{
+    const allBlogs = blogList;
+    const filteredBlogs = allBlogs.filter(
+      (blog) =>
+        blog.authorName === user.firstname + " " + user.lastname
+        );
+    setBlogs(filteredBlogs);
+  }
   return (
     <>
         <div className="container d-flex align-items-start flex-column bd-highlight">
@@ -89,6 +98,7 @@ const Blogs = () => {
                 type="checkbox"
                 role="switch"
                 id="flexSwitchCheckDefault"
+                onClick={filterMyblogs}
               />
               <label
                 className="form-check-label"

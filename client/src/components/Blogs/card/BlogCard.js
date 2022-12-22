@@ -10,7 +10,6 @@ const Blogitem = (props) => {
     ev.target.src =
       "https://pbwebdev.co.uk/wp-content/uploads/2018/12/blogs.jpg";
   };
-
   return (
     <div className="my-3">
       <div className="card">
@@ -44,5 +43,4 @@ const Blogitem = (props) => {
     </div>
   );
 };
-
 export default Blogitem;
