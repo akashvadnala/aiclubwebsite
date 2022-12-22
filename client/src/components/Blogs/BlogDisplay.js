@@ -56,7 +56,8 @@ const BlogDisplay = () => {
       {blog ? (
         <div className="blog-wrap">
           <header>
-            <p className="blog-date" style={{margin:"2rem"}}>Published on {returnDDMMYYYY(blog.createdAt)}</p>
+            <h3 className="mt-5">{blog.title}</h3>
+            <p className="blog-date">Published on {returnDDMMYYYY(blog.createdAt)}</p>
             <div className="blog-subCategory">
               {blog.tags.map((tag, i) => (
                 <div key={i}>

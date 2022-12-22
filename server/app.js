@@ -20,10 +20,8 @@ console.log('dir',path.resolve('uploads'));
 app.use(require('./router/auth'));
 app.use(require('./router/inductions'));
 app.use(require('./router/blogs'));
+app.use(require('./router/projects'));
 
-app.get('/',(req,res) => {
-    res.send(`Hello from server..`);
-});
 
 const PORT = process.env.PORT || 5000;
 
