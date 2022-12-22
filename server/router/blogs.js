@@ -8,7 +8,7 @@ router.route('/blogadd').post(async (req,res) => {
     const title = req.body.title;
     const url = req.body.url;
     const content = req.body.content;
-    const tag = req.body.tag;
+    const tags = req.body.tags;
     const authorAvatar = req.body.authorAvatar;
     const cover = req.body.cover;
     if( !title || !content){
@@ -21,7 +21,7 @@ router.route('/blogadd').post(async (req,res) => {
             title:title,  
             url:url,
             content:content,
-            tag:tag,
+            tags:tags,
             authorAvatar:authorAvatar,
             cover:cover,
         });
