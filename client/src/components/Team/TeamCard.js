@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {SERVER_URL} from '../../EditableStuff/Config';
+import TextTruncate from 'react-text-truncate';
 
 function TeamCard({ team, isadmin, isdelete }) {
   const navigate = useNavigate();
@@ -19,13 +20,13 @@ function TeamCard({ team, isadmin, isdelete }) {
     }
   }
   return (
-    <div className=' col-lg-3 col-md-4 col-sm-6 col-6'>
+    <div className='col-lg-3 col-md-4 col-sm-6 col-6'>
         <div className='card'>
           <img className='card-img-top' src={team.photo} alt={team.firstname} />
           <div className='card-body'>
             <h5>{team.firstname} {team.lastname}</h5>
             <h7>{team.profession}</h7>
-            <p>{team.description}</p>
+            <TextTruncate title={team.description} line={2} element="p" truncateText='' text={team.description} textTruncateChild="..." />
             <a href={`mailto:${team.email}`} >{team.email}</a>
             {
               isadmin?

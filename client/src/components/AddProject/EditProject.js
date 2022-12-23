@@ -21,7 +21,7 @@ const EditProject = () => {
   const [ proj, setProj ] = useState();
   const getProject = async () =>{
     try{
-      axios.get(`${SERVER_URL}/getProject/${url}`)
+      axios.get(`${SERVER_URL}/getProjectEdit/${url}`)
       .then(data => {
         if(data.status===200){
           console.log('projget',data.data);

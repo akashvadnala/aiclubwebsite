@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Project = require('../model/projectSchema');
+const Team = require('../model/teamSchema');
 require('../db/conn');
 
 router.route('/updateProject/:url').put(async (req,res) => {
@@ -43,15 +44,32 @@ router.route('/getProjects').get(async (req,res) => {
     res.status(200).json(projectData);
 });
 
+
 router.route('/getProject/:url').get(async (req,res) => {
     const {url} = req.params;
+    var auth=[];
     try{
-        const project = await Project.findOne({url:url});
+        var project = await Project.findOne({url:url});
+        const authors=project.authors;
         if(project){
-            console.log('project',project);
-            return res.status(200).json(project);
+            authors.map(async (user)=>{
+                const author = await Team.findOne({username:user});
+                auth.push({
+                    'firstname':author.firstname,
+                    'lastname':author.lastname,
+                    'photo':author.photo,
+                    'description':author.description
+                })
+                console.log('authors',auth);
+            })
+            setTimeout(() => {
+                console.log('project.authors',auth);
+                return res.status(200).json({'project':project,'authors':auth});
+            }, 1000);
+            
         }
         else{
+            console.log('null',null);
             return res.status(201).json(null);
         }
     }catch(err){
@@ -60,5 +78,21 @@ router.route('/getProject/:url').get(async (req,res) => {
     }
 });
 
+router.route('/getProjectEdit/:url').get(async (req,res) => {
+    const {url} = req.params;
+    try{
+        var project = await Project.findOne({url:url});
+        if(project){
+            return res.status(200).json(project);
+        }
+        else{
+            console.log('null',null);
+            return res.status(201).json(null);
+        }
+    }catch(err){
+        console.log(err);
+        res.status(422).send(`${url} not found`);
+    }
+});
 
 module.exports = router;

@@ -27,6 +27,9 @@ body{
   padding: 1.2rem 0.75rem 1.2rem 0.75rem;
 }
 
+p{
+  font-size: 13px;
+}
 
 @media (min-width: 576px){
   .adjust{

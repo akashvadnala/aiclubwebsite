@@ -48,7 +48,6 @@ router.route('/competitions').post(async (req,res) => {
 
 router.route('/getCompeteNames').get(async (req,res)=>{
     const data = await Competitions.find({public:true});
-    console.log('data',data);
     res.status(201).json(data);
 });
 
