@@ -11,7 +11,7 @@ const projectSchema = new mongoose.Schema({
     },
     creator:{
         type:String,
-        require:true
+        required:true
     },
     authors:[
         {
@@ -20,6 +20,10 @@ const projectSchema = new mongoose.Schema({
     ],
     content:{
         type:String
+    },
+    cover:{
+        type:String,
+        required:true
     },
     public:{
         type:Boolean,

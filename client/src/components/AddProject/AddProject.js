@@ -117,7 +117,7 @@ const AddProject = () => {
                 <div className='col-sm-10'>
                   <div className="input-group mb-3">
                     <div className="input-group-prepend">
-                      <span className="input-group-text text-end" id="basic-addon3">{CLIENT_URL}/projects/{proj.url}</span>
+                      <span className="input-group-text text-end" id="basic-addon3">{CLIENT_URL}/projects/</span>
                     </div>
                     <input type="text" name="url" value={proj.url} onChange={handleInputs} className="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="Enter Project Url" required/>
                   </div>

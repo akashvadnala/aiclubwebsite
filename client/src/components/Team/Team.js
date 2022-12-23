@@ -118,7 +118,7 @@ function Team() {
           <h1>Team Members</h1>
           {/* <img src='https://miro.medium.com/max/657/1*MdInuEHHzcTQvjlzs8wpKA.png' /> */}
         </div>
-          <div className='team adjust'>
+          <div className='container team'>
               <div className='row'>
                 <div className='col-sm-5'>
                   <h3>{teamHeading}</h3>
