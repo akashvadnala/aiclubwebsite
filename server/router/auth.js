@@ -4,6 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 let path = require('path');
 const authenticate = require('../middleware/authenticate');
+const Team = require('../model/teamSchema');
 
 
 router.route('/').get((req,res)=>{

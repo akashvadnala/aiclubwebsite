@@ -20,6 +20,7 @@ console.log('dir',path.resolve('uploads'));
 app.use(require('./router/auth'));
 app.use(require('./router/team'));
 app.use(require('./router/inductions'));
+app.use(require('./router/overview'));
 app.use(require('./router/blogs'));
 app.use(require('./router/projects'));
 

@@ -40,7 +40,6 @@ router.route('/projectAdd').post(async (req,res) => {
 
 router.route('/getProjects').get(async (req,res) => {
     const projectData = await Project.find({});
-    console.log('projectData',projectData);
     res.status(200).json(projectData);
 });
 
@@ -60,16 +59,13 @@ router.route('/getProject/:url').get(async (req,res) => {
                     'photo':author.photo,
                     'description':author.description
                 })
-                console.log('authors',auth);
             })
             setTimeout(() => {
-                console.log('project.authors',auth);
                 return res.status(200).json({'project':project,'authors':auth});
             }, 1000);
             
         }
         else{
-            console.log('null',null);
             return res.status(201).json(null);
         }
     }catch(err){
@@ -86,7 +82,6 @@ router.route('/getProjectEdit/:url').get(async (req,res) => {
             return res.status(200).json(project);
         }
         else{
-            console.log('null',null);
             return res.status(201).json(null);
         }
     }catch(err){

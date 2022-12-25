@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Competitions = require('../model/competitionSchema');
+const Overview = require('../model/overviewSchema');
 
 router.route('/getCompete/:url').get(async (req,res) => {
     const {url} = req.params;
@@ -27,20 +28,20 @@ router.route('/competitions').post(async (req,res) => {
         return res.status(422).json({error:"Competition Already Exist"});
     }
     try{
-        const compete = new Competitions({
-            url:url,
-            title:title,
-            description:description,
-            public:public,
-            navs:navs
-        });
+        const compete = new Competitions(req.body);
         await compete.save();
+
+        const overview = new Overview({
+            compete:compete._id,
+            description:`This is ${compete.title} overview`
+        })
+        await overview.save();
 
         console.log(`Competition Created`);
         // res.send(`${url} created`);
         res.status(201).json({message:"Competition Created"});
     }catch(err){
-        console.log('Cannot create competition');
+        console.log('Cannot create competition',err);
         res.status(200).json({message:"Connot create competition"});
 
     }
@@ -49,6 +50,20 @@ router.route('/competitions').post(async (req,res) => {
 router.route('/getCompeteNames').get(async (req,res)=>{
     const data = await Competitions.find({public:true});
     res.status(201).json(data);
+});
+
+// overview-save
+
+router.route('/updateCompeteOverview/:url').put(async (req,res)=>{
+    try{
+        const {url}=req.params;
+        const updateData = await Competitions.findOneAndUpdate({url:url},req.body,{
+            new:true
+        });
+        console.log('Updated Compete',updatedData);
+    }catch(err){
+        console.log(err);
+    }
 });
 
 

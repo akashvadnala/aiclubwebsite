@@ -18,6 +18,11 @@ const projectSchema = new mongoose.Schema({
             type:String
         }
     ],
+    tags:[
+        {
+            type:String
+        }
+    ],
     content:{
         type:String
     },

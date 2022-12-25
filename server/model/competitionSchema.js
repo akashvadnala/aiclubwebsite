@@ -13,6 +13,13 @@ const competitionSchema = new mongoose.Schema({
         type: String,
         requied: true
     },
+    creator:{
+        type: String,
+        required: true
+    },
+    access:[{
+        type:String
+    }],
     public:{
         type: Boolean
     }
