@@ -6,14 +6,16 @@ import { SERVER_URL } from '../../EditableStuff/Config';
 
 const CreateCompetition = () => {
   const navigate = useNavigate();
+  const { user } = useContext(Context);
   const [compete, setCompete] = useState({
     url:"",
     title:"",
     description:"",
+    creator:user?user.username:'',
+    access:[user?user.username:''],
     public:true,
     navs:[]
   });
-  const { user } = useContext(Context);
   // const [user,setUser] = useState(null);
   // const getUser = async () =>{
   //   const res = await axios.get(`${SERVER_URL}/getUserData`,

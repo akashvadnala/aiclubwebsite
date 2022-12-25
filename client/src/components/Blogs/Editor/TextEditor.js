@@ -4,6 +4,7 @@ import JoditEditor from "jodit-react";
 import axios from "axios";
 import { Context } from "../../../Context/Context";
 import { SERVER_URL } from "../../../EditableStuff/Config";
+import { editorConfig } from "../../AddProject/Params/editorConfig";
 
 const TextEditor = () => {
   const navigate = useNavigate();
@@ -204,6 +205,7 @@ const TextEditor = () => {
           <JoditEditor
             ref={editor}
             value={post.content}
+            config={editorConfig}
             onChange={(newContent) => contentFieldChanaged(newContent)}
           />
         </div>

@@ -7,6 +7,7 @@ import { editorConfig } from './Params/editorConfig';
 import Error from '../Error';
 import axios from 'axios';
 import { SERVER_URL } from '../../EditableStuff/Config';
+import Loading from '../Loading';
 
 const EditProject = () => {
   const {url} = useParams();
@@ -16,16 +17,27 @@ const EditProject = () => {
     
   const [ add, setAdd ] = useState('Save as Draft');
   const [ add2, setAdd2 ] =useState();
-  const [xauthor,setXAuthor] = useState('');
-  const [authorsCount,setAuthorsCount] = useState(1);
+  const [ xauthor,setXAuthor ] = useState('');
+  const [ xtag,setXTag ] = useState('');
   const [ proj, setProj ] = useState();
+  const [ load, setLoad ] = useState(0);
+  const [ preview, setPreview ] = useState(false);
   const getProject = async () =>{
     try{
       axios.get(`${SERVER_URL}/getProjectEdit/${url}`)
       .then(data => {
         if(data.status===200){
           console.log('projget',data.data);
-          setProj(data.data);
+          if(data.data.authors.indexOf(user.username)>-1){
+            setProj(data.data);
+            setLoad(1);
+          }
+          else{
+            setLoad(-1);
+          }
+        }
+        else{
+          setLoad(-1);
         }
       })
     }catch(err){
@@ -39,25 +51,33 @@ const EditProject = () => {
 
   const handleValue = (e) => {
     setProj({...proj, ['content']:e});
-    console.log('proj',proj);
   }
   const handleInputs = (e) => {
     setProj({...proj, [e.target.name]:e.target.value});
-    console.log('proj',proj);
   }
   const removeXAuthor = (author) => {
     let current = proj.authors;
     current = current.filter(x => x!==author);
     setProj({...proj,['authors']:current});
     setXAuthor('');
-    console.log('proj',proj);
   }
   const AddXAuthor = () => {
     let current = proj.authors;
     current.push(xauthor);
     setProj({...proj,['authors']:current});
     setXAuthor('');
-    console.log('proj',proj);
+  }
+  const removeXTag = (tag) => {
+    let current = proj.tags;
+    current = current.filter(x => x!==tag);
+    setProj({...proj,['tags']:current});
+    setXTag('');
+  }
+  const AddXTag = () => {
+    let current = proj.tags;
+    current.push(xtag);
+    setProj({...proj,['tags']:current});
+    setXTag('');
   }
   const UpdateProject = async (e) => {
     e.preventDefault();
@@ -66,9 +86,9 @@ const EditProject = () => {
     try{
       const projdata = await axios.put(`${SERVER_URL}/updateProject/${url}`,
       proj,
-          {
-              headers:{"Content-Type" : "application/json"}
-          }
+        {
+            headers:{"Content-Type" : "application/json"}
+        }
       );
       console.log('projdata',projdata);
       if(projdata.status===422 || !projdata){
@@ -77,6 +97,7 @@ const EditProject = () => {
       else{    
         setAdd('Save as Draft');
         setAdd2('');
+        setPreview(true);
           // navigate('/team');
       }
     }catch(err){
@@ -86,23 +107,22 @@ const EditProject = () => {
   console.log('proj',proj);
   return (
     <>
-      {user?
-        <div className='container addproject-container'>
-          <div className='row'>
-            <div className='col col-4'></div>
-            <div className='col col-4'>
-              <h3 className='my-3 text-center'>Add Project</h3>
-            </div>
-            <div className='col col-4'>
-              <h6 className='my-3 text-end'>
-                <NavLink to="#">Preview</NavLink>
-              </h6>
-            </div>
-          </div>
+      {load===0?<Loading />:
+      load===1?
+        <div className='container addproject-container py-3'>
+              <h3 className='text-center'>Add Project</h3>
+              <div className='text-center fs-6 pb-1'>
+                {
+                  preview?
+                    <NavLink to={`/projects/${proj.url}`}>Preview</NavLink>
+                  :
+                    <span className='text-muted'>Save for Preview</span>
+                }
+              </div>
               
                 <form method="POST" onSubmit={UpdateProject} encType="multipart/form-data">
                   <div className='row'>
-                    <div className='col col-9'>
+                    <div className='col-12 col-md-9'>
                         <div className="form-group mb-1">
                           <label for="title">Project Title :</label>
                         </div>
@@ -120,6 +140,49 @@ const EditProject = () => {
                         </div>
                         
                         <div className="form-group my-1">
+                          <label>Project Tags :</label>
+                        </div>
+                        <div className="form-group my-2 row">
+                          {proj &&
+                            (proj.tags).map(a => {
+                              return(
+                                  <div className='col-12 col-sm-6 col-lg-4 mb-2 row'>
+                                    <div className='col-8 paddr'>
+                                      <input 
+                                          type='text' 
+                                          value={a} 
+                                          className="form-control" 
+                                          id="tag" 
+                                          aria-describedby="tag" 
+                                        disabled/>
+                                    </div>
+                                    <div className='col-4 paddl'>
+                                      <input type="reset" className='btn btn-danger' onClick={() => removeXTag(a)} value="Remove" />
+                                    </div>
+                                  </div>
+                              )
+                            })
+                          }
+                            <div className='col-12 col-sm-6 col-lg-4 mb-2 row'>
+                              <div className='col-8 paddr'>
+                                <input 
+                                    type='text' 
+                                    name="xauthor" 
+                                    value={xtag} 
+                                    onChange={(e) => setXTag(e.target.value)} 
+                                    className="form-control" 
+                                    id="tags" 
+                                    aria-describedby="tags" 
+                                    placeholder="Enter Project Title" 
+                                  />
+                                </div>
+                                <div className='col-4 paddl'>
+                                  <input type="reset" className='btn btn-success' onClick={AddXTag} value="+Add" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form-group my-1">
                           <label for="content">Project Content :</label>
                         </div>
                         <div className="form-group mb-4">
@@ -128,12 +191,12 @@ const EditProject = () => {
                               <JoditEditor name="content" ref={editor} value={proj.content} config={editorConfig} onChange={handleInputs} /> 
                             ),[proj.content])
                           } */}
-                          <JoditEditor name="content" ref={editor} value={proj?proj.content:''} config={editorConfig} onChange={handleValue} /> 
+                          <JoditEditor name="content" ref={editor} value={proj?proj.content:''} onChange={handleValue} /> 
                           {/* <Jodit name="content" ref={editor} value={proj.content} config={editorConfig} onChange={handleInputs} /> */}
                         </div>
                         
                     </div>
-                    <div className='col col-3'>
+                    <div className='col-12 col-md-3'>
                         <div className="form-group my-1">
                           <label>Authors :</label>
                         </div>
@@ -151,7 +214,7 @@ const EditProject = () => {
                                     disabled/>
                                 </div>
                                 <div className='col col-3'>
-                                {user.username!==a && <input type="reset" className='btn btn-danger' onClick={() => removeXAuthor(a)} value="Remove" />}
+                                {(user.username!==a && proj.creator!==a) && <input type="reset" className='btn btn-danger' onClick={() => removeXAuthor(a)} value="Remove" />}
                                 </div>
                               </div>
                             )
@@ -182,8 +245,7 @@ const EditProject = () => {
                   </div>
                 </form>
         </div>
-        :
-        <Error />
+        :<Error />
         }
     </>
   )

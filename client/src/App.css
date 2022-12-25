@@ -31,6 +31,15 @@ p{
   font-size: 13px;
 }
 
+.paddl{
+  padding-left: 3px !important; 
+}
+
+.paddr{
+  padding-right: 3px !important;
+}
+
+
 @media (min-width: 576px){
   .adjust{
     margin-left: 2.5% !important;
