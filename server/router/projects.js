@@ -11,7 +11,7 @@ router.route('/updateProject/:url').put(async (req,res) => {
         const updatedProj = await Project.findOneAndUpdate({url:url},req.body,{
             new:true
         });
-        console.log('Project Updated',updatedProj);
+        console.log('Project Updated',updatedProj.title);
         res.status(200).json(updatedProj);
     }catch (err) {
         res.status(422).json(err);
@@ -89,5 +89,25 @@ router.route('/getProjectEdit/:url').get(async (req,res) => {
         res.status(422).send(`${url} not found`);
     }
 });
+
+router.route('/deleteProject/:url').post(async (req,res)=>{
+    const {url} = req.params;
+    console.log(url);
+    try{
+        await Project.deleteOne({url:url});
+        console.log('Deleted..');
+        return res.status(200).json({msg:"Project Deleted"});
+    } 
+    catch(err){
+        console.log("Cannot Delete the Project");
+        return res.status(422).json({msg:"Cannot Delete the Project"});
+    }
+});
+
+router.route('/getMyProjects/:user').get(async (req,res) => {
+    const projectData = await Project.find({creator:req.params.user});
+    res.status(200).json(projectData);
+});
+
 
 module.exports = router;

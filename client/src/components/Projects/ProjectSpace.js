@@ -1,15 +1,27 @@
-import React from 'react';
-import TextTruncate from 'react-text-truncate';
+import { NavLink } from "react-router-dom";
 
-const ProjectSpace = ({title, text, authors, url}) => {
+
+const ProjectSpace = ({project}) => {
+
   return (
-      <div className='col-xs-12'>
-        <h5>{title}</h5>
-        <TextTruncate line={2} element="p" truncateText='...' text={text} textTruncateChild={<a href={url}>Know More</a>} />
-        <p>
-            <span>-{authors}</span>
-        </p>
-        <hr />
+      <div className='card'>
+        <img src={project.cover} alt={project.title} className="card-img-top" />
+        <div className="card-body text-center">
+          <h5 className="card-title">{project.title}</h5>
+          <p className="card-text text-muted">
+            By
+            {
+              project.authors.map((author)=>{
+                return(
+                  <>
+                    &nbsp;{author},
+                  </>
+                )
+              })
+            }
+          </p>
+          <NavLink rel="noreferrer" to={`/projects/${project.url}`} className="btn btn-sm btn-dark">Read More</NavLink>
+        </div>
       </div>
   )
 }

@@ -136,8 +136,10 @@ const Navbar = () => {
                     
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             {user?(user.canCreateCompetitions || user.isadmin)?<NavLink className="dropdown-item" to="/create-competition">Create Competition</NavLink>:null:null}
+                            <hr />
                             <NavLink className="dropdown-item" to="/addproject">Add Project</NavLink>
                             <NavLink className="dropdown-item" to="/myprojects">My Projects</NavLink>
+                            <hr />
                             {user?user.isadmin?<NavLink className="dropdown-item" to="/admin">Admin</NavLink>:null:null}
                             <a className="dropdown-item" href="#" onClick={Logout}>Logout</a>
                         </div>

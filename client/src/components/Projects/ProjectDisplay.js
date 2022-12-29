@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Context } from '../../Context/Context';
 import { SERVER_URL } from '../../EditableStuff/Config';
 import Error from '../Error';
@@ -16,6 +16,8 @@ const ProjectDisplay = () => {
     const [ authors, setAuthors ] = useState([]);
     const [ load ,setLoad ] = useState(0);
     const [ edit, setEdit ] = useState(false);
+
+    const navigate = useNavigate();
 
     const getProject = async () =>{
         try{
@@ -36,8 +38,6 @@ const ProjectDisplay = () => {
             console.log(err);
         }
         
-        
-
     }
     
     useEffect(()=>{
@@ -45,6 +45,19 @@ const ProjectDisplay = () => {
     },[])
 
 
+    const deleteProject = async (e) => {
+        e.preventDefault();
+        const confirmed = window.confirm(`Are you sure to delete the project "${proj.title}"?`);
+        if(confirmed){
+            const res = await axios.post(`${SERVER_URL}/deleteProject/${proj.url}`);
+            if(res.status===200){
+                navigate('/projects');
+            }
+            else{
+                console.log('Project Cannot be deleted');
+            }
+        }
+    }
     return (
         <>
             {load===0?
@@ -59,7 +72,9 @@ const ProjectDisplay = () => {
                             </h3>  
                             {edit && 
                             <div className='text-center fs-6 p-2'>
-                                <NavLink to={`/projects/${proj.url}/edit`}> Edit</NavLink>
+                                <NavLink to={`/projects/${proj.url}/edit`}>Edit </NavLink>
+                                ·
+                                <NavLink rel="noreferrer" onClick={deleteProject}> Delete</NavLink>
                             </div>}
                             {
                                 proj.tags &&

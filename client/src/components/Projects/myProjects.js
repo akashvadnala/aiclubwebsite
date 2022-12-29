@@ -12,11 +12,12 @@ const Projects = () => {
   const {user} = useContext(Context);
   const [ projects, setProjects ] = useState([]);
   const [ load, setLoad ] = useState(0);
-  const getProjects = () => {
+ 
+  const getMyProjects = () =>{
     try{
-      axios.get(`${SERVER_URL}/getProjects`)
+      axios.get(`${SERVER_URL}/getMyProjects/${user.username}`)
       .then(data=>{
-        if(data.status===200){
+        if(user && data.status===200){
           setProjects(data.data);
           setLoad(1);
         }
@@ -25,14 +26,14 @@ const Projects = () => {
         }
       })
     }catch(err){
+        setLoad(-1);
       console.log(err);
     }
   }
 
   useEffect(()=>{
-    getProjects();
+    getMyProjects();
   },[user]);
-
 
   return (
     <>
@@ -41,12 +42,11 @@ const Projects = () => {
           <div>
             <div className='row py-4'>
               <div className='col-4'>
-                <h2>Projects</h2>
+                <h2>My Projects</h2>
               </div>
               <div className='col-8 text-end'>
                 {user?
                 <>
-                  <NavLink rel="noreferrer" to="/myprojects" className="btn btn-sm">My Projects</NavLink>&nbsp;&nbsp;
                   <NavLink rel="noreferrer" to="/addproject" className="btn btn-sm btn-success">+Add Project</NavLink>
                 </>
                 :null}

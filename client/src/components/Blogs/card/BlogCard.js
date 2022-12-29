@@ -11,7 +11,7 @@ const Blogitem = (props) => {
       "https://pbwebdev.co.uk/wp-content/uploads/2018/12/blogs.jpg";
   };
   return (
-    <div className="my-3">
+    <div className="my-3 blogcard-container">
       <div className="card">
         <img
           onError={addDefaultSrc}
