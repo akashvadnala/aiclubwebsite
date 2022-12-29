@@ -39,6 +39,9 @@ p{
   padding-right: 3px !important;
 }
 
+hr{
+  margin: 3px 0 3px !important;
+}
 
 @media (min-width: 576px){
   .adjust{

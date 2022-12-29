@@ -3,6 +3,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const teamSchema = new mongoose.Schema({
+    projects:[{
+        type: String,
+    }],
     firstname: {
         type: String,
         required: true

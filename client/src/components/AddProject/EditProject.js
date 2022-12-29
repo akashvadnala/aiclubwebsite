@@ -51,33 +51,39 @@ const EditProject = () => {
 
   const handleValue = (e) => {
     setProj({...proj, ['content']:e});
+    setPreview(false);
   }
   const handleInputs = (e) => {
     setProj({...proj, [e.target.name]:e.target.value});
+    setPreview(false);
   }
   const removeXAuthor = (author) => {
     let current = proj.authors;
     current = current.filter(x => x!==author);
     setProj({...proj,['authors']:current});
     setXAuthor('');
+    setPreview(false);
   }
   const AddXAuthor = () => {
     let current = proj.authors;
     current.push(xauthor);
     setProj({...proj,['authors']:current});
     setXAuthor('');
+    setPreview(false);
   }
   const removeXTag = (tag) => {
     let current = proj.tags;
     current = current.filter(x => x!==tag);
     setProj({...proj,['tags']:current});
     setXTag('');
+    setPreview(false);
   }
   const AddXTag = () => {
     let current = proj.tags;
     current.push(xtag);
     setProj({...proj,['tags']:current});
     setXTag('');
+    setPreview(false);
   }
   const UpdateProject = async (e) => {
     e.preventDefault();

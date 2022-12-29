@@ -3,7 +3,7 @@
         transition: all .5s ease;
     } */
 
-.card{
+.blogcard-container .card{
     max-width:414px;
     }
     

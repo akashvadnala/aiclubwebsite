@@ -14,7 +14,9 @@ import TextEditor from './components/Blogs/Editor/TextEditor'
 import CreateCompetition from './components/CreateCompetition/CreateCompetition';
 import ProjectDisplay from './components/Projects/ProjectDisplay';
 import EditProject from './components/AddProject/EditProject';
+import MyProjects from './components/Projects/myProjects';
 import PreviewProject from './components/AddProject/PreviewProject';
+import About from './components/About';
 
 
 const Routing = () => {
@@ -32,6 +34,7 @@ const Routing = () => {
         {/* Projects */}
         <Route exact path='/projects' element={<Projects />} />
         <Route exact path='/addproject' element={<AddProject />} />
+        <Route exact path='/myprojects' element={<MyProjects />} />
         <Route exact path='/projects/:url' element={<ProjectDisplay />} />
         <Route exact path='/projects/:url/edit' element={<EditProject />} />
         <Route exact path='/projects/:url/preview' element={<PreviewProject />} />
@@ -56,6 +59,9 @@ const Routing = () => {
         <Route exact path='/create-competition' element={<CreateCompetition />} />
         <Route exact path='/competitions/:spath/:path' element={<Compete />} />
         <Route exact path='/competitions/:spath' element={<Compete />} />
+
+        {/* About */}
+        <Route exact path='/about' element={<About />} />
 
         {/* Others */}
         <Route path='*' element={<Error />} />
