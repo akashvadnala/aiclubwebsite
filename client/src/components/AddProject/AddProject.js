@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './AddProject.css';
 import { Context } from '../../Context/Context';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ const AddProject = () => {
   const [ add2, setAdd2 ] =useState();
   const [xauthor,setXAuthor] = useState('');
   const [authorsCount,setAuthorsCount] = useState(1);
+  const [ load, setLoad ] = useState(0);
   const [ proj, setProj ] = useState({
     'title':'',
     'url':'',
@@ -21,6 +22,29 @@ const AddProject = () => {
     'content':'',
     'cover':''
   })
+  const [ teams, setTeams ] = useState([]);
+  let team=[];
+  const getTeams = () => {
+    try{
+      axios.get(`${SERVER_URL}/getTeams`)
+      .then(data=>{
+        team=data.data;
+        if(user){
+          team = team.filter(t=>t!==user.username);
+          setTeams(team);
+          setLoad(1);
+        }
+        else{
+          setLoad(-1);
+        }
+      })
+    }catch(err){
+      console.log(err);
+    }
+  }
+  useEffect(()=>{
+    getTeams();
+  },[user]);
   const handlePhoto = (e) => {
     setProj({ ...proj, ["cover"]: e.target.files[0] });
     console.log("proj", proj);
@@ -33,26 +57,28 @@ const AddProject = () => {
     const title=e.target.value;
     let url;
     setProj({...proj, ['title']:title});
-    console.log('proj',proj);
   }
 
   const handleInputs = (e) => {
     setProj({...proj, [e.target.name]:e.target.value});
-    console.log('proj',proj);
   }
   const removeXAuthor = (author) => {
     let current = proj.authors;
     current = current.filter(x => x!==author);
     setProj({...proj,['authors']:current});
+    teams.push(author);
+    setTeams(teams);
     setXAuthor('');
-    console.log('proj',proj);
   }
   const AddXAuthor = () => {
-    let current = proj.authors;
-    current.push(xauthor);
-    setProj({...proj,['authors']:current});
-    setXAuthor('');
-    console.log('proj',proj);
+    if(xauthor!=""){
+      team = teams.filter(t => t!==xauthor);
+      setTeams(team);
+      let current = proj.authors;
+      current.push(xauthor);
+      setProj({...proj,['authors']:current});
+      setXAuthor('');
+    }
   }
   const PostProject = async (e) => {
     e.preventDefault();
@@ -148,7 +174,17 @@ const AddProject = () => {
                   }
                   <div className="form-group my-2 row">
                     <div className='col col-9'>
-                      <input 
+                      <select name="xauthor" value={xauthor} onChange={(e) => setXAuthor(e.target.value)} className="form-select" aria-label="authors">
+                        <option value="">Select Author</option>
+                        {
+                          teams.map((t)=>{
+                            return(
+                              <option value={t}>{t}</option>
+                            )
+                          })
+                        }
+                      </select>
+                      {/* <input 
                           type='text' 
                           name="xauthor" 
                           value={xauthor} 
@@ -157,7 +193,7 @@ const AddProject = () => {
                           id="authors" 
                           aria-describedby="authors" 
                           placeholder="Enter Project Title" 
-                        />
+                        /> */}
                     </div>
                     <div className='col col-3'>
                       <input type="reset" className='btn btn-success' onClick={AddXAuthor} value="+Add" />

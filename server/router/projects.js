@@ -15,16 +15,25 @@ router.route('/updateProject/:url').put(async (req,res) => {
         let insertAuthors = updatedProj.authors;
         await Promise.all(
             removeAuthors.map(async author=>{
-                const team = await Team.findOne({username:author});
-                team.projects = team.projects.filter((x)=>x!==proj.url);
-                team.save();
+                try{
+                    const team = await Team.findOne({username:author});
+                    team.projects = team.projects.filter((x)=>x!==proj.url);
+                    await team.save();
+                }catch(err){
+                    console.log('Project Not Found')
+                }
             })
         );
         await Promise.all(
             insertAuthors.map(async author=>{
-                const team = await Team.findOne({username:author});
-                team.projects.push(proj.url);
-                team.save();
+                try{
+                    const team = await Team.findOne({username:author});
+                    team.projects.push(proj.url);
+                    await team.save();
+                }catch(err){
+                    console.log('Project Not Found')
+                }
+                
             })
         );
         console.log('Project Updated',updatedProj.title);
@@ -47,6 +56,17 @@ router.route('/projectAdd').post(async (req,res) => {
             cover:cover
         });
         await project.save();
+        await Promise.all(
+            project.authors.map(async author=>{
+                try{
+                    const team = await Team.findOne({username:author});
+                    team.projects.push(proj.url);
+                    await team.save();
+                }catch(err){
+                    console.log('Project Not Found')
+                }
+            })
+        );
         console.log(`${project.title} successfully uploaded`);
         res.status(201).json({message: "Project Uploaded Successfully"});
     }catch(err){
@@ -124,13 +144,18 @@ router.route('/getMyProjects/:user').get(async (req,res) => {
     let projects = [];
     if(team){
         await Promise.all(team.projects.map(async project=>{
-            const proj = await Project.findOne({url:project});
-            projects.push({
-                'title':proj.title,
-                'url':proj.url,
-                'cover':proj.cover,
-                'authors':proj.authors
-            });
+            try{
+                const proj = await Project.findOne({url:project});
+                projects.push({
+                    'title':proj.title,
+                    'url':proj.url,
+                    'cover':proj.cover,
+                    'authors':proj.authors
+                });
+            }catch(err){
+                console.log('Project Not Found');
+            }
+            
         }))
         res.status(200).json(projects);
     }

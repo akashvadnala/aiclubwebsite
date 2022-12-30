@@ -32,6 +32,7 @@ const Compete = () => {
             .then(data => {
                 if(data.status===201){
                     if(user && data.data.access.indexOf(user.username)>-1){
+                        console.log('accesss');
                         setHostAccess(true);
                     }
                     setComp(data.data);
