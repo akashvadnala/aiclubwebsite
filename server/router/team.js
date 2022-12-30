@@ -95,6 +95,7 @@ router.route('/teamadd').post(async (req,res) => {
     const cpassword = req.body.cpassword;
     const isadmin = req.body.isadmin;
     const ismember = req.body.ismember;
+    const canCreateCompetitions=req.body.canCreateCompetitions;
     console.log('body');
     const photo = req.body.photo;
     console.log('photo',photo);
