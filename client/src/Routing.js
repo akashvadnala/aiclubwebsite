@@ -10,14 +10,14 @@ import Events from './components/Events/Events';
 import Blogs from './components/Blogs/Blogs';
 import BlogDisplay from './components/Blogs/BlogDisplay';
 import Compete from './components/Inductions/Compete';
-import TextEditor from './components/Blogs/Editor/TextEditor'
 import CreateCompetition from './components/CreateCompetition/CreateCompetition';
 import ProjectDisplay from './components/Projects/ProjectDisplay';
 import EditProject from './components/AddProject/EditProject';
 import MyProjects from './components/Projects/myProjects';
 import PreviewProject from './components/AddProject/PreviewProject';
 import About from './components/About';
-
+import AddBlog from './components/Blogs/AddBlog/AddBlog';
+import EditBlog from './components/Blogs/AddBlog/EditBlog';
 
 const Routing = () => {
 
@@ -42,14 +42,11 @@ const Routing = () => {
         {/* Events */}
         <Route exact path='/events' element={<Events />} />
 
-        {/* Blogs */}
-        <Route exact path='/blogs' element={<Blogs />} />
-
-        {/* Blog Editor */}
-        <Route exact path='/blogs/editor/add' element={<TextEditor />} />
-
         {/* Blog Display */}
+        <Route exact path='/blogs' element={<Blogs />} />
+        <Route exact path='/addblog' element={<AddBlog />} />
         <Route exact path='/blogs/:url' element={<BlogDisplay />} />
+        <Route exact path='/blogs/:url/edit' element={<EditBlog />} />
         
         {/* Inductions */}
         {/* <Route exact path='/inductions-b21-b20' element={<Inductions />} /> */}

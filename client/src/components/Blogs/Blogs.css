@@ -1,0 +1,26 @@
+.blog-container .row .col-xs-12 p:nth-child(3){
+    text-align: end;
+    color: rgba(0,0,0.7);
+}
+
+.blog-container .row .col-xs-12{
+    padding-top: 12px;
+}
+
+.blog-container .row .col-xs-12:last-child hr{
+    display: none;
+}
+
+.authorcard-container{
+    width: 100%;
+}
+
+.authorcard-container img{
+    width: 5rem;
+    height: 5rem;
+}
+.authorcard-container .proj-desc{
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+}

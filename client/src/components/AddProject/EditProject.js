@@ -207,7 +207,7 @@ const EditProject = () => {
                                     className="form-control" 
                                     id="tags" 
                                     aria-describedby="tags" 
-                                    placeholder="Enter Project Title" 
+                                    placeholder="Enter Project tag" 
                                   />
                                 </div>
                                 <div className='col-4 paddl'>
