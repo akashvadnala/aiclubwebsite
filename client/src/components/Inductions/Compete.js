@@ -31,7 +31,7 @@ const Compete = () => {
             axios.get(`${SERVER_URL}/getCompete/${spath}`)
             .then(data => {
                 if(data.status===201){
-                    if(data.data.access.indexOf(user.username)>-1){
+                    if(user && data.data.access.indexOf(user.username)>-1){
                         setHostAccess(true);
                     }
                     setComp(data.data);

@@ -47,6 +47,7 @@ const Projects = () => {
               <div className='col-8 text-end'>
                 {user?
                 <>
+                  <NavLink rel="noreferrer" to="/projects" className="btn btn-sm">All Projects</NavLink>&nbsp;&nbsp;
                   <NavLink rel="noreferrer" to="/addproject" className="btn btn-sm btn-success">+Add Project</NavLink>
                 </>
                 :null}

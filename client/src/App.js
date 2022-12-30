@@ -18,9 +18,7 @@ function App() {
       </Helmet>
       <Navbar />
       <ScrollToTop />
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routing />
-      </Suspense>
+      <Routing />
       <Footer />
     </>
   );

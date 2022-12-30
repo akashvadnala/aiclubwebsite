@@ -28,7 +28,7 @@ const ProjectDisplay = () => {
                 return;
             }
             project=data.data.project;
-            if(data.data.project.authors.indexOf(user.username)>-1){
+            if(user && data.data.project.authors.indexOf(user.username)>-1){
                 setEdit(true);
             }
             setProj(data.data.project);
@@ -42,7 +42,7 @@ const ProjectDisplay = () => {
     
     useEffect(()=>{
         getProject();
-    },[])
+    },[user])
 
 
     const deleteProject = async (e) => {

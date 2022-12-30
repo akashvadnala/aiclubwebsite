@@ -7,10 +7,26 @@ require('../db/conn');
 router.route('/updateProject/:url').put(async (req,res) => {
     try{
         const {url} = req.params;
-        // console.log('req.body',req.body.url,req.body)
+        const proj = await Project.findOne({url:url});
+        let removeAuthors = proj.authors;
         const updatedProj = await Project.findOneAndUpdate({url:url},req.body,{
             new:true
         });
+        let insertAuthors = updatedProj.authors;
+        await Promise.all(
+            removeAuthors.map(async author=>{
+                const team = await Team.findOne({username:author});
+                team.projects = team.projects.filter((x)=>x!==proj.url);
+                team.save();
+            })
+        );
+        await Promise.all(
+            insertAuthors.map(async author=>{
+                const team = await Team.findOne({username:author});
+                team.projects.push(proj.url);
+                team.save();
+            })
+        );
         console.log('Project Updated',updatedProj.title);
         res.status(200).json(updatedProj);
     }catch (err) {
@@ -51,19 +67,18 @@ router.route('/getProject/:url').get(async (req,res) => {
         var project = await Project.findOne({url:url});
         const authors=project.authors;
         if(project){
-            authors.map(async (user)=>{
-                const author = await Team.findOne({username:user});
-                auth.push({
-                    'firstname':author.firstname,
-                    'lastname':author.lastname,
-                    'photo':author.photo,
-                    'description':author.description
+            await Promise.all(
+                authors.map(async (user)=>{
+                    const author = await Team.findOne({username:user});
+                    auth.push({
+                        'firstname':author.firstname,
+                        'lastname':author.lastname,
+                        'photo':author.photo,
+                        'description':author.description
+                    })
                 })
-            })
-            setTimeout(() => {
-                return res.status(200).json({'project':project,'authors':auth});
-            }, 1000);
-            
+            )
+            return res.status(200).json({'project':project,'authors':auth});           
         }
         else{
             return res.status(201).json(null);
@@ -105,8 +120,25 @@ router.route('/deleteProject/:url').post(async (req,res)=>{
 });
 
 router.route('/getMyProjects/:user').get(async (req,res) => {
-    const projectData = await Project.find({creator:req.params.user});
-    res.status(200).json(projectData);
+    const team = await Team.findOne({username:req.params.user});
+    let projects = [];
+    if(team){
+        await Promise.all(team.projects.map(async project=>{
+            const proj = await Project.findOne({url:project});
+            projects.push({
+                'title':proj.title,
+                'url':proj.url,
+                'cover':proj.cover,
+                'authors':proj.authors
+            });
+        }))
+        res.status(200).json(projects);
+    }
+    else{
+        res.status(422).json(null);
+    }
+    
+    
 });
 
 
