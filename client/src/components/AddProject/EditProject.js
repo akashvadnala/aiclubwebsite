@@ -22,14 +22,34 @@ const EditProject = () => {
   const [ proj, setProj ] = useState();
   const [ load, setLoad ] = useState(0);
   const [ preview, setPreview ] = useState(false);
+  const [ teams, setTeams ] = useState([]);
+  let team=[];
+  let project=null;
   const getProject = async () =>{
+    // getTeams
+    try{
+      axios.get(`${SERVER_URL}/getTeams`)
+      .then(data=>{
+        team=data.data;
+        setTeams(team);
+      })
+    }catch(err){
+      console.log(err);
+    }
+    // getProject
     try{
       axios.get(`${SERVER_URL}/getProjectEdit/${url}`)
-      .then(data => {
+      .then(async data => {
         if(data.status===200){
-          console.log('projget',data.data);
-          if(data.data.authors.indexOf(user.username)>-1){
-            setProj(data.data);
+          project=data.data;
+          if(user && project.authors.indexOf(user.username)>-1){
+            await Promise.all(project.authors.map((author)=>{
+              team = team.filter(t=>t!==author);
+            }));
+            setTeams(team);
+            setProj(project);
+            console.log('project',project);
+            console.log('team',team);
             setLoad(1);
           }
           else{
@@ -45,9 +65,10 @@ const EditProject = () => {
     }
     
   }
+
   useEffect(()=>{
     getProject();
-  },[]);
+  },[user]);
 
   const handleValue = (e) => {
     setProj({...proj, ['content']:e});
@@ -61,15 +82,21 @@ const EditProject = () => {
     let current = proj.authors;
     current = current.filter(x => x!==author);
     setProj({...proj,['authors']:current});
+    teams.push(author);
+    setTeams(teams);
     setXAuthor('');
     setPreview(false);
   }
   const AddXAuthor = () => {
-    let current = proj.authors;
-    current.push(xauthor);
-    setProj({...proj,['authors']:current});
-    setXAuthor('');
-    setPreview(false);
+    if(xauthor!==""){
+      team = teams.filter(t => t!==xauthor);
+      setTeams(team);
+      let current = proj.authors;
+      current.push(xauthor);
+      setProj({...proj,['authors']:current});
+      setXAuthor('');
+      setPreview(false);
+    }
   }
   const removeXTag = (tag) => {
     let current = proj.tags;
@@ -111,6 +138,7 @@ const EditProject = () => {
     }
   }
   console.log('proj',proj);
+  console.log('xauthor',xauthor);
   return (
     <>
       {load===0?<Loading />:
@@ -173,7 +201,7 @@ const EditProject = () => {
                               <div className='col-8 paddr'>
                                 <input 
                                     type='text' 
-                                    name="xauthor" 
+                                    name="xtag" 
                                     value={xtag} 
                                     onChange={(e) => setXTag(e.target.value)} 
                                     className="form-control" 
@@ -228,7 +256,17 @@ const EditProject = () => {
                         }
                         <div className="form-group my-2 row">
                           <div className='col col-9'>
-                            <input 
+                            <select name="xauthor" value={xauthor} onChange={(e) => setXAuthor(e.target.value)} className="form-select" aria-label="authors">
+                              <option value="">Select Author</option>
+                              {
+                                teams.map((t)=>{
+                                  return(
+                                    <option value={t}>{t}</option>
+                                  )
+                                })
+                              }
+                            </select>
+                            {/* <input 
                                 type='text' 
                                 name="xauthor" 
                                 value={xauthor} 
@@ -237,7 +275,7 @@ const EditProject = () => {
                                 id="authors" 
                                 aria-describedby="authors" 
                                 placeholder="Enter Project Title" 
-                              />
+                              /> */}
                           </div>
                           <div className='col col-3'>
                             <input type="reset" className='btn btn-success' onClick={AddXAuthor} value="+Add" />

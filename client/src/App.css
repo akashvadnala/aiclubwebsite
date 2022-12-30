@@ -43,6 +43,16 @@ hr{
   margin: 3px 0 3px !important;
 }
 
+.loading-container{
+  padding-top: calc(25% - 185px);
+  padding-bottom: calc(25% - 185px);
+}
+
+.loading-container img{
+  width: 30px;
+  height: 30px;
+}
+
 @media (min-width: 576px){
   .adjust{
     margin-left: 2.5% !important;

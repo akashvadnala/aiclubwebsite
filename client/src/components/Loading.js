@@ -1,8 +1,13 @@
 import React from 'react';
+import gif from '../EditableStuff/loading.webp';
 
 const Loading = () => {
   return (
-    <>Loading..</>
+    <>
+      <div className='text-center loading-container'>
+        <img src={gif} alt="Loading.." />
+      </div>
+    </>
   )
 }
 

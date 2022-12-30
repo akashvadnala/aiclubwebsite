@@ -11,6 +11,15 @@ router.route('/').get((req,res)=>{
     res.send(`Hello world from the server router js`);
 });
 
+router.route('/getTeams').get(async (req,res)=>{
+    let users=[];
+    const teams = await Team.find({ismember:true});
+    await Promise.all(
+        teams.map(t=>users.push(t.username))
+    );
+    return res.status(200).json(users);
+})
+
 router.post('/login', async (req, res, next) => {
     try{
         let token;
