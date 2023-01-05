@@ -6,17 +6,19 @@ import "./BlogDisplay.css";
 import ProfileCard from "./profile/ProfileCard";
 import Tag from "./tags/Tag";
 import axios from "axios";
+import Loading from "../Loading";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import { Context } from "../../Context/Context";
-import { NavLink } from 'react-router-dom';
-
+import { NavLink } from "react-router-dom";
 
 const BlogDisplay = () => {
   const params = new useParams();
   const url = params.url;
   const { user } = useContext(Context);
   const [blog, setBlog] = useState(null);
-  const [edit, setedit] = useState(0);
+  const [edit, setedit] = useState(null);
+  const [load, setLoad] = useState(0);
+  const [authordetails, setauthordetails] = useState(null);
   const navigate = useNavigate();
 
   const getBlog = async () => {
@@ -25,15 +27,18 @@ const BlogDisplay = () => {
       console.log("blog", res.status);
       if (res.status === 200) {
         console.log("blog", res.data);
-        const post_ = res.data;
-        setBlog(res.data);
+        const post_ = res.data.blog;
+        setBlog(res.data.blog);
+        setauthordetails(res.data.author);
+        setLoad(1);
         if (user && post_.authorName.indexOf(user.username) > -1) {
-          setedit(1);
+          setedit(true);
         } else {
-          setedit(0);
+          setedit(false);
         }
       } else {
-        setedit(0);
+        setLoad(-1);
+        setedit(false);
         console.log("No Blog Found");
       }
     } catch (err) {
@@ -43,7 +48,7 @@ const BlogDisplay = () => {
 
   useEffect(() => {
     getBlog();
-  }, []);
+  }, [user]);
 
   const returnDDMMYYYY = (inp) => {
     const d = new Date(inp);
@@ -73,46 +78,54 @@ const BlogDisplay = () => {
 
   return (
     <>
-      <div className="d-flex flex-wrap justify-content-around">
-        {blog ? (
-          <div className="blog-wrap">
-            <header>
-              <h3 className="mt-5">{blog.title}</h3>
-              <p className="blog-date">
-                Published on {returnDDMMYYYY(blog.createdAt)}
-              </p>
-              {edit && (
-                <div className="text-center fs-6 p-2">
-                  <NavLink to={`/blogs/${blog.url}/edit`}>Edit </NavLink>·
-                  <NavLink rel="noreferrer" onClick={deleteBlog}>
-                    {" "}
-                    Delete
-                  </NavLink>
-                </div>
-              )}
-              <div className="blog-subCategory">
-                {blog.tags.map((tag, i) => (
-                  <div key={i}>
-                    <Tag label={tag} />
+      {load === 0 ? (
+        <Loading />
+      ) : load === 1 ? (
+        <div className="container projectdisplay-container py-5">
+          <div className="row">
+            <div className="col-lg-8 px-5">
+              <div className="header align-center">
+                <h3 className="text-center pb-1">{blog.title}</h3>
+                <p className="blog-date text-center pb-1">
+                  Published on {returnDDMMYYYY(blog.createdAt)}
+                </p>
+                {edit && (
+                  <div className="text-center fs-6 p-2">
+                    <NavLink
+                      to={`/blogs/${blog.url}/edit`}
+                      className="btn btn-primary btn-sm"
+                    >
+                      Edit{" "}
+                    </NavLink>
+                    ·
+                    <NavLink
+                      rel="noreferrer"
+                      onClick={deleteBlog}
+                      className="btn btn-danger btn-sm"
+                    >
+                      {" "}
+                      Delete
+                    </NavLink>
                   </div>
-                ))}
+                )}
+                <div className="blog-subCategory">
+                  {blog.tags.map((tag, i) => (
+                    <div key={i}>
+                      <Tag label={tag} />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </header>
-            <p
-              className="blog-desc"
-              dangerouslySetInnerHTML={{ __html: blog.content }}
-            ></p>
+              <p dangerouslySetInnerHTML={{ __html: blog.content }}></p>
+            </div>
+            <div className="col-lg-4" >
+              <ProfileCard a={authordetails} />
+            </div>
           </div>
-        ) : (
-          <EmptyList />
-        )}
-        {blog && (
-          <ProfileCard
-            authorAvatar={blog.authorAvatar}
-            authorName={blog.authorName}
-          />
-        )}
-      </div>
+        </div>
+      ) : (
+        <EmptyList />
+      )}
     </>
   );
 };
