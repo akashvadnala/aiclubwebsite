@@ -48,7 +48,7 @@ const Projects = () => {
                     <NavLink
                       rel="noreferrer"
                       to="/myprojects"
-                      className="btn btn-sm"
+                      className="btn btn-sm btn-secondary mx-1"
                     >
                       My Projects
                     </NavLink>
