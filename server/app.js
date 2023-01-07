@@ -23,7 +23,7 @@ app.use(require('./router/inductions'));
 app.use(require('./router/overview'));
 app.use(require('./router/blogs'));
 app.use(require('./router/projects'));
-
+app.use('/events',require('./router/events'));
 
 const PORT = process.env.PORT || 5000;
 

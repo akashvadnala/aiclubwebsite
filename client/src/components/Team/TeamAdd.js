@@ -169,7 +169,7 @@ const TeamAdd = () => {
     ]
   return (
     <>
-        {/* {user? */}
+        {user?
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
                 <h3>Add Team Member</h3>
@@ -208,7 +208,7 @@ const TeamAdd = () => {
                 </form>
             </div>
         </div>
-        {/* :<Error />} */}
+        :<Error />} 
     </>
   )
 }
