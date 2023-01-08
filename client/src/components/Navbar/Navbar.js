@@ -48,7 +48,7 @@ const Navbar = () => {
             {
                 'show':true,
                 'link':'/events',
-                'name':'Past Events'
+                'name':'Events'
             },
             // {
             //     'show':true,

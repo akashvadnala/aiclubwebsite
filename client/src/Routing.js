@@ -18,6 +18,7 @@ import PreviewProject from './components/AddProject/PreviewProject';
 import About from './components/About';
 import AddBlog from './components/Blogs/AddBlog/AddBlog';
 import EditBlog from './components/Blogs/AddBlog/EditBlog';
+import AddEvent from './components/Events/AddEvent';
 
 const Routing = () => {
 
@@ -41,6 +42,7 @@ const Routing = () => {
 
         {/* Events */}
         <Route exact path='/events' element={<Events />} />
+        <Route exact path='/addevent' element={<AddEvent />} />
 
         {/* Blog Display */}
         <Route exact path='/blogs' element={<Blogs />} />
