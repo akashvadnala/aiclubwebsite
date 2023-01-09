@@ -6,8 +6,8 @@ router.route('/getEvents').get(async (req,res)=> {
 
     const upcoming = await Event.find({
         $and:[
-            {eventStart:{$lt:Date()}},
-            {eventEnd:{$lt:Date()}}
+            {eventStart:{$gt:Date()}},
+            {eventEnd:{$gt:Date()}}
         ]
     });
     const ongoing = await Event.find({
@@ -18,8 +18,8 @@ router.route('/getEvents').get(async (req,res)=> {
     });
     const past = await Event.find({
         $and:[
-            {eventStart:{$gt:Date()}},
-            {eventEnd:{$gt:Date()}}
+            {eventStart:{$lt:Date()}},
+            {eventEnd:{$lt:Date()}}
         ]
     });
 
@@ -31,6 +31,7 @@ router.route('/getEvents').get(async (req,res)=> {
 router.route('/addEvent').post(async (req,res)=>{
     try{
         const event = req.body;
+        console.log("server ",event);
         const newEvent = new Event(event);
         await newEvent.save();
         console.log(`${event.title} created sucessfull`);
@@ -42,8 +43,8 @@ router.route('/addEvent').post(async (req,res)=>{
     
 })
 
-router.route('/getEvent').get(async (req,res)=>{
-    const {url} = req.query;
+router.route('/getEvent/:url').get(async (req,res)=>{
+    const {url} = req.params;
     try{
         const event = await Event.findOne({url:url});
         if(event){

@@ -7,3 +7,8 @@
     background-color: rgb(248 249 251);
     cursor: pointer;
 }
+
+#link:hover {
+    color: rgb(214, 81, 29);
+    cursor: pointer;
+}
