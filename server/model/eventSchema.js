@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const eventSchema = new Schema({
-    name:{
+    title:{
         type: String,
         required:true
     },
@@ -14,6 +14,10 @@ const eventSchema = new Schema({
         type: String,
         required:true
     }],
+    cover:{
+        type: String,
+        required: true, 
+    },
     poster:{
         type: String,
         required:true
@@ -22,13 +26,21 @@ const eventSchema = new Schema({
         type: String,
         required:true
     },
-    duration:{
-        type: String,
-        required:true
-    },
-    eventSchedule:{
+    eventStart:{
         type:Date,
         required: true
+    },
+    eventEnd:{
+        type: Date,
+        require:true
+    },
+    eventLink:{
+        type:String,
+        default: null
+    },
+    eventLocation:{
+        type:String,
+        default: null
     },
     createdAt:{
         type: Date,

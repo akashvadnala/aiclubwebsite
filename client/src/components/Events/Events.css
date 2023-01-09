@@ -1,0 +1,12 @@
+.event-container .row .col-xs-12 p:nth-child(3){
+    text-align: end;
+    color: rgba(0,0,0.7);
+}
+
+.event-container .row .col-xs-12{
+    padding-top: 12px;
+}
+
+.event-container .row .col-xs-12:last-child hr{
+    display: none;
+}
