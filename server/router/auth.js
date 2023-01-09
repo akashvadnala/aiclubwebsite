@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 let path = require('path');
 const authenticate = require('../middleware/authenticate');
 const Team = require('../model/teamSchema');
+const { query } = require('express');
 
 
 router.route('/').get((req,res)=>{
@@ -50,7 +51,6 @@ router.post('/login', async (req, res, next) => {
         console.log('Invalid Credentials');
     }
 });
-
 
 // router.get('/about', authenticate, (req,res)=>{
 //     console.log(`Hello my About`);

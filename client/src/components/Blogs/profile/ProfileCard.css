@@ -16,7 +16,7 @@
 }
 
 .ProfileCard .card:hover .image img {
-    transform: scale(1.5)
+    transform: scale(1.1)
 }
 
 .ProfileCard .btn {

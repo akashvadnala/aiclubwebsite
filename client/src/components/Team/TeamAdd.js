@@ -236,7 +236,7 @@ const TeamAdd = () => {
                 </form>
             </div>
         </div>
-        :<Error />}
+        :<Error />} 
     </>
   )
 }

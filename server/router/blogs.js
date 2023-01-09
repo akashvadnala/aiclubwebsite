@@ -1,16 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const Blog = require('../model/BlogSchema');
+const Team = require('../model/teamSchema');
+
+router.route('/updateBlog/:url').put(async (req,res) => {
+    try{
+        const {url} = req.params;
+        // console.log('req.body',req.body.url,req.body)
+        const updatedBlog = await Blog.findOneAndUpdate({url:url},req.body,{
+            new:true
+        });
+        console.log('Project Updated',updatedBlog);
+        res.status(200).json(updatedBlog);
+    }catch (err) {
+        res.status(422).json(err);
+    }
+})
 
 router.route('/blogadd').post(async (req,res) => {
-    const authorName = req.body.authorName;
     const title = req.body.title;
-    const url = req.body.url;
-    const content = req.body.content;
-    const tags = req.body.tags;
-    const authorAvatar = req.body.authorAvatar;
-    const cover = req.body.cover;
-    if( !title || !content){
+    if( !title){
         return res.status(400).json({ error: "Plz fill the field properly" });
     }
     console.log("Posting..");
@@ -38,6 +47,7 @@ router.route('/getBlog/:url').get(async (req,res) => {
     try{
         const blog = await Blog.findOne({url:url});
         if(blog){
+            console.log('blog',blog);
             return res.status(200).json(blog);
         }
         else{
@@ -47,7 +57,20 @@ router.route('/getBlog/:url').get(async (req,res) => {
         console.log(err);
         res.status(422).send(`${url} not found`);
     }
-})
+});
 
+router.route('/deleteBlog/:url').post(async (req,res)=>{
+    const {url} = req.params;
+    console.log(url);
+    try{
+        await Blog.deleteOne({url:url});
+        console.log('Deleted..');
+        return res.status(200).json({msg:"Project Deleted"});
+    } 
+    catch(err){
+        console.log("Cannot Delete the Project");
+        return res.status(422).json({msg:"Cannot Delete the Project"});
+    }
+});
 
 module.exports = router;

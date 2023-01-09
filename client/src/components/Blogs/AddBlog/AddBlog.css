@@ -1,0 +1,4 @@
+.jodit_sticky>.jodit-toolbar__box{
+    position: sticky !important;
+    top: 40px !important;
+}

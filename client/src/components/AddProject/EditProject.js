@@ -148,7 +148,7 @@ const EditProject = () => {
               <div className='text-center fs-6 pb-1'>
                 {
                   preview?
-                    <NavLink to={`/projects/${proj.url}`}>Preview</NavLink>
+                    <NavLink to={`/projects/${proj.url}`} className="btn btn-success btn-sm">Preview</NavLink>
                   :
                     <span className='text-muted'>Save for Preview</span>
                 }
@@ -207,7 +207,7 @@ const EditProject = () => {
                                     className="form-control" 
                                     id="tags" 
                                     aria-describedby="tags" 
-                                    placeholder="Enter Project Title" 
+                                    placeholder="Enter Project tag" 
                                   />
                                 </div>
                                 <div className='col-4 paddl'>

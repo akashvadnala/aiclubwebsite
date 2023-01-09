@@ -16,7 +16,7 @@ const BlogSchema = new Schema({
     },
     content:{
         type: String,
-        required: true, 
+        required: false, 
     },
     tags:[{
         type: String
@@ -28,6 +28,10 @@ const BlogSchema = new Schema({
     cover:{
         type: String,
         required: true, 
+    },
+    public:{
+        type:Boolean,
+        default:false
     },
     createdAt:{
         type: Date,

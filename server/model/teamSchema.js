@@ -48,7 +48,7 @@ const teamSchema = new mongoose.Schema({
     },
     canCreateCompetitions:{
         type: Boolean,
-        required: true
+        required: false
     },
     password: {
         type: String,
