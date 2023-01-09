@@ -45,7 +45,6 @@ router.route('/updateProject/:url').put(async (req,res) => {
 
 router.route('/projectAdd').post(async (req,res) => {
     const { title, url, creator, authors, content, cover } = req.body;
-    console.log('new-project',req.body);
     try{
         const project = new Project({
             title:title,
@@ -85,8 +84,8 @@ router.route('/getProject/:url').get(async (req,res) => {
     var auth=[];
     try{
         var project = await Project.findOne({url:url});
-        const authors=project.authors;
         if(project){
+            const authors=project.authors;
             await Promise.all(
                 authors.map(async (user)=>{
                     const author = await Team.findOne({username:user});
@@ -127,13 +126,24 @@ router.route('/getProjectEdit/:url').get(async (req,res) => {
 
 router.route('/deleteProject/:url').post(async (req,res)=>{
     const {url} = req.params;
-    console.log(url);
-    try{
+    const proj = await Project.findOne({url:url});
+    if(proj){
+        const authors = proj.authors;
+        await Promise.all(authors.map(async author=>{
+            try{
+                const team = await Team.findOne({username:author});
+                team.projects = team.projects.filter(p=>p!=url);
+                await team.save();
+            }catch(err){
+                console.log(err);
+            }
+            
+        }))
         await Project.deleteOne({url:url});
         console.log('Deleted..');
         return res.status(200).json({msg:"Project Deleted"});
     } 
-    catch(err){
+    else{
         console.log("Cannot Delete the Project");
         return res.status(422).json({msg:"Cannot Delete the Project"});
     }

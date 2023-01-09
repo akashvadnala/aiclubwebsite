@@ -141,6 +141,14 @@ router.route('/teamadd').post(async (req,res) => {
     }  
 });
 
+router.route('/getTeams').get(async (req,res)=>{
+    let users=[];
+    const teams = await Team.find({ismember:true});
+    await Promise.all(
+        teams.map(t=>users.push(t.username))
+    );
+    return res.status(200).json(users);
+})
 
 router.route('/getTeam').get(async (req,res)=>{
     const teamData = await Team.find({ismember:true});
@@ -196,6 +204,12 @@ router.route('/team/delete/:username').post(async (req, res) => {
     const {username} = req.params;
     const team = await Team.findOne({ username: username });
     if(team){
+        const projects = team.projects;
+        await Promise.all(projects.map(async project=>{
+            const proj = await Project.findOne({url:project});
+            proj.authors = proj.authors.filter(t=>t!==username);
+            await proj.save();
+        }))
         await Team.deleteOne({ username: username });
         console.log('Deleted..');
         return res.status(201).json({ message: "Team Member Deleted Successfully"});

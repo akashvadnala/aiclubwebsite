@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import { SERVER_URL } from '../../EditableStuff/Config';
 
-function MyVerticallyCenteredModal(props) {
+function TeamLogin(props) {
   const [ username, setUsername ] = useState();
   const [ password, setPassword ] = useState();
   const [ signin, setsignin ] = useState('Sign in');
@@ -15,7 +16,7 @@ function MyVerticallyCenteredModal(props) {
     setsignin(<i class="fa fa-spinner fa-spin"></i>)
     setsignin2('Signing in ');
     try{
-      await axios.post('http://localhost:5000/login',
+      await axios.post(`${SERVER_URL}/login`,
       {
         'username':username,
         'password':password
@@ -51,7 +52,7 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Header closeButton>
       </Modal.Header>
       <Modal.Body>
-        <h4>Login</h4>
+        <h4 className='pb-3'>Login <span className='h5'>(Team Member)</span></h4>
         {msg?<div className='alert alert-danger'>{msg}</div>:null}
         <div className='login-container'>
         <form onSubmit={Login} method="POST">
@@ -75,4 +76,4 @@ function MyVerticallyCenteredModal(props) {
   );
 }
 
-export default MyVerticallyCenteredModal;
+export default TeamLogin;

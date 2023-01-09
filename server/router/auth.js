@@ -11,15 +11,6 @@ router.route('/').get((req,res)=>{
     res.send(`Hello world from the server router js`);
 });
 
-router.route('/getTeams').get(async (req,res)=>{
-    let users=[];
-    const teams = await Team.find({ismember:true});
-    await Promise.all(
-        teams.map(t=>users.push(t.username))
-    );
-    return res.status(200).json(users);
-})
-
 router.post('/login', async (req, res, next) => {
     try{
         let token;
@@ -30,9 +21,7 @@ router.post('/login', async (req, res, next) => {
         }
         var team = await Team.findOne({ username:username });
         if(!team){
-            console.log('team',team);
             team = await Team.findOne({ email:username });
-            console.log('team',team);
             if(!team){
                 return res.status(200).json({ error: "Invalid Credentials" });
             }
@@ -45,10 +34,8 @@ router.post('/login', async (req, res, next) => {
                 return res.status(200).json({ error: "Invalid Credentials" });
             }
             else{
-                console.log('No error');
                 if(team){
                     token = await team.generateAuthToken();
-                    console.log('token',token);
                     res.cookie('jwtoken',token,{  // jwtoken->name
                         expires: new Date(Date.now() + 258920000000), //30 days
                         httpOnly: true
@@ -78,11 +65,17 @@ router.post('/login', async (req, res, next) => {
 
 router.get('/getUserData', authenticate, (req,res)=>{
     // console.log(`Hello ${req.rootUser?req.rootUser.username:'Not logged in'}`);
-    res.send(req.rootUser);
+    if(req.rootUser){
+        res.status(200).json(req.rootUser);
+    }
+    else{
+        res.status(201).json(null);
+    }
 });
 
 router.get('/logout', (req,res)=>{
     res.clearCookie('jwtoken',{path:'/'});
+    res.clearCookie('cjwtoken',{path:'/'});
     res.status(200).send({msg:'Logged Out Succesfully'});
 });
 

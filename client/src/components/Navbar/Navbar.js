@@ -3,9 +3,11 @@ import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import {SERVER_URL} from '../../EditableStuff/Config';
-import MyVerticallyCenteredModal from './MyVerticallyCenteredModal';
+import TeamLogin from './TeamLogin';
 import { Context } from '../../Context/Context';
+import { CompeteContext } from '../../Context/CompeteContext';
 import axios from 'axios';
+import CompeteLogin from './CompeteLogin';
 // import CList from '../../EditableStuff/CList';
 
 const Navbar = () => {
@@ -66,9 +68,37 @@ const Navbar = () => {
             //     'name':'Contact Us'
             // }
         ]
-        const { user } = useContext(Context);
-        console.log('user',user);
+        // const { user } = useContext(Context);
+        // console.log('user',user);
+        // const { cuser } = useContext(CompeteContext);
+        const [ user, setUser ] = useState(null);
+        const getUser = () => {
+            try{
+                axios.get(`${SERVER_URL}/getUserData`,
+                {withCredentials: true})
+                .then(data=>{
+                    if(data.status===200){
+                        setUser(data.data);
+                    }
+                    else{
+                        axios.get(`${SERVER_URL}/getCUserData`,
+                        {withCredentials: true})
+                        .then(data=>{
+                            if(data.status===200){
+                                setUser(data.data);
+                            }
+                        })
+                    }
+                })
+            }catch(err){
+                console.log(err);
+            }
+        }
+        useEffect(()=>{
+            getUser();
+        },[]);
         const [modalShow, setModalShow] = React.useState(false);
+        const [modalShow2, setModalShow2] = React.useState(false);
         const Logout = async () => {
             try{
                 const res = await axios.get(`${SERVER_URL}/logout`,
@@ -133,28 +163,55 @@ const Navbar = () => {
                         <NavLink className="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Hello {user.firstname}
                         </NavLink>
-                    
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            {user?(user.canCreateCompetitions || user.isadmin)?<NavLink className="dropdown-item" to="/create-competition">Create Competition</NavLink>:null:null}
+                            {user?(user.canCreateCompetitions || user.isadmin)?<><NavLink className="dropdown-item" to="/create-competition">Create Competition</NavLink><hr /></>:null:null}
+                            <NavLink className="dropdown-item" to="/profile">My Profile</NavLink>
                             <hr />
-                            <NavLink className="dropdown-item" to="/addproject">Add Project</NavLink>
-                            <NavLink className="dropdown-item" to="/myprojects">My Projects</NavLink>
-                            <hr />
-                            {user?user.isadmin?<NavLink className="dropdown-item" to="/admin">Admin</NavLink>:null:null}
+                            {user?user.isadmin?<><NavLink className="dropdown-item" to="/admin">Admin</NavLink><hr /></>:null:null}
                             <a className="dropdown-item" href="#" onClick={Logout}>Logout</a>
                         </div>
                     </div>
                 </li>
                 :
                 <li className="nav-item">
-                    <NavLink className="nav-link" variant="primary" onClick={() => setModalShow(true)}>
+                    <div className="dropdown show">
+                        <NavLink className="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Login
+                        </NavLink>
+                    
+                        <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            
+                            <div className="dropdown-item pe-cursor" onClick={
+                                () => {
+                                    setModalShow2(false);
+                                    setModalShow(true);
+                                }
+                            }>
+                                Team Member
+                            </div>
+                            <hr />
+                            <div className="dropdown-item pe-cursor" onClick={
+                                () => {                                    
+                                    setModalShow(false);
+                                    setModalShow2(true);
+                                }
+                            }>
+                                Competition
+                            </div>
+                        </div>
+                    </div>
+                    {/* <NavLink className="nav-link" variant="primary" onClick={() => setModalShow(true)}>
                         Login
-                    </NavLink>
+                    </NavLink> */}
                 </li>
             }
-            <MyVerticallyCenteredModal
+            <TeamLogin
                 show={modalShow}
                 onHide={() => setModalShow(false)}
+            />
+            <CompeteLogin
+                show={modalShow2}
+                onHide={() => setModalShow2(false)}
             />
         </>
         )

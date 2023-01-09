@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import './AddProject.css';
 import { Context } from '../../Context/Context';
 import { useNavigate } from 'react-router-dom';
-import Error from '../Error';
 import { CLIENT_URL, SERVER_URL } from '../../EditableStuff/Config';
 import axios from 'axios';
+import Error from '../Error';
+import Loading from '../Loading';
 
 const AddProject = () => {
   const navigate = useNavigate();
@@ -14,14 +15,15 @@ const AddProject = () => {
   const [xauthor,setXAuthor] = useState('');
   const [authorsCount,setAuthorsCount] = useState(1);
   const [ load, setLoad ] = useState(0);
-  const [ proj, setProj ] = useState({
+  let project = {
     'title':'',
     'url':'',
     'creator':user?user.username:'',
     'authors':[user?user.username:''],
     'content':'',
     'cover':''
-  })
+  };
+  const [ proj, setProj ] = useState({})
   const [ teams, setTeams ] = useState([]);
   let team=[];
   const getTeams = () => {
@@ -31,6 +33,7 @@ const AddProject = () => {
         team=data.data;
         if(user){
           team = team.filter(t=>t!==user.username);
+          setProj(project);
           setTeams(team);
           setLoad(1);
         }
@@ -127,7 +130,7 @@ const AddProject = () => {
   console.log('proj',proj);
   return (
     <>
-      {user?
+      {load===0?<Loading />:load===1 && user?
         <div className='container addproject-container text-center'>
           <div className='adjust'>
             <h3>Add Project</h3>

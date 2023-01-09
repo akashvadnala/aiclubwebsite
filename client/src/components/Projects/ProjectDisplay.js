@@ -22,7 +22,7 @@ const ProjectDisplay = () => {
     const getProject = async () =>{
         try{
             const data = await axios.get(`${SERVER_URL}/getProject/${url}`)
-            console.log('project',data.data.project);
+            // console.log('project',data.data.project);
             if(data.status!==200){
                 setLoad(-1);
                 return;

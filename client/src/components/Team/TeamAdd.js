@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Context } from '../../Context/Context';
 import { SERVER_URL } from '../../EditableStuff/Config';
 import Error from '../Error';
+import Loading from '../Loading';
 
 const TeamAdd = () => {
     const navigate = useNavigate();
@@ -22,9 +23,29 @@ const TeamAdd = () => {
         ismember:false,
         canCreateCompetitions:false
     });
-    const { user } = useContext(Context);
-    const [ add, setAdd ] = useState('Submit');
-    const [ add2, setAdd2 ] =useState();
+    // const { user } = useContext(Context);
+    const [ load, setLoad ] = useState(0);
+    const [ add, setAdd ] = useState(false);
+    const getUser = () => {
+        try{
+            axios.get(`${SERVER_URL}/getUserData`,
+            {withCredentials: true})
+            .then(async data=>{
+                if(data.status===200 && data.data.isadmin){
+                    setLoad(1);
+                }
+                else{
+                    setLoad(-1);
+                }
+            })
+        }catch(err){
+            console.log(err);
+            setLoad(-1);
+        }
+    }
+    useEffect(()=>{
+        getUser();
+    },[]);
     let name, value, checked;
     const handleInputs = (e) => {
         name = e.target.name;
@@ -54,8 +75,7 @@ const TeamAdd = () => {
             console.log('Fill required Details');
         }
         else{
-            setAdd('Submitting ');
-            setAdd2(<i class="fa fa-spinner fa-spin"></i>);
+            setAdd(true);
             const data = new FormData();
             const photoname = Date.now() + photo.name;
             data.append("name",photoname);
@@ -169,7 +189,7 @@ const TeamAdd = () => {
     ]
   return (
     <>
-        {user?
+        {load===0?<Loading />:load===1?
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
                 <h3>Add Team Member</h3>
@@ -204,7 +224,15 @@ const TeamAdd = () => {
                         <input type="checkbox" checked={team.canCreateCompetitions} name="canCreateCompetitions" onChange={handleCheck} className="form-check-input" id="canCreateCompetitions" />
                         <label class="form-check-label" for="canCreateCompetitions">Can Create Competitions</label>
                     </div>
-                    <button type="submit" name="submit" id="submit" className="btn btn-primary">{add}{add2}</button>
+                    <button type="submit" name="submit" id="submit" className="btn btn-primary">
+                        {
+                        add?
+                            <>
+                            <span>Submitting </span> 
+                            <i class="fa fa-spinner fa-spin"></i>
+                            </>
+                        :'Submit'}
+                    </button>
                 </form>
             </div>
         </div>

@@ -30,7 +30,6 @@ router.route('/blogadd').post(async (req,res) => {
 
 router.route('/getBlogs').get(async (req,res) => {
     const blogData = await Blog.find({});
-    console.log('blogData',blogData);
     res.status(200).json(blogData);
 });
 
@@ -39,7 +38,6 @@ router.route('/getBlog/:url').get(async (req,res) => {
     try{
         const blog = await Blog.findOne({url:url});
         if(blog){
-            console.log('blog',blog);
             return res.status(200).json(blog);
         }
         else{

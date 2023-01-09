@@ -2,23 +2,12 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const teamSchema = new mongoose.Schema({
-    projects:[{
-        type: String,
-    }],
+const CTeamSchema = new mongoose.Schema({
     firstname: {
         type: String,
         required: true
     },
     lastname: {
-        type: String,
-        required: true
-    },
-    profession: {
-        type: String,
-        required: true
-    },
-    description: {
         type: String,
         required: true
     },
@@ -30,31 +19,10 @@ const teamSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    year: {
-        type: Number,
-        required: true
-    },
     photo:{
-        type: String,
-        required: true
-    },
-    isadmin:{
-        type: Boolean,
-        required: true
-    },
-    ismember:{
-        type: Boolean,
-        required: true
-    },
-    canCreateCompetitions:{
-        type: Boolean,
-        required: true
+        type: String
     },
     password: {
-        type: String,
-        required: true
-    },
-    cpassword: {
         type: String,
         required: true
     },
@@ -69,7 +37,7 @@ const teamSchema = new mongoose.Schema({
 });
 
 
-teamSchema.pre('save', async function(next){
+CTeamSchema.pre('save', async function(next){
     if(this.isModified('password')){
         this.password = bcrypt.hash(this.password, 10);
         this.cpassword = this.password;
@@ -77,7 +45,7 @@ teamSchema.pre('save', async function(next){
     next();
 });
 
-teamSchema.methods.generateAuthToken = async function(){
+CTeamSchema.methods.generateAuthToken = async function(){
     try{
         let token_d = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
         this.tokens = this.tokens.concat({ token: token_d });
@@ -88,6 +56,6 @@ teamSchema.methods.generateAuthToken = async function(){
     }
 }
 
-const Team = mongoose.model('Team',teamSchema);
+const CTeam = mongoose.model('CTeam',CTeamSchema);
 
-module.exports = Team;
+module.exports = CTeam;

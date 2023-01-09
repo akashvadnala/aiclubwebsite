@@ -9,10 +9,10 @@ router.route('/getCompete/:url').get(async (req,res) => {
     const data = await Competitions.findOne({url:url});
     console.log('compete',data);
     if(data){
-        res.status(201).json(data);
+        res.status(200).json(data);
     }
     else{
-        res.status(200).json(null);
+        res.status(201).json(null);
     }
 });
 

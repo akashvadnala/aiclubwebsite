@@ -30,7 +30,7 @@ const Compete = () => {
         try{
             axios.get(`${SERVER_URL}/getCompete/${spath}`)
             .then(data => {
-                if(data.status===201){
+                if(data.status===200){
                     if(user && data.data.access.indexOf(user.username)>-1){
                         console.log('accesss');
                         setHostAccess(true);
@@ -50,7 +50,7 @@ const Compete = () => {
     
     useEffect(() => {
         getCompete();
-    },[]);
+    },[user]);
 
     const getPage = async (path) => {
         console.log('comp',comp);

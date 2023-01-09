@@ -17,7 +17,8 @@ import EditProject from './components/AddProject/EditProject';
 import MyProjects from './components/Projects/myProjects';
 import PreviewProject from './components/AddProject/PreviewProject';
 import About from './components/About';
-
+import CompeteSignup from './components/Navbar/CompeteSignup';
+ 
 
 const Routing = () => {
 
@@ -59,6 +60,10 @@ const Routing = () => {
         <Route exact path='/create-competition' element={<CreateCompetition />} />
         <Route exact path='/competitions/:spath/:path' element={<Compete />} />
         <Route exact path='/competitions/:spath' element={<Compete />} />
+
+        {/* Signup */}
+        <Route exact path='/signup' element={<CompeteSignup />} />
+
 
         {/* About */}
         <Route exact path='/about' element={<About />} />

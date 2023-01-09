@@ -1,15 +1,16 @@
 import Carousel from 'react-bootstrap/Carousel';
 import './Slider.css';
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 function Slider() {
   const slides = [
     {
         'imgsrc':'https://i2.wp.com/myblogs.pw/wp-content/uploads/2018/08/AI-Web.jpg?fit=1034%2C480&ssl=1',
-        'caphead':'First slide label',
-        'captext':'Nulla vitae elit libero, a pharetra augue mollis interdum.',
+        'caphead':'Inductions For B20 and B21',
+        'captext':'AI CLUB Inductions for batch B20 and B21.',
         'linktitle':'Inductions',
-        'link':'/inductions'
+        'link':'/competitions/inductions-b20-b21'
     },
     {
       'imgsrc':'https://media.istockphoto.com/photos/artificial-intelligence-concept-picture-id1364859722?b=1&k=20&m=1364859722&s=170667a&w=0&h=o7emaeAZHOvBP1_o5ewQH9y9279rQWS9xO_xU4r-u-4=',
@@ -42,7 +43,7 @@ function Slider() {
               <Carousel.Caption>
                 <h3>{slide.caphead}</h3>
                 <p>{slide.captext}</p>
-                <a href={slide.link}>{slide.linktitle}</a>
+                <NavLink className="btn slider-a" to={slide.link}>{slide.linktitle}</NavLink>
               </Carousel.Caption>
             </Carousel.Item>
           )
