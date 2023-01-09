@@ -48,7 +48,7 @@ const Events = () => {
               <h2>Events</h2>
             </div>
             <div className="col-8 text-end">
-              {user ? (
+              {user.isadmin ? (
                 <NavLink
                   rel="noreferrer"
                   to="/addevent"
