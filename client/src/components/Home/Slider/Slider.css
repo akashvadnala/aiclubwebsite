@@ -1,3 +1,10 @@
 .carousel-caption{
     padding-bottom: 10% !important;
 }
+
+.carousel .slider-a,.carousel .slider-a:hover{
+    background-color: rgba(255,255,255,.6);
+    backdrop-filter: blur(10px);
+    color: black;
+    border-radius: 20px;
+}

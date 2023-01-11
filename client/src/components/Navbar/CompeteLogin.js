@@ -1,8 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { SERVER_URL } from '../../EditableStuff/Config';
 
-function MyVerticallyCenteredModal(props) {
+function CompeteLogin(props) {
+  const navigate = useNavigate();
   const [ username, setUsername ] = useState();
   const [ password, setPassword ] = useState();
   const [ signin, setsignin ] = useState('Sign in');
@@ -15,10 +18,11 @@ function MyVerticallyCenteredModal(props) {
     setsignin(<i class="fa fa-spinner fa-spin"></i>)
     setsignin2('Signing in ');
     try{
-      await axios.post('http://localhost:5000/login',
+      await axios.post(`${SERVER_URL}/login`,
       {
         'username':username,
-        'password':password
+        'password':password,
+        'compete':props.compete
       },
       {withCredentials: true}
       ).then(res => {
@@ -40,8 +44,8 @@ function MyVerticallyCenteredModal(props) {
       console.log('Login err','Invalid Credentials');
     }
   }
-
   return (
+    <>
     <Modal
       {...props}
       size="lg"
@@ -51,7 +55,7 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Header closeButton>
       </Modal.Header>
       <Modal.Body>
-        <h4>Login</h4>
+        <h4 className='pb-3'>Login <span className='h5'>(Competition)</span></h4>
         {msg?<div className='alert alert-danger'>{msg}</div>:null}
         <div className='login-container'>
         <form onSubmit={Login} method="POST">
@@ -69,10 +73,12 @@ function MyVerticallyCenteredModal(props) {
           </div>
           <button type="submit" class="cust btn btn-primary btn-block mb-4">{signin2}{signin}</button>
           </form>
+          <p>No Account for Competitions? <a href='/signup'>Create Yours</a></p>
         </div>
       </Modal.Body>
     </Modal>
+    </>
   );
 }
 
-export default MyVerticallyCenteredModal;
+export default CompeteLogin;

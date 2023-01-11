@@ -17,10 +17,12 @@ import MyProjects from './components/Projects/myProjects';
 import PreviewProject from './components/AddProject/PreviewProject';
 import About from './components/About';
 import AddBlog from './components/Blogs/AddBlog/AddBlog';
+import CompeteSignup from './components/Navbar/CompeteSignup';
 import EditBlog from './components/Blogs/AddBlog/EditBlog';
 import AddEvent from './components/Events/AddEvent';
 import EventDisplay from './components/Events/EventDisplay';
 import EditEvent from './components/Events/EditEvent';
+
 
 const Routing = () => {
 
@@ -62,6 +64,10 @@ const Routing = () => {
         <Route exact path='/create-competition' element={<CreateCompetition />} />
         <Route exact path='/competitions/:spath/:path' element={<Compete />} />
         <Route exact path='/competitions/:spath' element={<Compete />} />
+
+        {/* Signup */}
+        <Route exact path='/signup' element={<CompeteSignup />} />
+
 
         {/* About */}
         <Route exact path='/about' element={<About />} />

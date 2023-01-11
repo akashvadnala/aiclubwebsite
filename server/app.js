@@ -21,9 +21,15 @@ app.use(require('./router/auth'));
 app.use(require('./router/team'));
 app.use(require('./router/inductions'));
 app.use(require('./router/overview'));
+app.use(require('./router/data'));
+app.use(require('./router/rules'));
 app.use(require('./router/blogs'));
 app.use(require('./router/projects'));
+app.use(require('./router/CTeam'));
 app.use('/events',require('./router/events'));
+
+
+
 
 const PORT = process.env.PORT || 5000;
 

@@ -39,7 +39,6 @@ router.route('/blogadd').post(async (req,res) => {
 
 router.route('/getBlogs').get(async (req,res) => {
     const blogData = await Blog.find({});
-    console.log('blogData',blogData);
     res.status(200).json(blogData);
 });
 
@@ -59,7 +58,7 @@ router.route('/getBlog/:url').get(async (req,res) => {
         console.log(err);
         res.status(422).send(`${url} not found`);
     }
-})
+});
 
 router.route('/getBlogEdit/:url').get(async (req,res) => {
     const {url} = req.params;
@@ -76,6 +75,7 @@ router.route('/getBlogEdit/:url').get(async (req,res) => {
         res.status(422).send(`${url} not found`);
     }
 });
+
 
 router.route('/deleteBlog/:url').post(async (req,res)=>{
     const {url} = req.params;

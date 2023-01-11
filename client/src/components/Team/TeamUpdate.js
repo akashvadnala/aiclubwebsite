@@ -3,6 +3,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from '../../Context/Context';
 import { SERVER_URL } from '../../EditableStuff/Config';
+import Loading from '../Loading';
+import Error from '../Error';
 
 const TeamUpdate = () => {
     const navigate = useNavigate();
@@ -14,37 +16,38 @@ const TeamUpdate = () => {
     const [Img, setImg] = useState();
     const [submit,setSubmit] = useState('Update');
     const [submit2,setSubmit2] = useState();
-    const { user } = useContext(Context);
+    // const { user } = useContext(Context);
+    const [ load, setLoad ] = useState(0);
     const getUserDataForEdit = async () =>{
         try{
-            // const res = await fetch(`/getUserDataForEdit/${username}`,{
-            //     method:"GET",
-            //     headers:{
-            //         "Content-Type":"application/json"
-            //     }
-            // });
-            const res = await axios.get(`${SERVER_URL}/getUserDataForEdit/${username}`);
-            // const data = await res.json();
-            console.log('Data');
-            console.log(res.data);
-            setTeam(res.data);
-            if(user && user.isadmin){
-                if(user.username!==res.data.username){
-                    setCheckbox(true);
+            axios.get(`${SERVER_URL}/getUserData`,
+            {withCredentials: true})
+            .then(async data=>{
+                if(data.status===200){
+                    const user=data.data;
+                    const res = await axios.get(`${SERVER_URL}/getUserDataForEdit/${username}`);
+                    if(res.status===200){
+                        setTeam(res.data);
+                        if(user.isadmin){
+                            if(user.username!==res.data.username){
+                                setCheckbox(true);
+                            }
+                            setLoad(1);
+                        }
+                    }
+                    else{
+                        setLoad(-1);
+                    }
                 }
-            }
-            else{
-                navigate('/team');
-            }
+                else{
+                    setLoad(-1);
+                }
+            })
         }catch(err){
             console.log(err);
+            setLoad(-1);
         }
     }
-    useEffect(() => {
-        if(!user || !user.isadmin){
-            navigate('/team');
-        }
-    },[user]);
 
     useEffect(() => {
         getUserDataForEdit();
@@ -170,6 +173,7 @@ const TeamUpdate = () => {
     ]
   return (
     <>
+        {load===0?<Loading />:load===1?
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
                 <h3>You are editing '{username}' profile</h3>
@@ -215,6 +219,7 @@ const TeamUpdate = () => {
                 </form>
             </div>
         </div>
+        :<Error />}
     </>
   )
 }

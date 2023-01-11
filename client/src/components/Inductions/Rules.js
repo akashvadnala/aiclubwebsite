@@ -6,17 +6,17 @@ import Error from '../Error';
 import Loading from '../Loading';
 import './Inductions.css';
 
-const Data = ({props}) => {
+const Rules = ({props}) => {
   const editor = useRef(null);
   const [ preview, setPreview ] = useState(true);
-  const [ cdata, setCData ] = useState();
+  const [ rules, setRules ] = useState();
   const [ load, setLoad ] = useState(0);
   const [ desc, setDesc ] = useState('');
-  const getCData = () => {
-    axios.get(`${SERVER_URL}/getCData/${props.c.url}`)
+  const getRules = () => {
+    axios.get(`${SERVER_URL}/getRules/${props.c.url}`)
     .then(data=>{
       if(data.status===200){
-        setCData(data.data);
+        setRules(data.data);
         setDesc(data.data.description);
         setLoad(1);
       }
@@ -26,11 +26,11 @@ const Data = ({props}) => {
     })
   }
   useEffect(()=>{
-    getCData();
+    getRules();
     setPreview(true);
   },[props.c]);
   const handleValue = (value) => {
-    setCData({...cdata,['description']:value});
+    setRules({...rules,['description']:value});
   }
   const showPreview = ()=>{
     setPreview(true);
@@ -39,12 +39,12 @@ const Data = ({props}) => {
     setPreview(false);
   }
   const cancelIt = () => {
-    setCData({...cdata,['description']:desc});
+    setRules({...rules,['description']:desc});
     setPreview(true);
   }
   const saveIt = () =>{
-    axios.put(`${SERVER_URL}/editCData/${cdata._id}`,
-    cdata,
+    axios.put(`${SERVER_URL}/editRules/${rules._id}`,
+    rules,
     {
       headers:{"Content-Type" : "application/json"}
     }
@@ -54,11 +54,11 @@ const Data = ({props}) => {
   
   return (
     <>{load===0?<Loading />:load===1?
-      <div className='cdata-container'>
+      <div className='rules-container'>
         <div className='border'>
           <div className='row p-3 pb-1'>
             <div className='col-sm-8'>
-              <h5>Data</h5>
+              <h5>Rules</h5>
             </div>
             <div className='col-sm-4 text-end'>
               {props.access?preview?
@@ -74,10 +74,10 @@ const Data = ({props}) => {
           </div>
           {preview?
             <div className='p-3'>
-              <p dangerouslySetInnerHTML={{ __html: cdata.description }}></p>
+              <p dangerouslySetInnerHTML={{ __html: rules.description }}></p>
             </div>
           :
-            <JoditEditor name="content" ref={editor} value={cdata.description} onChange={handleValue} /> 
+            <JoditEditor name="content" ref={editor} value={rules.description} onChange={handleValue} /> 
           }
             </div>
       </div>
@@ -86,4 +86,4 @@ const Data = ({props}) => {
   )
 }
 
-export default Data;
+export default Rules;

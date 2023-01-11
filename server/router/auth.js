@@ -4,36 +4,25 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 let path = require('path');
 const authenticate = require('../middleware/authenticate');
+const Leaderboard = require('../model/leaderboardSchema');
 const Team = require('../model/teamSchema');
-const { query } = require('express');
-
+ 
 
 router.route('/').get((req,res)=>{
     res.send(`Hello world from the server router js`);
 });
 
-router.route('/getTeams').get(async (req,res)=>{
-    let users=[];
-    const teams = await Team.find({ismember:true});
-    await Promise.all(
-        teams.map(t=>users.push(t.username))
-    );
-    return res.status(200).json(users);
-})
-
 router.post('/login', async (req, res, next) => {
     try{
         let token;
-        const { username, password } = req.body;
+        const { username, password, compete } = req.body;
         console.log(username, password);
         if(!username || !password){
             return res.status(200).json({ error: "Plz fill the field properly" });
         }
         var team = await Team.findOne({ username:username });
         if(!team){
-            console.log('team',team);
             team = await Team.findOne({ email:username });
-            console.log('team',team);
             if(!team){
                 return res.status(200).json({ error: "Invalid Credentials" });
             }
@@ -46,14 +35,21 @@ router.post('/login', async (req, res, next) => {
                 return res.status(200).json({ error: "Invalid Credentials" });
             }
             else{
-                console.log('No error');
                 if(team){
                     token = await team.generateAuthToken();
-                    console.log('token',token);
                     res.cookie('jwtoken',token,{  // jwtoken->name
                         expires: new Date(Date.now() + 258920000000), //30 days
                         httpOnly: true
                     });
+                    if(compete){
+                        const leaderboard = new Leaderboard({
+                            compete:compete,
+                            name:team.username
+                        });
+                        await leaderboard.save();
+                        team.competitions.push(compete);
+                        await team.save();
+                    }
                     console.log('Logged in');
                 }
                 return res.status(201).json({ message: "User Signin Successfully", user:team });
@@ -65,24 +61,51 @@ router.post('/login', async (req, res, next) => {
     }
 });
 
-// router.get('/about', authenticate, (req,res)=>{
-//     console.log(`Hello my About`);
-//     res.send(req.rootUser);
-// });
-
-// router.get('/contact', authenticate, (req,res)=>{
-//     console.log(`Hello my Contact`);
-//     res.send(req.rootUser);
-// });
+router.route('/competesignup').post(async (req,res)=>{
+    try{
+        let teamExist = await Team.findOne({email:req.body.email});
+        if(teamExist){
+            console.log("Email already exist");
+            return res.status(201).json({ error: "Email already exist" });
+        }
+        teamExist = await Team.findOne({username:req.body.username});
+        if(teamExist){
+            console.log("Username already exist");
+            return res.status(201).json({ error: "Username already exist" });
+        }
+        console.log('team',req.body);
+        const team =  new Team(req.body); 
+        const saltRounds = 10;   
+        team.password = await bcrypt.hash(team.password,saltRounds);
+        await team.save();
+        let token = await team.generateAuthToken();
+        console.log('token',token);
+        res.cookie('jwtoken',token,{  // jwtoken->name
+            expires: new Date(Date.now() + 258920000000), //30 days
+            httpOnly: true
+        });
+        console.log('Logged in');
+        console.log(`${team.username} user registered successfully`);
+        res.status(200).json({ message: "user Login Successfully" });
+    }catch(err){
+        console.log('Team Cannot Create',err);
+    }
+});
 
 
 router.get('/getUserData', authenticate, (req,res)=>{
     // console.log(`Hello ${req.rootUser?req.rootUser.username:'Not logged in'}`);
-    res.send(req.rootUser);
+    if(req.rootUser){
+        res.status(200).json(req.rootUser);
+    }
+    else{
+        res.status(201).json(null);
+    }
 });
 
 router.get('/logout', (req,res)=>{
     res.clearCookie('jwtoken',{path:'/'});
+    res.clearCookie('cjwtoken',{path:'/'});
     res.status(200).send({msg:'Logged Out Succesfully'});
 });
 

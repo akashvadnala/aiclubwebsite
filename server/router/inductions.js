@@ -3,16 +3,20 @@ const router = express.Router();
 
 const Competitions = require('../model/competitionSchema');
 const Overview = require('../model/overviewSchema');
+const Data = require('../model/dataSchema');
+const Rules = require('../model/rulesSchema');
+const Leaderboard = require('../model/leaderboardSchema');
+const Team = require('../model/teamSchema');
 
 router.route('/getCompete/:url').get(async (req,res) => {
     const {url} = req.params;
     const data = await Competitions.findOne({url:url});
     console.log('compete',data);
     if(data){
-        res.status(201).json(data);
+        res.status(200).json(data);
     }
     else{
-        res.status(200).json(null);
+        res.status(201).json(null);
     }
 });
 
@@ -32,10 +36,22 @@ router.route('/competitions').post(async (req,res) => {
         await compete.save();
 
         const overview = new Overview({
-            compete:compete._id,
+            compete:compete.url,
             description:`This is ${compete.title} overview`
         })
         await overview.save();
+
+        const data = new Data({
+            compete:compete.url,
+            description:`This is ${compete.title} data`
+        })
+        await data.save();
+
+        const rules = new Rules({
+            compete:compete.url,
+            description:`This is ${compete.title} rules`
+        })
+        await rules.save();
 
         console.log(`Competition Created`);
         // res.send(`${url} created`);
@@ -52,6 +68,45 @@ router.route('/getCompeteNames').get(async (req,res)=>{
     res.status(201).json(data);
 });
 
+// Is User JOined the Competition
+
+router.route('/isJoined/:url/:username').get(async (req,res)=>{
+    const {url,username} = req.params;
+    let joined=false;
+    try{
+        const team = await Team.findOne({username:username});
+        if(team){
+            if(team.competitions.indexOf(url)>-1){
+                joined=true;
+            }
+        }
+    }catch(err){
+        console.log(err);
+    }
+    return res.status(200).json(joined);
+});
+
+// Join Competition
+
+router.route('/joinCompete').post(async (req,res)=>{
+    console.log('body',req.body);
+    const {url,username} = req.body;
+    try{
+        const leaderboard = new Leaderboard({
+            compete:url,
+            name:username
+        });
+        await leaderboard.save();
+        const team = await Team.findOne({username:username});
+        team.competitions.push(url);
+        await team.save();
+        return res.status(200).json({ message: "Competition Joined Successfully!"});
+    }catch(err){
+        console.log(err);
+        return res.status(201).json({ message: "Cannot Join Competition!"});
+    }
+})
+
 // overview-save
 
 router.route('/updateCompeteOverview/:url').put(async (req,res)=>{
@@ -65,6 +120,22 @@ router.route('/updateCompeteOverview/:url').put(async (req,res)=>{
         console.log(err);
     }
 });
+
+router.route('/deleteCompete/:id').post(async (req,res)=>{
+    const {id}=req.params;
+    const compete = await Competitions.findById(id);
+    if(compete){
+        const url=compete.url;
+        await Overview.findOneAndDelete({compete:url});
+        await Data.findOneAndDelete({compete:url});
+        await Rules.findOneAndDelete({compete:url});
+        await Competitions.findByIdAndDelete(url);
+        return res.status(200).json({ message: "Competition Deleted Successfully!"});
+    }
+    else{
+        return res.status(201).json({ message: "Competition Cannot be Deleted!"});
+    }
+})
 
 
 module.exports = router;
