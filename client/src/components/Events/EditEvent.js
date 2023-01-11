@@ -1,82 +1,136 @@
-import React, { useRef, useState, useMemo, useContext, useEffect } from "react";
-import "./AddBlog.css";
-import JoditEditor from "jodit-react";
-import { Context } from "../../../Context/Context";
-import { NavLink, useParams } from "react-router-dom";
-import Error from "../../Error";
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { useParams } from "react-router";
+import "./AddEvent.css";
+import { Context } from "../../Context/Context";
+import { useNavigate } from "react-router-dom";
+import Error from "../Error";
+import { CLIENT_URL, SERVER_URL } from "../../EditableStuff/Config";
 import axios from "axios";
-import { SERVER_URL } from "../../../EditableStuff/Config";
-import Loading from "../../Loading";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import JoditEditor from "jodit-react";
+import { NavLink } from "react-router-dom";
 
-const EditBlog = () => {
-  const { url } = useParams();
+const EditEvent = () => {
+  const params = new useParams();
+  const url = params.url;
+  const navigate = useNavigate();
   const editor = useRef(null);
   const { user } = useContext(Context);
-
   const [add, setAdd] = useState("Save as Draft");
   const [add2, setAdd2] = useState();
-  const [xtag, setXTag] = useState("");
-  const [post, setpost] = useState();
-  const [load, setLoad] = useState(0);
+  const [xspeakers, setXspeakers] = useState("");
   const [preview, setPreview] = useState(false);
-  const getBlog = async () => {
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [event, setEvent] = useState({
+    title: "",
+    url: "",
+    speakers: [],
+    poster: "",
+    abstract: "",
+    eventStart: new Date(),
+    eventEnd: new Date(),
+    eventLink: "",
+    eventLocation: "",
+  });
+
+  const getEvent = async () => {
     try {
-      axios.get(`${SERVER_URL}/getBlogEdit/${url}`).then((data) => {
-        if (data.status === 200) {
-          console.log("blog", data.data);
-          const post_ = data.data
-          if(user && post_.authorName.indexOf(user.username)>-1){
-          setpost(data.data);
-          setLoad(1);
-        }
-        else{
-          setLoad(-1);
-        }
-        } else {
-          setLoad(-1);
-        }
-      });
+      const res = await axios.get(`${SERVER_URL}/events/getEvent/${url}`);
+      console.log("blog", res.status);
+      if (res.status === 200) {
+        console.log("blog", res.data);
+        setEvent(res.data);
+      }
     } catch (err) {
       console.log(err);
     }
   };
-  useEffect(() => {
-    getBlog();
-  }, []);
+
+  const filterPassedTime = (time) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(time);
+
+    return currentDate.getTime() < selectedDate.getTime();
+  };
 
   const handleValue = (e) => {
-    setpost({ ...post, ["content"]: e });
+    setEvent({ ...event, ["abstract"]: e });
   };
+
+  useEffect(() => {
+    getEvent();
+    if (!user) {
+      navigate("/events");
+    }
+  }, [user]);
+
+  const handleposterPhoto = (e) => {
+    setEvent({ ...event, ["poster"]: e.target.files[0] });
+  };
+
   const handleInputs = (e) => {
-    setpost({ ...post, [e.target.name]: e.target.value });
+    setEvent({ ...event, [e.target.name]: e.target.value });
+    console.log("post", event);
   };
-  const removeXTag = (tag) => {
-    let current = post.tags;
-    current = current.filter((x) => x !== tag);
-    setpost({ ...post, ["tags"]: current });
-    setXTag("");
+
+  const removeXspeakers = (speaker) => {
+    let current = event.speakers;
+    current = current.filter((x) => x !== speaker);
+    setEvent({ ...event, ["speakers"]: current });
+    setXspeakers("");
   };
-  const AddXTag = () => {
-    let current = post.tags;
-    current.push(xtag);
-    setpost({ ...post, ["tags"]: current });
-    setXTag("");
+
+  const AddXspeakers = () => {
+    let current = event.speakers;
+    current.push(xspeakers);
+    setEvent({ ...event, ["tags"]: current });
+    setXspeakers("");
   };
-  const UpdateBlog = async (e) => {
+
+  const seteventStartDate = (date) => {
+    setStartDate(date);
+    setEvent({ ...event, ["eventStart"]: date });
+  };
+
+  const seteventEndDate = (date) => {
+    setEndDate(date);
+    setEvent({ ...event, ["eventEnd"]: date });
+  };
+
+  const EditEvent = async (e) => {
     e.preventDefault();
     setAdd("Saving ");
-    setAdd2(<i class="fa fa-spinner fa-spin"></i>);
+    setAdd2(<i className="fa fa-spinner fa-spin"></i>);
+    var imgurl;
+    const data = new FormData();
+    const photoname = Date.now() + event.poster.name;
+    if (typeof event.poster !== 'string'){
+      data.append("name", photoname);
+      data.append("photo", event.poster);
+  
+      try {
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+        imgurl = img.data;
+        event.poster = imgurl;
+        console.log("final post", event);
+      } catch (err) {
+        console.log("photoerr", err);
+      }
+    }
     try {
-      const postdata = await axios.put(
-        `${SERVER_URL}/updateBlog/${url}`,
-        post,
+      const eventdata = await axios.put(
+        `${SERVER_URL}/events/updateEvent/${url}`,
+        event,
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-      console.log("projdata", postdata);
-      if (postdata.status === 422 || !postdata) {
-        console.log("Project not found");
+      console.log("blogdata", eventdata);
+      if (eventdata.status === 422 || !eventdata) {
+        window.alert("Posting failed");
+        console.log("Posting failed");
       } else {
         setAdd("Save as Draft");
         setAdd2("");
@@ -86,126 +140,234 @@ const EditBlog = () => {
       console.log("err", err);
     }
   };
-  console.log("proj", post);
+
   return (
     <>
-      {load === 0 ? (
-        <Loading />
-      ) : load === 1 ? (
-        <div className="container addproject-container py-3">
-          <h3 className="text-center">Add Blog</h3>
-          <div className="text-center fs-6 pb-1">
-            {preview ? (
-              <NavLink to={`/blogs/${post.url}`} className="btn btn-success btn-sm">Preview</NavLink>
-            ) : (
-              <span className="text-muted">Save for Preview</span>
-            )}
-          </div>
-
-          <form
-            method="POST"
-            onSubmit={UpdateBlog}
-            encType="multipart/form-data"
-          >
-            <div className="row">
-              <div className="col-12 col-md-9">
-                <div className="form-group mb-1">
-                  <label for="title">Blog Title :</label>
-                </div>
-                <div className="form-group mb-4">
+      {user ? (
+        <div className="container addBlog-container text-center">
+          <div className="adjust">
+            <h3>Edit Event</h3>
+            <div className="text-center fs-6 pb-1">
+              {preview ? (
+                <NavLink
+                  to={`/events/${event.url}`}
+                  className="btn btn-success btn-sm"
+                >
+                  Preview
+                </NavLink>
+              ) : (
+                <span className="text-muted">Save for Preview</span>
+              )}
+            </div>
+            <form
+              method="POST"
+              onSubmit={EditEvent}
+              encType="multipart/form-data"
+            >
+              <div className="form-group my-3 row">
+                <label htmlFor="title" className="col-sm-2 text-end">
+                  Event Title :
+                </label>
+                <div className="col-sm-10">
                   <input
                     type="text"
                     name="title"
-                    value={post ? post.title : ""}
+                    value={event.title}
                     onChange={handleInputs}
                     className="form-control"
                     id="title"
                     aria-describedby="title"
-                    placeholder="Enter Project Title"
+                    placeholder="Enter Blog Title"
                     required
                   />
                 </div>
-
-                <div className="form-group my-1">
-                  <label>Blog Tags :</label>
+              </div>
+              <div className="form-group my-3 row">
+                <label htmlFor="url" className="col-sm-2 text-end">
+                  Event Url :
+                </label>
+                <div className="col-sm-10">
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend">
+                      <span
+                        className="input-group-text text-end"
+                        id="basic-addon3"
+                      >
+                        {CLIENT_URL}/events/{event.url}
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      name="url"
+                      value={event.url}
+                      onChange={handleInputs}
+                      className="form-control"
+                      id="basic-url"
+                      aria-describedby="basic-addon3"
+                      placeholder="Enter Blog Url"
+                      required
+                    />
+                  </div>
                 </div>
-                <div className="form-group my-2 row">
-                  {post &&
-                    post.tags.map((a) => {
-                      return (
-                        <div className="col-12 col-sm-6 col-lg-4 mb-2 row">
-                          <div className="col-8 paddr">
-                            <input
-                              type="text"
-                              value={a}
-                              className="form-control"
-                              id="tag"
-                              aria-describedby="tag"
-                              disabled
-                            />
-                          </div>
-                          <div className="col-4 paddl">
-                            <input
-                              type="reset"
-                              className="btn btn-danger"
-                              onClick={() => removeXTag(a)}
-                              value="Remove"
-                            />
-                          </div>
+              </div>
+              <div className="form-group my-3 row">
+                <label className="col-sm-2 text-end">Speakers :</label>
+                <div className="col-sm-10">
+                  {event.speakers.map((a) => {
+                    return (
+                      <div className="form-group my-2 row">
+                        <div className="col col-9">
+                          <input
+                            type="text"
+                            value={a}
+                            className="form-control"
+                            id="tag"
+                            aria-describedby="title"
+                            disabled
+                          />
                         </div>
-                      );
-                    })}
-                  <div className="col-12 col-sm-6 col-lg-4 mb-2 row">
-                    <div className="col-8 paddr">
+                        <div className="col col-3">
+                          <input
+                            type="reset"
+                            className="btn btn-danger"
+                            onClick={() => removeXspeakers(a)}
+                            value="Remove"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <div className="form-group my-2 row">
+                    <div className="col col-9">
                       <input
                         type="text"
-                        name="xauthor"
-                        value={xtag}
-                        onChange={(e) => setXTag(e.target.value)}
+                        name="xspeakers"
+                        value={xspeakers}
+                        onChange={(e) => setXspeakers(e.target.value)}
                         className="form-control"
-                        id="tags"
-                        aria-describedby="tags"
-                        placeholder="Enter Project Title"
+                        id="xspeakers"
+                        aria-describedby="xspeakers"
+                        placeholder="Enter speaker's name"
                       />
                     </div>
-                    <div className="col-4 paddl">
+                    <div className="col col-3">
                       <input
                         type="reset"
                         className="btn btn-success"
-                        onClick={AddXTag}
+                        onClick={AddXspeakers}
                         value="+Add"
                       />
                     </div>
                   </div>
                 </div>
-
-                <div className="form-group my-1">
-                  <label for="content">Blog Content :</label>
+              </div>
+              <div className="form-group my-3 row">
+                <label for="photo" className="col-sm-2 text-end">
+                  Event Poster :
+                </label>
+                <div className="col-sm-10">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="photo"
+                    onChange={handleposterPhoto}
+                    className="form-control"
+                    id="photo"
+                    aria-describedby="photo"
+                  />
                 </div>
-                <div className="form-group mb-4">
+              </div>
+              <div className="form-group my-3 row">
+                <label for="photo" className="col-sm-2 text-end">
+                  Start Time :
+                </label>
+                <div className="col-sm-10">
+                  <DatePicker
+                    className="form-control"
+                    selected={startDate}
+                    onChange={(date) => seteventStartDate(date)}
+                    showTimeSelect
+                    minDate={new Date()}
+                    filterTime={filterPassedTime}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                  />
+                </div>
+              </div>
+              <div className="form-group my-3 row">
+                <label for="photo" className="col-sm-2 text-end">
+                  End Time :
+                </label>
+                <div className="col-sm-10">
+                  <DatePicker
+                    className="form-control"
+                    selected={endDate}
+                    onChange={(date) => seteventEndDate(date)}
+                    showTimeSelect
+                    minDate={new Date()}
+                    filterTime={filterPassedTime}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                  />
+                </div>
+              </div>
+              <div className="form-group my-3 row">
+                <label for="photo" className="col-sm-2 text-end">
+                  Abstract :
+                </label>
+                <div className="col-sm-10">
                   <JoditEditor
                     name="content"
                     ref={editor}
-                    value={post ? post.content : ""}
+                    value={event ? event.abstract : ""}
                     onChange={handleValue}
                   />
                 </div>
               </div>
-              <div className="col-12 col-md-3">
-                <div>
-                  <button
-                    type="submit"
-                    name="submit"
-                    id="submit"
-                    className="btn btn-primary my-3"
-                  >
-                    {add}
-                    {add2}
-                  </button>
+              <div className="form-group my-3 row">
+                <label htmlFor="title" className="col-sm-2 text-end">
+                  Event Link :
+                </label>
+                <div className="col-sm-10">
+                  <input
+                    type="text"
+                    name="eventLink"
+                    value={event.eventLink}
+                    onChange={handleInputs}
+                    className="form-control"
+                    id="eventLink"
+                    aria-describedby="eventLink"
+                    placeholder="Enter event link if conducted in online"
+                  />
                 </div>
               </div>
-            </div>
-          </form>
+              <div className="form-group my-3 row">
+                <label htmlFor="title" className="col-sm-2 text-end">
+                  Event Location :
+                </label>
+                <div className="col-sm-10">
+                  <input
+                    type="text"
+                    name="eventLocation"
+                    value={event.eventLocation}
+                    onChange={handleInputs}
+                    className="form-control"
+                    id="eventLocation"
+                    aria-describedby="eventLocation"
+                    placeholder="Enter event venue if conducted in offline"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                name="submit"
+                id="submit"
+                className="btn btn-primary"
+              >
+                {add}
+                {add2}
+              </button>
+            </form>
+          </div>
         </div>
       ) : (
         <Error />
@@ -214,4 +376,4 @@ const EditBlog = () => {
   );
 };
 
-export default EditBlog;
+export default EditEvent;

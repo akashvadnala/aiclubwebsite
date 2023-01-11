@@ -20,6 +20,8 @@ import AddBlog from './components/Blogs/AddBlog/AddBlog';
 import CompeteSignup from './components/Navbar/CompeteSignup';
 import EditBlog from './components/Blogs/AddBlog/EditBlog';
 import AddEvent from './components/Events/AddEvent';
+import EventDisplay from './components/Events/EventDisplay';
+import EditEvent from './components/Events/EditEvent';
 
 
 const Routing = () => {
@@ -45,6 +47,8 @@ const Routing = () => {
         {/* Events */}
         <Route exact path='/events' element={<Events />} />
         <Route exact path='/addevent' element={<AddEvent />} />
+        <Route exact path='/events/:url' element={<EventDisplay />} />
+        <Route exact path='/events/:url/edit' element={<EditEvent />} />
 
         {/* Blog Display */}
         <Route exact path='/blogs' element={<Blogs />} />
