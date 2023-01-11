@@ -107,9 +107,9 @@ router.route('/teamadd').post(async (req,res) => {
         const teamExist = await Team.findOne({email:email});
         
         if(teamExist){
-            return res.status(422).json({ error: "Email already exist" });
+            return res.status(201).json({ error: "Email already exist" });
         }else if(password != cpassword){
-            return res.status(422).json({ error: "Passwords not matched" });
+            return res.status(201).json({ error: "Passwords not matched" });
         }
 
         const team = new Team({ 
@@ -177,7 +177,7 @@ router.route('/getUserDataForEdit/:username').get(async (req,res)=>{
         }
     }catch(err){
         console.log(err);
-        res.status(422).send(`${username} not found`);
+        res.status(201).send(`${username} not found`);
     }
 });
 
@@ -195,7 +195,7 @@ router.route('/teamupdate/:username').put(async (req,res)=>{
         res.status(201).json(updateduser);
 
     } catch (error) {
-        res.status(422).json(error);
+        res.status(201).json(error);
     }
 });
 

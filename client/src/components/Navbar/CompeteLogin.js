@@ -1,9 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { SERVER_URL } from '../../EditableStuff/Config';
 
 function CompeteLogin(props) {
+  const navigate = useNavigate();
   const [ username, setUsername ] = useState();
   const [ password, setPassword ] = useState();
   const [ signin, setsignin ] = useState('Sign in');
@@ -16,10 +18,11 @@ function CompeteLogin(props) {
     setsignin(<i class="fa fa-spinner fa-spin"></i>)
     setsignin2('Signing in ');
     try{
-      await axios.post(`${SERVER_URL}/competelogin`,
+      await axios.post(`${SERVER_URL}/login`,
       {
         'username':username,
-        'password':password
+        'password':password,
+        'compete':props.compete
       },
       {withCredentials: true}
       ).then(res => {

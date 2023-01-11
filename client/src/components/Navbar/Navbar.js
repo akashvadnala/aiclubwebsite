@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import './Navbar.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import {SERVER_URL} from '../../EditableStuff/Config';
 import TeamLogin from './TeamLogin';
 import { Context } from '../../Context/Context';
-import { CompeteContext } from '../../Context/CompeteContext';
 import axios from 'axios';
 import CompeteLogin from './CompeteLogin';
 // import CList from '../../EditableStuff/CList';
@@ -80,15 +79,6 @@ const Navbar = () => {
                     if(data.status===200){
                         setUser(data.data);
                     }
-                    else{
-                        axios.get(`${SERVER_URL}/getCUserData`,
-                        {withCredentials: true})
-                        .then(data=>{
-                            if(data.status===200){
-                                setUser(data.data);
-                            }
-                        })
-                    }
                 })
             }catch(err){
                 console.log(err);
@@ -110,6 +100,8 @@ const Navbar = () => {
             }
             window.location.reload(true);
         }
+        
+        const location = useLocation();
         return(
         <>
             <li>
@@ -191,7 +183,8 @@ const Navbar = () => {
                             </div>
                             <hr />
                             <div className="dropdown-item pe-cursor" onClick={
-                                () => {                                    
+                                () => {     
+                                    localStorage.setItem('aiclubnitcsignupredirect',location.pathname);                             
                                     setModalShow(false);
                                     setModalShow2(true);
                                 }
@@ -210,6 +203,7 @@ const Navbar = () => {
                 onHide={() => setModalShow(false)}
             />
             <CompeteLogin
+                compete={null}
                 show={modalShow2}
                 onHide={() => setModalShow2(false)}
             />

@@ -3,6 +3,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const CTeamSchema = new mongoose.Schema({
+    competitions:[{
+        type: String
+    }], 
     firstname: {
         type: String,
         required: true
@@ -16,7 +19,7 @@ const CTeamSchema = new mongoose.Schema({
         required: true
     },
     email: {
-        type: String,
+        type: String, 
         required: true
     },
     photo:{

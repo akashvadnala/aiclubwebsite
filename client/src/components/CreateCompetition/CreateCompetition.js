@@ -97,67 +97,69 @@ const CreateCompetition = () => {
             <div className='adjust'>
                 <h3>Create Competition</h3>
                 <form method="POST" onSubmit={createCompete} encType="multipart/form-data">
-                  <div className="form-group my-3 row">
+                  <div className="form-group my-3 row align-items-center">
                     <label for="title" className='col-sm-2 text-end'>Title :</label>
                     <div className='col-sm-10'>
                         <input type="text" name="title" value={compete.title} onChange={handleInputs} className="form-control" id="title" aria-describedby="title" placeholder={`Enter Competition title`} required/>
                     </div>
                   </div>
-                  <div className="form-group my-3 row">
+                  <div className="form-group my-3 row align-items-center">
                     <label for="description" className='col-sm-2 text-end'>Description :</label>
                     <div className='col-sm-10'>
                         {/* <input type="text" name="title" value={compete.title} onChange={handleInputs} className="form-control" id="title" aria-describedby="title" placeholder={`Enter Competition title`} /> */}
-                        <textarea name="description" onChange={handleInputs} className="form-control" id="description" aria-describedby="description" placeholder={`Enter Competition Description`} required>{compete.description}</textarea>
+                        <textarea name="description" onChange={handleInputs} className="form-control" id="description" aria-describedby="description" value={compete.description} placeholder={`Enter Competition Description`} required>{compete.description}</textarea>
                     </div>
                   </div>
-                  <div className="form-group my-3 row">
+                  <div className="form-group my-3 row align-items-center">
                     <label for="url" className='col-sm-2 text-end'>Url :</label>
                     <div className='col-sm-10'>
                         <input type="text" name="url" value={compete.url} onChange={handleInputs} className="form-control" id="url" aria-describedby="url" placeholder={`Enter Competition url`} required/>
                     </div>
                   </div>
-                  <div className="form-group my-1">
-                    <label>Host Access :</label>
-                  </div>
-                  <div className="form-group my-2 row">
-                    {compete &&
-                      (compete.access).map(a => {
-                        return(
-                            <div className='col-12 col-sm-6 col-lg-4 mb-2 row'>
-                              <div className='col-8 paddr'>
-                                <input 
-                                    type='text' 
-                                    value={a} 
-                                    className="form-control" 
-                                    id="access" 
-                                    aria-describedby="access" 
-                                  disabled/>
+                  <div className="form-group my-3 row align-items-center">
+                    <label className='col-sm-2 text-end'>Host Access :</label>
+                    <div className='col-sm-10'>
+                      <div className="form-group row">
+                        {compete &&
+                          (compete.access).map(a => {
+                            return(
+                                <div className='col-12 col-sm-6 col-lg-4 row'>
+                                  <div className='col-8 paddr'>
+                                    <input 
+                                        type='text' 
+                                        value={a} 
+                                        className="form-control" 
+                                        id="access" 
+                                        aria-describedby="access" 
+                                      disabled/>
+                                  </div>
+                                  <div className='col-4 paddl'>
+                                    <input type="reset" className='btn btn-danger' onClick={() => removeXAccess(a)} value="Remove" />
+                                  </div>
+                                </div>
+                            )
+                          })
+                        }
+                          <div className='col-12 col-sm-6 col-lg-4 row'>
+                            <div className='col-8 paddr'>
+                              <input 
+                                  type='text' 
+                                  name="xaccess" 
+                                  value={xaccess} 
+                                  onChange={(e) => setXAccess(e.target.value)} 
+                                  className="form-control" 
+                                  id="accesses" 
+                                  aria-describedby="accesses" 
+                                  placeholder="Enter Username" 
+                                />
                               </div>
                               <div className='col-4 paddl'>
-                                <input type="reset" className='btn btn-danger' onClick={() => removeXAccess(a)} value="Remove" />
+                                <input type="reset" className='btn btn-success' onClick={AddXAccess} value="+Add" />
                               </div>
-                            </div>
-                        )
-                      })
-                    }
-                      <div className='col-12 col-sm-6 col-lg-4 mb-2 row'>
-                        <div className='col-8 paddr'>
-                          <input 
-                              type='text' 
-                              name="xaccess" 
-                              value={xaccess} 
-                              onChange={(e) => setXAccess(e.target.value)} 
-                              className="form-control" 
-                              id="accesses" 
-                              aria-describedby="accesses" 
-                              placeholder="Enter Username" 
-                            />
-                          </div>
-                          <div className='col-4 paddl'>
-                            <input type="reset" className='btn btn-success' onClick={AddXAccess} value="+Add" />
                           </div>
                       </div>
-                  </div>
+                    </div>
+                  </div>                  
                   <div className="form-group form-check my-3">
                         <input type="radio" name="public" checked={compete.public} onChange={(e)=>{setCompete({...compete, public:e.target.checked})}} className="form-check-input" id="public" />
                         <label class="form-check-label" for="public">Public</label>

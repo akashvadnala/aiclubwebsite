@@ -25,12 +25,13 @@ const CompeteSignup = () => {
                 axios.post(`${SERVER_URL}/competesignup`,
                 team,
                 {
-                    headers:{"Content-Type" : "application/json"}
+                    headers:{"Content-Type" : "application/json"},
+                    withCredentials: true
                 })
                 .then(res=>{
                     if(res.status===200){
                         console.log('Account Created Successfully');
-                        navigate('/');
+                        navigate(localStorage.getItem('aiclubnitcsignupredirect'));
                     }
                     else{
                         console.log('Cannot Create Account');

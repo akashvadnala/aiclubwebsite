@@ -2,31 +2,37 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const CTeam = require('../model/CTeamSchema');
+const Team = require('../model/teamSchema');
 const competeAuthenticate = require('../middleware/competeAuthenticate');
 
 router.route('/competesignup').post(async (req,res)=>{
     try{
-        let teamExist = await CTeam.findOne({email:req.body.email});
+        let teamExist = await Team.findOne({email:req.body.email});
         if(teamExist){
             console.log("Email already exist");
-            return res.status(422).json({ error: "Email already exist" });
+            return res.status(201).json({ error: "Email already exist" });
         }
-        teamExist = await CTeam.findOne({username:req.body.username});
+        teamExist = await Team.findOne({username:req.body.username});
         if(teamExist){
             console.log("Username already exist");
-            return res.status(422).json({ error: "Username already exist" });
+            return res.status(201).json({ error: "Username already exist" });
         }
         console.log('team',req.body);
-        const team =  new CTeam(req.body); 
+        const team =  new Team(req.body); 
         const saltRounds = 10;   
         team.password = await bcrypt.hash(team.password,saltRounds);
         await team.save();
-
+        let token = await team.generateAuthToken();
+        console.log('token',token);
+        res.cookie('jwtoken',token,{  // jwtoken->name
+            expires: new Date(Date.now() + 258920000000), //30 days
+            httpOnly: true
+        });
+        console.log('Logged in');
         console.log(`${team.username} user registered successfully`);
         res.status(200).json({ message: "user Login Successfully" });
     }catch(err){
-        console.log('CTeam Cannot Create',err);
+        console.log('Team Cannot Create',err);
     }
 });
 

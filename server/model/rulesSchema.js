@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const overviewSchema = new mongoose.Schema({
+const rulesSchema = new mongoose.Schema({
     compete:{
         type: String,
         required: true,
@@ -12,4 +12,4 @@ const overviewSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('Overview',overviewSchema);
+module.exports = mongoose.model('Rules',rulesSchema);

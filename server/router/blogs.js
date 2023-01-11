@@ -47,7 +47,24 @@ router.route('/getBlog/:url').get(async (req,res) => {
     try{
         const blog = await Blog.findOne({url:url});
         if(blog){
+            const userdetails = await Team.findOne({username:blog.authorName}).select("-__v -_id -username -password -cpassword -canCreateCompetitions -projects -isadmin -ismember -tokens");
             console.log('blog',blog);
+            return res.status(200).json({'blog':blog,'author':userdetails});
+        }
+        else{
+            return res.status(201).json(null);
+        }
+    }catch(err){
+        console.log(err);
+        res.status(422).send(`${url} not found`);
+    }
+});
+
+router.route('/getBlogEdit/:url').get(async (req,res) => {
+    const {url} = req.params;
+    try{
+        var blog = await Blog.findOne({url:url});
+        if(blog){
             return res.status(200).json(blog);
         }
         else{
@@ -58,6 +75,7 @@ router.route('/getBlog/:url').get(async (req,res) => {
         res.status(422).send(`${url} not found`);
     }
 });
+
 
 router.route('/deleteBlog/:url').post(async (req,res)=>{
     const {url} = req.params;

@@ -3,6 +3,7 @@ import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import Data from './Data';
 import Leaderboard from './Leaderboard';
 import Overview from './Overview';
+import Rules from './Rules';
 import Register from './Register';
 import Error from '../Error';
 import Loading from '../Loading';
@@ -21,20 +22,28 @@ const Compete = () => {
     const spath = params.spath;
     console.log("spath",spath);
     console.log("path",path);
-    const {user} = useContext(Context);
+    const {user,logged_in} = useContext(Context);
     const [ page, setPage ] = useState(null);
     const [ comp, setComp ] = useState([]);
     const [ load, setLoad ] = useState(0);
     const [ hostAccess, setHostAccess ] = useState(false);
-    const getCompete = async () => {
+    const [isJoined,setIsJoined] = useState(false);
+  const getCompete = async () => {
         try{
             axios.get(`${SERVER_URL}/getCompete/${spath}`)
             .then(data => {
                 if(data.status===200){
-                    if(user && data.data.access.indexOf(user.username)>-1){
-                        console.log('accesss');
-                        setHostAccess(true);
+                    if(user){
+                        if(data.data.access.indexOf(user.username)>-1){
+                            setHostAccess(true);
+                        }
+    
+                        axios.get(`${SERVER_URL}/isJoined/${data.data.url}/${user.username}`)
+                        .then(res=>{
+                            setIsJoined(res.data);
+                        });
                     }
+
                     setComp(data.data);
                     setLoad(1);
                 }
@@ -45,34 +54,44 @@ const Compete = () => {
             })
         }catch(err){
             console.log('Connot get Compete data');
+            setLoad(-1);
         }
     }
     
     useEffect(() => {
+        setHostAccess(false);
         getCompete();
-    },[user]);
-
+    },[logged_in,spath]);
+    const parameters = {
+        c:comp,
+        access:hostAccess,
+        username:user?user.username:null,
+        isJoined:isJoined
+    }
     const getPage = async (path) => {
         console.log('comp',comp);
         // window.history.replaceState()
         switch (path) {
             case undefined:
-                setPage(<Overview c={comp} access={hostAccess} />);
+                setPage(<Overview props={parameters} />);
                 break;
             case 'overview':
-                setPage(<Overview c={comp} access={hostAccess} />);
+                setPage(<Overview props={parameters} />);
                 break;
             case 'host':
-                setPage(<Host c={comp} access={hostAccess} />);
+                setPage(<Host props={parameters} />);
                 break;
             case 'data':
-                setPage(<Data c={comp} access={hostAccess} />);
+                setPage(<Data props={parameters} />);
                 break;
             case 'leaderboard':
-                setPage(<Leaderboard c={comp} access={hostAccess} />);
+                setPage(<Leaderboard props={parameters} />);
+                break;
+            case 'rules':
+                setPage(<Rules props={parameters} />);
                 break;
             case 'submissions':
-                setPage(<Submissions c={comp} access={hostAccess} />);
+                setPage(<Submissions props={parameters} />);
                 break;
             case 'register':
                 setPage(<Register c={comp} />);
@@ -85,7 +104,7 @@ const Compete = () => {
 
     useEffect(() => {
         getPage(path);
-    },[comp,path]);
+    },[comp,path,isJoined]);
 
     const keys = {
         'overview':'Overview',
@@ -98,7 +117,7 @@ const Compete = () => {
             page?
                 <div className='compete-container'>
                     <div className='adjust'>
-                        <InductionsHeader c={comp} access={hostAccess} />
+                        <InductionsHeader props={parameters} />
                         {page}
                     </div>
                 </div>

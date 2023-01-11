@@ -6,21 +6,24 @@ const teamSchema = new mongoose.Schema({
     projects:[{
         type: String,
     }],
+    blogs:[{
+        type: String,
+    }],
+    competitions:[{
+        type: String
+    }], 
     firstname: {
         type: String,
         required: true
     },
     lastname: {
         type: String,
-        required: true
     },
     profession: {
         type: String,
-        required: true
     },
     description: {
         type: String,
-        required: true
     },
     username: {
         type: String,
@@ -32,7 +35,9 @@ const teamSchema = new mongoose.Schema({
     },
     year: {
         type: Number,
-        required: true
+    },
+    phone:{
+        type: Number,
     },
     photo:{
         type: String,
