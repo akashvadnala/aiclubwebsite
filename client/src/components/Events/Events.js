@@ -8,69 +8,6 @@ import Error from "../Error";
 import { NavLink } from "react-router-dom";
 import { Context } from "../../Context/Context";
 
-const eventList = [
-  {
-    title: "A 3 Day All India Workshop on Generative Adversarial Networks",
-    eventStart: "2022-12-30T10:12:34.487+00:00",
-    eventEnd: "2022-12-30T11:12:34.487+00:00",
-    speakers: ["Anirudh", "Bhanu Prakash"],
-    cover: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    poster: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    eventLink:"https://meet.google.com/kaw-tjrm-rck",
-    eventLocation:"Auditorium NITC",
-    abstract:
-      "Dr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computing",
-  },
-  {
-    title: "A 3 Day All India Workshop on Generative Adversarial Networks",
-    eventStart: "2022-12-30T10:12:34.487+00:00",
-    eventEnd: "2022-12-30T11:12:34.487+00:00",
-    speakers: ["Anirudh", "Bhanu Prakash"],
-    cover: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    poster: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    eventLink:"https://meet.google.com/kaw-tjrm-rck",
-    eventLocation:"Auditorium NITC",
-    abstract:
-      "Dr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computing",
-  },
-  {
-    title: "A 3 Day All India Workshop on Generative Adversarial Networks",
-    eventStart: "2022-12-30T10:12:34.487+00:00",
-    eventEnd: "2022-12-30T11:12:34.487+00:00",
-    speakers: ["Anirudh", "Bhanu Prakash"],
-    cover: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    poster: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    eventLink:"https://meet.google.com/kaw-tjrm-rck",
-    eventLocation:"Auditorium NITC",
-    abstract:
-      "Dr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computing",
-  },
-  {
-    title: "A 3 Day All India Workshop on Generative Adversarial Networks",
-    eventStart: "2022-12-30T10:12:34.487+00:00",
-    eventEnd: "2022-12-30T11:12:34.487+00:00",
-    speakers: ["Anirudh", "Bhanu Prakash"],
-    cover: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    poster: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    eventLink:"https://meet.google.com/kaw-tjrm-rck",
-    eventLocation:"Auditorium NITC",
-    abstract:
-      "Dr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computing",
-  },
-  {
-    title: "A 3 Day All India Workshop on Generative Adversarial Networks",
-    eventStart: "2022-12-30T10:12:34.487+00:00",
-    eventEnd: "2022-12-30T11:12:34.487+00:00",
-    speakers: ["Anirudh", "Bhanu Prakash"],
-    cover: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    poster: "https://preview.colorlib.com/theme/confer/img/bg-img/10.jpg",
-    eventLink:"https://meet.google.com/kaw-tjrm-rck",
-    eventLocation:"Auditorium NITC",
-    abstract:
-      "Dr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computingDr. Aditya Bhaskara on How ML has changed computing",
-  }
-];
-
 const Events = () => {
   const { user } = useContext(Context);
   const [ongoingEvents, setongoingEvents] = useState([]);
