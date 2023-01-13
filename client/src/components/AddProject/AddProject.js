@@ -9,7 +9,7 @@ import Loading from '../Loading';
 
 const AddProject = () => {
   const navigate = useNavigate();
-  const { user } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const [ add, setAdd ] = useState('Create');
   const [ add2, setAdd2 ] =useState();
   const [xauthor,setXAuthor] = useState('');
@@ -27,27 +27,32 @@ const AddProject = () => {
   const [ teams, setTeams ] = useState([]);
   let team=[];
   const getTeams = () => {
-    try{
-      axios.get(`${SERVER_URL}/getTeams`)
-      .then(data=>{
-        team=data.data;
-        if(user){
-          team = team.filter(t=>t!==user.username);
-          setProj(project);
-          setTeams(team);
-          setLoad(1);
-        }
-        else{
-          setLoad(-1);
-        }
-      })
-    }catch(err){
-      console.log(err);
+    if(logged_in===1){
+      try{
+        axios.get(`${SERVER_URL}/getTeams`)
+        .then(data=>{
+          team=data.data;
+          if(user){
+            team = team.filter(t=>t!==user.username);
+            setProj(project);
+            setTeams(team);
+            setLoad(1);
+          }
+          else{
+            setLoad(-1);
+          }
+        })
+      }catch(err){
+        console.log(err);
+      }
+    }
+    else if(logged_in===-1){
+      setLoad(-1);
     }
   }
   useEffect(()=>{
     getTeams();
-  },[user]);
+  },[logged_in]);
   const handlePhoto = (e) => {
     setProj({ ...proj, ["cover"]: e.target.files[0] });
     console.log("proj", proj);

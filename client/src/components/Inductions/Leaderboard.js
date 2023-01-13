@@ -1,61 +1,76 @@
-import React from "react";
-
-const Leaderboard = (props) => {
-    return(
-        <>
-            {
-                <div className="leaderboard-container">
-                    <div className="border">
-                    <div className='row p-3 pb-1'>
-                        <div className='col-sm-8'>
-                        <h5>Leaderboard</h5>
-                        </div>
-                        <div className='col-sm-4 text-end'>
-                        {props.access?
-                            <>
-                                <button className='btn btn-outline-dark btn-sm mx-1' >Public</button>
-                                <button className='btn btn-outline-dark btn-sm mx-1' >Private</button>
-                            </>
-                            :
-                            null
-                        }
-                        </div>
-                    </div>
-                        <table className="table table-striped">
-                            <thead className="thead-dark">
-                                <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">First</th>
-                                <th scope="col">Last</th>
-                                <th scope="col">Handle</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                                </tr>
-                                <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { SERVER_URL } from "../../EditableStuff/Config";
+const Leaderboard = ({props}) => {
+  const [lb,setLB] = useState([]);
+  const [count,setCount] = useState(1);
+  const getLeaderboard = async () =>{
+    try{
+      axios.get(`${SERVER_URL}/getLeaderboard/${props.c.url}`)
+      .then(data=>{
+        if(data.status===200){
+          setLB(data.data);
+        }
+      });
+    }catch(err){
+      console.log(err);
+    }
+  }
+  useEffect(()=>{
+    getLeaderboard();
+  },[props]);
+  console.log('lb',lb);
+  return(
+  <>
+  {
+    <div className="leaderboard-container">
+      <div className="border">
+        <div className='row p-3 pb-1'>
+          <div className='col-sm-8'>
+            <h5>Leaderboard</h5>
+          </div>
+          <div className='col-sm-4 text-end'>
+            {props.access?
+              <>
+                <button className='btn btn-outline-dark btn-sm mx-1' >Public</button>
+                <button className='btn btn-outline-dark btn-sm mx-1' >Private</button>
+              </>
+            :
+              null
             }
-        </>
-    );
+          </div>
+        </div>
+        <table className="table table-striped">
+          <thead className="thead-dark">
+            <tr>
+              <th scope="col">S.No.</th>
+              <th scope="col">Team Name</th>
+              <th scope="col">Score</th>
+              <th scope="col">Submissions</th>
+              <th scole="col">Last Submission</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              lb.map((l,index)=>{
+                return(
+                    <tr>
+                    <th scope="row">{index+1}</th>                    
+                    <th>{l.name}</th>
+                    <th>{l.score}</th>
+                    <th>{l.submissions}</th>
+                    <th>{l.last}</th>
+                  </tr>
+                )                
+              })
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+  </>
+);
 }
 
 export default Leaderboard;

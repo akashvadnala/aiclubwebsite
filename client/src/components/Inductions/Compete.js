@@ -29,33 +29,33 @@ const Compete = () => {
     const [ hostAccess, setHostAccess ] = useState(false);
     const [isJoined,setIsJoined] = useState(false);
   const getCompete = async () => {
-        try{
-            axios.get(`${SERVER_URL}/getCompete/${spath}`)
-            .then(data => {
-                if(data.status===200){
-                    if(user){
-                        if(data.data.access.indexOf(user.username)>-1){
-                            setHostAccess(true);
-                        }
-    
-                        axios.get(`${SERVER_URL}/isJoined/${data.data.url}/${user.username}`)
-                        .then(res=>{
-                            setIsJoined(res.data);
-                        });
+    try{
+        axios.get(`${SERVER_URL}/getCompete/${spath}`)
+        .then(data => {
+            if(data.status===200){
+                if(user){
+                    if(data.data.access.indexOf(user.username)>-1){
+                        setHostAccess(true);
                     }
 
-                    setComp(data.data);
-                    setLoad(1);
+                    axios.get(`${SERVER_URL}/isJoined/${data.data.url}/${user.username}`)
+                    .then(res=>{
+                        setIsJoined(res.data);
+                    });
                 }
-                else{
-                    console.log('Competition not found');
-                    setLoad(-1);
-                }
-            })
-        }catch(err){
-            console.log('Connot get Compete data');
-            setLoad(-1);
-        }
+
+                setComp(data.data);
+                setLoad(1);
+            }
+            else{
+                console.log('Competition not found');
+                setLoad(-1);
+            }
+        })
+    }catch(err){
+        console.log('Connot get Compete data');
+        setLoad(-1);
+    }
     }
     
     useEffect(() => {

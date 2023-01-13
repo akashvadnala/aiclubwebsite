@@ -8,6 +8,11 @@ const InductionsHeader = ({props}) => {
   console.log('props',props);
   const location = useLocation();
   const [isJoined,setIsJoined] = useState(false);
+  
+  useEffect(()=>{
+    setIsJoined(props.isJoined);
+  },[props]);
+
   let keys = {
     '':'Overview',
     'data':'Data',
@@ -58,10 +63,6 @@ const InductionsHeader = ({props}) => {
       console.log(err);
     }
   }  
-  useEffect(()=>{
-    setIsJoined(props.isJoined);
-    console.log('isJoined',isJoined)
-  },[props]);
   return (
     <>
         <div className='row'>
