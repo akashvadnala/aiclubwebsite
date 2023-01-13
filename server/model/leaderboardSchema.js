@@ -19,7 +19,7 @@ const leaderboardSchema = new mongoose.Schema({
     score:{
         type: mongoose.Schema.Types.Decimal128
     },
-    entries:{
+    submissions:{
         type: Number
     },
     last:{

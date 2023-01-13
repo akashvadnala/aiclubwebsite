@@ -42,13 +42,15 @@ router.post('/login', async (req, res, next) => {
                         httpOnly: true
                     });
                     if(compete){
-                        const leaderboard = new Leaderboard({
-                            compete:compete,
-                            name:team.username
-                        });
-                        await leaderboard.save();
-                        team.competitions.push(compete);
-                        await team.save();
+                        if(team.competitions.indexOf(compete)===-1){
+                            const leaderboard = new Leaderboard({
+                                compete:compete,
+                                name:team.username
+                            });
+                            await leaderboard.save();
+                            team.competitions.push(compete);
+                            await team.save();
+                        }
                     }
                     console.log('Logged in');
                 }

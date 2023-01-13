@@ -11,7 +11,6 @@ const Team = require('../model/teamSchema');
 router.route('/getCompete/:url').get(async (req,res) => {
     const {url} = req.params;
     const data = await Competitions.findOne({url:url});
-    console.log('compete',data);
     if(data){
         res.status(200).json(data);
     }
@@ -92,14 +91,16 @@ router.route('/joinCompete').post(async (req,res)=>{
     console.log('body',req.body);
     const {url,username} = req.body;
     try{
-        const leaderboard = new Leaderboard({
-            compete:url,
-            name:username
-        });
-        await leaderboard.save();
         const team = await Team.findOne({username:username});
-        team.competitions.push(url);
-        await team.save();
+        if(team.competitions.indexOf(url)===-1){
+            team.competitions.push(url);
+            await team.save();
+            const leaderboard = new Leaderboard({
+                compete:url,
+                name:username
+            });
+            await leaderboard.save();
+        }
         return res.status(200).json({ message: "Competition Joined Successfully!"});
     }catch(err){
         console.log(err);
@@ -130,6 +131,14 @@ router.route('/deleteCompete/:id').post(async (req,res)=>{
         await Data.findOneAndDelete({compete:url});
         await Rules.findOneAndDelete({compete:url});
         await Competitions.findByIdAndDelete(url);
+        const leaderboard = await Leaderboard.find({compete:url});
+        await Promise.all(
+            leaderboard.map(async l=>{
+                const team = await Team.findOne({username:l.name});
+                team.competitions.filter(t=>t!==url);
+                await team.save();
+            })
+        )
         return res.status(200).json({ message: "Competition Deleted Successfully!"});
     }
     else{
