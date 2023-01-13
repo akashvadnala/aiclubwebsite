@@ -1,0 +1,29 @@
+.event-card-home-container{
+    border: solid;
+    border-width: 1px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    border-radius: 5px;
+    background-color: rgb(248, 245, 245);
+}
+
+.event-card-home-container > h5 {
+    font-family: "Times New Roman", Times, serif;
+}
+
+.speakers{
+    display: flex;
+    justify-content: space-between;
+}
+
+.speakers > p{
+    margin-bottom: 0;
+}
+
+.button{
+    margin: 5px;
+    margin-top: 0;
+    color: blue;
+    background-color: rgb(248, 245, 245);
+    border-width: 0;
+    border-radius: 5px;
+}
