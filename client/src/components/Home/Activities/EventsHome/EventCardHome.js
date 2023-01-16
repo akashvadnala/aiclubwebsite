@@ -1,15 +1,17 @@
 import React from 'react';
 import './EventHome.css'
-import { useNavigate } from "react-router-dom";
 
 const EventCardHome = ({event}) => {
-  let navigate = useNavigate();
   return (
       <div className='event-card-home-container mt-3'>
+        <div id='title'>
           <h5>{event.title} </h5>
+          <p><span class="badge rounded-pill text-bg-success">{event.status}</span></p>
+        </div>
+          {/* url - https://getbootstrap.com/docs/5.3/components/badge/ */}
           <div className='speakers'>
-            <p>By - {event.speakers} </p>
-            <button type="button" className="button" onClick={()=>{navigate("/events/"+event.url);}}> - {event.status}</button>
+            <p>By - {event.speakers.join(',')} </p>
+            <a href={"events/"+event.url}><p>Learn more</p></a>
           </div>
           
       </div>
