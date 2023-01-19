@@ -4,34 +4,6 @@ import { NavLink } from 'react-router-dom';
 import axios from "axios";
 import { SERVER_URL } from "../../../../EditableStuff/Config";
 
-// const events=[
-//     {
-//         'name':'How ML has changed computing',
-//         'speaker':'Dr. Aditya Bhaskara',
-//         'status': 'upcoming',
-//     },
-//     {
-//         'name':'The need of AI in robotics for Rehabilitation',
-//         'speaker':'Dr. S M Mizanoor Rahman',
-//         'status': 'upcoming'
-//     },
-//     {
-//         'name':'Class-Agnostic Object Detection',
-//         'speaker':'Dr. Ayush Jaiswal',
-//         'status': 'ongoing'
-//     },
-//     {
-//         'name':'AI in Healthcare and Life Science',
-//         'speaker':'Mr. Raghav Mani',
-//         'status': 'past'
-//     },
-//     {
-//         'name':'The Basics of X-Vector-Based Automatic Speaker Verification',
-//         'speaker':'Mr.Syed Shahnawazuddin',
-//         'status': 'past'
-//     }
-// ]
-
 
 const EventsHome = () => {
     const [events,setEvents] = useState([]);
@@ -63,6 +35,7 @@ const EventsHome = () => {
                     )
                     })
                 }
+                <br></br>
                 <p><NavLink to='/events'>Know More About Events<span className='small'> ❯</span></NavLink></p>
             </div>
     )
