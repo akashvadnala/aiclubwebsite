@@ -43,6 +43,20 @@ router.route('/updateProject/:url').put(async (req,res) => {
     }
 })
 
+
+router.route("/updateprojPublicStatus/:url").put(async (req, res) => {
+    try {
+      const { url } = req.params;
+      const updatedProj = await Project.findOne({ url: url });
+      updatedProj.public = req.body.public;
+      updatedProj.save();
+      console.log("Project Updated", updatedProj);
+      res.status(200).json(updatedProj);
+    } catch (err) {
+      res.status(422).json(err);
+    }
+  });
+
 router.route('/projectAdd').post(async (req,res) => {
     const { title, url, creator, authors, content, cover } = req.body;
     try{

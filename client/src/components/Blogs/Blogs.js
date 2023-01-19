@@ -9,7 +9,7 @@ import { SERVER_URL } from "../../EditableStuff/Config";
 import axios from "axios";
 
 const Blogs = () => {
-  const[blogList, setblogList]  = useState([]);
+  const [blogList, setblogList] = useState([]);
   const { user } = useContext(Context);
   const [filtermode, setfiltermode] = useState("My Blogs");
   const [blogs, setBlogs] = useState([]);
@@ -21,6 +21,17 @@ const Blogs = () => {
         console.log("data", data.data);
         setBlogs(data.data);
         setblogList(data.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getuserBlogData = async (name) => {
+    try {
+      axios.get(`${SERVER_URL}/getuserBlogs/${name}`).then((data) => {
+        console.log("data", data.data);
+        setBlogs(data.data);
       });
     } catch (err) {
       console.log(err);
@@ -61,16 +72,13 @@ const Blogs = () => {
     setSearchKey("");
   };
 
-  const filterMyblogs = () => {
+  const filterMyblogs = (name) => {
     const allBlogs = blogList;
     if (filtermode === "All Blogs") {
       setBlogs(allBlogs);
       setfiltermode("My Blogs");
     } else {
-      const filteredBlogs = allBlogs.filter(
-        (blog) => blog.authorName === user.username
-      );
-      setBlogs(filteredBlogs);
+      getuserBlogData(name);
       setfiltermode("All Blogs");
     }
   };
@@ -80,15 +88,19 @@ const Blogs = () => {
         <div>
           <div className="row py-4">
             <div className="col-4">
-              <h2>Blogs</h2>
+              {(filtermode !== "All Blogs")? <h2>Blogs</h2> : <h2>My Blogs</h2>}
             </div>
             <div className="col-8 text-end">
               {user ? (
                 <>
                   <button
                     rel="noreferrer"
-                    className={`btn btn-sm btn-${(filtermode==="All Blogs")?"primary":"secondary"} mx-1`}
-                    onClick={filterMyblogs}
+                    className={`btn btn-sm btn-${
+                      filtermode === "All Blogs" ? "primary" : "secondary"
+                    } mx-1`}
+                    onClick={() => {
+                      filterMyblogs(user.username);
+                    }}
                   >
                     {filtermode}
                   </button>
