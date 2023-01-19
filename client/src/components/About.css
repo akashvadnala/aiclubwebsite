@@ -1,0 +1,48 @@
+.inductions-navbar {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.inductions-navbar div {
+    margin: 0.5rem 2rem 1rem 0;
+    font-size: 14px;
+}
+
+#main{
+    margin: 0 auto;
+    width: 1080px;
+}
+
+
+.heading{
+    background-color: aquamarine;
+    background-image: url("Inductions/aibg.webp");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+}
+
+.options{
+    display: flex;
+    /* background-color: rgb(115, 173, 195); */
+    justify-content: space-evenly;
+    
+}
+
+a{
+    text-decoration: none;
+}
+
+.overview{
+    display: flex;
+}
+
+.sidenav{
+    border: 2px solid;
+}
+
+.describe{
+    border: 2px solid;
+    margin: 5px auto;
+}

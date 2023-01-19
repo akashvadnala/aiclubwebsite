@@ -27,6 +27,7 @@ app.use(require('./router/blogs'));
 app.use(require('./router/leaderboard'));
 app.use(require('./router/projects'));
 app.use(require('./router/CTeam'));
+app.use(require('./router/about'));
 app.use('/events',require('./router/events'));
 
 
