@@ -6,15 +6,14 @@ import Error from '../Error';
 import Loading from '../Loading';
 import './Inductions.css';
 
-const Overview = (props) => {
+const Overview = ({props}) => {
   const editor = useRef(null);
   const [ preview, setPreview ] = useState(true);
   const [ overview, setOverview ] = useState();
   const [ load, setLoad ] = useState(0);
   const [ desc, setDesc ] = useState('');
   const getOverview = () => {
-    console.log('id',props.c._id);
-    axios.get(`${SERVER_URL}/getOverview/${props.c._id}`)
+    axios.get(`${SERVER_URL}/getOverview/${props.c.url}`)
     .then(data=>{
       if(data.status===200){
         setOverview(data.data);
@@ -28,6 +27,7 @@ const Overview = (props) => {
   }
   useEffect(()=>{
     getOverview();
+    setPreview(true);
   },[props.c]);
   const handleValue = (value) => {
     setOverview({...overview,['description']:value});

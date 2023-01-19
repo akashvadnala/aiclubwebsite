@@ -5,6 +5,7 @@
 body{
   font-family: sans-serif;
   letter-spacing: 0.7px;
+  font-size: 16px;
   /* background-color: rgb(250,250,250); */
 }
 
@@ -51,6 +52,13 @@ hr{
 .loading-container img{
   width: 30px;
   height: 30px;
+}
+
+
+
+.error-container img{
+  width: 30rem;
+  height: 30rem;
 }
 
 @media (min-width: 576px){

@@ -6,21 +6,24 @@ const teamSchema = new mongoose.Schema({
     projects:[{
         type: String,
     }],
+    blogs:[{
+        type: String,
+    }],
+    competitions:[{
+        type: String
+    }], 
     firstname: {
         type: String,
         required: true
     },
     lastname: {
         type: String,
-        required: true
     },
     profession: {
         type: String,
-        required: true
     },
     description: {
         type: String,
-        required: true
     },
     username: {
         type: String,
@@ -32,7 +35,9 @@ const teamSchema = new mongoose.Schema({
     },
     year: {
         type: Number,
-        required: true
+    },
+    phone:{
+        type: Number,
     },
     photo:{
         type: String,
@@ -70,7 +75,6 @@ const teamSchema = new mongoose.Schema({
 
 
 teamSchema.pre('save', async function(next){
-    console.log("Hi from inside");
     if(this.isModified('password')){
         this.password = bcrypt.hash(this.password, 10);
         this.cpassword = this.password;
@@ -80,7 +84,6 @@ teamSchema.pre('save', async function(next){
 
 teamSchema.methods.generateAuthToken = async function(){
     try{
-        console.log('secretkey',process.env.SECRET_KEY);
         let token_d = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
         this.tokens = this.tokens.concat({ token: token_d });
         await this.save();

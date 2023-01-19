@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const overviewSchema = new mongoose.Schema({
     compete:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: true,
         ref: "Competitions",
     },

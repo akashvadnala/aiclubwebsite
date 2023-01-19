@@ -13,8 +13,8 @@ const EditProject = () => {
   const {url} = useParams();
   const editor = useRef(null);
   const navigate = useNavigate();
-  const { user } = useContext(Context);
-    
+  const { user,logged_in } = useContext(Context);
+  
   const [ add, setAdd ] = useState('Save as Draft');
   const [ add2, setAdd2 ] =useState();
   const [ xauthor,setXAuthor ] = useState('');
@@ -26,49 +26,54 @@ const EditProject = () => {
   let team=[];
   let project=null;
   const getProject = async () =>{
-    // getTeams
-    try{
-      axios.get(`${SERVER_URL}/getTeams`)
-      .then(data=>{
-        team=data.data;
-        setTeams(team);
-      })
-    }catch(err){
-      console.log(err);
-    }
-    // getProject
-    try{
-      axios.get(`${SERVER_URL}/getProjectEdit/${url}`)
-      .then(async data => {
-        if(data.status===200){
-          project=data.data;
-          if(user && project.authors.indexOf(user.username)>-1){
-            await Promise.all(project.authors.map((author)=>{
-              team = team.filter(t=>t!==author);
-            }));
+   
+    if(logged_in===1){
+      try{ // getTeams
+        try{
+          axios.get(`${SERVER_URL}/getTeams`)
+          .then(data=>{
+            team=data.data;
             setTeams(team);
-            setProj(project);
-            console.log('project',project);
-            console.log('team',team);
-            setLoad(1);
+          })
+        }catch(err){
+          console.log(err);
+        }
+        // getProject
+        axios.get(`${SERVER_URL}/getProjectEdit/${url}`)
+        .then(async data => {
+          if(data.status===200){
+            project=data.data;
+            if(user && project.authors.indexOf(user.username)>-1){
+              await Promise.all(project.authors.map((author)=>{
+                team = team.filter(t=>t!==author);
+              }));
+              setTeams(team);
+              setProj(project);
+              console.log('project',project);
+              console.log('team',team);
+              setLoad(1);
+            }
+            else{
+              setLoad(-1);
+            }
           }
           else{
             setLoad(-1);
           }
-        }
-        else{
-          setLoad(-1);
-        }
-      })
-    }catch(err){
-      console.log(err);
+        })
+      }catch(err){
+        console.log(err);
+      }
+    }
+    else if(logged_in===-1){
+      setLoad(-1);
     }
     
   }
 
   useEffect(()=>{
     getProject();
-  },[user]);
+  },[logged_in]);
 
   const handleValue = (e) => {
     setProj({...proj, ['content']:e});

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Register = (props) => {
+const Register = ({props}) => {
     const forms=[
         {
             'type':'text',

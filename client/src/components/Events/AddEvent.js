@@ -17,15 +17,15 @@ const AddEvent = () => {
   const [add2, setAdd2] = useState();
   const [xspeakers, setXspeakers] = useState("");
   const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [event, setEvent] = useState({
     title: "",
     url: "",
     speakers: [],
-    cover: "",
     poster: "",
     abstract: "",
-    eventStart:"",
-    eventEnd:"",
+    eventStart:new Date(),
+    eventEnd:new Date(),
     eventLink:"",
     eventLocation:""
   });
@@ -47,8 +47,8 @@ const AddEvent = () => {
     }
   }, [user]);
 
-  const handlePhoto = (e) => {
-    setEvent({ ...event, ["cover"]: e.target.files[0] });
+  const handleposterPhoto = (e) => {
+    setEvent({ ...event, ["poster"]: e.target.files[0] });
   };
 
   const handleInputs = (e) => {
@@ -70,32 +70,30 @@ const AddEvent = () => {
     setXspeakers("");
   };
 
+  const seteventStartDate = (date) => {
+    setStartDate(date);
+    setEvent({ ...event, ["eventStart"]: date });
+  };
+
+  const seteventEndDate = (date) => {
+    setEndDate(date);
+    setEvent({ ...event, ["eventEnd"]: date });
+  };
+
   const PostEvent = async (e) => {
     e.preventDefault();
     setAdd("Creating ");
+    console.log("start-end", startDate, endDate);
     setAdd2(<i className="fa fa-spinner fa-spin"></i>);
-    const data = new FormData();
-    const photoname = Date.now() + event.cover.name;
-    data.append("name", photoname);
-    data.append("photo", event.cover);
     var imgurl;
-
-    try {
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-      imgurl = img.data;
-      event.cover = imgurl;
-      console.log("final post", event);
-    } catch (err) {
-      console.log("photoerr", err);
-    }
-
-    const data1 = new FormData();
-    const photoname1 = Date.now() + event.poster.name;
-    data.append("name", photoname1);
+    const data = new FormData();
+    console.log(data);
+    const photoname = Date.now() + event.poster.name;
+    data.append("name", photoname);
     data.append("photo", event.poster);
 
     try {
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data1);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
       imgurl = img.data;
       event.poster = imgurl;
       console.log("final post", event);
@@ -104,7 +102,7 @@ const AddEvent = () => {
     }
 
     try {
-      const eventdata = await axios.post(`${SERVER_URL}/addEvent`, event, {
+      const eventdata = await axios.post(`${SERVER_URL}/events/addEvent`, event, {
         headers: { "Content-Type": "application/json" },
       });
       console.log("blogdata", eventdata);
@@ -115,7 +113,7 @@ const AddEvent = () => {
         console.log("data");
         console.log(eventdata);
         console.log("Posting Successfull");
-        navigate(`/event/${event.url}/edit`);
+        navigate("/events")
       }
     } catch (err) {
       console.log("err", err);
@@ -232,23 +230,6 @@ const AddEvent = () => {
               </div>
               <div className="form-group my-3 row">
                 <label for="photo" className="col-sm-2 text-end">
-                  Event Cover Photo :
-                </label>
-                <div className="col-sm-10">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    name="photo"
-                    onChange={handlePhoto}
-                    className="form-control"
-                    id="photo"
-                    aria-describedby="photo"
-                    required
-                  />
-                </div>
-              </div>
-              <div className="form-group my-3 row">
-                <label for="photo" className="col-sm-2 text-end">
                   Event Poster :
                 </label>
                 <div className="col-sm-10">
@@ -256,7 +237,7 @@ const AddEvent = () => {
                     type="file"
                     accept="image/*"
                     name="photo"
-                    onChange={handlePhoto}
+                    onChange={handleposterPhoto}
                     className="form-control"
                     id="photo"
                     aria-describedby="photo"
@@ -272,7 +253,7 @@ const AddEvent = () => {
                   <DatePicker
                     className="form-control"
                     selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date) => seteventStartDate(date)}
                     showTimeSelect
                     minDate={new Date()}
                     filterTime={filterPassedTime}
@@ -287,8 +268,8 @@ const AddEvent = () => {
                 <div className="col-sm-10">
                   <DatePicker
                     className="form-control"
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    selected={endDate}
+                    onChange={(date) => seteventEndDate(date)}
                     showTimeSelect
                     minDate={new Date()}
                     filterTime={filterPassedTime}
@@ -316,14 +297,13 @@ const AddEvent = () => {
                 <div className="col-sm-10">
                   <input
                     type="text"
-                    name="link"
-                    value={event.title}
+                    name="eventLink"
+                    value={event.eventLink}
                     onChange={handleInputs}
                     className="form-control"
-                    id="link"
-                    aria-describedby="link"
+                    id="eventLink"
+                    aria-describedby="eventLink"
                     placeholder="Enter event link if conducted in online"
-                    required
                   />
                 </div>
               </div>
@@ -334,14 +314,13 @@ const AddEvent = () => {
                 <div className="col-sm-10">
                   <input
                     type="text"
-                    name="location"
-                    value={event.title}
+                    name="eventLocation"
+                    value={event.eventLocation}
                     onChange={handleInputs}
                     className="form-control"
-                    id="location"
-                    aria-describedby="location"
+                    id="eventLocation"
+                    aria-describedby="eventLocation"
                     placeholder="Enter event venue if conducted in offline"
-                    required
                   />
                 </div>
               </div>

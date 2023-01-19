@@ -95,6 +95,7 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
 router.route('/addEvent').post(async (req,res)=>{
     try{
         const event = req.body;
+        console.log("server ",event);
         const newEvent = new Event(event);
         await newEvent.save();
         console.log(`${event.title} created sucessfull`);

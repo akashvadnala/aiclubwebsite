@@ -14,10 +14,6 @@ const eventSchema = new Schema({
         type: String,
         required:true
     }],
-    cover:{
-        type: String,
-        required: true, 
-    },
     poster:{
         type: String,
         required:true
