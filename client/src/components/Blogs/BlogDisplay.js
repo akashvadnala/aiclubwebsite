@@ -19,6 +19,8 @@ const BlogDisplay = () => {
   const [edit, setedit] = useState(null);
   const [load, setLoad] = useState(0);
   const [authordetails, setauthordetails] = useState(null);
+  const [pub, setPub] = useState("Make Public");
+  const [pub2, setPub2] = useState();
   const navigate = useNavigate();
 
   const getBlog = async () => {
@@ -30,6 +32,7 @@ const BlogDisplay = () => {
         const post_ = res.data.blog;
         setBlog(res.data.blog);
         setauthordetails(res.data.author);
+        setPub(`${!res.data.blog.public ? "Make Public" : "Make Private"}`);
         setLoad(1);
         if (user && post_.authorName.indexOf(user.username) > -1) {
           setedit(true);
@@ -59,6 +62,34 @@ const BlogDisplay = () => {
       "/" +
       d.getFullYear();
     return a;
+  };
+
+  const TogglePublic = async (e) => {
+    e.preventDefault();
+    const confirmed = window.confirm(
+      `Are you sure to make blog "${blog.title}" ${
+        !blog.public ? "Public" : "Private"
+      }?`
+    );
+    if (confirmed) {
+      setPub(`${!blog.public ? "Publishing" : "Making Private"}`);
+      setPub2(<i class="fa fa-spinner fa-spin"></i>);
+      const res = await axios.put(
+        `${SERVER_URL}/updateblogPublicStatus/${blog.url}`,
+        { public: !blog.public ? true : false },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (res.status === 200) {
+        blog.public = !blog.public ? true : false;
+        setPub(`${!blog.public ? "Make Public" : "Make Private"}`);
+        setPub2();
+        navigate(`/blogs/${blog.url}`);
+      } else {
+        console.log("Publishing failed");
+      }
+    }
   };
 
   const deleteBlog = async (e) => {
@@ -106,6 +137,17 @@ const BlogDisplay = () => {
                       {" "}
                       Delete
                     </NavLink>
+                    <NavLink
+                      rel="noreferrer"
+                      onClick={TogglePublic}
+                      className={`btn btn-${
+                        blog.public ? "warning" : "success"
+                      } btn-sm mx-2`}
+                    >
+                      {" "}
+                      {pub}
+                      {pub2}
+                    </NavLink>
                   </div>
                 )}
                 <div className="blog-subCategory">
@@ -118,7 +160,7 @@ const BlogDisplay = () => {
               </div>
               <p dangerouslySetInnerHTML={{ __html: blog.content }}></p>
             </div>
-            <div className="col-lg-4" >
+            <div className="col-lg-4">
               <ProfileCard a={authordetails} />
             </div>
           </div>
