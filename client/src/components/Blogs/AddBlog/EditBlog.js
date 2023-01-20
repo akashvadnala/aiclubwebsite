@@ -7,11 +7,13 @@ import Error from "../../Error";
 import axios from "axios";
 import { SERVER_URL } from "../../../EditableStuff/Config";
 import Loading from "../../Loading";
+import {alertContext} from "../../../Context/Alert";
 
 const EditBlog = () => {
   const { url } = useParams();
   const editor = useRef(null);
   const { user } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
 
   const [add, setAdd] = useState("Save as Draft");
   const [add2, setAdd2] = useState();
@@ -42,7 +44,7 @@ const EditBlog = () => {
   };
   useEffect(() => {
     getBlog();
-  }, []);
+  }, [user]);
 
   const handleValue = (e) => {
     setpost({ ...post, ["content"]: e });
@@ -65,7 +67,7 @@ const EditBlog = () => {
   const UpdateBlog = async (e) => {
     e.preventDefault();
     setAdd("Saving ");
-    setAdd2(<i class="fa fa-spinner fa-spin"></i>);
+    setAdd2(<i className="fa fa-spinner fa-spin"></i>);
     try {
       const postdata = await axios.put(
         `${SERVER_URL}/updateBlog/${url}`,
@@ -80,6 +82,7 @@ const EditBlog = () => {
       } else {
         setAdd("Save as Draft");
         setAdd2("");
+        showAlert("Saved as Draft","success");
         setPreview(true);
       }
     } catch (err) {
@@ -93,7 +96,7 @@ const EditBlog = () => {
         <Loading />
       ) : load === 1 ? (
         <div className="container addproject-container py-3">
-          <h3 className="text-center">Add Blog</h3>
+          <h3 className="text-center">Edit Blog</h3>
           <div className="text-center fs-6 pb-1">
             {preview ? (
               <NavLink to={`/blogs/${post.url}`} className="btn btn-success btn-sm">Preview</NavLink>
@@ -110,7 +113,7 @@ const EditBlog = () => {
             <div className="row">
               <div className="col-12 col-md-9">
                 <div className="form-group mb-1">
-                  <label for="title">Blog Title :</label>
+                  <label htmlFor="title">Blog Title :</label>
                 </div>
                 <div className="form-group mb-4">
                   <input
@@ -131,9 +134,9 @@ const EditBlog = () => {
                 </div>
                 <div className="form-group my-2 row">
                   {post &&
-                    post.tags.map((a) => {
+                    post.tags.map((a,i) => {
                       return (
-                        <div className="col-12 col-sm-6 col-lg-4 mb-2 row">
+                        <div className="col-12 col-sm-6 col-lg-4 mb-2 row" key={i}>
                           <div className="col-8 paddr">
                             <input
                               type="text"
@@ -180,7 +183,7 @@ const EditBlog = () => {
                 </div>
 
                 <div className="form-group my-1">
-                  <label for="content">Blog Content :</label>
+                  <label htmlFor="content">Blog Content :</label>
                 </div>
                 <div className="form-group mb-4">
                   <JoditEditor
