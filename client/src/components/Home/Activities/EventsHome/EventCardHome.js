@@ -6,7 +6,7 @@ const EventCardHome = ({event}) => {
       <div className='event-card-home-container mt-3'>
         <div id='title'>
           <h5>{event.title} </h5>
-          <p><span class="badge rounded-pill text-bg-success">{event.status}</span></p>
+          <p><span className="badge rounded-pill text-bg-success">{event.status}</span></p>
         </div>
           {/* url - https://getbootstrap.com/docs/5.3/components/badge/ */}
           <div className='speakers'>
