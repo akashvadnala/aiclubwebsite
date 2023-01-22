@@ -8,6 +8,7 @@ import Loading from "../Loading";
 import AuthorCard from "./AuthorCard";
 import { NavLink } from "react-router-dom";
 import Tag from "../Blogs/tags/Tag";
+import { Helmet } from "react-helmet";
 
 const ProjectDisplay = () => {
   const { url } = useParams();
@@ -23,18 +24,18 @@ const ProjectDisplay = () => {
     const getProject = async () =>{
         try{
             const data = await axios.get(`${SERVER_URL}/getProject/${url}`)
-            console.log('project',data.data.project);
-            if(data.status!==200){
-                setLoad(-1);
-                return;
+            if(data.status===200){
+              project=data.data.project;
+              if(user && data.data.project.authors.indexOf(user.username)>-1){
+                  setEdit(true);
+              }
+              setProj(data.data.project);
+              setAuthors(data.data.authors);
+              setLoad(1);
             }
-            project=data.data.project;
-            if(user && data.data.project.authors.indexOf(user.username)>-1){
-                setEdit(true);
+            else{
+              setLoad(-1);
             }
-            setProj(data.data.project);
-            setAuthors(data.data.authors);
-            setLoad(1);
         }catch(err){
             console.log(err);
         }
@@ -43,7 +44,7 @@ const ProjectDisplay = () => {
     
     useEffect(()=>{
         getProject();
-    },[user])
+    },[user,url])
 
 
   const deleteProject = async (e) => {
@@ -67,6 +68,9 @@ const ProjectDisplay = () => {
       ) : load === 1 ? (
         <div className="container projectdisplay-container py-5">
           <div className="row">
+            <Helmet>
+              <title>Projects - AI Club</title>
+            </Helmet>
             <div className="col-lg-8 px-5">
               <div className="header align-center">
                 <h3 className="text-center pb-1">{proj.title}</h3>

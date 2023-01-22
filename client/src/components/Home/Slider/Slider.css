@@ -1,10 +1,25 @@
-.carousel-caption{
-    padding-bottom: 10% !important;
+.carousel .carousel-inner .carousel-item {
+    position: relative;
+    height: calc(var(--module-height) + 10vh);
+    text-align: center;
 }
 
-.carousel .slider-a,.carousel .slider-a:hover{
-    background-color: rgba(255,255,255,.6);
-    backdrop-filter: blur(10px);
-    color: black;
-    border-radius: 20px;
+.carousel-caption{
+    position: relative;
+    left: 0;
+    top: calc(0rem - var(--module-height));
+    z-index: 10;
+    color: white;
+}
+
+.carousel-caption a{
+    color: #efefef;
+}
+
+.carousel-caption a:hover{
+    text-decoration: underline;
+}
+
+html{
+    --module-height:60vh;
 }

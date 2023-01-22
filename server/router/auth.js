@@ -105,6 +105,16 @@ router.get('/getUserData', authenticate, (req,res)=>{
     }
 });
 
+router.route('/userExist/:username').get(async (req,res)=>{
+    const user = await Team.findOne({username:req.params.username});
+    if(user){
+        return res.status(200).json(null);
+    }
+    else{
+        return res.status(201).json(null);
+    }
+});
+
 router.get('/logout', (req,res)=>{
     res.clearCookie('jwtoken',{path:'/'});
     res.clearCookie('cjwtoken',{path:'/'});

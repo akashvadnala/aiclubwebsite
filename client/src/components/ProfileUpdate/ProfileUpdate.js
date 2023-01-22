@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Helmet } from 'react-helmet';
 import { useLocation } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
@@ -123,6 +124,9 @@ const ProfileUpdate = () => {
     <>
         <div className='profile-update-container'>
             <div className='profile-update adjust'>
+                <Helmet>
+                    <title>Projects - AI Club</title>
+                </Helmet>
                 <h3>You are editing {username} profile</h3>
                 <form method='POST'>
                     {

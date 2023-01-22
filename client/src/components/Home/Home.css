@@ -1,4 +1,5 @@
-.carousel-inner div img{
-    vertical-align: auto !important;
-    height: 70vh !important;
+.carousel-inner .carousel-item img{
+    /* vertical-align: auto !important;
+    height: 70vh !important; */
+    height: 100%;
 }

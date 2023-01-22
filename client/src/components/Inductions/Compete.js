@@ -43,7 +43,7 @@ const Compete = () => {
                         setIsJoined(res.data);
                     });
                 }
-
+                console.log('data.data',data.data);
                 setComp(data.data);
                 setLoad(1);
             }
@@ -59,6 +59,7 @@ const Compete = () => {
     }
     
     useEffect(() => {
+        setIsJoined(false);
         setHostAccess(false);
         getCompete();
     },[logged_in,spath]);

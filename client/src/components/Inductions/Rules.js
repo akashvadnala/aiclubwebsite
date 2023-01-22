@@ -55,8 +55,8 @@ const Rules = ({props}) => {
   return (
     <>{load===0?<Loading />:load===1?
       <div className='rules-container'>
-        <div className='border'>
-          <div className='row p-3 pb-1'>
+        <div className=''>
+          <div className='row py-3'>
             <div className='col-sm-8'>
               <h5>Rules</h5>
             </div>
@@ -73,8 +73,8 @@ const Rules = ({props}) => {
             </div>
           </div>
           {preview?
-            <div className='p-3'>
-              <p dangerouslySetInnerHTML={{ __html: rules.description }}></p>
+            <div className=''>
+              <span dangerouslySetInnerHTML={{ __html: rules.description }}></span>
             </div>
           :
             <JoditEditor name="content" ref={editor} value={rules.description} onChange={handleValue} /> 

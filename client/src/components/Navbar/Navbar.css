@@ -18,6 +18,15 @@
     padding: 0 !important;
 }
 
+.navbar-nav{
+    padding: 0;
+}
+
+#navbarSupportedContent ul li a span:nth-child(2){
+    position: relative;
+    top: 1px;
+}
+
 .navbar li NavLink:hover{
     text-decoration: none;
 }

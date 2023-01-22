@@ -8,6 +8,7 @@ import { Context } from '../../Context/Context';
 import axios from 'axios';
 import CompeteLogin from './CompeteLogin';
 // import CList from '../../EditableStuff/CList';
+import Logo from '../../EditableStuff/ai-logo.jpg';
 
 const Navbar = () => {
 
@@ -105,7 +106,7 @@ const Navbar = () => {
         return(
         <>
             <li>
-                <NavLink className="navbar-brand" to='/'>AI CLUB</NavLink>
+                <NavLink className="navbar-brand" to='/'><span><img src={Logo} arc="Logo" style={{width:"30px", borderRadius:"5px"}} /></span><span>&nbsp;Club</span></NavLink>
             </li>
             {
                 navs.map((nav)=>{
@@ -121,7 +122,7 @@ const Navbar = () => {
                     }
                 })
             }
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     
                     <div className="dropdown show">
                         <NavLink className="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -140,7 +141,7 @@ const Navbar = () => {
                             }
                         </div>
                     </div>
-                </li>
+                </li> */}
                 <li className="nav-item">
                     <NavLink className="nav-link" to="/about">About</NavLink>
                 </li>
