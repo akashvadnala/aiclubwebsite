@@ -124,15 +124,14 @@ const BlogDisplay = () => {
                   <div className="text-center fs-6 p-2">
                     <NavLink
                       to={`/blogs/${blog.url}/edit`}
-                      className="btn btn-primary btn-sm"
+                      className="btn btn-primary btn-sm mx-1"
                     >
                       Edit{" "}
                     </NavLink>
-                    ·
                     <NavLink
                       rel="noreferrer"
                       onClick={deleteBlog}
-                      className="btn btn-danger btn-sm"
+                      className="btn btn-danger btn-sm mx-1"
                     >
                       {" "}
                       Delete
@@ -142,7 +141,7 @@ const BlogDisplay = () => {
                       onClick={TogglePublic}
                       className={`btn btn-${
                         blog.public ? "warning" : "success"
-                      } btn-sm mx-2`}
+                      } btn-sm mx-1`}
                     >
                       {" "}
                       {pub}
