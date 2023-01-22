@@ -48,14 +48,14 @@ const Footer = () => {
             <form method='POST' onSubmit={addSubscriber} encType="multipart/form-data">
               <p>Subscribe to Stay informed about our News, Events, Blogs and Projects</p>
               <input 
-                style={{ height: "1.8rem", borderColor: 'black', borderWidth: "0.05rem", marginBottom:'0.1rem'}} 
+                style={{ height: "1.8rem", border: "1px solid #bdb7b7", borderWidth: "0.05rem", marginBottom:'0.1rem'}} 
                 name='name' 
                 value={name}
                 onChange={(e)=>setName(e.target.value)}
                 placeholder='Enter Name' 
                 required/>
               <input 
-                style={{ height: "1.8rem", borderColor: 'black', borderWidth: "0.05rem" }} 
+                style={{ height: "1.8rem", border: "1px solid #bdb7b7", borderWidth: "0.05rem" }} 
                 name='email' 
                 value={email}
                 placeholder='Enter Email' 
