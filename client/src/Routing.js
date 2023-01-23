@@ -22,6 +22,7 @@ import EditBlog from './components/Blogs/AddBlog/EditBlog';
 import AddEvent from './components/Events/AddEvent';
 import EventDisplay from './components/Events/EventDisplay';
 import EditEvent from './components/Events/EditEvent';
+import AllPhotos from './components/Home/PhotoGallery/AllPhotos';
 
 
 const Routing = () => {
@@ -71,6 +72,9 @@ const Routing = () => {
 
         {/* About */}
         <Route exact path='/about' element={<About />} />
+
+        {/* Images */}
+        <Route exact path='/gallery' element={<AllPhotos />} />
 
         {/* Others */}
         <Route path='*' element={<Error />} />
