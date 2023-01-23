@@ -1,43 +1,64 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const projectSchema = new mongoose.Schema({
-    title:{
-        type:String,
-        required:true
+  title: {
+    type: String,
+    required: true,
+  },
+  url: {
+    type: String,
+    required: true,
+  },
+  creator: {
+    type: String,
+    required: true,
+  },
+  authors: [
+    {
+      type: String,
     },
-    url:{
-        type:String,
-        required:true
+  ],
+
+  isPublished: {
+    type: Boolean,
+    default: false,
+  },
+  researchPaperLink: {
+    type: String,
+  },
+  publisher: {
+    type: String,
+  },
+  coAuthors: [
+    {
+      type: String,
     },
-    creator:{
-        type:String,
-        required:true
+  ],
+
+  tags: [
+    {
+      type: String,
     },
-    authors:[
-        {
-            type:String
-        }
-    ],
-    tags:[
-        {
-            type:String
-        }
-    ],
-    content:{
-        type:String
-    },
-    cover:{
-        type:String,
-        required:true
-    },
-    public:{
-        type:Boolean,
-        default:false
-    },
-    createdAt:{
-        type: Date,
-        default: Date.now
-    },
+  ],
+  content: {
+    type: String,
+  },
+  cover: {
+    type: String,
+    required: true,
+  },
+  public: {
+    type: Boolean,
+    default: false,
+  },
+  approvalStatus: {
+    type: String,
+    default: "submit",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('Project', projectSchema);
+module.exports = mongoose.model("Project", projectSchema);

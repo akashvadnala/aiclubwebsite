@@ -23,7 +23,7 @@ import AddEvent from './components/Events/AddEvent';
 import EventDisplay from './components/Events/EventDisplay';
 import EditEvent from './components/Events/EditEvent';
 import AllPhotos from './components/Home/PhotoGallery/AllPhotos';
-
+import ProjectApprovals from './components/Projects/ProjectApprovals';
 
 const Routing = () => {
 
@@ -41,6 +41,7 @@ const Routing = () => {
         <Route exact path='/projects' element={<Projects />} />
         <Route exact path='/addproject' element={<AddProject />} />
         <Route exact path='/myprojects' element={<MyProjects />} />
+        <Route exact path='/projectapprovals' element={<ProjectApprovals />} />
         <Route exact path='/projects/:url' element={<ProjectDisplay />} />
         <Route exact path='/projects/:url/edit' element={<EditProject />} />
         <Route exact path='/projects/:url/preview' element={<PreviewProject />} />

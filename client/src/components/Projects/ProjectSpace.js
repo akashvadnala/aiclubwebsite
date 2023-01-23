@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-
+import { Fragment } from "react";
 
 const ProjectSpace = ({project}) => {
 
@@ -11,11 +11,11 @@ const ProjectSpace = ({project}) => {
           <p className="card-text text-muted">
             By
             {
-              project.authors.map((author)=>{
+              project.authors.map((author,i)=>{
                 return(
-                  <>
+                  <Fragment key={i}>
                     &nbsp;{author},
-                  </>
+                  </Fragment>
                 )
               })
             }

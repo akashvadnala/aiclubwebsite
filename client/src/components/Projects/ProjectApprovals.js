@@ -8,14 +8,15 @@ import Error from "../Error";
 import { NavLink } from "react-router-dom";
 import { Context } from "../../Context/Context";
 
-const Projects = () => {
+const ProjectApprovals = () => {
   const { user } = useContext(Context);
   const [projects, setProjects] = useState([]);
   const [load, setLoad] = useState(0);
-  const getProjects = () => {
+
+  const getProjectApprovals = () => {
     try {
-      axios.get(`${SERVER_URL}/getProjects`).then((data) => {
-        if (data.status === 200) {
+      axios.get(`${SERVER_URL}/getpendingProjApprovals`).then((data) => {
+        if (user && data.status === 200) {
           setProjects(data.data);
           setLoad(1);
         } else {
@@ -23,12 +24,13 @@ const Projects = () => {
         }
       });
     } catch (err) {
+      setLoad(-1);
       console.log(err);
     }
   };
 
   useEffect(() => {
-    getProjects();
+    getProjectApprovals();
   }, [user]);
 
   return (
@@ -40,24 +42,17 @@ const Projects = () => {
           <div>
             <div className="row py-4">
               <div className="col-4">
-                <h2>Projects</h2>
+                <h2>Requires Approval</h2>
               </div>
               <div className="col-8 text-end">
                 {user ? (
                   <>
-                    {user.isadmin && <NavLink
-                      rel="noreferrer"
-                      to="/projectapprovals"
-                      className="btn btn-sm btn-secondary mx-1"
-                    >
-                      Approvals
-                    </NavLink>}
                     <NavLink
                       rel="noreferrer"
-                      to="/myprojects"
-                      className="btn btn-sm btn-secondary mx-1"
+                      to="/projects"
+                      className="btn btn-sm btn-primary mx-1"
                     >
-                      My Projects
+                      All Projects
                     </NavLink>
                     &nbsp;&nbsp;
                     <NavLink
@@ -82,9 +77,9 @@ const Projects = () => {
               </div>
             </div>
             <div className="row">
-              {projects.map((project) => {
+              {projects.map((project,i) => {
                 return (
-                  <div className="col-12 col-sm-6 col-lg-4 pb-5 px-3">
+                  <div className="col-12 col-sm-6 col-lg-4 pb-5 px-3" key={i}>
                     <ProjectSpace project={project} />
                   </div>
                 );
@@ -99,4 +94,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default ProjectApprovals;
