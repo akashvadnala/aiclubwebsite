@@ -46,11 +46,12 @@ const ProjectDisplay = () => {
       console.log(err);
     }
     
-    useEffect(()=>{
-        getProject();
-    },[user,url])
   };
 
+  useEffect(()=>{
+      getProject();
+  },[user,url]);
+  
   const deleteProject = async (e) => {
     e.preventDefault();
     const confirmed = window.confirm(
