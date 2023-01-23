@@ -361,18 +361,39 @@ const EditProject = () => {
                   id="collapseExample"
                 >
                   <div className="form-group my-2 row">
-                    <div className="col col-9">
+                    <div className="col col-9 my-2">
+                      <div className="form-group mb-1">
+                        <label htmlFor="title">Publication Link :</label>
+                      </div>
                       <input
                         name="researchPaperLink"
                         type="text"
                         value={proj.researchPaperLink}
                         className="form-control"
-                        id="CoAuthor"
+                        id="researchPaperLink"
                         aria-describedby="title"
                         placeholder="Enter Research Paper Link"
                         onChange={handleInputs}
                       />
                     </div>
+                    <div className="col col-9">
+                      <div className="form-group mb-1">
+                        <label htmlFor="title">Publisher :</label>
+                      </div>
+                      <input
+                        name="publisher"
+                        type="text"
+                        value={proj.publisher}
+                        className="form-control"
+                        id="researchPaperLink"
+                        aria-describedby="title"
+                        placeholder="Enter Publisher Name"
+                        onChange={handleInputs}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group my-1">
+                    <label>Co-Authors :</label>
                   </div>
                   {proj &&
                     proj.coAuthors.map((a, i) => {
@@ -430,6 +451,7 @@ const EditProject = () => {
                     name="submit"
                     id="submit"
                     className="btn btn-primary my-3"
+                    onClick={()=>{setProj({ ...proj, ["approvalStatus"]: "submit" });}}
                   >
                     {add}
                     {add2}

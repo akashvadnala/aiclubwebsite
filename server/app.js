@@ -30,6 +30,7 @@ app.use(require('./router/projects'));
 app.use(require('./router/CTeam'));
 app.use(require('./router/about'));
 app.use('/events',require('./router/events'));
+app.use('/gallery',require('./router/gallery'));
 app.use(require('./router/subscribe'));
 
 const PORT = process.env.PORT || 5000;

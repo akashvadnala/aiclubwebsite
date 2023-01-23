@@ -7,16 +7,15 @@ import Loading from "../Loading";
 import Error from "../Error";
 import { NavLink } from "react-router-dom";
 import { Context } from "../../Context/Context";
-import { Helmet } from "react-helmet";
 
-const Projects = () => {
+const ProjectApprovals = () => {
   const { user } = useContext(Context);
   const [projects, setProjects] = useState([]);
   const [load, setLoad] = useState(0);
 
-  const getMyProjects = () => {
+  const getProjectApprovals = () => {
     try {
-      axios.get(`${SERVER_URL}/getMyProjects/${user.username}`).then((data) => {
+      axios.get(`${SERVER_URL}/getpendingProjApprovals`).then((data) => {
         if (user && data.status === 200) {
           setProjects(data.data);
           setLoad(1);
@@ -31,7 +30,7 @@ const Projects = () => {
   };
 
   useEffect(() => {
-    getMyProjects();
+    getProjectApprovals();
   }, [user]);
 
   return (
@@ -43,23 +42,11 @@ const Projects = () => {
           <div>
             <div className="row py-4">
               <div className="col-4">
-                <Helmet>
-                  <title>Projects - AI Club</title>
-                </Helmet>
-                <h2>My Projects</h2>
+                <h2>Requires Approval</h2>
               </div>
               <div className="col-8 text-end">
                 {user ? (
                   <>
-                    {user.isadmin && (
-                      <NavLink
-                        rel="noreferrer"
-                        to="/projectapprovals"
-                        className="btn btn-sm btn-secondary mx-1"
-                      >
-                        Approvals
-                      </NavLink>
-                    )}
                     <NavLink
                       rel="noreferrer"
                       to="/projects"
@@ -90,7 +77,7 @@ const Projects = () => {
               </div>
             </div>
             <div className="row">
-              {projects.map((project, i) => {
+              {projects.map((project,i) => {
                 return (
                   <div className="col-12 col-sm-6 col-lg-4 pb-5 px-3" key={i}>
                     <ProjectSpace project={project} />
@@ -107,4 +94,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default ProjectApprovals;

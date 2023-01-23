@@ -24,7 +24,7 @@ router.route('/getEvents').get(async (req,res)=> {
     });
 
     const eventData = {"upcoming":upcoming,"ongoing":ongoing,"past":past};
-    console.log('eventData',eventData);
+    // console.log('eventData',eventData);
     res.status(200).json(eventData);
 });
 
@@ -82,7 +82,7 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
 
             lessEvents = lessEvents.concat(ents);
         }
-        console.log(lessEvents);
+        // console.log(lessEvents);
         res.status(200).json(lessEvents);
     }
     catch(err){
@@ -95,7 +95,7 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
 router.route('/addEvent').post(async (req,res)=>{
     try{
         const event = req.body;
-        console.log("server ",event);
+        // console.log("server ",event);
         const newEvent = new Event(event);
         await newEvent.save();
         console.log(`${event.title} created sucessfull`);
@@ -103,8 +103,8 @@ router.route('/addEvent').post(async (req,res)=>{
     }
     catch(err){
         console.log('err',err);
+        res.status(500).json({"msg":"Problem with adding event"});
     }
-    
 })
 
 router.route('/getEvent/:url').get(async (req,res)=>{

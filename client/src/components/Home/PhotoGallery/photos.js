@@ -84,14 +84,15 @@ const photos = unsplashPhotos.map((photo, index) => {
     key: `${index}`,
     width,
     height,
-    images: breakpoints.map((breakpoint) => {
-      const breakpointHeight = Math.round((height / width) * breakpoint);
-      return {
-        src: unsplashLink(photo.id, breakpoint, breakpointHeight),
-        width: breakpoint,
-        height: breakpointHeight
-      };
-    })
+    title:"sample caption"
+    // images: breakpoints.map((breakpoint) => {
+    //   const breakpointHeight = Math.round((height / width) * breakpoint);
+    //   return {
+    //     src: unsplashLink(photo.id, breakpoint, breakpointHeight),
+    //     width: breakpoint,
+    //     height: breakpointHeight
+    //   };
+    // })
   };
 });
 

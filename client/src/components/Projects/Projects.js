@@ -49,6 +49,13 @@ const Projects = () => {
               <div className="col-8 text-end">
                 {user ? (
                   <>
+                    {user.isadmin && <NavLink
+                      rel="noreferrer"
+                      to="/projectapprovals"
+                      className="btn btn-sm btn-secondary mx-1"
+                    >
+                      Approvals
+                    </NavLink>}
                     <NavLink
                       rel="noreferrer"
                       to="/myprojects"
