@@ -9,9 +9,6 @@ const InductionsHeader = ({props}) => {
   const location = useLocation();
   const [isJoined,setIsJoined] = useState(false);
   
-  useEffect(()=>{
-    setIsJoined(props.isJoined);
-  },[props]);
 
   let keys = {
     '':'Overview',
@@ -27,15 +24,24 @@ const InductionsHeader = ({props}) => {
       'leaderboard':'Leaderboard',
       'rules':'Rules',
     }
-    if(isJoined){
-      keys = {
-        'host':'Host',
-        '':'Overview',
-        'data':'Data',
-        'leaderboard':'Leaderboard',
-        'rules':'Rules',
-        'submissions':'Submissions',
-      }
+  }
+  if(isJoined){
+    keys = {
+      '':'Overview',
+      'data':'Data',
+      'leaderboard':'Leaderboard',
+      'rules':'Rules',
+      'submissions':'Submissions',
+    }
+  }
+  if(props.access && isJoined){
+    keys = {
+      'host':'Host',
+      '':'Overview',
+      'data':'Data',
+      'leaderboard':'Leaderboard',
+      'rules':'Rules',
+      'submissions':'Submissions',
     }
   }
   const [modalShow2, setModalShow2] = useState(false);
@@ -51,7 +57,7 @@ const InductionsHeader = ({props}) => {
         })
         .then(res=>{
           if(res.status===200){
-            setIsJoined(true);
+            window.location.reload(true);
           }
         })
       }
@@ -63,6 +69,9 @@ const InductionsHeader = ({props}) => {
       console.log(err);
     }
   }  
+  useEffect(()=>{
+    setIsJoined(props.isJoined);
+  },[props]);
   return (
     <>
         <div className='row'>
@@ -90,7 +99,7 @@ const InductionsHeader = ({props}) => {
           </div>
         </div>
         <p>{props.c.description}</p>
-        <div className='inductions-navbar align-items-center'>
+        <div className='inductions-navbar align-items-center border-bottom'>
             {
               Object.entries(keys).map(([key, value]) => {
                 return(

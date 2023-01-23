@@ -7,6 +7,7 @@ import { Context } from "../../Context/Context";
 import { NavLink } from "react-router-dom";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 
 const Blogs = () => {
   const [blogList, setblogList] = useState([]);
@@ -86,6 +87,9 @@ const Blogs = () => {
     <>
       <div className="blog-container container">
         <div>
+          <Helmet>
+            <title>Blogs - AI Club</title>
+          </Helmet>
           <div className="row py-4">
             <div className="col-4">
               {(filtermode !== "All Blogs")? <h2>Blogs</h2> : <h2>My Blogs</h2>}

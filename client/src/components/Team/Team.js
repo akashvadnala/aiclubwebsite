@@ -111,7 +111,7 @@ function Team() {
   return (
     <>
     <Helmet>
-      <title>TEAM - AI CLUB - NITC</title>
+      <title>Team - AI Club</title>
     </Helmet>
       <div className='team-container'>
         <div className='head-img'>

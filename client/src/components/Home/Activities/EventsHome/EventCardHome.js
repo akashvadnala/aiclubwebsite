@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import './EventHome.css'
 
 const EventCardHome = ({event}) => {
@@ -10,8 +11,8 @@ const EventCardHome = ({event}) => {
         </div>
           {/* url - https://getbootstrap.com/docs/5.3/components/badge/ */}
           <div className='speakers'>
-            <p>By - {event.speakers.join(',')} </p>
-            <a href={"events/"+event.url}><p>Learn more</p></a>
+            <p>by {event.speakers.join(',')} </p>
+            <NavLink to={"events/"+event.url}><p>Learn more<span className='small'> ❯</span></p></NavLink>
           </div>
           
       </div>

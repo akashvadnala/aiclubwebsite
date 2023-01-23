@@ -97,6 +97,13 @@ router.route("/projectAdd").post(async (req, res) => {
   }
 });
 
+router.route('/getthreeprojects').get(async (req,res) => {
+    let projectData = await Project.find({});
+    projectData.sort().reverse().slice(0,2);
+    console.log('projects',projectData);
+    res.status(200).json(projectData);
+});
+
 router.route("/getProjects").get(async (req, res) => {
   const projectData = await Project.find({ public: true });
   res.status(200).json(projectData);

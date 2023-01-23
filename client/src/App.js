@@ -5,16 +5,14 @@ import './App.css';
 import ScrollToTop from './ScrollToTop';
 import { Helmet } from 'react-helmet';
 import Footer from './components/Footer/Footer';
-
-
-const Routing = React.lazy(() => import("./Routing.js"))
+import Routing from './Routing.js';
 
 function App() {
   
   return (
     <>
       <Helmet>
-        <title>AI CLUB - NITC</title>
+        <title>AI Club - NIT Calicut</title>
       </Helmet>
       <Navbar />
       <ScrollToTop />

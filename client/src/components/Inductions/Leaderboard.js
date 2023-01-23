@@ -24,8 +24,8 @@ const Leaderboard = ({props}) => {
   <>
   {
     <div className="leaderboard-container">
-      <div className="border">
-        <div className='row p-3 pb-1'>
+      <div className="">
+        <div className='row py-3'>
           <div className='col-sm-8'>
             <h5>Leaderboard</h5>
           </div>
@@ -41,7 +41,7 @@ const Leaderboard = ({props}) => {
           </div>
         </div>
         <table className="table table-striped">
-          <thead className="thead-dark">
+          <thead className="">
             <tr>
               <th scope="col">S.No.</th>
               <th scope="col">Team Name</th>

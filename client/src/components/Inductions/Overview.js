@@ -55,8 +55,8 @@ const Overview = ({props}) => {
   return (
     <>{load===0?<Loading />:load===1?
       <div className='overview-container'>
-        <div className='border'>
-          <div className='row p-3 pb-1'>
+        <div className=''>
+          <div className='row py-3'>
             <div className='col-sm-8'>
               <h5>Overview</h5>
             </div>
@@ -73,7 +73,7 @@ const Overview = ({props}) => {
             </div>
           </div>
           {preview?
-            <div className='p-3'>
+            <div className=''>
               <p dangerouslySetInnerHTML={{ __html: overview.description }}></p>
             </div>
           :

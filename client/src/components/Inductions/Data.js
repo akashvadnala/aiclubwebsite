@@ -55,8 +55,8 @@ const Data = ({props}) => {
   return (
     <>{load===0?<Loading />:load===1?
       <div className='cdata-container'>
-        <div className='border'>
-          <div className='row p-3 pb-1'>
+        <div className=''>
+          <div className='row py-3'>
             <div className='col-sm-8'>
               <h5>Data</h5>
             </div>
@@ -73,7 +73,7 @@ const Data = ({props}) => {
             </div>
           </div>
           {preview?
-            <div className='p-3'>
+            <div className=''>
               <p dangerouslySetInnerHTML={{ __html: cdata.description }}></p>
             </div>
           :

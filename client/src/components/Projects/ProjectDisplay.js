@@ -8,6 +8,7 @@ import Loading from "../Loading";
 import AuthorCard from "./AuthorCard";
 import { NavLink } from "react-router-dom";
 import Tag from "../Blogs/tags/Tag";
+import { Helmet } from "react-helmet";
 
 const ProjectDisplay = () => {
   const { url } = useParams();
@@ -44,11 +45,11 @@ const ProjectDisplay = () => {
     } catch (err) {
       console.log(err);
     }
+    
+    useEffect(()=>{
+        getProject();
+    },[user,url])
   };
-
-  useEffect(() => {
-    getProject();
-  }, [user]);
 
   const deleteProject = async (e) => {
     e.preventDefault();
@@ -153,6 +154,9 @@ const ProjectDisplay = () => {
       ) : load === 1 ? (
         <div className="container projectdisplay-container py-5">
           <div className="row">
+            <Helmet>
+              <title>Projects - AI Club</title>
+            </Helmet>
             <div className="col-lg-8 px-5">
               <div className="header align-center">
                 <h3 className="text-center pb-1">{proj.title}</h3>

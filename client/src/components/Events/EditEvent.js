@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import JoditEditor from "jodit-react";
 import { NavLink } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const EditEvent = () => {
   const params = new useParams();
@@ -146,6 +147,9 @@ const EditEvent = () => {
       {user ? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
+            <Helmet>
+              <title>Events - AI Club</title>
+            </Helmet>
             <h3>Edit Event</h3>
             <div className="text-center fs-6 pb-1">
               {preview ? (

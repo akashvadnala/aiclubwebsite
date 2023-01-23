@@ -8,6 +8,7 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import JoditEditor from "jodit-react";
+import { Helmet } from "react-helmet";
 
 const AddEvent = () => {
   const navigate = useNavigate();
@@ -125,6 +126,11 @@ const AddEvent = () => {
       {user ? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
+            <Helmet>
+              <title>
+                Events - NIT Calicut
+              </title>
+            </Helmet>
             <h3>Add Event</h3>
             <form
               method="POST"

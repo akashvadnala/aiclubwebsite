@@ -10,6 +10,7 @@ import Loading from "../Loading";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import { Context } from "../../Context/Context";
 import { NavLink } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const BlogDisplay = () => {
   const params = new useParams();
@@ -114,6 +115,9 @@ const BlogDisplay = () => {
       ) : load === 1 ? (
         <div className="container projectdisplay-container py-5">
           <div className="row">
+            <Helmet>
+              <title>Blogs - AI Club</title>
+            </Helmet>
             <div className="col-lg-8 px-5">
               <div className="header align-center">
                 <h3 className="text-center pb-1">{blog.title}</h3>

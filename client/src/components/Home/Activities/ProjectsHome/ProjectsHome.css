@@ -2,3 +2,7 @@
     text-align: end;
     color: rgba(0,0,0,0.7);
 }
+
+.speakers p span:last-child span{
+    display: none;
+}

@@ -8,6 +8,7 @@ import Loading from "../Loading";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import { Context } from "../../Context/Context";
 import { NavLink } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const EventDisplay = () => {
   const params = new useParams();
@@ -93,10 +94,13 @@ const EventDisplay = () => {
         <Loading />
       ) : load === 1 ? (
         <div className="container projectdisplay-container py-5">
+          <Helmet>
+            <title>Events - AI Club</title>
+          </Helmet>
           <div className="header align-center">
-            <h3 className="text-center pb-1">{event.title}</h3>
+            <h3 className="text-center pb-4">{event.title}</h3>
             {edit && (
-              <div className="text-center fs-6 p-2">
+              <div className="text-center fs-6 pb-3">
                 <NavLink
                   to={`/events/${event.url}/edit`}
                   className="btn btn-primary btn-sm"
@@ -118,14 +122,14 @@ const EventDisplay = () => {
               <div className="col-lg-5">
                 <img
                   src={event.poster}
-                  className="mx-3 my-3 img-fluid"
+                  className="img-fluid rounded"
                   alt="..."
-                  style={{ width: "30rem", height: "40rem" }}
+                  style={{ width: "30rem", objectFit:"contain" }}
                 />
               </div>
               <div className="col-lg-7">
                 <div className="row">
-                  <h3 className="text-center pb-1">Abstract</h3>
+                  <h3 className="text-center pt-4 pt-lg-1 pb-1">Abstract</h3>
                   <p dangerouslySetInnerHTML={{ __html: event.abstract }}></p>
                 </div>
                 <div className="row">

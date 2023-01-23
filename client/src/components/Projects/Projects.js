@@ -7,6 +7,7 @@ import Loading from "../Loading";
 import Error from "../Error";
 import { NavLink } from "react-router-dom";
 import { Context } from "../../Context/Context";
+import { Helmet } from "react-helmet";
 
 const Projects = () => {
   const { user } = useContext(Context);
@@ -40,6 +41,9 @@ const Projects = () => {
           <div>
             <div className="row py-4">
               <div className="col-4">
+                <Helmet>
+                  <title>Projects - AI Club</title>
+                </Helmet>
                 <h2>Projects</h2>
               </div>
               <div className="col-8 text-end">

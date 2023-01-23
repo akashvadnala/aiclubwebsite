@@ -36,7 +36,7 @@ const EventsHome = () => {
                     })
                 }
                 <br></br>
-                <p><NavLink to='/events'>Know More About Events<span className='small'> ❯</span></NavLink></p>
+                <p className='h6'><NavLink to='/events'>Know More About Events<span className='small'> ❯</span></NavLink></p>
             </div>
     )
 }

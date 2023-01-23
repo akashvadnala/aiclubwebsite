@@ -34,7 +34,8 @@ app.use('/gallery',require('./router/gallery'));
 app.use(require('./router/subscribe'));
 
 const PORT = process.env.PORT || 5000;
-const url = process.env.DATABASE;
+// const url = process.env.DATABASE;
+const url = 'mongodb://127.0.0.1:27017/aiclub';
 
 const start = async () => {
     try{

@@ -7,6 +7,7 @@ import Loading from "../Loading";
 import Error from "../Error";
 import { NavLink } from "react-router-dom";
 import { Context } from "../../Context/Context";
+import { Helmet } from "react-helmet";
 
 const Events = () => {
   const { user } = useContext(Context);
@@ -43,12 +44,15 @@ const Events = () => {
         <Loading />
       ) : load === 1 ? (
         <div className="event-container container">
+          <Helmet>
+            <title>Events - AI Club</title>
+          </Helmet>
           <div className="row py-4">
             <div className="col-4">
               <h2>Events</h2>
             </div>
             <div className="col-8 text-end">
-              {user.isadmin ? (
+              {user && user.isadmin ? (
                 <NavLink
                   rel="noreferrer"
                   to="/addevent"
