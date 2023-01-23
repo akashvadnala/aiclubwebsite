@@ -30,6 +30,19 @@ router.route("/updateblogPublicStatus/:url").put(async (req, res) => {
   }
 });
 
+router.route("/updateblogApprovalStatus/:url").put(async (req, res) => {
+  try {
+    const { url } = req.params;
+    const updatedBlog = await Blog.findOne({ url: url });
+    updatedBlog.approvalStatus = req.body.approvalStatus;
+    updatedBlog.public = req.body.public;
+    updatedBlog.save();
+    res.status(200).json(updatedBlog);
+  } catch (err) {
+    res.status(422).json(err);
+  }
+});
+
 router.route("/blogadd").post(async (req, res) => {
   const title = req.body.title;
   if (!title) {
@@ -49,6 +62,11 @@ router.route("/blogadd").post(async (req, res) => {
 
 router.route("/getBlogs").get(async (req, res) => {
   const blogData = await Blog.find({ public: true });
+  res.status(200).json(blogData);
+});
+
+router.route("/getpendingBlogApprovals").get(async (req, res) => {
+  const blogData = await Blog.find({ approvalStatus: "pending" });
   res.status(200).json(blogData);
 });
 

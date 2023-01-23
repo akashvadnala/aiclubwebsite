@@ -7,7 +7,7 @@ import Error from "../../Error";
 import axios from "axios";
 import { SERVER_URL } from "../../../EditableStuff/Config";
 import Loading from "../../Loading";
-import {alertContext} from "../../../Context/Alert";
+import { alertContext } from "../../../Context/Alert";
 
 const EditBlog = () => {
   const { url } = useParams();
@@ -26,14 +26,13 @@ const EditBlog = () => {
       axios.get(`${SERVER_URL}/getBlogEdit/${url}`).then((data) => {
         if (data.status === 200) {
           console.log("blog", data.data);
-          const post_ = data.data
-          if(user && post_.authorName.indexOf(user.username)>-1){
-          setpost(data.data);
-          setLoad(1);
-        }
-        else{
-          setLoad(-1);
-        }
+          const post_ = data.data;
+          if (user && post_.authorName.indexOf(user.username) > -1) {
+            setpost(data.data);
+            setLoad(1);
+          } else {
+            setLoad(-1);
+          }
         } else {
           setLoad(-1);
         }
@@ -82,7 +81,7 @@ const EditBlog = () => {
       } else {
         setAdd("Save as Draft");
         setAdd2("");
-        showAlert("Saved as Draft","success");
+        showAlert("Saved as Draft", "success");
         setPreview(true);
       }
     } catch (err) {
@@ -99,7 +98,12 @@ const EditBlog = () => {
           <h3 className="text-center">Edit Blog</h3>
           <div className="text-center fs-6 pb-1">
             {preview ? (
-              <NavLink to={`/blogs/${post.url}`} className="btn btn-success btn-sm">Preview</NavLink>
+              <NavLink
+                to={`/blogs/${post.url}`}
+                className="btn btn-success btn-sm"
+              >
+                Preview
+              </NavLink>
             ) : (
               <span className="text-muted">Save for Preview</span>
             )}
@@ -134,9 +138,12 @@ const EditBlog = () => {
                 </div>
                 <div className="form-group my-2 row">
                   {post &&
-                    post.tags.map((a,i) => {
+                    post.tags.map((a, i) => {
                       return (
-                        <div className="col-12 col-sm-6 col-lg-4 mb-2 row" key={i}>
+                        <div
+                          className="col-12 col-sm-6 col-lg-4 mb-2 row"
+                          key={i}
+                        >
                           <div className="col-8 paddr">
                             <input
                               type="text"
@@ -201,6 +208,7 @@ const EditBlog = () => {
                     name="submit"
                     id="submit"
                     className="btn btn-primary my-3"
+                    onClick={()=>{setpost({ ...post, ["approvalStatus"]: "submit", ["public"]: false });}}
                   >
                     {add}
                     {add2}

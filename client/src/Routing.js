@@ -25,7 +25,8 @@ import EditEvent from './components/Events/EditEvent';
 import Admin from './components/Admin/Admin';
 import AllPhotos from './components/Home/PhotoGallery/AllPhotos';
 import ProjectApprovals from './components/Projects/ProjectApprovals';
-
+import BlogApprovals from './components/Blogs/BlogApprovals';
+import MyBlogs from './components/Blogs/myBlogs';
 const Routing = () => {
 
     return(
@@ -55,9 +56,11 @@ const Routing = () => {
 
         {/* Blog Display */}
         <Route exact path='/blogs' element={<Blogs />} />
+        <Route exact path='/myblogs' element={<MyBlogs />} />
         <Route exact path='/addblog' element={<AddBlog />} />
         <Route exact path='/blogs/:url' element={<BlogDisplay />} />
         <Route exact path='/blogs/:url/edit' element={<EditBlog />} />
+        <Route exact path='/blogapprovals' element={<BlogApprovals />} />
         
         {/* Inductions */}
         {/* <Route exact path='/inductions-b21-b20' element={<Inductions />} /> */}

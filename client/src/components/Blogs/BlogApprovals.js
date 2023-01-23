@@ -11,16 +11,17 @@ import { Helmet } from "react-helmet";
 import Loading from "../Loading";
 import Error from "../Error";
 
-const Blogs = () => {
+const BlogApprovals = () => {
   const [blogList, setblogList] = useState([]);
   const { user } = useContext(Context);
+  const [filtermode, setfiltermode] = useState("My Blogs");
   const [blogs, setBlogs] = useState([]);
   const [searchKey, setSearchKey] = useState("");
   const [load, setLoad] = useState(0);
 
-  const getBlogData = async () => {
+  const getBlogApprovals = async () => {
     try {
-      axios.get(`${SERVER_URL}/getBlogs`).then((data) => {
+      axios.get(`${SERVER_URL}/getpendingBlogApprovals`).then((data) => {
         if (data.status === 200) {
           console.log("data", data.data);
           setBlogs(data.data);
@@ -36,7 +37,7 @@ const Blogs = () => {
   };
 
   useEffect(() => {
-    getBlogData();
+    getBlogApprovals();
   }, [user]);
 
   // Search submit
@@ -68,6 +69,7 @@ const Blogs = () => {
     setBlogs(blogList);
     setSearchKey("");
   };
+
   return (
     <>
       {load === 0 ? (
@@ -80,7 +82,7 @@ const Blogs = () => {
                 <Helmet>
                   <title>Blogs - AI Club</title>
                 </Helmet>
-                <h2>Blogs</h2>
+                <h2>Requires Approval</h2>
               </div>
               <div className="col-8 text-end">
                 {user ? (
@@ -96,10 +98,10 @@ const Blogs = () => {
                     )}
                     <NavLink
                       rel="noreferrer"
-                      to="/myblogs"
+                      to="/blogs"
                       className="btn btn-sm btn-secondary mx-1"
                     >
-                      My Blogs
+                      All Blogs
                     </NavLink>
                     <NavLink
                       type="button"
@@ -140,4 +142,4 @@ const Blogs = () => {
   );
 };
 
-export default Blogs;
+export default BlogApprovals;

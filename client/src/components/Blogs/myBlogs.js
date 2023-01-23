@@ -11,16 +11,16 @@ import { Helmet } from "react-helmet";
 import Loading from "../Loading";
 import Error from "../Error";
 
-const Blogs = () => {
+const MyBlogs = () => {
   const [blogList, setblogList] = useState([]);
   const { user } = useContext(Context);
   const [blogs, setBlogs] = useState([]);
   const [searchKey, setSearchKey] = useState("");
   const [load, setLoad] = useState(0);
 
-  const getBlogData = async () => {
+  const getuserBlogData = async () => {
     try {
-      axios.get(`${SERVER_URL}/getBlogs`).then((data) => {
+      axios.get(`${SERVER_URL}/getuserBlogs/${user.username}`).then((data) => {
         if (data.status === 200) {
           console.log("data", data.data);
           setBlogs(data.data);
@@ -36,7 +36,7 @@ const Blogs = () => {
   };
 
   useEffect(() => {
-    getBlogData();
+    getuserBlogData();
   }, [user]);
 
   // Search submit
@@ -80,7 +80,7 @@ const Blogs = () => {
                 <Helmet>
                   <title>Blogs - AI Club</title>
                 </Helmet>
-                <h2>Blogs</h2>
+                <h2>My Blogs</h2>
               </div>
               <div className="col-8 text-end">
                 {user ? (
@@ -96,10 +96,10 @@ const Blogs = () => {
                     )}
                     <NavLink
                       rel="noreferrer"
-                      to="/myblogs"
+                      to="/blogs"
                       className="btn btn-sm btn-secondary mx-1"
                     >
-                      My Blogs
+                      All Blogs
                     </NavLink>
                     <NavLink
                       type="button"
@@ -140,4 +140,4 @@ const Blogs = () => {
   );
 };
 
-export default Blogs;
+export default MyBlogs;

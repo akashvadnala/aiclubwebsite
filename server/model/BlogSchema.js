@@ -33,6 +33,10 @@ const BlogSchema = new Schema({
         type:Boolean,
         default:false
     },
+    approvalStatus: {
+        type: String,
+        default: "submit",
+      },
     createdAt:{
         type: Date,
         default: Date.now

@@ -126,6 +126,7 @@ const ProjectDisplay = () => {
     var response;
     if (status){
       response = "Approved";
+      setPub("Make Private");
     }
     else{
       response = "Rejected";
@@ -134,13 +135,13 @@ const ProjectDisplay = () => {
     setApproval2(<i className="fa fa-spinner fa-spin"></i>);
     const res = await axios.put(
       `${SERVER_URL}/updateprojApprovalStatus/${proj.url}`,
-      { approvalStatus: response },
+      { approvalStatus: response, public: status },
       {
         headers: { "Content-Type": "application/json" },
       }
     );
     if (res.status === 200) {
-      setProj({ ...proj, ["approvalStatus"]: response });
+      setProj({ ...proj, ["approvalStatus"]: response, ["public"]: status });
       setApproval2();
       navigate(`/projects/${proj.url}`);
     } else {
@@ -192,34 +193,34 @@ const ProjectDisplay = () => {
                           {approval2}
                         </NavLink>
                         <div
-                          class="modal fade"
+                          className="modal fade"
                           id="exampleModal"
-                          tabindex="-1"
+                          tabIndex="-1"
                           aria-labelledby="exampleModalLabel"
                           aria-hidden="true"
                         >
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
+                          <div className="modal-dialog">
+                            <div className="modal-content">
+                              <div className="modal-header">
                                 <h1
-                                  class="modal-title fs-5"
+                                  className="modal-title fs-5"
                                   id="exampleModalLabel"
                                 >
                                   Approve or Reject
                                 </h1>
                               </div>
-                              <div class="modal-footer">
+                              <div className="modal-footer">
                                 <button
                                   type="button"
-                                  class="btn btn-secondary"
+                                  className="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                 >
                                   Close
                                 </button>
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={()=>{ApproveOrReject(true)}}>
-                                  Approve
+                                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>{ApproveOrReject(true)}}>
+                                  Approve & Publish
                                 </button>
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onClick={()=>{ApproveOrReject(false)}}>
+                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={()=>{ApproveOrReject(false)}}>
                                   Reject
                                 </button>
                               </div>
@@ -246,7 +247,7 @@ const ProjectDisplay = () => {
                         onClick={TogglePublic}
                         className={`btn btn-${
                           proj.public ? "warning" : "success"
-                        } btn-sm mx-1`}
+                        } btn-sm mx-1 ${proj.approvalStatus==="Rejected"?"disabled":""}`}
                       >
                         {" "}
                         {pub}

@@ -60,6 +60,7 @@ router.route("/updateprojApprovalStatus/:url").put(async (req, res) => {
     const { url } = req.params;
     const updatedProj = await Project.findOne({ url: url });
     updatedProj.approvalStatus = req.body.approvalStatus;
+    updatedProj.public = req.body.public;
     updatedProj.save();
     res.status(200).json(updatedProj);
   } catch (err) {

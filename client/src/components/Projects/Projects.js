@@ -63,11 +63,10 @@ const Projects = () => {
                     >
                       My Projects
                     </NavLink>
-                    &nbsp;&nbsp;
                     <NavLink
                       rel="noreferrer"
                       to="/addproject"
-                      className="btn btn-sm btn-success"
+                      className="btn btn-sm btn-success mx-1"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
