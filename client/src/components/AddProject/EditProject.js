@@ -451,7 +451,7 @@ const EditProject = () => {
                     name="submit"
                     id="submit"
                     className="btn btn-primary my-3"
-                    onClick={()=>{setProj({ ...proj, ["approvalStatus"]: "submit" });}}
+                    onClick={()=>{setProj({ ...proj, ["approvalStatus"]: "submit" , ["public"]: false});}}
                   >
                     {add}
                     {add2}
