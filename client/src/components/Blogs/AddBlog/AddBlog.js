@@ -5,21 +5,23 @@ import { useNavigate } from "react-router-dom";
 import Error from "../../Error";
 import { CLIENT_URL, SERVER_URL } from "../../../EditableStuff/Config";
 import axios from "axios";
+import {alertContext} from "../../../Context/Alert";
 
 const AddBlog = () => {
   const navigate = useNavigate();
   const { user } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
   const [add, setAdd] = useState("Create");
   const [add2, setAdd2] = useState();
   const [xtag, setXtag] = useState("");
   const [post, setPost] = useState({
-    'title': "",
-    'url': "",
-    'tags': [],
-    'content': "",
-    'authorName': user.username,
-    'authorAvatar': user.photo,
-    'cover': "",
+    title: "",
+    url: "",
+    tags: [],
+    content: "",
+    authorName: user.username,
+    authorAvatar: user.photo,
+    cover: "",
   });
 
   useEffect(() => {
@@ -80,6 +82,7 @@ const AddBlog = () => {
       } else {
         console.log("data");
         console.log(blogdata);
+        showAlert("Blog Created Successfull","success");
         console.log("Posting Successfull");
         navigate(`/blogs/${post.url}/edit`);
       }

@@ -22,6 +22,7 @@ import EditBlog from './components/Blogs/AddBlog/EditBlog';
 import AddEvent from './components/Events/AddEvent';
 import EventDisplay from './components/Events/EventDisplay';
 import EditEvent from './components/Events/EditEvent';
+import Admin from './components/Admin/Admin';
 
 
 const Routing = () => {
@@ -71,6 +72,9 @@ const Routing = () => {
 
         {/* About */}
         <Route exact path='/about' element={<About />} />
+
+        {/* Admin */}
+        <Route exact path='/admin' element={<Admin />} />
 
         {/* Others */}
         <Route path='*' element={<Error />} />

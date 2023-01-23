@@ -1,19 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import ScrollToTop from './ScrollToTop';
-import ContextProvider from './Context/Context';
+import ScrollToTop from "./ScrollToTop";
+import ContextProvider from "./Context/Context";
+import Alert from "./Context/Alert"
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <ContextProvider>
-        <ScrollToTop />
-        <App />
+        <Alert>
+          <ScrollToTop />
+          <App />
+        </Alert>
       </ContextProvider>
     </BrowserRouter>
   </React.StrictMode>

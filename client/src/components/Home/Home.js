@@ -3,15 +3,15 @@ import Slider from './Slider/Slider';
 import Module from './Module/Module';
 import './Home.css';
 import Activities from './Activities/Activities';
-import ProjectsHome from './ProjectsHome/ProjectsHome';
+import PhotoGallery from './PhotoGallery/Gallery';
 
 const Home = () => {
   return (
     <>
       <Slider />
       {/* <Module /> */}
-      <ProjectsHome />
       <Activities />
+      <PhotoGallery />
     </>
   )
 }

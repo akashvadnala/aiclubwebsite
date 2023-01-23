@@ -18,24 +18,27 @@ const ProjectDisplay = () => {
   const [authors, setAuthors] = useState([]);
   const [load, setLoad] = useState(0);
   const [edit, setEdit] = useState(false);
+  const [pub, setPub] = useState("Make Public");
+  const [pub2, setPub2] = useState();
 
   const navigate = useNavigate();
 
     const getProject = async () =>{
         try{
             const data = await axios.get(`${SERVER_URL}/getProject/${url}`)
-            if(data.status===200){
-              project=data.data.project;
-              if(user && data.data.project.authors.indexOf(user.username)>-1){
-                  setEdit(true);
-              }
-              setProj(data.data.project);
-              setAuthors(data.data.authors);
-              setLoad(1);
+            console.log('project',data.data.project);
+            if(data.status!==200){
+                setLoad(-1);
+                return;
             }
-            else{
-              setLoad(-1);
+            project=data.data.project;
+            if(user && data.data.project.authors.indexOf(user.username)>-1){
+                setEdit(true);
             }
+            setProj(data.data.project);
+            setAuthors(data.data.authors);
+            setPub(`${!data.data.project.public ? "Make Public" : "Make Private"}`);
+            setLoad(1);
         }catch(err){
             console.log(err);
         }
@@ -61,6 +64,36 @@ const ProjectDisplay = () => {
       }
     }
   };
+
+  const TogglePublic = async (e) => {
+    e.preventDefault();
+    const confirmed = window.confirm(
+      `Are you sure to make blog "${proj.title}" ${
+        !proj.public ? "Public" : "Private"
+      }?`
+    );
+    if (confirmed) {
+      setPub(`${!proj.public ? "Publishing" : "Making Private"}`);
+      setPub2(<i class="fa fa-spinner fa-spin"></i>);
+      const res = await axios.put(
+        `${SERVER_URL}/updateprojPublicStatus/${proj.url}`,
+        { public: !proj.public ? true : false },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (res.status === 200) {
+        proj.public = !proj.public ? true : false;
+        setPub(`${!proj.public ? "Make Public" : "Make Private"}`);
+        setPub2();
+        navigate(`/projects/${proj.url}`);
+      } else {
+        console.log("Publishing failed");
+      }
+    }
+  };
+
+
   return (
     <>
       {load === 0 ? (
@@ -78,18 +111,28 @@ const ProjectDisplay = () => {
                   <div className="text-center fs-6 p-2">
                     <NavLink
                       to={`/projects/${proj.url}/edit`}
-                      className="btn btn-primary btn-sm"
+                      className="btn btn-primary btn-sm  mx-1"
                     >
                       Edit{" "}
                     </NavLink>
-                    ·
                     <NavLink
                       rel="noreferrer"
                       onClick={deleteProject}
-                      className="btn btn-danger btn-sm"
+                      className="btn btn-danger btn-sm  mx-1"
                     >
                       {" "}
                       Delete
+                    </NavLink>
+                    <NavLink
+                      rel="noreferrer"
+                      onClick={TogglePublic}
+                      className={`btn btn-${
+                        proj.public ? "warning" : "success"
+                      } btn-sm mx-1`}
+                    >
+                      {" "}
+                      {pub}
+                      {pub2}
                     </NavLink>
                   </div>
                 )}
