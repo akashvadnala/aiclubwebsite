@@ -24,9 +24,11 @@ const projectSchema = new mongoose.Schema({
     default: false,
   },
   researchPaperLink: {
-    type: String
+    type: String,
   },
-
+  publisher: {
+    type: String,
+  },
   coAuthors: [
     {
       type: String,
@@ -48,6 +50,10 @@ const projectSchema = new mongoose.Schema({
   public: {
     type: Boolean,
     default: false,
+  },
+  approvalStatus: {
+    type: String,
+    default: "submit",
   },
   createdAt: {
     type: Date,

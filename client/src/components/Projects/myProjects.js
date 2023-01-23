@@ -47,6 +47,15 @@ const Projects = () => {
               <div className="col-8 text-end">
                 {user ? (
                   <>
+                    {user.isadmin && (
+                      <NavLink
+                        rel="noreferrer"
+                        to="/projectapprovals"
+                        className="btn btn-sm btn-secondary mx-1"
+                      >
+                        Approvals
+                      </NavLink>
+                    )}
                     <NavLink
                       rel="noreferrer"
                       to="/projects"
@@ -77,9 +86,9 @@ const Projects = () => {
               </div>
             </div>
             <div className="row">
-              {projects.map((project) => {
+              {projects.map((project, i) => {
                 return (
-                  <div className="col-12 col-sm-6 col-lg-4 pb-5 px-3">
+                  <div className="col-12 col-sm-6 col-lg-4 pb-5 px-3" key={i}>
                     <ProjectSpace project={project} />
                   </div>
                 );
