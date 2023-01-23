@@ -18,6 +18,7 @@ const PhotoGallery = () => {
     const [image,setImage] = useState();
     const [caption,setCaption] =useState("");
     const [photos,setPhotos]=useState([]);
+    const [ add, setAdd ] = useState(false);
 
     const handlePhoto = (e) => {
       setImage(e.target.files[0]);
@@ -25,7 +26,7 @@ const PhotoGallery = () => {
 
     const postImage = async (e) => {
       e.preventDefault();
-
+      setAdd(true);
       const data = new FormData();
       const photoname = Date.now() + image.name;
       data.append("name", photoname);
@@ -59,6 +60,7 @@ const PhotoGallery = () => {
           console.log("data");
           console.log(imagedata);
           console.log("Posting Successfull");
+          window.location.reload(true);
         }
       } catch (err) {
         console.log("err", err);
@@ -73,6 +75,7 @@ const PhotoGallery = () => {
 
         imagedata = data.data;
         console.log("imagedata", imagedata);
+
         let photoArray = imagedata.map((photo, index) => {
           const width = photo.width * 4;
           const height = photo.height * 4;
@@ -97,12 +100,25 @@ const PhotoGallery = () => {
 
     return (
       <div className="gallery-container adjust">
-        <div>
+        <div className="titlebox">
           <h4>Image Gallery</h4>
-          <div className="col-8 text-end">
-              {user && user.isadmin ? (
-                <form onSubmit={postImage} method='POST'>
-                  <div className="col-sm-10">
+            {user && user.isadmin ? (
+              <button type="button" class="btn btn-primary btn-rounded btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Add Images
+              </button>
+            ) : null}
+        </div>
+                  
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Image</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+              <form onSubmit={postImage} method='POST'>
+                <div className="modalform">
                   <input
                     type="file"
                     accept="image/*"
@@ -114,28 +130,37 @@ const PhotoGallery = () => {
                     required
                   />
                   <input
-                    type="text"
-                    name="title"
-                    value={caption}
-                    onChange={(e)=>setCaption(e.target.value)}
-                    className="form-control"
-                    id="caption"
-                    aria-describedby="title"
-                    placeholder="Enter caption"
-                    required
-                  />
-                  <button
+                  type="text"
+                  name="title"
+                  value={caption}
+                  onChange={(e)=>setCaption(e.target.value)}
+                  className="form-control"
+                  id="caption"
+                  aria-describedby="title"
+                  placeholder="Enter caption"
+                  required
+                />
+                </div>
+                <br></br>
+                <button
                     type="submit"
                     name="submit"
                     id="submit"
                     className="btn btn-primary"
-                  >Add Image
+                  >{ add?
+                        <>
+                        <span>Uploading </span> 
+                        <i class="fa fa-spinner fa-spin"></i>
+                        </>
+                    :'Upload'}
                   </button>
-                </div>
-                </form>
-              ) : null}
+                {/* <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Upload</button>
+                </div> */}
+              </form>
+              </div>
             </div>
-            
+          </div>
         </div>
         
         <PhotoAlbum

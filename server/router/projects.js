@@ -83,10 +83,10 @@ router.route("/projectAdd").post(async (req, res) => {
       project.authors.map(async (author) => {
         try {
           const team = await Team.findOne({ username: author });
-          team.projects.push(proj.url);
+          team.projects.push(project.url);
           await team.save();
         } catch (err) {
-          console.log("Project Not Found");
+          console.log("Author Not Found");
         }
       })
     );

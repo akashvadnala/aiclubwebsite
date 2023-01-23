@@ -4,7 +4,7 @@ const Photo = require('../model/gallerySchema');
 
 router.route('/getHomepagePhotos').get(async (req,res)=> {
     try {
-        const somePhotos = await Photo.find({}).limit(10);
+        const somePhotos = await Photo.find({}).sort({createdAt:-1}).limit(8);
         res.status(200).send(somePhotos);
     } catch (error) {
         console.log(error);
@@ -14,7 +14,7 @@ router.route('/getHomepagePhotos').get(async (req,res)=> {
 
 router.route('/getAllPhotos').get(async (req,res)=>{
     try {
-        const allPhtotos = await Photo.find({});
+        const allPhtotos = await Photo.find({}).sort({createdAt:-1});
         res.status(200).send(allPhtotos);
     } catch (error) {
         console.log(error);

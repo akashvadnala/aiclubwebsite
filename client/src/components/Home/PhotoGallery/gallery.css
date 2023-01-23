@@ -1,3 +1,14 @@
 .lightbox{
     --yarl__color_button: rgb(0,0,0);
 }
+
+.titlebox{
+    display: flex;
+    justify-content: space-between;
+    margin: 2px;
+}
+
+.modalform{
+    display: flex;
+    flex-direction: column;
+}
