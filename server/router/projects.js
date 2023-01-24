@@ -110,6 +110,13 @@ router.route("/getProjects").get(async (req, res) => {
   res.status(200).json(projectData);
 });
 
+router.route("/getResearchPapers").get(async (req, res) => {
+  const projectData = await Project.find({ isPublished: true, public:true }).select(
+    "-__v -_id -creator -authors -isPublished -tags -content -cover -public -approvalStatus -createdAt"
+  );;
+  res.status(200).json(projectData);
+});
+
 router.route("/getpendingProjApprovals").get(async (req, res) => {
   const projectData = await Project.find({ approvalStatus: "pending" });
   res.status(200).json(projectData);

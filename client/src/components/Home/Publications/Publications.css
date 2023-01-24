@@ -1,0 +1,8 @@
+.publications-container .carousel .carousel-inner .carousel-item {
+  height: 200px;
+}
+
+.publication-card .card-body .card-title{
+  display: inline;
+  vertical-align: top;
+}
