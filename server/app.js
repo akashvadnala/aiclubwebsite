@@ -32,6 +32,7 @@ app.use(require('./router/about'));
 app.use('/events',require('./router/events'));
 app.use('/gallery',require('./router/gallery'));
 app.use(require('./router/subscribe'));
+app.use(require('./router/slider'));
 
 const PORT = process.env.PORT || 5000;
 // const url = process.env.DATABASE;

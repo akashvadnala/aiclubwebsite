@@ -15,6 +15,7 @@ router.route('/').get((req,res)=>{
 router.post('/login', async (req, res, next) => {
     try{
         let token;
+        console.log(req.body);
         const { username, password, compete } = req.body;
         console.log(username, password);
         if(!username || !password){

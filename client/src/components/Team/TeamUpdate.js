@@ -207,10 +207,10 @@ const TeamUpdate = () => {
                                     <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
                                     <label className="form-check-label" for="member">Make Member</label>
                                 </div>
-                                <div className="form-group form-check my-3">
+                                {/* <div className="form-group form-check my-3">
                                     <input type="checkbox" checked={team.canCreateCompetitions} name="canCreateCompetitions" onChange={handleCheck} className="form-check-input" id="canCreateCompetitions" />
                                     <label className="form-check-label" for="canCreateCompetitions">Can Create Competitions</label>
-                                </div>
+                                </div> */}
                             </>
                         :
                             null

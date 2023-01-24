@@ -53,7 +53,7 @@ const fileFilter = (req, file, cb)=>{
 }
 
 
-router.route('/imgupload').post(multer({ storage, fileFilter }).single('photo'), async (req, res) => {
+router.route('/imgupload').post(multer({ storage }).single('photo'), async (req, res) => {
     if(req.file === null){
         return res.status(400).json({ msg: "No file uploaded" });
     }

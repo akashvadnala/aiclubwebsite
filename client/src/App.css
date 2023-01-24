@@ -23,9 +23,9 @@ body{
 }
 
 .adjust{
-  margin-left: 10px !important;
-  width: calc(100% - 20px) !important;
-  padding: 1.2rem 0.75rem 1.2rem 0.75rem;
+  /* margin-left: 10px !important; */
+  width: 100% !important;
+  padding: 1.2rem 10px 1.2rem 0.75rem;
 }
 
 p{
@@ -61,10 +61,15 @@ hr{
   height: 30rem;
 }
 
+.adjust{
+  margin: 0 !important;
+}
+
 @media (min-width: 576px){
   .adjust{
-    margin-left: 2.5% !important;
-    width: 95% !important;
+    /* margin-left: 2.5% !important;
+    width: 95% !important; */
+    padding: 1.2rem 2.5% 1.2rem 2.5%;
   }
   
   .right-panel{
@@ -75,29 +80,33 @@ hr{
 
 @media (min-width: 768px){
   .adjust{
-    margin-left: 10% !important;
-    width: 80% !important;
+    /* margin-left: 10% !important;
+    width: 80% !important; */
+    padding: 1.2rem 10% 1.2rem 10%;
   }
 }
 
 @media (min-width: 992px){
   .adjust{
-    margin-left: 12.5% !important;
-    width: 75% !important;
+    /* margin-left: 12.5% !important;
+    width: 75% !important; */
+    padding: 1.2rem 12.5% 1.2rem 12.5%;
   }
 }
 
 @media (min-width: 1200px){
   .adjust{
-    margin-left: 15% !important;
-    width: 70% !important;
+    /* margin-left: 15% !important;
+    width: 70% !important; */
+    padding: 1.2rem 15% 1.2rem 15%;
   }
 }
 
 @media (min-width: 1300px){
   .adjust{
-    margin-left: 17.5% !important;
-    width: 65% !important;
+    /* margin-left: 17.5% !important;
+    width: 65% !important; */
+    padding: 1.2rem 17.5% 1.2rem 17.5%;
   }
 }
 

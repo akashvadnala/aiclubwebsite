@@ -53,6 +53,7 @@ const AddProject = () => {
   useEffect(()=>{
     getTeams();
   },[logged_in]);
+  
   const handlePhoto = (e) => {
     setProj({ ...proj, ["cover"]: e.target.files[0] });
     console.log("proj", proj);
