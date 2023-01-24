@@ -180,7 +180,7 @@ const BlogDisplay = () => {
                 <p className="blog-date text-center pb-1">
                   Published on {returnDDMMYYYY(blog.createdAt)}
                 </p>
-                {(edit || user.isadmin) && (
+                {(edit || (user && user.isadmin)) && (
                   <div className="text-center fs-6 p-2">
                     {edit && (
                       <NavLink
@@ -200,7 +200,7 @@ const BlogDisplay = () => {
                         Delete
                       </NavLink>
                     )}
-                    {user.isadmin && approval === "pending" ? (
+                    {user && user.isadmin && approval === "pending" ? (
                       <>
                         <NavLink
                           rel="noreferrer"
@@ -283,7 +283,7 @@ const BlogDisplay = () => {
                         {approval2}
                       </NavLink>
                     )}
-                    {user.isadmin && (
+                    {user && user.isadmin && (
                       <NavLink
                         rel="noreferrer"
                         onClick={TogglePublic}
