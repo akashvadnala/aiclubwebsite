@@ -77,7 +77,7 @@ const PhotoGallery = () => {
       const data = await axios.get(`${SERVER_URL}/gallery/getHomepagePhotos`);
 
       imagedata = data.data;
-      console.log("imagedata", imagedata);
+      // console.log("imagedata", imagedata);
 
       let photoArray = imagedata.map((photo, index) => {
         const width = photo.width * 4;
@@ -91,7 +91,6 @@ const PhotoGallery = () => {
         };
       });
       setPhotos(photoArray);
-      console.log("photos ", photos);
     } catch (err) {
       console.log(err);
     }

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Subscribe = require('../model/subscribeSchema');
-const sendAMail = require('../controllers/sendmail');
+const {broadcastMail} = require('../controllers/mail');
 
 const validateEmail = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

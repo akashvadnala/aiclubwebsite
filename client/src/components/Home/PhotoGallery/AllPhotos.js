@@ -15,6 +15,8 @@ const AllPhotos = () => {
     const { user } = useContext(Context);
     const [index, setIndex] = useState(-1);
     const [photos,setPhotos]=useState([]);
+    const [canDelete,setCanDelete] = useState(false);
+    const [selectedImages,setSelectedImages] = useState([]);
 
     const getAllPhotos = async () => {
       try {
@@ -22,7 +24,7 @@ const AllPhotos = () => {
         const data = await axios.get(`${SERVER_URL}/gallery/getAllPhotos`);
 
         imagedata = data.data;
-        console.log("imagedata", imagedata);
+        // console.log("imagedata", imagedata);
         let photoArray = imagedata.map((photo, index) => {
           const width = photo.width * 4;
           const height = photo.height * 4;
@@ -35,34 +37,97 @@ const AllPhotos = () => {
           })
         });
         setPhotos(photoArray);
-        console.log("photos ",photos);
+        // console.log("photos ",photos);
       } catch (err) {
         console.log(err);
       }
     };
 
+    const handleSelect =(e)  => {
+      // e.preventDefault();
+      setSelectedImages([...selectedImages,e.target.value]);
+      console.log(selectedImages);
+    }
+
+    const handleDelete = async (e) => {
+      e.preventDefault();
+      setCanDelete(false);
+    }
+
     useEffect(()=>{
       getAllPhotos();
     },[]);
 
-    return (
-      <div className="gallery-container adjust">
-        <div className="titlebox">
-          <h4>All Images</h4>
-            {/* {user && user.isadmin ? (
-              <button type="button" class="btn btn-primary btn-rounded btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                Add Images
-              </button>
-            ) : null} */}
-        </div>
 
-        <PhotoAlbum
-          layout="rows"
-          photos={photos}
-          targetRowHeight={200}
-          onClick={({ index }) => setIndex(index)}
-        />
-  
+    const renderPhoto = ({ layout, layoutOptions, imageProps: { alt, style, ...restImageProps } }) => (
+      <div
+          style={{
+            border: "2px solid #eee",
+            borderRadius: "4px",
+            boxSizing: "content-box",
+            alignItems: "center",
+            width: style?.width,
+            padding: `${layoutOptions.padding - 2}px`,
+            paddingBottom: 0,
+            // display:"flex",
+          }}
+      >
+        {canDelete?(
+          <div className="form-check">
+            <input 
+            className="form-check-input" 
+            type="checkbox" value={restImageProps.src} 
+            id="flexCheckDefault" 
+            onChange={handleSelect}
+            />
+          </div>
+        ):null}
+        <img alt={alt} style={{ ...style, width: "100%", padding: 0 }} {...restImageProps} />
+            
+      </div>
+    );
+
+    return (
+      <div className="gallery-container container">
+          <div className="titlebox">
+            <h4>All Images</h4>
+              {user && user.isadmin ? (
+                <div>
+                  {canDelete ? (
+                    <div>
+                      <button
+                        type="button"
+                        name="submit"
+                        className="btn btn-danger"
+                        onClick={handleDelete}
+                      >
+                        Delete selected Photos
+                      </button>
+                    </div>
+                  ):(
+                    <div>
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={()=>setCanDelete(true)}
+                      >
+                        Enable Delete
+                      </button>
+                    </div>
+                  )}
+                  
+                </div>
+              ) : null}
+          </div>
+            
+          <PhotoAlbum
+            layout="rows"
+            photos={photos}
+            targetRowHeight={200}
+            renderPhoto={renderPhoto}
+            onClick={({ index }) => setIndex(index)}
+          />
+
         <Lightbox
           styles={{ container: { backgroundColor: "rgba(240,240,240,.9)" } }}
           className = 'lightbox'
@@ -72,6 +137,7 @@ const AllPhotos = () => {
           slides={photos}
           plugins={[Captions]}
         />
+        <br></br>
       </div>
     );
   };
