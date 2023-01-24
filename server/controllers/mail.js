@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 // const path = require('path');
 dotenv.config({ path:'./config.env' });
  
-const sendAMail = async (toAddress,text) => {
+const broadcastMail = async (text) => {
 
     // let transport = nodemailer.createTransport({
     //     host: "smtp.gmail.com",
@@ -39,5 +39,31 @@ const sendAMail = async (toAddress,text) => {
     });
 }
 
-module.exports = sendAMail;
+
+const sendMail = async (toAddress,subject,text) => {
+  let transport = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: 'staranirudh88477@gmail.com',
+          pass: 'gkwjhetlhfbljcdn'
+      }
+  });
+
+  const mailOptions = {
+      from: 'staranirudh88477@gmail.com', // Sender address
+      to: toAddress, // List of recipients
+      subject: subject, // Subject line
+      text: text, // Plain text body
+  };
+
+  transport.sendMail(mailOptions, function(err, info) {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(info);
+    }
+  });
+}
+
+module.exports = {broadcastMail ,sendMail};
 
