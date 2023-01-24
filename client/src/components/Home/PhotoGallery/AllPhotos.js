@@ -17,7 +17,8 @@ const AllPhotos = () => {
     const [photos,setPhotos]=useState([]);
     const [canDelete,setCanDelete] = useState(false);
     const [selectedImages,setSelectedImages] = useState([]);
-
+    const [del, setDel] = useState(false);
+    
     const getAllPhotos = async () => {
       try {
         let imagedata=[];
@@ -45,13 +46,42 @@ const AllPhotos = () => {
 
     const handleSelect =(e)  => {
       // e.preventDefault();
-      setSelectedImages([...selectedImages,e.target.value]);
+      const {value,checked} = e.target;
+      if(checked){
+        setSelectedImages([...selectedImages,value]);
+      }else{
+        const newList = selectedImages.filter((url)=>value!=url);
+        setSelectedImages(newList);
+      }
       console.log(selectedImages);
     }
 
     const handleDelete = async (e) => {
       e.preventDefault();
-      setCanDelete(false);
+      setDel(true);
+      try {
+        const response = await axios.delete(
+          `${SERVER_URL}/gallery/deleteImages`,
+          {data:
+            {urls:selectedImages}
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+          });
+
+        if (response.status === 422 || !response) {
+          window.alert("Posting failed");
+          console.log("Posting failed");
+        } else {
+          console.log("data");
+          console.log(response);
+          console.log("deleted Successfull");
+          window.location.reload(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
     }
 
     useEffect(()=>{
@@ -97,11 +127,28 @@ const AllPhotos = () => {
                     <div>
                       <button
                         type="button"
+                        className="btn btn-warning"
+                        onClick={()=>{
+                          setSelectedImages([]);
+                          setCanDelete(false)
+                        }}
+                      >
+                        cancel
+                      </button>
+                      <button
+                        type="button"
                         name="submit"
-                        className="btn btn-danger"
+                        className="btn btn-danger ms-2"
                         onClick={handleDelete}
                       >
-                        Delete selected Photos
+                        {del ? (
+                          <>
+                            <span>Deleting... </span>
+                            <i className="fa fa-spinner fa-spin"></i>
+                          </>
+                        ) : (
+                          "Delete"
+                        )}
                       </button>
                     </div>
                   ):(

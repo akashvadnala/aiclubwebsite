@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Photo = require('../model/gallerySchema');
+const { InitFileUpload } = require('../file_upload');
+
+const fileUpload = InitFileUpload();
 
 router.route('/getHomepagePhotos').get(async (req,res)=> {
     try {
@@ -32,8 +35,30 @@ router.route('/addPhoto').post(async (req,res)=> {
         res.status(201).json({'msg':'photo added sucessfully'});
     } catch (error) {
         console.log(error);
-        res.status(500).json({"msg":"Problem with adding Photo"});
+        res.status(422).json({"msg":"Problem with adding Photo"});
     }
 });
 
+router.route('/deleteImages').delete(async (req,res)=>{
+    try {
+        const urls = req.body.urls;
+        console.log("urls: ",urls);
+
+        const keys = urls.map((url)=>{
+            return url.split('=')[2];
+        })
+        console.log("keys: ",keys);
+        
+        const stats = keys.map(async (key)=>{
+            return await fileUpload.deleteFile(key);
+        })
+        
+        const count= await Photo.deleteMany({ imgurl: {$in:urls} });
+
+        res.status(201).json({"msg":"Images deleted sucessfully"});
+    } catch (error) {
+        console.log(error);
+        res.status(422).json({"msg":"Error while deleting Images"})
+    }
+})
 module.exports = router;
