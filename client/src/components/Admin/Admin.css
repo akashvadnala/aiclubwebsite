@@ -1,0 +1,11 @@
+.admin-container .slider-card:hover{
+    background-color: rgba(240,240,240,.7);
+}
+
+.admin-container input{
+    font-size: 15px;
+}
+
+.admin-container .modal-content{
+    text-align: center;
+}

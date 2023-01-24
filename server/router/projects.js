@@ -48,7 +48,6 @@ router.route("/updateprojPublicStatus/:url").put(async (req, res) => {
     const updatedProj = await Project.findOne({ url: url });
     updatedProj.public = req.body.public;
     updatedProj.save();
-    console.log("Project Updated", updatedProj);
     res.status(200).json(updatedProj);
   } catch (err) {
     res.status(422).json(err);
@@ -101,7 +100,6 @@ router.route("/projectAdd").post(async (req, res) => {
 router.route('/getthreeprojects').get(async (req,res) => {
     let projectData = await Project.find({});
     projectData.sort().reverse().slice(0,2);
-    console.log('projects',projectData);
     res.status(200).json(projectData);
 });
 

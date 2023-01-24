@@ -24,114 +24,117 @@ const Navbar = () => {
     }
   };
 
-    useEffect(() => {
-        getCompeteNames();
-    },[]);
-    
-    const RenderMenu = () =>{
-        const navs = [
-            {
-                'show':true,
-                'link':'/team',
-                'name':'Team'
-            },
-            {
-                'show':true,
-                'link':'/projects',
-                'name':'Projects'
-            },
-            {
-                'show':true,
-                'link':'/blogs',
-                'name':'Blogs'
-            },
-            {
-                'show':true,
-                'link':'/events',
-                'name':'Events'
-            },
-            // {
-            //     'show':true,
-            //     'link':'/inductions-b21-b20',
-            //     'name':'Inductions'
-            // },
-            // {
-            //     'show':true,
-            //     'link':'/about',
-            //     'name':'About'
-            // },
-            // {
-            //     'show':true,
-            //     'link':'#contact-us',
-            //     'name':'Contact Us'
-            // }
-        ]
-        // const { user } = useContext(Context);
-        // console.log('user',user);
-        // const { cuser } = useContext(CompeteContext);
-        const [ user, setUser ] = useState(null);
-        const getUser = () => {
-            try{
-                axios.get(`${SERVER_URL}/getUserData`,
-                {withCredentials: true})
-                .then(data=>{
-                    if(data.status===200){
-                        setUser(data.data);
-                    }
-                })
-            }catch(err){
-                console.log(err);
-            }
-        }
-        useEffect(()=>{
-            getUser();
-        },[]);
-        const [modalShow, setModalShow] = React.useState(false);
-        const [modalShow2, setModalShow2] = React.useState(false);
-        const Logout = async () => {
-            try{
-                const res = await axios.get(`${SERVER_URL}/logout`,
-                    {withCredentials:true}
-                );
-                console.log(res.msg);
-            }catch(err){
-                console.log('Unable to logout..')
-            }
-            window.location.reload(true);
-        }
-        
-        const location = useLocation();
-        return(
-        <>
-            <li>
-                <NavLink className="navbar-brand" to='/'><span><img src={Logo} arc="Logo" style={{width:"30px", borderRadius:"5px"}} /></span><span>&nbsp;Club</span></NavLink>
-            </li>
-            {
-                navs.map((nav)=>{
-                    if(nav.show){
-                        return(
-                            <li className="nav-item" key={nav.link}>
-                                <NavLink className="nav-link" to={nav.link}>{nav.name}</NavLink>
-                            </li>
-                        )
-                    }
-                    else{
-                        return null;
-                    }
-                })
-            }
-                {/* <li className="nav-item">
-                    
-                    <div className="dropdown show">
-                        <NavLink className="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Competitions
-                        </NavLink>
-                    
-                        <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            {
-                                compete.map((c) => {
-                                    return(
+  useEffect(() => {
+    getCompeteNames();
+  }, []);
 
+  const RenderMenu = () => {
+    const navs = [
+      {
+        show: true,
+        link: "/team",
+        name: "Team",
+      },
+      {
+        show: true,
+        link: "/projects",
+        name: "Projects",
+      },
+      {
+        show: true,
+        link: "/blogs",
+        name: "Blogs",
+      },
+      {
+        show: true,
+        link: "/events",
+        name: "Events",
+      },
+      // {
+      //     'show':true,
+      //     'link':'/inductions-b21-b20',
+      //     'name':'Inductions'
+      // },
+      // {
+      //     'show':true,
+      //     'link':'/about',
+      //     'name':'About'
+      // },
+      // {
+      //     'show':true,
+      //     'link':'#contact-us',
+      //     'name':'Contact Us'
+      // }
+    ];
+    // const { user } = useContext(Context);
+    // console.log('user',user);
+    // const { cuser } = useContext(CompeteContext);
+    const [user, setUser] = useState(null);
+    const getUser = () => {
+      try {
+        axios
+          .get(`${SERVER_URL}/getUserData`, { withCredentials: true })
+          .then((data) => {
+            if (data.status === 200) {
+              setUser(data.data);
+            }
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    useEffect(() => {
+      getUser();
+    }, []);
+    const [modalShow, setModalShow] = React.useState(false);
+    const [modalShow2, setModalShow2] = React.useState(false);
+    const Logout = async () => {
+      try {
+        const res = await axios.get(`${SERVER_URL}/logout`, {
+          withCredentials: true,
+        });
+        console.log(res.msg);
+      } catch (err) {
+        console.log("Unable to logout..");
+      }
+      window.location.reload(true);
+    };
+
+    const location = useLocation();
+    return (
+      <>
+        <li>
+          <NavLink className="navbar-brand" to='/'><span><img src={Logo} arc="Logo" style={{width:"30px", borderRadius:"5px"}} /></span><span>&nbsp;Club</span></NavLink>
+        </li>
+        {navs.map((nav) => {
+          if (nav.show) {
+            return (
+              <li className="nav-item" key={nav.link}>
+                <NavLink className="nav-link" to={nav.link}>
+                  {nav.name}
+                </NavLink>
+              </li>
+            );
+          } else {
+            return null;
+          }
+        })}
+        {/* <li className="nav-item">
+          <div className="dropdown show">
+            <NavLink
+              className="nav-link dropdown-toggle"
+              role="button"
+              id="dropdownMenuLink"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Competitions
+            </NavLink>
+
+            <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              {compete.map((c) => {
+                return (
                   <NavLink
                     key={c.title}
                     className="dropdown-item"
@@ -143,14 +146,13 @@ const Navbar = () => {
               })}
             </div>
           </div>
-        </li>
+        </li> */}
         <li className="nav-item">
           <NavLink className="nav-link" to="/about">
             About
           </NavLink>
         </li>
         {/* <li className="nav-item">
-
                     <NavLink className="nav-link" to="#contact-us">Contact Us</NavLink>
                 </li> */}
         {user ? (
@@ -167,7 +169,7 @@ const Navbar = () => {
                 Hello {user.firstname}
               </NavLink>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                {user ? (
+                {/* {user ? (
                   user.canCreateCompetitions || user.isadmin ? (
                     <>
                       <NavLink
@@ -179,7 +181,7 @@ const Navbar = () => {
                       <hr />
                     </>
                   ) : null
-                ) : null}
+                ) : null} */}
                 <NavLink className="dropdown-item" to="/profile">
                   My Profile
                 </NavLink>
@@ -258,9 +260,7 @@ const Navbar = () => {
   return (
     <nav variant="primary" className="navbar navbar-expand-lg">
       <div className="container-fluid">
-        <NavLink className="navbar-brand title" to="/">
-          <span><img src={Logo} arc="Logo" style={{width:"30px", borderRadius:"5px"}} /></span><span>&nbsp;Club</span>
-        </NavLink>
+        <NavLink className="navbar-brand title" to='/'><span><img src={Logo} arc="Logo" style={{width:"30px", borderRadius:"5px"}} /></span><span>&nbsp;Club</span></NavLink>
         <button
           className="navbar-toggler"
           type="button"

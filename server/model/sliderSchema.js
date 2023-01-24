@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const sliderSchema = new mongoose.Schema({
-    imgsrc:{
+    photo:{
         type: String,
         required: true,
     },
@@ -15,13 +15,16 @@ const sliderSchema = new mongoose.Schema({
     caption2: {
         type: String,
     },
-    linktitle: {
-        type: String,
-        requied: true
-    },
     link: {
         type: String,
         requied: true
+    },
+    textcolor: {
+        type: String
+    },
+    createdAt:{
+        type: Date,
+        default: Date.now
     },
 });
 
