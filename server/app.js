@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
 dotenv.config({ path:'./config.env' });
+const Config = require('./Config');
 
 // require('./db/conn');
 const connectDB = require('./db/conn');
@@ -36,7 +37,7 @@ app.use(require('./router/slider'));
 
 const PORT = process.env.PORT || 5000;
 // const url = process.env.DATABASE;
-const url = 'mongodb://127.0.0.1:27017/aiclub';
+const url = Config.DATABASE;
 
 const start = async () => {
     try{
