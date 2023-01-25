@@ -20,7 +20,11 @@ const sliderSchema = new mongoose.Schema({
         requied: true
     },
     textcolor: {
-        type: String
+        type: String,
+        default: 'white'
+    },
+    index: {
+        type: Number,
     },
     createdAt:{
         type: Date,

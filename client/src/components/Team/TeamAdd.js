@@ -80,6 +80,7 @@ const TeamAdd = () => {
             const photoname = Date.now() + photo.name;
             data.append("name",photoname);
             data.append("photo",photo);
+            console.log('formdata',data);
             var imgurl;
 
             try{

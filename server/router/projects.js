@@ -104,6 +104,7 @@ router.route('/getthreeprojects').get(async (req,res) => {
 });
 
 router.route("/getProjects").get(async (req, res) => {
+  console.log('helo')
   const projectData = await Project.find({ public: true });
   res.status(200).json(projectData);
 });
