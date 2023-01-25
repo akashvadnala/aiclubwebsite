@@ -47,7 +47,7 @@ const Admin = () => {
         caption1:"",
         caption2:"",
         link:"",
-        textcolor:"",
+        textcolor:"white",
         index:0
     });
     const [photo,setPhoto] = useState("");
@@ -130,7 +130,7 @@ const Admin = () => {
                     caption1:"",
                     caption2:"",
                     link:"",
-                    textcolor:"",
+                    textcolor:"white",
                     index:0
                 });
             }
@@ -181,7 +181,7 @@ const Admin = () => {
                     caption1:"",
                     caption2:"",
                     link:"",
-                    textcolor:"",
+                    textcolor:"white",
                     index:0
                 });
             }
@@ -259,7 +259,7 @@ const Admin = () => {
                                         caption1:"",
                                         caption2:"",
                                         link:"",
-                                        textcolor:"",
+                                        textcolor:"white",
                                         index:0
                                     });
                                     setPhoto("");
@@ -329,7 +329,7 @@ const Admin = () => {
                                                         caption1:"",
                                                         caption2:"",
                                                         link:"",
-                                                        textcolor:"",
+                                                        textcolor:"white",
                                                         index:0
                                                     });
                                                     setPhoto("");
