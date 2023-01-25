@@ -190,16 +190,19 @@ const Admin = () => {
         }
     }
 
-    const deleteSlider = (id)=>{
-        try{
-            axios.post(`${SERVER_URL}/deleteSlider/${id}`)
-            .then(res=>{
-                if(res.status===200){
-                    getSlides();
-                }
-            })
-        }catch(err){
-            console.log(err);
+    const deleteSlider = (id,title)=>{
+        const confirmed = window.confirm(`Are you sure to delete the slider '${title}'?`);
+        if(confirmed){
+            try{
+                axios.post(`${SERVER_URL}/deleteSlider/${id}`)
+                .then(res=>{
+                    if(res.status===200){
+                        getSlides();
+                    }
+                })
+            }catch(err){
+                console.log(err);
+            }
         }
     }
 
@@ -372,14 +375,17 @@ const Admin = () => {
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="45" width="48"><path d="m24 30.75-12-12 2.15-2.15L24 26.5l9.85-9.85L36 18.8Z"/></svg>
                                                     </div>
                                                 </div>
-                                                <img className="card-img-left" src={slide.photo} alt={slide.title} style={{ width: "200px", height: "100px" }} />
-                                                <div class="card-body p-0 small px-2">
-                                                    <div>Title:<strong> {slide.title}</strong></div>
-                                                    <div>Caption1: <strong> {slide.caption1}</strong></div>
-                                                    <div>Caption2:<strong> {slide.caption2}</strong></div>
-                                                    <div>Link:<strong> {slide.link}</strong></div>
-                                                    <div>textcolor:<strong> {slide.textcolor}</strong></div>
+                                                <div className='card slider-card-in flex-row actual-card'>
+                                                    <img className="card-img-left" src={slide.photo} alt={slide.title} />
+                                                    <div class="card-body p-0 small px-2">
+                                                        <div>Title:<strong> {slide.title}</strong></div>
+                                                        <div>Caption1: <strong> {slide.caption1}</strong></div>
+                                                        <div>Caption2:<strong> {slide.caption2}</strong></div>
+                                                        <div>Link:<strong> {slide.link}</strong></div>
+                                                        <div>textcolor:<strong> {slide.textcolor}</strong></div>
+                                                    </div>
                                                 </div>
+                                                
                                             </div>
                                             <div className='edit-delete text-center pt-2'>
                                                 <NavLink type="button" className="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#sliderModal" 
@@ -392,7 +398,7 @@ const Admin = () => {
                                                     Edit
                                                 </NavLink>
                                                 &nbsp;
-                                                <NavLink type="button" className="btn btn-sm btn-danger" onClick={()=>deleteSlider(slide._id)}>
+                                                <NavLink type="button" className="btn btn-sm btn-danger" onClick={()=>deleteSlider(slide._id,slide.title)}>
                                                     Delete
                                                 </NavLink>
                                             </div>

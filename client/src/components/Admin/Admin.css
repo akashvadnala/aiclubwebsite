@@ -21,6 +21,21 @@
     position:relative;
     top:15px;
     overflow:hidden;
+    width:50px;
+    height: 107px;
+}
+
+.admin-container .actual-card{
+    width: calc(100% - 45px);
+}
+
+.admin-container .actual-card img{
+    height:100px;
+    width: 150px;
+}
+
+.admin-container .actual-card .card-body{
+    width: calc(100% - 150px);
 }
 
 .admin-container .swap .arrow:first-child{
