@@ -33,6 +33,10 @@ const teamSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    isalumni: {
+        type: Boolean,
+        default: false
+    },
     year: {
         type: Number,
     },
