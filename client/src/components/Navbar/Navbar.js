@@ -204,7 +204,7 @@ const Navbar = () => {
           </li>
         ) : (
           <li className="nav-item">
-            <div className="dropdown show">
+            {/* <div className="dropdown show">
               <NavLink
                 className="nav-link dropdown-toggle"
                 role="button"
@@ -241,10 +241,10 @@ const Navbar = () => {
                   Competition
                 </div>
               </div>
-            </div>
-            {/* <NavLink className="nav-link" variant="primary" onClick={() => setModalShow(true)}>
+            </div> */}
+            <NavLink className="nav-link" variant="primary" onClick={() => setModalShow(true)}>
                         Login
-                    </NavLink> */}
+                    </NavLink>
           </li>
         )}
         <TeamLogin show={modalShow} onHide={() => setModalShow(false)} />

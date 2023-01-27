@@ -5,7 +5,7 @@ import BlogItem from "./card/BlogCard";
 const BlogsList = (props) => {
 
   return (
-    <div className="container ">
+    <div>
       <div className="row">
         {props.blogs.map((blog) => {
           return (

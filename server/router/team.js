@@ -83,12 +83,8 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
 
 router.route('/imgdelete').post(async (req,res)=>{
     try {
-        console.log(req.body);
         const url = req.body.url;
-        console.log("url: ",url);
-
         const key =  url.split('=')[2];
-        console.log("key: ",key);
         
         const stats = await fileUpload.deleteFile(key);
         

@@ -54,7 +54,7 @@ function TeamLogin(props) {
       <Modal.Header closeButton></Modal.Header>
       <Modal.Body>
         <h4 className="pb-3">
-          Login <span className="h5">(Team Member)</span>
+          Login
         </h4>
         {msg ? <div className="alert alert-danger">{msg}</div> : null}
         <div className="login-container">

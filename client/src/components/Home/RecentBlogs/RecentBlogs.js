@@ -36,9 +36,7 @@ function RecentBlogs() {
 
   return (
     <div className="recentblogs-container adjust">
-      <div className="titlebox">
-        <h4>Recent Blogs</h4>
-      </div>
+      <h3 className="text-center py-3">Recent Blogs</h3>
       <BlogsList blogs={blogs} />
       <p>
         <NavLink to="/blogs">

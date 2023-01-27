@@ -4,7 +4,6 @@ const { Schema } = mongoose;
 const subscriberSchema = new Schema({
     name:{
         type:String,
-        required:true
     },
     email:{
         type:String,
