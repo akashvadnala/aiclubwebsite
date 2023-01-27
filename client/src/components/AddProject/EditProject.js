@@ -8,6 +8,7 @@ import Error from "../Error";
 import axios from "axios";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import Loading from "../Loading";
+import { Helmet } from "react-helmet";
 
 const EditProject = () => {
   const { url } = useParams();
@@ -169,6 +170,9 @@ const EditProject = () => {
         <Loading />
       ) : load === 1 ? (
         <div className="container addproject-container py-3">
+          <Helmet>
+            <title>Project - AI Club</title>
+          </Helmet>
           <h3 className="text-center">Add Project</h3>
           <div className="text-center fs-6 pb-1">
             {preview ? (

@@ -16,7 +16,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
 app.use('/uploads',express.static(path.resolve('uploads')));
-console.log('dir',path.resolve('uploads'));
+// console.log('dir',path.resolve('uploads'));
 
 //routes
 app.use(require('./router/auth'));
