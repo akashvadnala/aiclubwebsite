@@ -119,7 +119,7 @@ const AllPhotos = () => {
 
     return (
       <div className="gallery-container container">
-          <div className="titlebox">
+          <div className="titlebox py-3">
             <h4>All Images</h4>
               {user && user.isadmin ? (
                 <div>
@@ -127,7 +127,7 @@ const AllPhotos = () => {
                     <div>
                       <button
                         type="button"
-                        className="btn btn-warning"
+                        className="btn btn-sm"
                         onClick={()=>{
                           setSelectedImages([]);
                           setCanDelete(false)
@@ -138,7 +138,7 @@ const AllPhotos = () => {
                       <button
                         type="button"
                         name="submit"
-                        className="btn btn-danger ms-2"
+                        className="btn btn-sm btn-danger ms-2"
                         onClick={handleDelete}
                       >
                         {del ? (
@@ -155,7 +155,7 @@ const AllPhotos = () => {
                     <div>
                       <button
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-sm btn-success"
                         onClick={()=>setCanDelete(true)}
                       >
                         Enable Delete

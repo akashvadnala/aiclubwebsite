@@ -6,6 +6,7 @@ import { CLIENT_URL, SERVER_URL } from '../../EditableStuff/Config';
 import axios from 'axios';
 import Error from '../Error';
 import Loading from '../Loading';
+import { Helmet } from 'react-helmet';
 
 const AddProject = () => {
   const navigate = useNavigate();
@@ -138,6 +139,9 @@ const AddProject = () => {
     <>
       {load===0?<Loading />:load===1 && user?
         <div className='container addproject-container text-center'>
+          <Helmet>
+            <title>Project - AI Club</title>
+          </Helmet>
           <div className='adjust'>
             <h3>Add Project</h3>
             <form method="POST" onSubmit={PostProject} encType="multipart/form-data">
