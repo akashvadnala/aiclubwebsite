@@ -12,7 +12,7 @@ import axios from "axios";
 import { getImageSize } from 'react-image-size';
 
 const AllPhotos = () => {
-  const { user,logged_in } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const [index, setIndex] = useState(-1);
   const [photos, setPhotos] = useState([]);
   const [canDelete, setCanDelete] = useState(false);
@@ -59,6 +59,9 @@ const AllPhotos = () => {
 
   const handleDelete = async (e) => {
     e.preventDefault();
+    if(selectedImages.length===0){
+      return ;
+    }
     setDel(true);
     try {
       const response = await axios.delete(
@@ -175,72 +178,77 @@ const AllPhotos = () => {
 
   return (
     <div className="gallery-container container">
-      <div className="titlebox py-3">
-        <h4>All Images</h4>
-        {user && user.isadmin ? (
-          <div>
-            {canDelete ? (
-              <div>
-                <button
-                  type="button"
-                  className="btn btn-sm"
-                  onClick={() => {
-                    setSelectedImages([]);
-                    setCanDelete(false)
-                  }}
-                >
-                  cancel
-                </button>
-                <button
-                  type="button"
-                  name="submit"
-                  className="btn btn-sm btn-danger ms-2"
-                  onClick={handleDelete}
-                >
-                  {del ? (
-                    <>
-                      <span>Deleting... </span>
-                      <i className="fa fa-spinner fa-spin"></i>
-                    </>
-                  ) : (
-                    "Delete"
-                  )}
-                </button>
-              </div>
-            ) : (
-              <div>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-success"
-                  onClick={() => setCanDelete(true)}
-                >
-                  Enable Delete
-                </button>
-              </div>
-            )}
-
+      <div className="py-3">
+        <div className="row align-items-center">
+          <div className="col-12 col-sm-4">
+            <h3>All Images</h3>
           </div>
-        ) : null}
-        {user && user.isadmin ? (
-          <button
-            type="button"
-            className="btn btn-success btn-rounded btn-sm my-3"
-            data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              fill="currentColor"
-              className="bi bi-plus-circle-fill"
-              viewBox="0 0 16 16"
-            >
-              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-            </svg>{" "}
-            Add Image
-          </button>
-        ) : null}
+          <div className="col-12 col-sm-8 text-end">
+            {user && user.isadmin ? (
+              <>
+                {canDelete ? (
+                  <>
+                    <button
+                      type="button"
+                      className="btn btn-sm"
+                      onClick={() => {
+                        setSelectedImages([]);
+                        setCanDelete(false)
+                      }}
+                    >
+                      cancel
+                    </button>
+                    <button
+                      type="button"
+                      name="submit"
+                      className="btn btn-sm btn-danger ms-2"
+                      onClick={handleDelete}
+                    >
+                      {del ? (
+                        <>
+                          <span>Deleting... </span>
+                          <i className="fa fa-spinner fa-spin"></i>
+                        </>
+                      ) : (
+                        "Delete"
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-warning"
+                    onClick={() => setCanDelete(true)}
+                  >
+                    Enable Delete
+                  </button>
+                )}
+
+              </>
+            ) : null}
+            {' '}
+            {user && user.isadmin ? (
+              <button
+                type="button"
+                className="btn btn-success btn-rounded btn-sm my-3"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  className="bi bi-plus-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                </svg>{" "}
+                Add Image
+              </button>
+            ) : null}
+          </div>
+        </div>
       </div>
       <div
         className="modal fade"

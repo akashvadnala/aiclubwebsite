@@ -12,7 +12,7 @@ const Blogitem = (props) => {
   };
   return (
     <div className="my-3 blogcard-container">
-      <div className="card">
+      <div className="card text-center">
         <img
           onError={addDefaultSrc}
           src={

@@ -135,10 +135,10 @@ function Team() {
         </div>
           <div className='container team'>
               <div className='row align-items-center'>
-                <div className='col-12 col-md-4 col-lg-4  text-center text-md-left'>
+                <div className='col-12 col-md-4 col-lg-4 text-md-left'>
                   <h3>{teamHeading}</h3>
                 </div>
-                <div className='col-12 col-md-5 col-lg-6 text-center text-lg-right'>
+                <div className='col-12 col-md-5 col-lg-6 text-lg-right'>
                   {
                     user?user.isadmin?
                       <div className='right-panel'>

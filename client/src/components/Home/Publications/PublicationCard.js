@@ -5,7 +5,7 @@ function PublicationCard(props) {
   
   return (
     <div className="publication-card card">
-      <div className="card-body">
+      <div className="card-body text-center">
         <h5 className="card-title"><strong>{props.publication.title}</strong></h5>
         <h6 className="card-text">{props.publication.coAuthors.join(", ")}</h6>
         <h6 className="card-text"><strong>{"Publisher : " + props.publication.publisher}</strong></h6>
