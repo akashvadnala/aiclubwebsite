@@ -81,6 +81,25 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
     }
 });
 
+router.route('/imgdelete').delete(async (req,res)=>{
+    try {
+        const url = req.body.url;
+        console.log("url: ",url);
+
+        const key =  url.split('=')[2];
+        console.log("key: ",key);
+        
+        const stats = await fileUpload.deleteFile(key);
+        
+        const count= await Photo.deleteOne({ imgurl: {url} });
+
+        res.status(200).json({"msg":"Image deleted sucessfully"});
+    } catch (error) {
+        console.log(error);
+        res.status(422).json({"msg":"Error while deleting Images"})
+    }
+});
+
 
 router.route('/teamadd').post(async (req,res) => {
     // const {  firstname,lastname,profession,description,username,email,password,cpassword } = req.body;
@@ -150,8 +169,21 @@ router.route('/getTeams').get(async (req,res)=>{
     return res.status(200).json(users);
 })
 
-router.route('/getTeam').get(async (req,res)=>{
-    const teamData = await Team.find({ismember:true});
+router.route('/getTeam/:year').get(async (req,res)=>{
+    let teamData = [];
+    const {year} = req.params;  
+    const d=new Date();
+    var y=d.getFullYear();
+    console.log(year,y+1);
+    if(parseInt(year)===y+1){
+        teamData = await Team.find({ismember:true,isalumni:false});
+    }
+    else{
+        teamData = await Team.find({ismember:true,isalumni:true,year:year});
+    }
+    // await Promise.all(
+    //     teamData.map((t)=>{Object.assign(t,{year:2023})})
+    // );
     res.status(201).json(teamData);
 });
 
@@ -184,7 +216,6 @@ router.route('/getUserDataForEdit/:username').get(async (req,res)=>{
 
 router.route('/teamupdate/:username').put(async (req,res)=>{
     try {
-        console.log('updatess',req.body.username);
         const {username} = req.params;
 
         const updateduser = await Team.findOneAndUpdate({username:username},req.body,{
@@ -205,8 +236,8 @@ router.route('/team/delete/:username').post(async (req, res) => {
     const team = await Team.findOne({ username: username });
     if(team){
         const projects = team.projects;
-        await Promise.all(projects.map(async project=>{
-            const proj = await Project.findOne({url:project});
+        await Promise.all(projects.map(async p=>{
+            const proj = await Project.findOne({url:p});
             proj.authors = proj.authors.filter(t=>t!==username);
             await proj.save();
         }))
