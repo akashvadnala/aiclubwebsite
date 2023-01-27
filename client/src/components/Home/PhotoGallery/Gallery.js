@@ -103,7 +103,7 @@ const PhotoGallery = () => {
   return (
     <div className="gallery-container adjust">
       <div className="titlebox">
-        <h4 className="my-3">Image Gallery</h4>
+        <h3 className="my-3">Image Gallery</h3>
         {user && user.isadmin ? (
           <button
             type="button"
@@ -214,11 +214,11 @@ const PhotoGallery = () => {
         slides={photos}
         plugins={[Captions]}
       />
-      <p>
+      <div className="mt-3">
         <NavLink to="/gallery">
           View all Images<span className="small"> ❯</span>
         </NavLink>
-      </p>
+      </div>
     </div>
   );
 };

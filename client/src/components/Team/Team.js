@@ -15,10 +15,22 @@ function Team() {
   const [ archStat, setArchStat ] = useState('Archived');
   const [ msg, setMsg ] = useState();
 
+  const d=new Date();
+  var y=d.getFullYear();
+  const ly=2019;
+  const years = Array.from(
+  {length:y-ly+1},
+  (value,index)=>{
+    return(ly+index);
+  });
+  years.reverse();
+  const [ year, setYear ] = useState(y+1);
+
   const { user } = useContext(Context);
   const getTeamData = async() => {
+    console.log('year',year);
     try{
-      axios.get(`${SERVER_URL}/getTeam`)
+      axios.get(`${SERVER_URL}/getTeam/${year}`)
       .then(data => {
         console.log('data');
         console.log(data.data);
@@ -31,6 +43,7 @@ function Team() {
       console.log(err);
     }
   }
+
 
   const getArchTeamData = async() => {
     try{
@@ -55,7 +68,7 @@ function Team() {
     else{
         getTeamData();
     }
-  },[]);
+  },[year]);
 
    const toggleArchived = () =>{
     if(archTeam){
@@ -66,6 +79,7 @@ function Team() {
     }
    } 
 
+   
   //  const teams=[
   //   {
   //     'imgsrc':'https://aiclub.nitc.ac.in/img/drive/jayaraj%20sir.jpg',
@@ -98,6 +112,7 @@ function Team() {
   //     'isadmin':true
   //   }
   // ]
+
   const PostDelete = async (username) => {
     const res = await axios.post(`${SERVER_URL}/team/delete/${username}`);
     if(res.status===200){
@@ -119,18 +134,45 @@ function Team() {
           {/* <img src='https://miro.medium.com/max/657/1*MdInuEHHzcTQvjlzs8wpKA.png' /> */}
         </div>
           <div className='container team'>
-              <div className='row'>
-                <div className='col-sm-5'>
+              <div className='row align-items-center'>
+                <div className='col-12 col-md-4'>
                   <h3>{teamHeading}</h3>
                 </div>
-                {
-                  user?user.isadmin?
-                  <div className='right-panel col-sm-7'>
-                    <NavLink className='teamadd' onClick={toggleArchived}>{archStat}</NavLink>
-                    <NavLink className='teamadd' to='/team/add'>Add +</NavLink>
-                  </div>
-                  :'':''
-                }
+                <div className='col-12 col-md-4'>
+                  {
+                    user?user.isadmin?
+                      <div className='right-panel'>
+                        <NavLink rel="noreferrer" className='btn btn-sm' onClick={toggleArchived}>{archStat}</NavLink>
+                        <NavLink className='btn btn-sm btn-primary' to='/team/add'>
+                          <span><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            fill="currentColor"
+                            className="bi bi-plus-circle-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                          </svg></span>
+                          {' '}Add
+                      </NavLink>
+                      </div>
+                    :'':''
+                  }
+                </div>
+                
+                <div className='right-panel col-12 col-md-4'>
+                  <select name="year" value={year} onChange={(e)=>setYear(e.target.value)} className="form-select" aria-label="year">
+                    {/* <option value="">Select Year</option> */}
+                      <option value={y+1}>Present</option>
+                    {/* <option value={year}>Present</option> */}
+                    {
+                      years.map((yr)=>{
+                        return(<option value={yr}>{yr}</option>)
+                      })
+                    }
+                  </select>
+                </div>
               </div>
               <div className='msg'>
                 {

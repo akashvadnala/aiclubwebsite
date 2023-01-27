@@ -12,8 +12,8 @@ const Home = () => {
       <Slider />
       {/* <Module /> */}
       <Activities />
-      <PhotoGallery />
       <Publications />
+      <PhotoGallery />
     </>
   )
 }

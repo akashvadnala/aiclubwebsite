@@ -7,6 +7,7 @@ import Error from '../Error';
 import Loading from '../Loading';
 import './Admin.css'
 import AddSlider from './AddSlider';
+import { Helmet } from 'react-helmet';
 
 const Admin = () => {
     // const slides = [
@@ -246,6 +247,9 @@ const Admin = () => {
         <>
             {load===0?<Loading />:load===1?
             <div className='admin-container'>
+                <Helmet>
+                    <title>Admin - AI Club</title>
+                </Helmet>
                 <div className='adjust'>
                     <h2 className='text-center'>Admin Panel</h2>
                 </div>
@@ -366,7 +370,7 @@ const Admin = () => {
                                 return (
                                     <>
                                         <div className='slider-card card py-2 mb-3' style={{overflow:"hidden"}}>
-                                            <div class="card slider-card-in flex-row" style={{ cursor: "pointer" }} onClick={() => setSlider(slide)}>
+                                            <div class="card slider-card-in flex-row" style={{ cursor: "pointer" }}>
                                                 <div className="swap mx-2">
                                                     <div type="button" className='arrow py-1' onClick={()=>sliderMoveUp(slide.index)}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="45" width="48"><path d="M14.15 30.75 12 28.6l12-12 12 11.95-2.15 2.15L24 20.85Z"/></svg>
@@ -375,7 +379,7 @@ const Admin = () => {
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="45" width="48"><path d="m24 30.75-12-12 2.15-2.15L24 26.5l9.85-9.85L36 18.8Z"/></svg>
                                                     </div>
                                                 </div>
-                                                <div className='card slider-card-in flex-row actual-card'>
+                                                <div className='card slider-card-in flex-row actual-card' onClick={() => setSlider(slide)}>
                                                     <img className="card-img-left" src={slide.photo} alt={slide.title} />
                                                     <div class="card-body p-0 small px-2">
                                                         <div>Title:<strong> {slide.title}</strong></div>
