@@ -119,7 +119,7 @@ const AllPhotos = () => {
 
     return (
       <div className="gallery-container container">
-          <div className="titlebox">
+          <div className="titlebox my-3">
             <h4>All Images</h4>
               {user && user.isadmin ? (
                 <div>

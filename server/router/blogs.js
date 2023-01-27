@@ -61,19 +61,19 @@ router.route("/blogadd").post(async (req, res) => {
 });
 
 router.route("/getBlogs").get(async (req, res) => {
-  const blogData = await Blog.find({ public: true });
+  const blogData = await Blog.find({ public: true }).sort({createdAt:-1});
   res.status(200).json(blogData);
 });
 
 router.route("/getpendingBlogApprovals").get(async (req, res) => {
-  const blogData = await Blog.find({ approvalStatus: "pending" });
+  const blogData = await Blog.find({ approvalStatus: "pending" }).sort({createdAt:-1});
   res.status(200).json(blogData);
 });
 
 router.route("/getuserBlogs/:name").get(async (req, res) => {
   const {name} = req.params;
   try {
-    const blogData = await Blog.find({ authorName: name });
+    const blogData = await Blog.find({ authorName: name }).sort({createdAt:-1});
     res.status(200).json(blogData);
   } catch (err) {
     console.log(err);
