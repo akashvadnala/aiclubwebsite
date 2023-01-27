@@ -135,10 +135,10 @@ function Team() {
         </div>
           <div className='container team'>
               <div className='row align-items-center'>
-                <div className='col-12 col-md-4'>
+                <div className='col-12 col-md-4 col-lg-4  text-center text-md-left'>
                   <h3>{teamHeading}</h3>
                 </div>
-                <div className='col-12 col-md-4'>
+                <div className='col-12 col-md-5 col-lg-6 text-center text-lg-right'>
                   {
                     user?user.isadmin?
                       <div className='right-panel'>
@@ -161,7 +161,7 @@ function Team() {
                   }
                 </div>
                 
-                <div className='right-panel col-12 col-md-4'>
+                <div className='right-panel col-12 col-md-3 col-lg-2'>
                   <select name="year" value={year} onChange={(e)=>setYear(e.target.value)} className="form-select" aria-label="year">
                     {/* <option value="">Select Year</option> */}
                       <option value={y+1}>Present</option>

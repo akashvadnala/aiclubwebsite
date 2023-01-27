@@ -60,9 +60,12 @@
 .team-container a{
     color: #0d6efd !important;
 } */
-
-@media (max-width: 576px){
-    row col{
-        text-align: center;
+/* @media (min-width: 1300px){
+    .text-md-left{
+        text-align: left !important;
     }
-}
+
+    .text-md-right{
+        text-align: right !important;
+    }
+} */

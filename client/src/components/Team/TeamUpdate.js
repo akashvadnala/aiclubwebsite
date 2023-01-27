@@ -85,19 +85,7 @@ const TeamUpdate = () => {
         e.preventDefault();
         setSubmit('Updating');
         setSubmit2(<i class="fa fa-spinner fa-spin"></i>);
-        console.log('Postteam');
-        // const {firstname,lastname,profession,description,username,photo,email,password,cpassword,isadmin,ismember,canCreateCompetitions} = user;
-    
-        // const firstname = user.firstname;
-        // const lastname = user.lastname;
-        // const profession = user.profession;
-        // const description = user.description;
-        // const username = user.username;
         const photo = team.photo;
-        // const email = user.email;
-        // const isadmin = user.isadmin;
-        // const ismember = user.ismember;
-        // console.log(firstname,lastname,profession,description,username,photo,email,isadmin,ismember,canCreateCompetitions);
         team.ismember = team.ismember || team.isadmin;
         var imgurl;
         if(Img){
@@ -105,6 +93,16 @@ const TeamUpdate = () => {
             const photoname = Date.now() + Img.name;
             data.append("name",photoname);
             data.append("photo",Img);
+
+            try{
+                axios.post(`${SERVER_URL}/imgdelete`,
+                {'url':team.photo},
+                {
+                    headers: { "Content-Type": "application/json" },
+                });
+            }catch(err){
+                console.log('photoerr',err);
+            }
     
             try{
                 const img = await axios.post(`${SERVER_URL}/imgupload`,data);
