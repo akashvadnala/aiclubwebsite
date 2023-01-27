@@ -308,7 +308,7 @@ const Admin = () => {
                                                     }
                                                 </div>
                                                 <div className="form-group my-3">
-                                                    <input type="text" name="title" value={xSlider.title} onChange={handleInput} className="form-control form-control-lg" id="title" aria-describedby="title" placeholder="Title" required />
+                                                    <input type="text" name="title" value={xSlider.title} onChange={handleInput} className="form-control form-control-lg" id="title" aria-describedby="title" placeholder="Title"/>
                                                 </div>
                                                 <div className="form-group my-3">
                                                     <input type="text" name="caption1" value={xSlider.caption1} onChange={handleInput} className="form-control form-control-lg" id="caption1" aria-describedby="caption1" placeholder="Caption 1" />
@@ -317,7 +317,7 @@ const Admin = () => {
                                                     <input type="text" name="caption2" value={xSlider.caption2} onChange={handleInput} className="form-control form-control-lg" id="caption2" aria-describedby="caption2" placeholder="Caption 2 " />
                                                 </div>
                                                 <div className="form-group my-3">
-                                                    <input type="text" name="link" value={xSlider.link} onChange={handleInput} className="form-control form-control-lg" id="link" aria-describedby="link" placeholder="Link" required />
+                                                    <input type="text" name="link" value={xSlider.link} onChange={handleInput} className="form-control form-control-lg" id="link" aria-describedby="link" placeholder="Link"/>
                                                 </div>
                                                 <div className="form-group my-3">
                                                     <input type="text" name="textcolor" value={xSlider.textcolor} onChange={handleInput} className="form-control form-control-lg" id="textcolor" aria-describedby="textcolor" placeholder="Text Color" />
@@ -417,7 +417,7 @@ const Admin = () => {
                                         <h2>{slider.title}</h2>
                                         <p>{slider.caption1}</p>
                                         <h6>{slider.caption2}</h6>
-                                        <p><a className="mt-3 btn align-items-center" style={{ color: `${slider.textcolor}` }} href={slider.link}>Learn More <span>❯</span></a></p>
+                                        {slider.link && <p><a className="mt-3 btn align-items-center" style={{ color: `${slider.textcolor}` }} href={slider.link}>Learn More <span>❯</span></a></p>}
                                     </div>
                                 </>
                             }
