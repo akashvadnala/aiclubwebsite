@@ -67,7 +67,7 @@ useEffect(()=>{
                 <h1>{slide.title}</h1>
                 <h6>{slide.caption1}</h6>
                 <h5>{slide.caption2}</h5>
-                <a className="mt-3 btn align-items-center" style={{color:slide.textcolor}} href={slide.link}>Learn More <span>❯</span></a>
+                {slide.link && <a className="mt-3 btn align-items-center" href={slide.link}>Learn More <span>❯</span></a>}
               </Carousel.Caption>
             </Carousel.Item>
             
