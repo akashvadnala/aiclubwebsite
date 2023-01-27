@@ -81,8 +81,9 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
     }
 });
 
-router.route('/imgdelete').delete(async (req,res)=>{
+router.route('/imgdelete').post(async (req,res)=>{
     try {
+        console.log(req.body);
         const url = req.body.url;
         console.log("url: ",url);
 
@@ -91,8 +92,8 @@ router.route('/imgdelete').delete(async (req,res)=>{
         
         const stats = await fileUpload.deleteFile(key);
         
-        const count= await Photo.deleteOne({ imgurl: {url} });
-
+        const count= await File.deleteOne({ imgurl: {url} });
+        console.log('Old Image Deleted');
         res.status(200).json({"msg":"Image deleted sucessfully"});
     } catch (error) {
         console.log(error);
@@ -103,24 +104,9 @@ router.route('/imgdelete').delete(async (req,res)=>{
 
 router.route('/teamadd').post(async (req,res) => {
     // const {  firstname,lastname,profession,description,username,email,password,cpassword } = req.body;
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
-    const profession = req.body.profession;
-    const description = req.body.description;
-    const username = req.body.username;
-    const email = req.body.email;
-    const year = req.body.year;
-    const password = req.body.password;
-    const cpassword = req.body.cpassword;
-    const isadmin = req.body.isadmin;
-    const ismember = req.body.ismember;
-    const canCreateCompetitions=req.body.canCreateCompetitions;
     console.log('body');
     const photo = req.body.photo;
     console.log('photo',photo);
-    if( !firstname || !lastname || !profession || !description || !username || !email || !year || !password || !cpassword || !photo){
-        return res.status(400).json({ error: "Plz fill the field properly" });
-    }
     console.log("Registering..");
     try{
         const teamExist = await Team.findOne({email:email});
@@ -131,21 +117,7 @@ router.route('/teamadd').post(async (req,res) => {
             return res.status(201).json({ error: "Passwords not matched" });
         }
 
-        const team = new Team({ 
-            firstname:firstname, 
-            lastname:lastname,  
-            profession:profession,
-            description:description,
-            username:username,
-            email:email, 
-            photo:photo,
-            year:year,
-            password:password,
-            cpassword:cpassword,
-            isadmin:isadmin,
-            ismember:ismember,
-            canCreateCompetitions:canCreateCompetitions
-        });
+        const team = new Team(req.body);
 
         const saltRounds = 10;
         team.password = await bcrypt.hash(password,saltRounds);
