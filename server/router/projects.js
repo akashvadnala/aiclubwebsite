@@ -97,34 +97,44 @@ router.route("/projectAdd").post(async (req, res) => {
   }
 });
 
-router.route('/getthreeprojects').get(async (req,res) => {
-    let projectData = await Project.find({});
-    projectData.sort().reverse().slice(0,2);
-    res.status(200).json(projectData);
+router.route("/getthreeprojects").get(async (req, res) => {
+  let projectData = await Project.find({ public: true }).sort({
+    createdAt: -1,
+  });
+  projectData.slice(0, 2);
+  res.status(200).json(projectData);
 });
 
 router.route("/getProjects").get(async (req, res) => {
-  console.log('helo')
-  const projectData = await Project.find({ public: true });
+  console.log("helo");
+  const projectData = await Project.find({ public: true }).sort({
+    createdAt: -1,
+  });
   res.status(200).json(projectData);
 });
 
 router.route("/getResearchPapers").get(async (req, res) => {
-  const projectData = await Project.find({ isPublished: true, public:true }).select(
-    "-__v -_id -creator -authors -isPublished -tags -content -cover -public -approvalStatus -createdAt"
-  );;
+  const projectData = await Project.find({ isPublished: true, public: true })
+    .select(
+      "-__v -_id -creator -authors -isPublished -tags -content -cover -public -approvalStatus -createdAt"
+    )
+    .sort({ createdAt: -1 });
   res.status(200).json(projectData);
 });
 
 router.route("/getpendingProjApprovals").get(async (req, res) => {
-  const projectData = await Project.find({ approvalStatus: "pending" });
+  const projectData = await Project.find({ approvalStatus: "pending" }).sort({
+    createdAt: -1,
+  });
   res.status(200).json(projectData);
 });
 
 router.route("/getProjectApprovals").get(async (req, res) => {
-    const projectData = await Project.find({ approvalStatus: "pending" });
-    res.status(200).json(projectData);
+  const projectData = await Project.find({ approvalStatus: "pending" }).sort({
+    createdAt: -1,
   });
+  res.status(200).json(projectData);
+});
 
 router.route("/getProject/:url").get(async (req, res) => {
   const { url } = req.params;
@@ -207,12 +217,14 @@ router.route("/getMyProjects/:user").get(async (req, res) => {
             url: proj.url,
             cover: proj.cover,
             authors: proj.authors,
+            createdAt: proj.createdAt,
           });
         } catch (err) {
           console.log("Project Not Found");
         }
       })
     );
+    projects.sort({ createdAt: -1 });
     res.status(200).json(projects);
   } else {
     res.status(422).json(null);

@@ -242,7 +242,6 @@ const AllPhotos = () => {
           </button>
         ) : null}
       </div>
-
       <div
         className="modal fade"
         id="staticBackdrop"
