@@ -36,7 +36,6 @@ const AddBlog = () => {
 
   const handleInputs = (e) => {
     setPost({ ...post, [e.target.name]: e.target.value });
-    console.log("post", post);
   };
 
   const removeXtag = (tag) => {
@@ -67,7 +66,6 @@ const AddBlog = () => {
       const img = await axios.post(`${SERVER_URL}/imgupload`, data);
       imgurl = img.data;
       post.cover = imgurl;
-      console.log("final post", post);
     } catch (err) {
       console.log("photoerr", err);
     }
@@ -75,15 +73,10 @@ const AddBlog = () => {
       const blogdata = await axios.post(`${SERVER_URL}/blogadd`, post, {
         headers: { "Content-Type": "application/json" },
       });
-      console.log("blogdata", blogdata);
       if (blogdata.status === 422 || !blogdata) {
-        window.alert("Posting failed");
-        console.log("Posting failed");
+        showAlert("Blog Posting failed","danger");
       } else {
-        console.log("data");
-        console.log(blogdata);
         showAlert("Blog Created Successfull","success");
-        console.log("Posting Successfull");
         navigate(`/blogs/${post.url}/edit`);
       }
     } catch (err) {

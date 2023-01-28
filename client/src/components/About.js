@@ -3,6 +3,7 @@ import JoditEditor from "jodit-react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { SERVER_URL } from "../EditableStuff/Config";
 import { Context } from "../Context/Context";
+import {alertContext} from "../Context/Alert";
 import Error from "./Error";
 import Loading from "./Loading";
 import "./About.css";
@@ -10,6 +11,7 @@ import "./About.css";
 const About = () => {
   const editor = useRef(null);
   const { user } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
   const [preview, setPreview] = useState(true);
   const [about, setAbout] = useState("");
   const [load, setLoad] = useState(0);
@@ -20,7 +22,6 @@ const About = () => {
       if (data.status === 200) {
         setAbout(data.data);
         setDesc(data.data.about);
-        console.log('about',data.data);
         setLoad(1);
       } else {
         setLoad(-1);
@@ -53,12 +54,12 @@ const About = () => {
     setPreview(true);
   };
   const saveIt = () => {
-    console.log("before saving", about);
     axios.put(`${SERVER_URL}/updateAbout/${about._id}`,
     about, 
     {
       headers: { "Content-Type": "application/json" },
     });
+    showAlert("Saved", "success");
     setSave(false);
     setPreview(true);
   };
@@ -75,8 +76,8 @@ const About = () => {
                 <h2>About</h2>
               </div>
               <div className="col-sm-4 text-end">
-                {user ? (
-                  user.isadmin && preview ? (
+                {user && user.isadmin ? (
+                   preview ? (
                     <>
                       <button
                         className="btn btn-outline-dark btn-sm mx-1"

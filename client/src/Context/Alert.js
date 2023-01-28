@@ -23,7 +23,7 @@ const Alert = ({ children }) => {
             toggleAlert(false);
             setTextAlert("");
             setAlertType("")
-          }, 4000);
+          }, 2000);
         },
       }}
     >
