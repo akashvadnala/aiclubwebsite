@@ -1,11 +1,11 @@
 import axios from 'axios';
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {SERVER_URL} from '../../EditableStuff/Config';
 import TextTruncate from 'react-text-truncate';
 
 function TeamCard({ team, isadmin, isdelete }) {
-  const navigate = useNavigate();
+
   const PostDelete = async (username) => {
     const confirmed = window.confirm(`Are you sure to delete the user ${username}?`);
     if(confirmed){

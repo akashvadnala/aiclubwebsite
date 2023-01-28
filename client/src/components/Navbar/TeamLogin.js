@@ -6,15 +6,13 @@ import { SERVER_URL } from "../../EditableStuff/Config";
 function TeamLogin(props) {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
-  const [signin, setsignin] = useState("Sign in");
-  const [signin2, setsignin2] = useState();
+  const [signin, setsignin] = useState(false);
   const [msg, setMsg] = useState();
   const Login = async (e) => {
     e.preventDefault();
     console.log("Logging..");
     setMsg("");
-    setsignin(<i class="fa fa-spinner fa-spin"></i>);
-    setsignin2("Signing in ");
+    setsignin(true);
     try {
       await axios
         .post(
@@ -29,16 +27,14 @@ function TeamLogin(props) {
           console.log("res", res);
           if (res.status === 200) {
             setMsg("Invalid Credentials");
-            setsignin("");
-            setsignin2("Sign in ");
+            setsignin(true);
             console.log("Invalid Credentials");
           } else if (res.status === 201) {
             window.location.reload(true);
           }
         });
     } catch (err) {
-      setsignin("");
-      setsignin2("Sign in ");
+      setsignin(true);
       setMsg();
       console.log("Login err", "Invalid Credentials");
     }
@@ -95,10 +91,16 @@ function TeamLogin(props) {
                 />
               </div>
             </div>
-            <button type="submit" class="cust btn btn-primary btn-block mb-4">
-              {signin2}
-              {signin}
-            </button>
+            
+              <button type="submit" class="cust btn btn-primary btn-block mb-4" disabled={signin?true:false}>
+                {
+                  signin?
+                    <>Signing in<i class="fa fa-spinner fa-spin"></i></>
+                  :
+                    <>Sign in</>
+                }
+            
+              </button>
           </form>
         </div>
       </Modal.Body>
