@@ -6,7 +6,6 @@ const Team = require("../model/teamSchema");
 router.route("/updateBlog/:url").put(async (req, res) => {
   try {
     const { url } = req.params;
-    // console.log('req.body',req.body.url,req.body)
     const updatedBlog = await Blog.findOneAndUpdate({ url: url }, req.body, {
       new: true,
     });
@@ -61,7 +60,17 @@ router.route("/blogadd").post(async (req, res) => {
 });
 
 router.route("/getBlogs").get(async (req, res) => {
-  const blogData = await Blog.find({ public: true }).sort({createdAt:-1});
+  const blogData = await Blog.find({ public: true }).sort({createdAt:-1}).select(
+    "-_id -content -authorAvatar -public -approvalStatus"
+  );
+  res.status(200).json(blogData);
+});
+
+router.route("/getsixBlogs").get(async (req, res) => {
+  let blogData = await Blog.find({ public: true }).sort({createdAt:-1}).select(
+    "-_id -content -authorAvatar -public -approvalStatus"
+  );
+  blogData = blogData.slice(0, 6);
   res.status(200).json(blogData);
 });
 
