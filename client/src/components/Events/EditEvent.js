@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import "./AddEvent.css";
 import { Context } from "../../Context/Context";
+import {alertContext} from "../../Context/Alert";
 import { useNavigate } from "react-router-dom";
 import Error from "../Error";
 import { CLIENT_URL, SERVER_URL } from "../../EditableStuff/Config";
@@ -18,6 +19,7 @@ const EditEvent = () => {
   const navigate = useNavigate();
   const editor = useRef(null);
   const { user } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
   const [add, setAdd] = useState("Save as Draft");
   const [add2, setAdd2] = useState();
   const [xspeakers, setXspeakers] = useState("");
@@ -62,7 +64,7 @@ const EditEvent = () => {
 
   useEffect(() => {
     getEvent();
-    if (!user) {
+    if (!(user && user.isadmin)) {
       navigate("/events");
     }
   }, [user]);
@@ -73,7 +75,6 @@ const EditEvent = () => {
 
   const handleInputs = (e) => {
     setEvent({ ...event, [e.target.name]: e.target.value });
-    console.log("post", event);
   };
 
   const removeXspeakers = (speaker) => {
@@ -115,7 +116,6 @@ const EditEvent = () => {
         const img = await axios.post(`${SERVER_URL}/imgupload`, data);
         imgurl = img.data;
         event.poster = imgurl;
-        console.log("final post", event);
       } catch (err) {
         console.log("photoerr", err);
       }
@@ -130,11 +130,11 @@ const EditEvent = () => {
       );
       console.log("blogdata", eventdata);
       if (eventdata.status === 422 || !eventdata) {
-        window.alert("Posting failed");
-        console.log("Posting failed");
+        showAlert("Failed to save", "danger");
       } else {
         setAdd("Save as Draft");
         setAdd2("");
+        showAlert("Saved as Draft", "success");
         setPreview(true);
       }
     } catch (err) {

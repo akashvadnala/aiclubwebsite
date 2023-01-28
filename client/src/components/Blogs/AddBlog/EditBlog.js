@@ -77,6 +77,7 @@ const EditBlog = () => {
       );
       console.log("projdata", postdata);
       if (postdata.status === 422 || !postdata) {
+        showAlert("Failed to save", "danger");
         console.log("Project not found");
       } else {
         setAdd("Save as Draft");
@@ -88,7 +89,6 @@ const EditBlog = () => {
       console.log("err", err);
     }
   };
-  console.log("proj", post);
   return (
     <>
       {load === 0 ? (

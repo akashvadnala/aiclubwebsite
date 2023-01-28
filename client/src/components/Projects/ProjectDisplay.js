@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../Context/Context";
+import {alertContext} from "../../Context/Alert";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import Error from "../Error";
 import Loading from "../Loading";
@@ -13,6 +14,7 @@ import { Helmet } from "react-helmet";
 const ProjectDisplay = () => {
   const { url } = useParams();
   const { user } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
   var project = null;
   const [proj, setProj] = useState();
   const [authors, setAuthors] = useState([]);
@@ -28,7 +30,6 @@ const ProjectDisplay = () => {
   const getProject = async () => {
     try {
       const data = await axios.get(`${SERVER_URL}/getProject/${url}`);
-      console.log("project", data.data.project);
       if (data.status !== 200) {
         setLoad(-1);
         return;
@@ -55,9 +56,10 @@ const ProjectDisplay = () => {
     if (status) {
       const res = await axios.post(`${SERVER_URL}/deleteProject/${proj.url}`);
       if (res.status === 200) {
+        showAlert("Project deleted successfully","success");
         navigate("/projects");
       } else {
-        console.log("Project Cannot be deleted");
+        showAlert("Project Deletion failed","danger");
       }
     }
   };
@@ -75,11 +77,12 @@ const ProjectDisplay = () => {
       );
       if (res.status === 200) {
         proj.public = !proj.public ? true : false;
+        showAlert(`Blog made ${proj.public?"public":"private"}`,"success");
         setPub(`${!proj.public ? "Make Public" : "Make Private"}`);
         setPub2();
         navigate(`/projects/${proj.url}`);
       } else {
-        console.log("Publishing failed");
+        showAlert("Operation failed. Please try again.","success");
       }
     }
   };
@@ -97,11 +100,12 @@ const ProjectDisplay = () => {
           }
         );
         if (res.status === 200) {
+          showAlert("Submitted for Admin approval","success");
           setProj({ ...proj, ["approvalStatus"]: "pending" });
           setApproval2();
           navigate(`/projects/${proj.url}`);
         } else {
-          console.log("Publishing failed");
+          showAlert("Submission failed. PLease try again!","danger");
         }
       }
     }
@@ -125,11 +129,12 @@ const ProjectDisplay = () => {
       }
     );
     if (res.status === 200) {
+      showAlert(`${response === "Approved"?"Approved & Published.":response}.`,"success");
       setProj({ ...proj, ["approvalStatus"]: response, ["public"]: status });
       setApproval2();
       navigate(`/projects/${proj.url}`);
     } else {
-      console.log("Publishing failed");
+      showAlert("Response not recorded. Please try again","success");
     }
   };
 

@@ -2,8 +2,8 @@ import React, { useRef, useState, useMemo, useContext, useEffect } from "react";
 import "./AddProject.css";
 import JoditEditor from "jodit-react";
 import { Context } from "../../Context/Context";
+import {alertContext} from "../../Context/Alert";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { editorConfig } from "./Params/editorConfig";
 import Error from "../Error";
 import axios from "axios";
 import { SERVER_URL } from "../../EditableStuff/Config";
@@ -15,7 +15,7 @@ const EditProject = () => {
   const editor = useRef(null);
   const navigate = useNavigate();
   const { user, logged_in } = useContext(Context);
-
+  const { showAlert } = useContext(alertContext);
   const [add, setAdd] = useState("Save as Draft");
   const [add2, setAdd2] = useState();
   const [xauthor, setXAuthor] = useState("");
@@ -51,8 +51,6 @@ const EditProject = () => {
               );
               setTeams(team);
               setProj(project);
-              console.log("project", project);
-              console.log("team", team);
               setLoad(1);
             } else {
               setLoad(-1);
@@ -151,19 +149,17 @@ const EditProject = () => {
       );
       console.log("projdata", projdata);
       if (projdata.status === 422 || !projdata) {
-        console.log("Project not found");
+        showAlert("Failed to save", "danger");
       } else {
         setAdd("Save as Draft");
         setAdd2("");
+        showAlert("Saved as Draft", "success");
         setPreview(true);
-        // navigate('/team');
       }
     } catch (err) {
       console.log("err", err);
     }
   };
-  console.log("proj", proj);
-  console.log("xauthor", xauthor);
   return (
     <>
       {load === 0 ? (
