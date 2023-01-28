@@ -13,6 +13,7 @@ const About = () => {
   const [preview, setPreview] = useState(true);
   const [about, setAbout] = useState("");
   const [load, setLoad] = useState(0);
+  const [save, setSave] = useState(false);
   const [desc, setDesc] = useState("");
   const getAbout = () => {
     axios.get(`${SERVER_URL}/getAbout/`).then((data) => {
@@ -35,6 +36,12 @@ const About = () => {
     setAbout({...about,['about']:value});
   };
   const showPreview = () => {
+    if(desc!==about.about){
+      setSave(true);
+    }
+    else{
+      setSave(false);
+    }
     setPreview(true);
   };
   const showEdit = () => {
@@ -42,6 +49,7 @@ const About = () => {
   };
   const cancelIt = () => {
     setAbout({...about,['about']:desc});
+    setSave(false);
     setPreview(true);
   };
   const saveIt = () => {
@@ -51,6 +59,7 @@ const About = () => {
     {
       headers: { "Content-Type": "application/json" },
     });
+    setSave(false);
     setPreview(true);
   };
 
@@ -75,6 +84,10 @@ const About = () => {
                       >
                         Edit
                       </button>
+                      {save && <button
+                        className="btn btn-outline-dark btn-sm mx-1"
+                        onClick={saveIt}
+                      >Save</button>}
                     </>
                   ) : (
                     <>
