@@ -27,6 +27,7 @@ import AllPhotos from './components/Home/PhotoGallery/AllPhotos';
 import ProjectApprovals from './components/Projects/ProjectApprovals';
 import BlogApprovals from './components/Blogs/BlogApprovals';
 import MyBlogs from './components/Blogs/myBlogs';
+import Profile from './components/Profile/profile';
 const Routing = () => {
 
     return(
@@ -83,6 +84,9 @@ const Routing = () => {
 
         {/* Images */}
         <Route exact path='/gallery' element={<AllPhotos />} />
+
+        {/* Profile */}
+        <Route exact path='/profile' element={<Profile />} />
 
         {/* Others */}
         <Route path='*' element={<Error />} />
