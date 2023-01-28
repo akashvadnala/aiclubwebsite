@@ -81,27 +81,28 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
     }
 });
 
+router.route('/imgdelete').post(async (req,res)=>{
+    try {
+        const url = req.body.url;
+        const key =  url.split('=')[2];
+        
+        const stats = await fileUpload.deleteFile(key);
+        
+        const count= await File.deleteOne({ imgurl: {url} });
+        console.log('Old Image Deleted');
+        res.status(200).json({"msg":"Image deleted sucessfully"});
+    } catch (error) {
+        console.log(error);
+        res.status(422).json({"msg":"Error while deleting Images"})
+    }
+});
+
 
 router.route('/teamadd').post(async (req,res) => {
     // const {  firstname,lastname,profession,description,username,email,password,cpassword } = req.body;
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
-    const profession = req.body.profession;
-    const description = req.body.description;
-    const username = req.body.username;
-    const email = req.body.email;
-    const year = req.body.year;
-    const password = req.body.password;
-    const cpassword = req.body.cpassword;
-    const isadmin = req.body.isadmin;
-    const ismember = req.body.ismember;
-    const canCreateCompetitions=req.body.canCreateCompetitions;
     console.log('body');
     const photo = req.body.photo;
     console.log('photo',photo);
-    if( !firstname || !lastname || !profession || !description || !username || !email || !year || !password || !cpassword || !photo){
-        return res.status(400).json({ error: "Plz fill the field properly" });
-    }
     console.log("Registering..");
     try{
         const teamExist = await Team.findOne({email:email});
@@ -112,21 +113,7 @@ router.route('/teamadd').post(async (req,res) => {
             return res.status(201).json({ error: "Passwords not matched" });
         }
 
-        const team = new Team({ 
-            firstname:firstname, 
-            lastname:lastname,  
-            profession:profession,
-            description:description,
-            username:username,
-            email:email, 
-            photo:photo,
-            year:year,
-            password:password,
-            cpassword:cpassword,
-            isadmin:isadmin,
-            ismember:ismember,
-            canCreateCompetitions:canCreateCompetitions
-        });
+        const team = new Team(req.body);
 
         const saltRounds = 10;
         team.password = await bcrypt.hash(password,saltRounds);
@@ -150,8 +137,21 @@ router.route('/getTeams').get(async (req,res)=>{
     return res.status(200).json(users);
 })
 
-router.route('/getTeam').get(async (req,res)=>{
-    const teamData = await Team.find({ismember:true});
+router.route('/getTeam/:year').get(async (req,res)=>{
+    let teamData = [];
+    const {year} = req.params;  
+    const d=new Date();
+    var y=d.getFullYear();
+    console.log(year,y+1);
+    if(parseInt(year)===y+1){
+        teamData = await Team.find({ismember:true,isalumni:false});
+    }
+    else{
+        teamData = await Team.find({ismember:true,isalumni:true,year:year});
+    }
+    // await Promise.all(
+    //     teamData.map((t)=>{Object.assign(t,{year:2023})})
+    // );
     res.status(201).json(teamData);
 });
 
@@ -184,7 +184,6 @@ router.route('/getUserDataForEdit/:username').get(async (req,res)=>{
 
 router.route('/teamupdate/:username').put(async (req,res)=>{
     try {
-        console.log('updatess',req.body.username);
         const {username} = req.params;
 
         const updateduser = await Team.findOneAndUpdate({username:username},req.body,{
@@ -205,8 +204,8 @@ router.route('/team/delete/:username').post(async (req, res) => {
     const team = await Team.findOne({ username: username });
     if(team){
         const projects = team.projects;
-        await Promise.all(projects.map(async project=>{
-            const proj = await Project.findOne({url:project});
+        await Promise.all(projects.map(async p=>{
+            const proj = await Project.findOne({url:p});
             proj.authors = proj.authors.filter(t=>t!==username);
             await proj.save();
         }))

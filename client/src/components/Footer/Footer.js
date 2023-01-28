@@ -47,21 +47,25 @@ const Footer = () => {
             <h5>LATEST UPDATES</h5>
             <form method='POST' onSubmit={addSubscriber} encType="multipart/form-data">
               <p>Subscribe to Stay informed about our News, Events, Blogs and Projects</p>
-              <input 
+              {/* <input 
                 style={{ height: "1.8rem", border: "1px solid #bdb7b7", borderWidth: "0.05rem", marginBottom:'0.1rem'}} 
                 name='name' 
                 value={name}
                 onChange={(e)=>setName(e.target.value)}
                 placeholder='Enter Name' 
-                required/>
-              <input 
-                style={{ height: "1.8rem", border: "1px solid #bdb7b7", borderWidth: "0.05rem" }} 
-                name='email' 
-                value={email}
-                placeholder='Enter Email' 
-                onChange={(e)=>setEmail(e.target.value)}
-                required/>
-              <div className='py-1'><button type="submit" name="submit" id="submit" className='btn btn-success btn-sm'>Subscribe</button></div>
+                required/> */}
+                <div class="input-group mb-3 align-items-center">
+                  <input 
+                    className='form-control'
+                    name='email' 
+                    value={email}
+                    placeholder='Enter Email' 
+                    onChange={(e)=>setEmail(e.target.value)}
+                    required/>
+                  <div class="input-group-append">
+                    <button type="submit" name="submit" id="submit" className='btn btn-primary input-group-text rounded-right'>Subscribe</button>
+                  </div>
+                </div>
             </form>
           </div>
         </div>

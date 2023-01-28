@@ -1,10 +1,10 @@
-.carousel .carousel-inner .carousel-item {
+.slides-home-container .carousel .carousel-inner .carousel-item {
     position: relative;
     height: calc(var(--module-height) + 10vh);
     text-align: center;
 }
 
-.carousel-caption{
+.slides-home-container .carousel-caption{
     position: relative;
     left: 15%;
     width: 70% !important;
@@ -13,11 +13,11 @@
     color: white;
 }
 
-.carousel-caption a{
+.slides-home-container .carousel-caption a{
     color: #efefef;
 }
 
-.carousel-caption a:hover{
+.slides-home-container .carousel-caption a:hover{
     text-decoration: underline;
 }
 

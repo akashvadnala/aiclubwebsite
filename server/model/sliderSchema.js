@@ -21,7 +21,7 @@ const sliderSchema = new mongoose.Schema({
     },
     textcolor: {
         type: String,
-        default: 'white'
+        default: "white"
     },
     index: {
         type: Number,

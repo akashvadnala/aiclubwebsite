@@ -68,14 +68,8 @@ const BlogDisplay = () => {
     return a;
   };
 
-  const TogglePublic = async (e) => {
-    e.preventDefault();
-    const confirmed = window.confirm(
-      `Are you sure to make blog "${blog.title}" ${
-        !blog.public ? "Public" : "Private"
-      }?`
-    );
-    if (confirmed) {
+  const TogglePublic = async (status) => {
+    if (status) {
       setPub(`${!blog.public ? "Publishing" : "Making Private"}`);
       setPub2(<i className="fa fa-spinner fa-spin"></i>);
       const res = await axios.put(
@@ -96,12 +90,8 @@ const BlogDisplay = () => {
     }
   };
 
-  const deleteBlog = async (e) => {
-    e.preventDefault();
-    const confirmed = window.confirm(
-      `Are you sure to delete the blog "${blog.title}"?`
-    );
-    if (confirmed) {
+  const deleteBlog = async (status) => {
+    if (status) {
       const res = await axios.post(`${SERVER_URL}/deleteBlog/${blog.url}`);
       if (res.status === 200) {
         navigate("/blogs");
@@ -111,13 +101,9 @@ const BlogDisplay = () => {
     }
   };
 
-  const ChangeApprovalStatus = async (e) => {
-    e.preventDefault();
+  const ChangeApprovalStatus = async (status) => {
     if (blog.approvalStatus === "submit") {
-      const confirmed = window.confirm(
-        `Are you sure to submit blog "${blog.title}" for Admin Approval ?`
-      );
-      if (confirmed) {
+      if (status) {
         setApproval("pending");
         setApproval2(<i className="fa fa-spinner fa-spin"></i>);
         const res = await axios.put(
@@ -191,23 +177,71 @@ const BlogDisplay = () => {
                       </NavLink>
                     )}
                     {edit && (
-                      <NavLink
-                        rel="noreferrer"
-                        onClick={deleteBlog}
-                        className="btn btn-danger btn-sm mx-1"
-                      >
-                        {" "}
-                        Delete
-                      </NavLink>
+                      <>
+                        <NavLink
+                          rel="noreferrer"
+                          data-bs-toggle="modal"
+                          data-bs-target="#delete"
+                          className="btn btn-danger btn-sm mx-1"
+                        >
+                          {" "}
+                          Delete
+                        </NavLink>
+                        <div
+                          className="modal fade"
+                          id="delete"
+                          tabIndex="-1"
+                          aria-labelledby="deleteLabel"
+                          aria-hidden="true"
+                        >
+                          <div className="modal-dialog">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h1
+                                  className="modal-title fs-5"
+                                  id="deleteLabel"
+                                >
+                                  {`Are you sure to delete the blog "${blog.title}"?`}
+                                </h1>
+                              </div>
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                >
+                                  No
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    deleteBlog(true);
+                                  }}
+                                >
+                                  Yes
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
                     )}
                     {user && user.isadmin && approval === "pending" ? (
                       <>
                         <NavLink
                           rel="noreferrer"
                           data-bs-toggle="modal"
-                          data-bs-target="#exampleModal"
+                          data-bs-target="#approveOrReject"
                           className={`btn btn-${
-                          blog.approvalStatus==="submit" ? "success" : blog.approvalStatus==="pending"?"warning":blog.approvalStatus==="Rejected"?"danger":"primary"
+                            blog.approvalStatus === "submit"
+                              ? "success"
+                              : blog.approvalStatus === "pending"
+                              ? "warning"
+                              : blog.approvalStatus === "Rejected"
+                              ? "danger"
+                              : "primary"
                           } btn-sm mx-1`}
                         >
                           {" "}
@@ -216,9 +250,9 @@ const BlogDisplay = () => {
                         </NavLink>
                         <div
                           className="modal fade"
-                          id="exampleModal"
+                          id="approveOrReject"
                           tabIndex="-1"
-                          aria-labelledby="exampleModalLabel"
+                          aria-labelledby="approveOrRejectLabel"
                           aria-hidden="true"
                         >
                           <div className="modal-dialog">
@@ -226,7 +260,7 @@ const BlogDisplay = () => {
                               <div className="modal-header">
                                 <h1
                                   className="modal-title fs-5"
-                                  id="exampleModalLabel"
+                                  id="approveOrRejectLabel"
                                 >
                                   Approve or Reject
                                 </h1>
@@ -265,36 +299,124 @@ const BlogDisplay = () => {
                         </div>
                       </>
                     ) : (
-                      <NavLink
-                        rel="noreferrer"
-                        onClick={ChangeApprovalStatus}
-                        className={`btn btn-${
-                          blog.approvalStatus === "submit"
-                            ? "success"
-                            : blog.approvalStatus === "pending"
-                            ? "warning"
-                            : blog.approvalStatus === "Rejected"
-                            ? "danger"
-                            : "primary"
-                        } btn-sm mx-1`}
-                      >
-                        {" "}
-                        {approval}
-                        {approval2}
-                      </NavLink>
+                      <>
+                        <NavLink
+                          rel="noreferrer"
+                          data-bs-toggle="modal"
+                          data-bs-target="#submitForApproval"
+                          className={`btn btn-${
+                            blog.approvalStatus === "submit"
+                              ? "success"
+                              : blog.approvalStatus === "pending"
+                              ? "warning"
+                              : blog.approvalStatus === "Rejected"
+                              ? "danger"
+                              : "primary"
+                          } btn-sm mx-1`}
+                        >
+                          {" "}
+                          {approval}
+                          {approval2}
+                        </NavLink>
+                        <div
+                          className="modal fade"
+                          id="submitForApproval"
+                          tabIndex="-1"
+                          aria-labelledby="submitForApprovalLabel"
+                          aria-hidden="true"
+                        >
+                          <div className="modal-dialog">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h1
+                                  className="modal-title fs-5"
+                                  id="submitForApprovalLabel"
+                                >
+                                  {`Are you sure to submit blog "${blog.title}" for Admin Approval ?`}
+                                </h1>
+                              </div>
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                >
+                                  No
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    ChangeApprovalStatus(true);
+                                  }}
+                                >
+                                  Yes
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
                     )}
-                    {user && user.isadmin && (
-                      <NavLink
-                        rel="noreferrer"
-                        onClick={TogglePublic}
-                        className={`btn btn-${
-                          blog.public ? "warning" : "success"
-                        } btn-sm mx-1 ${blog.approvalStatus==="Rejected"?"disabled":""}`}
-                      >
-                        {" "}
-                        {pub}
-                        {pub2}
-                      </NavLink>
+                    {user && user.isadmin && approval === "Approved" && (
+                      <>
+                        <NavLink
+                          rel="noreferrer"
+                          data-bs-toggle="modal"
+                          data-bs-target="#publicOrPrivate"
+                          className={`btn btn-${
+                            blog.public ? "warning" : "success"
+                          } btn-sm mx-1 ${
+                            blog.approvalStatus === "Rejected" ? "disabled" : ""
+                          }`}
+                        >
+                          {" "}
+                          {pub}
+                          {pub2}
+                        </NavLink>
+                        <div
+                          className="modal fade"
+                          id="publicOrPrivate"
+                          tabIndex="-1"
+                          aria-labelledby="publicOrPrivateLabel"
+                          aria-hidden="true"
+                        >
+                          <div className="modal-dialog">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h1
+                                  className="modal-title fs-5"
+                                  id="publicOrPrivateLabel"
+                                >
+                                  {`Are you sure to make blog "${blog.title}" ${
+                                    !blog.public ? "Public" : "Private"
+                                  }?`}
+                                </h1>
+                              </div>
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                >
+                                  No
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    TogglePublic(true);
+                                  }}
+                                >
+                                  Yes
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
                 )}

@@ -60,5 +60,6 @@ router.route('/deleteImages').delete(async (req,res)=>{
         console.log(error);
         res.status(422).json({"msg":"Error while deleting Images"})
     }
-})
+});
+
 module.exports = router;

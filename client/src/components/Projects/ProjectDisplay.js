@@ -45,19 +45,14 @@ const ProjectDisplay = () => {
     } catch (err) {
       console.log(err);
     }
-    
   };
 
-  useEffect(()=>{
-      getProject();
-  },[user,url]);
-  
-  const deleteProject = async (e) => {
-    e.preventDefault();
-    const confirmed = window.confirm(
-      `Are you sure to delete the project "${proj.title}"?`
-    );
-    if (confirmed) {
+  useEffect(() => {
+    getProject();
+  }, [user, url]);
+
+  const deleteProject = async (status) => {
+    if (status) {
       const res = await axios.post(`${SERVER_URL}/deleteProject/${proj.url}`);
       if (res.status === 200) {
         navigate("/projects");
@@ -67,14 +62,8 @@ const ProjectDisplay = () => {
     }
   };
 
-  const TogglePublic = async (e) => {
-    e.preventDefault();
-    const confirmed = window.confirm(
-      `Are you sure to make blog "${proj.title}" ${
-        !proj.public ? "Public" : "Private"
-      }?`
-    );
-    if (confirmed) {
+  const TogglePublic = async (status) => {
+    if (status) {
       setPub(`${!proj.public ? "Publishing" : "Making Private"}`);
       setPub2(<i className="fa fa-spinner fa-spin"></i>);
       const res = await axios.put(
@@ -95,13 +84,9 @@ const ProjectDisplay = () => {
     }
   };
 
-  const ChangeApprovalStatus = async (e) => {
-    e.preventDefault();
+  const ChangeApprovalStatus = async (status) => {
     if (proj.approvalStatus === "submit") {
-      const confirmed = window.confirm(
-        `Are you sure to submit blog "${proj.title}" for Admin Approval ?`
-      );
-      if (confirmed) {
+      if (status) {
         setApproval("pending");
         setApproval2(<i className="fa fa-spinner fa-spin"></i>);
         const res = await axios.put(
@@ -124,11 +109,10 @@ const ProjectDisplay = () => {
 
   const ApproveOrReject = async (status) => {
     var response;
-    if (status){
+    if (status) {
       response = "Approved";
       setPub("Make Private");
-    }
-    else{
+    } else {
       response = "Rejected";
     }
     setApproval(response);
@@ -164,28 +148,80 @@ const ProjectDisplay = () => {
                 <h3 className="text-center pb-1">{proj.title}</h3>
                 {(edit || (user && user.isadmin)) && (
                   <div className="text-center fs-6 p-2">
-                    {edit && <NavLink
-                      to={`/projects/${proj.url}/edit`}
-                      className="btn btn-primary btn-sm  mx-1"
-                    >
-                      Edit{" "}
-                    </NavLink>}
-                    {edit && <NavLink
-                      rel="noreferrer"
-                      onClick={deleteProject}
-                      className="btn btn-danger btn-sm  mx-1"
-                    >
-                      {" "}
-                      Delete
-                    </NavLink>}
-                    {(user && user.isadmin && approval === "pending")? (
+                    {edit && (
+                      <NavLink
+                        to={`/projects/${proj.url}/edit`}
+                        className="btn btn-primary btn-sm  mx-1"
+                      >
+                        Edit{" "}
+                      </NavLink>
+                    )}
+                    {edit && (
+                      <>
+                      <NavLink
+                        rel="noreferrer"
+                          data-bs-toggle="modal"
+                          data-bs-target="#delete"
+                        className="btn btn-danger btn-sm  mx-1"
+                      >
+                        {" "}
+                        Delete
+                      </NavLink>
+                      <div
+                          className="modal fade"
+                          id="delete"
+                          tabIndex="-1"
+                          aria-labelledby="deleteLabel"
+                          aria-hidden="true"
+                        >
+                          <div className="modal-dialog">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h1
+                                  className="modal-title fs-5"
+                                  id="deleteLabel"
+                                >
+                                  {`Are you sure to delete the project "${proj.title}"?`}
+                                </h1>
+                              </div>
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                >
+                                  No
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    deleteProject(true);
+                                  }}
+                                >
+                                  Yes
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {user && user.isadmin && approval === "pending" ? (
                       <>
                         <NavLink
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
                           className={`btn btn-${
-                          proj.approvalStatus==="submit" ? "success" : proj.approvalStatus==="pending"?"warning":proj.approvalStatus==="Rejected"?"danger":"primary"
+                            proj.approvalStatus === "submit"
+                              ? "success"
+                              : proj.approvalStatus === "pending"
+                              ? "warning"
+                              : proj.approvalStatus === "Rejected"
+                              ? "danger"
+                              : "primary"
                           } btn-sm mx-1`}
                         >
                           {" "}
@@ -217,10 +253,24 @@ const ProjectDisplay = () => {
                                 >
                                   Close
                                 </button>
-                                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>{ApproveOrReject(true)}}>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    ApproveOrReject(true);
+                                  }}
+                                >
                                   Approve & Publish
                                 </button>
-                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={()=>{ApproveOrReject(false)}}>
+                                <button
+                                  type="button"
+                                  className="btn btn-danger"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    ApproveOrReject(false);
+                                  }}
+                                >
                                   Reject
                                 </button>
                               </div>
@@ -229,30 +279,124 @@ const ProjectDisplay = () => {
                         </div>
                       </>
                     ) : (
+                      <>
                       <NavLink
                         rel="noreferrer"
-                        onClick={ChangeApprovalStatus}
+                          data-bs-toggle="modal"
+                          data-bs-target="#submitForApproval"
                         className={`btn btn-${
-                          proj.approvalStatus==="submit" ? "success" : proj.approvalStatus==="pending"?"warning":proj.approvalStatus==="Rejected"?"danger":"primary"
+                          proj.approvalStatus === "submit"
+                            ? "success"
+                            : proj.approvalStatus === "pending"
+                            ? "warning"
+                            : proj.approvalStatus === "Rejected"
+                            ? "danger"
+                            : "primary"
                         } btn-sm mx-1`}
                       >
                         {" "}
                         {approval}
                         {approval2}
                       </NavLink>
+                      <div
+                          className="modal fade"
+                          id="submitForApproval"
+                          tabIndex="-1"
+                          aria-labelledby="submitForApprovalLabel"
+                          aria-hidden="true"
+                        >
+                          <div className="modal-dialog">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h1
+                                  className="modal-title fs-5"
+                                  id="submitForApprovalLabel"
+                                >
+                                  {`Are you sure to submit project "${proj.title}" for Admin Approval ?`}
+                                </h1>
+                              </div>
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                >
+                                  No
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    ChangeApprovalStatus(true);
+                                  }}
+                                >
+                                  Yes
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
                     )}
-                    {user && user.isadmin && (
-                      <NavLink
-                        rel="noreferrer"
-                        onClick={TogglePublic}
-                        className={`btn btn-${
-                          proj.public ? "warning" : "success"
-                        } btn-sm mx-1 ${proj.approvalStatus==="Rejected"?"disabled":""}`}
-                      >
-                        {" "}
-                        {pub}
-                        {pub2}
-                      </NavLink>
+                    {user && user.isadmin && approval === "Approved" && (
+                      <>
+                        <NavLink
+                          rel="noreferrer"
+                          data-bs-toggle="modal"
+                          data-bs-target="#publicOrPrivate"
+                          className={`btn btn-${
+                            proj.public ? "warning" : "success"
+                          } btn-sm mx-1 ${
+                            proj.approvalStatus === "Rejected" ? "disabled" : ""
+                          }`}
+                        >
+                          {" "}
+                          {pub}
+                          {pub2}
+                        </NavLink>
+                        <div
+                          className="modal fade"
+                          id="publicOrPrivate"
+                          tabIndex="-1"
+                          aria-labelledby="publicOrPrivateLabel"
+                          aria-hidden="true"
+                        >
+                          <div className="modal-dialog">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h1
+                                  className="modal-title fs-5"
+                                  id="publicOrPrivateLabel"
+                                >
+                                  {`Are you sure to make project "${proj.title}" ${
+                                    !proj.public ? "Public" : "Private"
+                                  }?`}
+                                </h1>
+                              </div>
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                >
+                                  No
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => {
+                                    TogglePublic(true);
+                                  }}
+                                >
+                                  Yes
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
                 )}

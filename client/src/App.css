@@ -15,10 +15,8 @@ body{
 }
 
 .right-panel a{
-  background: rgb(220,220,220);
   padding: 7px 12px;
   border-radius: 18px;
-  color: black;
   margin-left: 1rem;
 }
 

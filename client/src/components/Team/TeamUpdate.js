@@ -14,6 +14,7 @@ const TeamUpdate = () => {
     const [team,setTeam] = useState([]);
     const [checkbox,setCheckbox] = useState(false);
     const [Img, setImg] = useState();
+    const [photo, setPhoto] = useState(null);
     const [submit,setSubmit] = useState('Update');
     const [submit2,setSubmit2] = useState();
     // const { user } = useContext(Context);
@@ -53,6 +54,10 @@ const TeamUpdate = () => {
         getUserDataForEdit();
     },[]);
 
+
+    const d=new Date();
+    var y=d.getFullYear();
+    const ly=2019;
     
     let name, value;
     const handleInputs = (e) => {
@@ -61,37 +66,26 @@ const TeamUpdate = () => {
         console.log(name);
         console.log(value);
         setTeam({...team, [name]:value});
-        console.log('team',team.isadmin,team.ismember);
+        console.log('team',team);
     }
 
     
     const handleCheck = (e) =>{
         const name = e.target.name;
         const checked=e.target.checked
-        setTeam({...team,[name]:checked});
+        setTeam({...team, [name]:checked});
     }
     
     const handlePhoto = (e) => {
         setImg(e.target.files[0]);
+        setPhoto(URL.createObjectURL(e.target.files[0]));
     }
 
     const UpdateTeam = async (e) => {
         e.preventDefault();
         setSubmit('Updating');
         setSubmit2(<i class="fa fa-spinner fa-spin"></i>);
-        console.log('Postteam');
-        // const {firstname,lastname,profession,description,username,photo,email,password,cpassword,isadmin,ismember,canCreateCompetitions} = user;
-    
-        // const firstname = user.firstname;
-        // const lastname = user.lastname;
-        // const profession = user.profession;
-        // const description = user.description;
-        // const username = user.username;
         const photo = team.photo;
-        // const email = user.email;
-        // const isadmin = user.isadmin;
-        // const ismember = user.ismember;
-        // console.log(firstname,lastname,profession,description,username,photo,email,isadmin,ismember,canCreateCompetitions);
         team.ismember = team.ismember || team.isadmin;
         var imgurl;
         if(Img){
@@ -99,6 +93,16 @@ const TeamUpdate = () => {
             const photoname = Date.now() + Img.name;
             data.append("name",photoname);
             data.append("photo",Img);
+
+            try{
+                axios.post(`${SERVER_URL}/imgdelete`,
+                {'url':team.photo},
+                {
+                    headers: { "Content-Type": "application/json" },
+                });
+            }catch(err){
+                console.log('photoerr',err);
+            }
     
             try{
                 const img = await axios.post(`${SERVER_URL}/imgupload`,data);
@@ -114,6 +118,12 @@ const TeamUpdate = () => {
         }
         console.log('imgurl',imgurl); 
         try{
+            if(team.year>y){
+                team.year=y;
+            }
+            else if(team.year<ly){
+                team.year=ly;
+            }
             const teamdata = await axios.put(`${SERVER_URL}/teamupdate/${username}`,
                 team,
                 {
@@ -164,12 +174,6 @@ const TeamUpdate = () => {
             'des':'EMail',
             'val':team.email
         },
-        {
-            'type':'number',
-            'id':'year',
-            'des':'Graduation Year',
-            'val':team.year
-        }
     ]
   return (
     <>
@@ -196,6 +200,11 @@ const TeamUpdate = () => {
                             <input type='file' accept=".png, .jpg, .jpeg" name='photo' onChange={handlePhoto} className="form-control" id='photo' aria-describedby='photo' />
                         </div>
                     </div>
+                    <div className="form-group my-3 row">
+                        <div className=" col-8 col-md-3">
+                            <img src={photo?photo:team.photo} alt={team.firstname} style={{width:"100%",objectFit:"contain"}}/>
+                        </div>
+                    </div>
                     {
                         checkbox?
                             <>
@@ -207,6 +216,21 @@ const TeamUpdate = () => {
                                     <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
                                     <label className="form-check-label" for="member">Make Member</label>
                                 </div>
+                                <div className="form-group form-check my-3">
+                                    <input type="checkbox" checked={team.isalumni} name="isalumni" onChange={handleCheck} className="form-check-input" id="alumni" />
+                                    <label class="form-check-label" for="alumni">Make Alumni</label>
+                                </div>
+                                {
+                                    team.isalumni?
+                                        <div className="form-group my-3 row">
+                                            <label for="year" className='col-sm-2 text-end'>Year of Alumni :</label>
+                                            <div className='col-sm-10'>
+                                                <input type="text" name="year" value={team.year} onChange={handleInputs} className="form-control" id="year" aria-describedby="year" placeholder={`Enter Year of Alumni`} required/>
+                                            </div>
+                                        </div>
+                                    :
+                                        null
+                                }
                                 {/* <div className="form-group form-check my-3">
                                     <input type="checkbox" checked={team.canCreateCompetitions} name="canCreateCompetitions" onChange={handleCheck} className="form-check-input" id="canCreateCompetitions" />
                                     <label className="form-check-label" for="canCreateCompetitions">Can Create Competitions</label>
