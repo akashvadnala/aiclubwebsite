@@ -97,11 +97,11 @@ router.route("/projectAdd").post(async (req, res) => {
   }
 });
 
-router.route("/getthreeprojects").get(async (req, res) => {
+router.route("/getfiveprojects").get(async (req, res) => {
   let projectData = await Project.find({ public: true }).sort({
     createdAt: -1,
   });
-  projectData.slice(0, 2);
+  projectData = projectData.slice(0, 5);
   res.status(200).json(projectData);
 });
 
@@ -224,7 +224,7 @@ router.route("/getMyProjects/:user").get(async (req, res) => {
         }
       })
     );
-    projects.sort({ createdAt: -1 });
+    projects.sort((a, b) => b.createdAt - a.createdAt);
     res.status(200).json(projects);
   } else {
     res.status(422).json(null);

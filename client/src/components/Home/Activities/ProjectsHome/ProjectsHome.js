@@ -9,7 +9,7 @@ const ProjectsHome = () => {
   const [ projects, setProjects ] = useState([]);
   const getProjects = () => {
     try{
-      axios.get(`${SERVER_URL}/getthreeprojects`)
+      axios.get(`${SERVER_URL}/getfiveprojects`)
       .then(data=>{
         setProjects(data.data);
       })
