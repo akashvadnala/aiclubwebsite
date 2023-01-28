@@ -2,8 +2,9 @@ const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 // const path = require('path');
 dotenv.config({ path:'./config.env' });
- 
-const broadcastMail = async (text) => {
+const Subscribers = require('../model/subscribeSchema');
+
+const broadcastMail = async (subject,text) => {
 
     // let transport = nodemailer.createTransport({
     //     host: "smtp.gmail.com",
@@ -23,10 +24,12 @@ const broadcastMail = async (text) => {
         }
     });
 
+    const subsmails = await Subscribers.find({},{"_id":false,"__v":false}).select("email");
+    
      const mailOptions = {
         from: 'staranirudh88477@gmail.com', // Sender address
-        to: toAddress, // List of recipients
-        subject: 'Thanks for signing up for latest updates', // Subject line
+        to: subsmails, // List of recipients
+        subject: subject, // Subject line
         text: text, // Plain text body
     };
     
@@ -40,7 +43,7 @@ const broadcastMail = async (text) => {
 }
 
 
-const sendMail = async (toAddress,subject,text) => {
+const sendMail = async (toAddress,subject,body) => {
   let transport = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -53,7 +56,7 @@ const sendMail = async (toAddress,subject,text) => {
       from: 'staranirudh88477@gmail.com', // Sender address
       to: toAddress, // List of recipients
       subject: subject, // Subject line
-      text: text, // Plain text body
+      text: body, // Plain text body
   };
 
   transport.sendMail(mailOptions, function(err, info) {
