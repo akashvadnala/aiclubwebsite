@@ -158,16 +158,16 @@ const ProjectDisplay = () => {
                     )}
                     {edit && (
                       <>
-                      <NavLink
-                        rel="noreferrer"
+                        <NavLink
+                          rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#delete"
-                        className="btn btn-danger btn-sm  mx-1"
-                      >
-                        {" "}
-                        Delete
-                      </NavLink>
-                      <div
+                          className="btn btn-danger btn-sm  mx-1"
+                        >
+                          {" "}
+                          Delete
+                        </NavLink>
+                        <div
                           className="modal fade"
                           id="delete"
                           tabIndex="-1"
@@ -278,27 +278,27 @@ const ProjectDisplay = () => {
                           </div>
                         </div>
                       </>
-                    ) : (
+                    ) : proj.approvalStatus === "submit" ? (
                       <>
-                      <NavLink
-                        rel="noreferrer"
+                        <NavLink
+                          rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#submitForApproval"
-                        className={`btn btn-${
-                          proj.approvalStatus === "submit"
-                            ? "success"
-                            : proj.approvalStatus === "pending"
-                            ? "warning"
-                            : proj.approvalStatus === "Rejected"
-                            ? "danger"
-                            : "primary"
-                        } btn-sm mx-1`}
-                      >
-                        {" "}
-                        {approval}
-                        {approval2}
-                      </NavLink>
-                      <div
+                          className={`btn btn-${
+                            proj.approvalStatus === "submit"
+                              ? "success"
+                              : proj.approvalStatus === "pending"
+                              ? "warning"
+                              : proj.approvalStatus === "Rejected"
+                              ? "danger"
+                              : "primary"
+                          } btn-sm mx-1`}
+                        >
+                          {" "}
+                          {approval}
+                          {approval2}
+                        </NavLink>
+                        <div
                           className="modal fade"
                           id="submitForApproval"
                           tabIndex="-1"
@@ -338,6 +338,23 @@ const ProjectDisplay = () => {
                           </div>
                         </div>
                       </>
+                    ) : (
+                      <NavLink
+                        rel="noreferrer"
+                        className={`btn btn-${
+                          proj.approvalStatus === "submit"
+                            ? "success"
+                            : proj.approvalStatus === "pending"
+                            ? "warning"
+                            : proj.approvalStatus === "Rejected"
+                            ? "danger"
+                            : "primary"
+                        } btn-sm mx-1`}
+                      >
+                        {" "}
+                        {approval}
+                        {approval2}
+                      </NavLink>
                     )}
                     {user && user.isadmin && approval === "Approved" && (
                       <>
@@ -369,9 +386,9 @@ const ProjectDisplay = () => {
                                   className="modal-title fs-5"
                                   id="publicOrPrivateLabel"
                                 >
-                                  {`Are you sure to make project "${proj.title}" ${
-                                    !proj.public ? "Public" : "Private"
-                                  }?`}
+                                  {`Are you sure to make project "${
+                                    proj.title
+                                  }" ${!proj.public ? "Public" : "Private"}?`}
                                 </h1>
                               </div>
                               <div className="modal-footer">
