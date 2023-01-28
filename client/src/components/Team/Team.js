@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { Suspense, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { NavLink } from 'react-router-dom';
 import './Team.css';
@@ -11,8 +11,6 @@ const TeamCard = React.lazy(() => import('./TeamCard'));
 function Team() {
   const [ teams, setTeams] = useState([]);
   const [ archTeam, setArchTeam ] = useState(false);
-  const [ teamHeading, setTeamHeading ] = useState('Team Members');
-  const [ archStat, setArchStat ] = useState('Archived');
   const [ msg, setMsg ] = useState();
 
   const d=new Date();
@@ -26,35 +24,26 @@ function Team() {
   years.reverse();
   const [ year, setYear ] = useState(y+1);
 
-  const { user } = useContext(Context);
+  const { user,logged_in } = useContext(Context);
   const getTeamData = async() => {
     console.log('year',year);
     try{
       axios.get(`${SERVER_URL}/getTeam/${year}`)
       .then(data => {
-        console.log('data');
-        console.log(data.data);
         setTeams(data.data);
-        setTeamHeading('Team Members');
         setArchTeam(false);
-        setArchStat('Archived');
       })
     }catch(err){
       console.log(err);
     }
   }
 
-
   const getArchTeamData = async() => {
     try{
       axios.get(`${SERVER_URL}/getArchTeam`)
       .then(data => {
-        console.log('data');
-        console.log(data.data);
         setTeams(data.data);
-        setTeamHeading('Archived Team Members');
         setArchTeam(true);
-        setArchStat('Team');
       })
     }catch(err){
       console.log(err);
@@ -68,61 +57,12 @@ function Team() {
     else{
         getTeamData();
     }
-  },[year]);
+  },[logged_in]);
 
-   const toggleArchived = () =>{
-    if(archTeam){
-      getTeamData();
-    }
-    else{
-      getArchTeamData();
-    }
-   } 
+  useEffect(()=>{
+    getTeamData();
+  },[year])
 
-   
-  //  const teams=[
-  //   {
-  //     'imgsrc':'https://aiclub.nitc.ac.in/img/drive/jayaraj%20sir.jpg',
-  //     'text':'Assistant Professor at NIT Calicut CSED',
-  //     'name':'Jayaraj PB',
-  //     'title':'Faculty Advisor',
-  //     'email':'jayarajpb@nitc.ac.in',
-  //     'username':'jayrajpb',
-  //     'show':true,
-  //     'isadmin':false
-  //   },
-  //   {
-  //     'imgsrc':'https://aiclub.nitc.ac.in/img/drive/pournamimam.jpg',
-  //     'text':'Assistant Professor at NIT Calicut CSED',
-  //     'name':'Dr. Pournami P.N.',
-  //     'title':'Faculty Advisor',
-  //     'email':'pournamipn@nitc.ac.in',
-  //     'username':'pournamipn',
-  //     'show':true,
-  //     'isadmin':false
-  //   },
-  //   {
-  //     'imgsrc':'https://aiclub.nitc.ac.in/img/drive/BHANUPRAKASH%20PEBBETI.jpeg',
-  //     'text':'Assistant Professor at NIT Calicut CSED',
-  //     'name':'Bhanu Prakash Pebbeti',
-  //     'title':'Secretary',
-  //     'email':'pebbetibhanu2017@gmail.com',
-  //     'username':'bhanu',
-  //     'show':true,
-  //     'isadmin':true
-  //   }
-  // ]
-
-  const PostDelete = async (username) => {
-    const res = await axios.post(`${SERVER_URL}/team/delete/${username}`);
-    if(res.status===200){
-      console.log('User not deleted');
-    }
-    else if(res.status===201){
-      // navigate('/team');
-      setTeams(Team.filter((item) => item.username !== username));
-    }
-  }
   return (
     <>
     <Helmet>
@@ -136,13 +76,22 @@ function Team() {
           <div className='container team'>
               <div className='row align-items-center'>
                 <div className='col-12 col-md-4 col-lg-4 text-md-left'>
-                  <h3>{teamHeading}</h3>
+                  <h3>{archTeam && <span>Archieved</span>} Team Members</h3>
                 </div>
                 <div className='col-12 col-md-5 col-lg-6 text-lg-right'>
                   {
                     user?user.isadmin?
                       <div className='right-panel'>
-                        <NavLink rel="noreferrer" className='btn btn-sm' onClick={toggleArchived}>{archStat}</NavLink>
+                        {
+                          archTeam?
+                            <NavLink rel="noreferrer" className='btn btn-sm' onClick={getTeamData}>
+                              Team
+                            </NavLink>
+                          :
+                            <NavLink rel="noreferrer" className='btn btn-sm' onClick={getArchTeamData}>
+                              Archived
+                            </NavLink>
+                        }
                         <NavLink className='btn btn-sm btn-primary' to='/team/add'>
                           <span><svg
                             xmlns="http://www.w3.org/2000/svg"
