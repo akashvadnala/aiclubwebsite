@@ -298,7 +298,7 @@ const BlogDisplay = () => {
                           </div>
                         </div>
                       </>
-                    ) : (
+                    ) : blog.approvalStatus === "submit" ? (
                       <>
                         <NavLink
                           rel="noreferrer"
@@ -358,6 +358,23 @@ const BlogDisplay = () => {
                           </div>
                         </div>
                       </>
+                    ) : (
+                      <NavLink
+                        rel="noreferrer"
+                        className={`btn btn-${
+                          blog.approvalStatus === "submit"
+                            ? "success"
+                            : blog.approvalStatus === "pending"
+                            ? "warning"
+                            : blog.approvalStatus === "Rejected"
+                            ? "danger"
+                            : "primary"
+                        } btn-sm mx-1`}
+                      >
+                        {" "}
+                        {approval}
+                        {approval2}
+                      </NavLink>
                     )}
                     {user && user.isadmin && approval === "Approved" && (
                       <>

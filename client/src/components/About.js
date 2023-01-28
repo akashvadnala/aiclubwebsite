@@ -75,8 +75,8 @@ const About = () => {
                 <h2>About</h2>
               </div>
               <div className="col-sm-4 text-end">
-                {user ? (
-                  user.isadmin && preview ? (
+                {user && user.isadmin ? (
+                   preview ? (
                     <>
                       <button
                         className="btn btn-outline-dark btn-sm mx-1"

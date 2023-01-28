@@ -97,7 +97,7 @@ const MyBlogs = () => {
                     <NavLink
                       rel="noreferrer"
                       to="/blogs"
-                      className="btn btn-sm btn-secondary mx-1"
+                      className="btn btn-sm btn-primary mx-1"
                     >
                       All Blogs
                     </NavLink>

@@ -173,7 +173,7 @@ const EditProject = () => {
           <Helmet>
             <title>Project - AI Club</title>
           </Helmet>
-          <h3 className="text-center">Add Project</h3>
+          <h3 className="text-center">Edit Project</h3>
           <div className="text-center fs-6 pb-1">
             {preview ? (
               <NavLink
@@ -378,6 +378,7 @@ const EditProject = () => {
                         aria-describedby="title"
                         placeholder="Enter Research Paper Link"
                         onChange={handleInputs}
+                        required={proj.isPublished}
                       />
                     </div>
                     <div className="col col-9">
@@ -393,6 +394,7 @@ const EditProject = () => {
                         aria-describedby="title"
                         placeholder="Enter Publisher Name"
                         onChange={handleInputs}
+                        required={proj.isPublished}
                       />
                     </div>
                   </div>
