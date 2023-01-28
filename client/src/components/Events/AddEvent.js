@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import "./AddEvent.css";
 import { Context } from "../../Context/Context";
+import {alertContext} from "../../Context/Alert";
 import { useNavigate } from "react-router-dom";
 import Error from "../Error";
 import { CLIENT_URL, SERVER_URL } from "../../EditableStuff/Config";
@@ -14,6 +15,7 @@ const AddEvent = () => {
   const navigate = useNavigate();
   const editor = useRef(null);
   const { user } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
   const [add, setAdd] = useState("Create");
   const [add2, setAdd2] = useState();
   const [xspeakers, setXspeakers] = useState("");
@@ -34,7 +36,6 @@ const AddEvent = () => {
   const filterPassedTime = (time) => {
     const currentDate = new Date();
     const selectedDate = new Date(time);
-
     return currentDate.getTime() < selectedDate.getTime();
   };
 
@@ -54,7 +55,6 @@ const AddEvent = () => {
 
   const handleInputs = (e) => {
     setEvent({ ...event, [e.target.name]: e.target.value });
-    console.log("post", event);
   };
 
   const removeXspeakers = (speaker) => {
@@ -108,12 +108,9 @@ const AddEvent = () => {
       });
       console.log("blogdata", eventdata);
       if (eventdata.status === 422 || !eventdata) {
-        window.alert("Posting failed");
-        console.log("Posting failed");
+        showAlert("Event Posting failed", "danger");
       } else {
-        console.log("data");
-        console.log(eventdata);
-        console.log("Posting Successfull");
+        showAlert("Event Created Successfull", "success");
         navigate("/events")
       }
     } catch (err) {
@@ -123,7 +120,7 @@ const AddEvent = () => {
 
   return (
     <>
-      {user ? (
+      {user && user.isadmin ? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <Helmet>

@@ -9,6 +9,7 @@ import axios from "axios";
 import Loading from "../Loading";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import { Context } from "../../Context/Context";
+import {alertContext} from "../../Context/Alert";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
@@ -16,6 +17,7 @@ const BlogDisplay = () => {
   const params = new useParams();
   const url = params.url;
   const { user } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
   const [blog, setBlog] = useState(null);
   const [edit, setedit] = useState(null);
   const [load, setLoad] = useState(0);
@@ -31,7 +33,6 @@ const BlogDisplay = () => {
       const res = await axios.get(`${SERVER_URL}/getBlog/${url}`);
       console.log("blog", res.status);
       if (res.status === 200) {
-        console.log("blog", res.data.blog);
         const post_ = res.data.blog;
         setBlog(res.data.blog);
         setauthordetails(res.data.author);
@@ -81,11 +82,12 @@ const BlogDisplay = () => {
       );
       if (res.status === 200) {
         blog.public = !blog.public ? true : false;
+        showAlert(`Blog made ${blog.public?"public":"private"}`,"success");
         setPub(`${!blog.public ? "Make Public" : "Make Private"}`);
         setPub2();
         navigate(`/blogs/${blog.url}`);
       } else {
-        console.log("Publishing failed");
+        showAlert("Operation failed. Please try again.","success");
       }
     }
   };
@@ -94,9 +96,10 @@ const BlogDisplay = () => {
     if (status) {
       const res = await axios.post(`${SERVER_URL}/deleteBlog/${blog.url}`);
       if (res.status === 200) {
+        showAlert("Blog deleted successfully","success");
         navigate("/blogs");
       } else {
-        console.log("Blog Cannot be deleted");
+        showAlert("Blog Deletion failed","danger");
       }
     }
   };
@@ -114,11 +117,12 @@ const BlogDisplay = () => {
           }
         );
         if (res.status === 200) {
+          showAlert("Submitted for Admin approval","success");
           setBlog({ ...blog, ["approvalStatus"]: "pending" });
           setApproval2();
           navigate(`/blogs/${blog.url}`);
         } else {
-          console.log("Publishing failed");
+          showAlert("Submission failed. PLease try again!","danger");
         }
       }
     }
@@ -142,11 +146,12 @@ const BlogDisplay = () => {
       }
     );
     if (res.status === 200) {
+      showAlert(`${response === "Approved"?"Approved & Published.":response}.`,"success");
       setBlog({ ...blog, ["approvalStatus"]: response, ["public"]: status });
       setApproval2();
       navigate(`/blogs/${blog.url}`);
     } else {
-      console.log("Publishing failed");
+      showAlert("Response not recorded. Please try again","success");
     }
   };
 
