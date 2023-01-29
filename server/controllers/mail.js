@@ -94,4 +94,3 @@ const sendMail = async (toAddress,subject,body) => {
 }
 
 module.exports = {welcomeMail, broadcastMail ,sendMail};
-

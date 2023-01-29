@@ -28,6 +28,8 @@ import ProjectApprovals from './components/Projects/ProjectApprovals';
 import BlogApprovals from './components/Blogs/BlogApprovals';
 import MyBlogs from './components/Blogs/myBlogs';
 import Profile from './components/Profile/profile';
+import ForgetPassword from './components/Navbar/ForgetPassword';
+
 const Routing = () => {
 
     return(
@@ -74,8 +76,8 @@ const Routing = () => {
 
         {/* Signup */}
         <Route exact path='/signup' element={<CompeteSignup />} />
-
-
+        <Route exact path='/reset-password/:id/:token' element={<ForgetPassword />} />
+        
         {/* About */}
         <Route exact path='/about' element={<About />} />
 
