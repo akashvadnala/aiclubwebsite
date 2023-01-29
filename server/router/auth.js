@@ -6,7 +6,7 @@ let path = require("path");
 const authenticate = require("../middleware/authenticate");
 const Leaderboard = require("../model/leaderboardSchema");
 const Team = require("../model/teamSchema");
-const { sendMail } = require("../controllers/mail");
+const { passwordResetMail } = require("../controllers/mail");
 const Config = require("../Config");
 const CLIENT_URL = Config.CLIENT_URL;
 
@@ -141,7 +141,11 @@ router.post("/forgot-password", async (req, res) => {
   try {
     const token = await oldUser.generateForgetPasswordToken();
     const link = `${CLIENT_URL}/reset-password/${oldUser._id}/${token}`;
-    sendMail(email, "Forget Password Link", link);
+    const content = {
+      link:link,
+      contact:"aiclubnitc",
+    }
+    passwordResetMail(email,content);
     res.status(200).send({ msg: "Mail sent successfully" });
   } catch (error) {
     console.log(error);
