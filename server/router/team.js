@@ -150,7 +150,6 @@ router.route('/getTeam/:year').get(async (req,res)=>{
     const {year} = req.params;  
     const d=new Date();
     var y=d.getFullYear();
-    console.log(year,y+1);
     if(parseInt(year)===y+1){
         teamData = await Team.find({ismember:true,isalumni:false});
     }
