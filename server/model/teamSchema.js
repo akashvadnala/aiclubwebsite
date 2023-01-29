@@ -19,6 +19,9 @@ const teamSchema = new mongoose.Schema({
     lastname: {
         type: String,
     },
+    position:{
+        type: String,
+    },
     profession: {
         type: String,
     },
@@ -36,18 +39,24 @@ const teamSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    phone:{
+        type: Number
+    },
     email: {
         type: String,
         required: true
+    },
+    github:{
+        type: String,
+    },
+    linkedin:{
+        type: String,
     },
     isalumni: {
         type: Boolean,
         default: false
     },
     year: {
-        type: Number,
-    },
-    phone:{
         type: Number,
     },
     photo:{
@@ -99,7 +108,7 @@ teamSchema.pre('save', async function(next){
 
 teamSchema.methods.generateAuthToken = async function(){
     try{
-        let token_d = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
+        let token_d = jwt.sign({ _id: this._id, password:this.password }, process.env.SECRET_KEY);
         this.tokens = this.tokens.concat({ token: token_d });
         await this.save();
         return token_d;

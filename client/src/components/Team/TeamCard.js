@@ -1,6 +1,6 @@
 import axios from "axios";
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import TextTruncate from "react-text-truncate";
 
@@ -39,35 +39,47 @@ function TeamCard({ team, isadmin, isdelete }) {
           />
           <div className="d-flex justify-content-evenly my-4">
             <a
-              className="fas fa-envelope fa-lg mx-2"
-              style={{ color: "#55acee" }}
               href={`mailto:${team.email}`}
-            ></a>
-            <i
-              className="fab fa-linkedin-in fa-lg mx-2"
-              style={{ color: "#3b5998" }}
-            ></i>
-            <i
-              className="fab fa-github fa-lg mx-2"
-              style={{ color: "#333333" }}
-            ></i>
+            >
+              <i
+                className="fas fa-envelope fa-lg mx-2"
+                style={{ color: "#55acee" }}
+              ></i>
+            </a>
+            <a
+              href={team.linkedin}
+            >
+              <i
+                className="fab fa-linkedin-in fa-lg mx-2"
+                style={{ color: "#3b5998" }}
+              ></i>
+            </a>
+            <a
+              href={team.github}
+            >
+              <i
+                className="fab fa-github fa-lg mx-2"
+                style={{ color: "#333333" }}
+              ></i>
+            </a>
           </div>
           {isadmin ? (
             <div className="admin-opt d-flex justify-content-evenly">
               <span>
-                <NavLink to={`/team/edit/${team.username}`}>Edit <i className="fas fa-edit"></i></NavLink>
+                <NavLink type="button" to={`/team/edit/${team.username}`} className="btn btn-sm btn-primary"><i className="fas fa-edit"></i> Edit</NavLink>
               </span>
               {isdelete ? null : (
                 <>
                   <span>
                     <NavLink
                       type="button"
-                      style={{ color: "#bc1616" }}
+                      rel="noreferrer"
+                      className="btn btn-sm btn-outline-danger"
                       onClick={() => {
                         PostDelete(team.username);
                       }}
                     >
-                      &nbsp;&nbsp;&nbsp; Delete <i className="fas fa-trash-alt"></i>
+                     <i className="fas fa-trash-alt"></i> Delete
                     </NavLink>
                   </span>
                 </>

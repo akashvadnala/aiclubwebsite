@@ -29,7 +29,7 @@ function TeamLogin(props) {
           console.log("res", res);
           if (res.status === 200) {
             setMsg("Invalid Credentials");
-            setsignin(true);
+            setsignin(false);
             console.log("Invalid Credentials");
           } else if (res.status === 201) {
             window.location.reload(true);
@@ -116,18 +116,15 @@ function TeamLogin(props) {
                   />
                 </div>
               </div>
-            
-              <button type="submit" class="cust btn btn-primary btn-block mb-4" disabled={signin?true:false} onClick={Login}>
-                {
-                  signin?
-                    <>Signing in<i class="fa fa-spinner fa-spin"></i></>
-                  :
-                    <>Sign in</>
-                }
-            
-              </button>
-            </form>
-            <button
+            </div>
+            {
+              signin ?
+                <button type="submit" class="cust btn btn-primary btn-block mb-4" disabled>Signing in<i class="fa fa-spinner fa-spin"></i></button>
+                :
+                <button type="submit" class="cust btn btn-primary btn-block mb-4" >Sign in</button>
+            }
+          </form>
+          <button
               type="reset"
               class="cust btn btn-danger btn-block mb-4 mx-4"
               onClick={() => {
@@ -137,7 +134,7 @@ function TeamLogin(props) {
             >
               Forget Password
             </button>
-          </div>
+        </div>
         ) : (
           <div className="login-container">
             <form method="POST">

@@ -9,35 +9,7 @@ import './Admin.css'
 import AddSlider from './AddSlider';
 import { Helmet } from 'react-helmet';
 
-const Admin = () => {
-    // const slides = [
-    //     {
-    //         'imgsrc': 'https://i2.wp.com/myblogs.pw/wp-content/uploads/2018/08/AI-Web.jpg?fit=1034%2C480&ssl=1',
-    //         'title': 'Inductions For B20 and B21',
-    //         'caption1': 'AI CLUB Inductions for batch B20 and B21.',
-    //         'caption2': 'NITC',
-    //         'linktitle': 'Inductions',
-    //         'link': '/competitions/ai-club-inductions',
-    //         'textcolor': 'white'
-    //     },
-    //     {
-    //         'imgsrc': 'https://media.istockphoto.com/photos/artificial-intelligence-concept-picture-id1364859722?b=1&k=20&m=1364859722&s=170667a&w=0&h=o7emaeAZHOvBP1_o5ewQH9y9279rQWS9xO_xU4r-u-4=',
-    //         'title': 'Inductions For B20 and B21',
-    //         'caption1': 'AI CLUB Inductions for batch B20 and B21.',
-    //         'caption2': 'AI CLUB Inductions for batch B20 and B21.',
-    //         'linktitle': 'Inductions',
-    //         'link': '/competitions/ai-club-inductions',
-    //         'textcolor': 'safcd'
-    //     },
-    //     {
-    //         'imgsrc': 'https://miro.medium.com/max/657/1*MdInuEHHzcTQvjlzs8wpKA.png',
-    //         'title': 'Inductions For B20 and B21',
-    //         'caption1': 'AI CLUB Inductions for batch B20 and B21.',
-    //         'linktitle': 'Inductions',
-    //         'link': '/competitions/ai-club-inductions',
-    //         'textcolor': '#99ff00'
-    //     }
-    // ]
+const Admin = () => {  
     const {user,logged_in} = useContext(Context);
     const [load,setLoad] = useState(0);
     const [slides,setSlides] = useState([]);

@@ -108,6 +108,15 @@ router.get("/getUserData", authenticate, (req, res) => {
   }
 });
 
+router.get('/getUserData', authenticate, (req,res)=>{
+    if(req.rootUser){
+        res.status(200).json(req.rootUser);
+    }
+    else{
+        res.status(201).json(null);
+    }
+});
+
 router.route("/userExist/:username").get(async (req, res) => {
   const user = await Team.findOne({ username: req.params.username });
   if (user) {
@@ -146,6 +155,15 @@ router.post("/forgot-password", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+
+router.get('/logout', authenticate,async (req,res)=>{
+    const user = req.rootUser;
+    user.tokens = user.tokens.filter(to=>to===user.tokens.find(t=>t.token===req.token));
+    await user.save();
+    res.clearCookie('jwtoken',{path:'/'});
+    res.status(200).send({msg:'Logged Out Succesfully'});
 });
 
 router.get("/reset-password/:id/:token", async (req, res) => {

@@ -8,7 +8,8 @@ const Reducer = (state, action) => {
             }
         case "LOGOUT":
             return{
-                user: null
+                user: null,
+                logged_in: -1
             }
         default:
             return state;

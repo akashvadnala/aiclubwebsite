@@ -89,7 +89,7 @@ function Team() {
                             </NavLink>
                           :
                             <NavLink rel="noreferrer" className='btn btn-sm' onClick={getArchTeamData}>
-                              Archived
+                              Archieved
                             </NavLink>
                         }
                         <NavLink className='btn btn-sm btn-primary' to='/team/add'>

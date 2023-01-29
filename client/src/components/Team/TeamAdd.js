@@ -105,21 +105,6 @@ const TeamAdd = () => {
                     team.year=ly;
                 }
                 const teamdata = await axios.post(`${SERVER_URL}/teamadd`,
-                    // {
-                    //     'firstname':firstname,
-                    //     'lastname':lastname,
-                    //     'profession':profession,
-                    //     'description':description,
-                    //     'username':username,
-                    //     'email':email,
-                    //     'year':year,
-                    //     'photo':imgurl,
-                    //     'password':password,
-                    //     'cpassword':cpassword,
-                    //     'isadmin':isadmin,
-                    //     'ismember':ismember,
-                    //     'canCreateCompetitions':canCreateCompetitions
-                    // },
                     team,
                     {
                         headers:{"Content-Type" : "application/json"}
