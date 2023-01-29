@@ -105,22 +105,30 @@ router.route('/teamadd').post(async (req,res) => {
     console.log('photo',photo);
     console.log("Registering..");
     try{
-        const teamExist = await Team.findOne({email:email});
-        
-        if(teamExist){
-            return res.status(201).json({ error: "Email already exist" });
-        }else if(password != cpassword){
+        if(req.body.password != req.body.cpassword){
             return res.status(201).json({ error: "Passwords not matched" });
         }
 
+        const mailExist = await Team.findOne({email:req.body.email});
+        
+        if(mailExist){
+            return res.status(201).json({ error: "Email already exist" });
+        }
+
+        const userExist = await Team.findOne({username:req.body.username});
+        
+        if(userExist){
+            return res.status(201).json({ error: "Username already exist" });
+        }
+        
         const team = new Team(req.body);
 
         const saltRounds = 10;
-        team.password = await bcrypt.hash(password,saltRounds);
+        team.password = await bcrypt.hash(req.body.password,saltRounds);
         team.cpassword = team.password;
         await team.save();
 
-        console.log(`${team} user registered successfully`);
+        console.log(`${team.username} user registered successfully`);
         res.status(201).json({ message: "user Login Successfully" });
         
     }catch(err){

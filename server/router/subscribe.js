@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Subscribe = require('../model/subscribeSchema');
-const {broadcastMail} = require('../controllers/mail');
+const {welcomeMail} = require('../controllers/mail');
 
 const validateEmail = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -19,7 +19,7 @@ router.route('/subscribe').post(async (req,res)=> {
                 const name = subscriber.name;
                 await subscriber.save();
                 let text = `Hello ${data.name}, Thanks for subscribing for Latest Updates from AI CLUB NITC`;
-                sendAMail(data.email,text);
+                welcomeMail(data.email);
                 res.status(200).json({'msg':`${name} subscribed sucessfully`});
             }
             else{

@@ -59,10 +59,10 @@ const Profile = () => {
                                     className="rounded-circle img-fluid" style={{ "width": "150px" }} />
                                 <h5 className="my-3">{user.firstname + " " + user.lastname}</h5>
                                 <p className="text-muted mb-1">{user.profession}</p>
-                                <p className="text-muted mb-4">{user.description}</p>
+                                <p className="text-muted mb-4">{user.position}</p>
                                 <div className="d-flex justify-content-center mb-2">
                                     {/* <button type="button" className="btn btn-primary">Edit</button> */}
-                                    <button type="button" className="btn btn-outline-primary ms-1">Edit</button>
+                                    <button type="button" className="btn btn-outline-primary ms-1"><NavLink to={`/team/edit/${user.username}`}>Edit</NavLink></button>
                                 </div>
                             </div>
                         </div>
@@ -70,16 +70,16 @@ const Profile = () => {
                             <div className="card-body p-0">
                                 <ul className="list-group list-group-flush rounded-3">
                                     <li className="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i className="fab fa-github fa-lg" style={{ "color": "#333333" }}></i>
-                                        <p className="mb-0">Github</p>
+                                        <a href={user.githublink || "#"} target="_blank" className="fab fa-github fa-lg" style={{ "color": "#333333" }}></a>
+                                        <p className="mb-0">{user.github || "Github"}</p>
+                                    </li>
+                                    <li className="list-group-item d-flex justify-content-between align-items-center p-3">
+                                        <a href={user.linkedinlink || "#"} className="fab fa-linkedin-in fa-lg" style={{ "color": "#3b5998" }}></a>
+                                        <p className="mb-0">{user.linkedin || "linkedin"}</p>
                                     </li>
                                     <li className="list-group-item d-flex justify-content-between align-items-center p-3">
                                         <i className="fas fa-envelope fa-lg" style={{ "color": "#55acee" }}></i>
                                         <p className="mb-0">{user.email}</p>
-                                    </li>
-                                    <li className="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i className="fab fa-linkedin-in fa-lg" style={{ "color": "#3b5998" }}></i>
-                                        <p className="mb-0">linkedin</p>
                                     </li>
                                 </ul>
                             </div>
@@ -124,6 +124,19 @@ const Profile = () => {
                                     </div>
                                 </div>
                                 <hr />
+                                {user.branch && (
+                                <>
+                                <div className="row">
+                                    <div className="col-sm-3">
+                                        <p className="mb-0">Branch</p>
+                                    </div>
+                                    <div className="col-sm-9">
+                                        <p className="text-muted mb-0">{user.year}</p>
+                                    </div>
+                                </div>
+                                <hr />
+                                </>
+                                )}
                                 <div className="row">
                                     <div className="col-sm-3">
                                         <p className="mb-0">Year</p>
@@ -132,7 +145,15 @@ const Profile = () => {
                                         <p className="text-muted mb-0">{user.year}</p>
                                     </div>
                                 </div>
-
+                                <hr/>
+                                <div className="row">
+                                    <div className="col-sm-3">
+                                        <p className="mb-0">Description</p>
+                                    </div>
+                                    <div className="col-sm-9">
+                                        <p className="text-muted mb-0">{user.description}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="row">

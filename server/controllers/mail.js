@@ -1,5 +1,8 @@
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
+const handlebars = require("handlebars")
+const fs = require("fs")
+const path = require("path")
 // const path = require('path');
 dotenv.config({ path:'./config.env' });
 const Subscribers = require('../model/subscribeSchema');
@@ -68,7 +71,7 @@ const broadcastMail = async (subject,body) => {
 }
 
 
-const sendMail = async (toAddress,subject,body) => {
+const passwordResetMail = async (toAddress,content) => {
   let transport = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -77,11 +80,15 @@ const sendMail = async (toAddress,subject,body) => {
       }
   });
 
+  const emailTemplateSource = fs.readFileSync(path.join(__dirname,'..', 'views/emails','/forgotpassword.hbs'), "utf8");
+  const template = handlebars.compile(emailTemplateSource);
+  const htmlToSend = template(content);
+
   const mailOptions = {
       from: 'staranirudh88477@gmail.com', // Sender address
       to: toAddress, // List of recipients
-      subject: subject, // Subject line
-      html:body,
+      subject: "Reset password AI Club", // Subject line
+      html:htmlToSend,
   };
 
   transport.sendMail(mailOptions, function(err, info) {
@@ -93,4 +100,5 @@ const sendMail = async (toAddress,subject,body) => {
   });
 }
 
-module.exports = {welcomeMail, broadcastMail ,sendMail};
+module.exports = {welcomeMail, broadcastMail ,passwordResetMail};
+
