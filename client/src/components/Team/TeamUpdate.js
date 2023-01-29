@@ -95,7 +95,7 @@ const TeamUpdate = () => {
             data.append("photo",Img);
 
             try{
-                axios.post(`${SERVER_URL}/imgdelete`,
+                await axios.post(`${SERVER_URL}/imgdelete`,
                 {'url':team.photo},
                 {
                     headers: { "Content-Type": "application/json" },
