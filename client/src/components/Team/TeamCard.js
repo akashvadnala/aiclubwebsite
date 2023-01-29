@@ -5,7 +5,7 @@ import { SERVER_URL } from "../../EditableStuff/Config";
 import TextTruncate from "react-text-truncate";
 
 function TeamCard({ team, isadmin, isdelete }) {
-  const navigate = useNavigate();
+
   const PostDelete = async (username) => {
     const confirmed = window.confirm(
       `Are you sure to delete the user ${username}?`
