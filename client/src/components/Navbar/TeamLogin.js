@@ -27,7 +27,7 @@ function TeamLogin(props) {
           console.log("res", res);
           if (res.status === 200) {
             setMsg("Invalid Credentials");
-            setsignin(true);
+            setsignin(false);
             console.log("Invalid Credentials");
           } else if (res.status === 201) {
             window.location.reload(true);
@@ -91,16 +91,12 @@ function TeamLogin(props) {
                 />
               </div>
             </div>
-            
-              <button type="submit" class="cust btn btn-primary btn-block mb-4" disabled={signin?true:false}>
-                {
-                  signin?
-                    <>Signing in<i class="fa fa-spinner fa-spin"></i></>
-                  :
-                    <>Sign in</>
-                }
-            
-              </button>
+            {
+              signin ?
+                <button type="submit" class="cust btn btn-primary btn-block mb-4" disabled>Signing in<i class="fa fa-spinner fa-spin"></i></button>
+                :
+                <button type="submit" class="cust btn btn-primary btn-block mb-4" >Sign in</button>
+            }
           </form>
         </div>
       </Modal.Body>

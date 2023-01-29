@@ -142,9 +142,7 @@ router.route("/deleteBlog/:url").post(async (req, res) => {
 router.route("/getprofileblogs/:username").get(async (req,res)=>{
   try {
     const user = req.params.username;
-    console.log("user: ",user);
-    const blogs = await Blog.find({authorName:user}).sort({createdAt:-1}).select("title -_id").limit(5);
-    console.log("blogs",blogs);
+    const blogs = await Blog.find({authorName:user}).sort({createdAt:-1}).select("title url -_id").limit(5);
     res.status(200).json({blogs:blogs});
   } catch (error) {
     console.log(error);

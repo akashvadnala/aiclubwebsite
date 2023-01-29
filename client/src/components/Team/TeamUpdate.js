@@ -85,7 +85,6 @@ const TeamUpdate = () => {
         e.preventDefault();
         setSubmit('Updating');
         setSubmit2(<i class="fa fa-spinner fa-spin"></i>);
-        const photo = team.photo;
         team.ismember = team.ismember || team.isadmin;
         var imgurl;
         if(Img){
@@ -95,7 +94,7 @@ const TeamUpdate = () => {
             data.append("photo",Img);
 
             try{
-                axios.post(`${SERVER_URL}/imgdelete`,
+                await axios.post(`${SERVER_URL}/imgdelete`,
                 {'url':team.photo},
                 {
                     headers: { "Content-Type": "application/json" },
@@ -112,9 +111,6 @@ const TeamUpdate = () => {
             }catch(err){
                 console.log('photoerr',err);
             }
-        }
-        else{
-            imgurl = photo;
         }
         console.log('imgurl',imgurl); 
         try{

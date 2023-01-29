@@ -2,3 +2,16 @@
     width: 5rem;
     height: 5rem;
 }
+
+.profile-container .blog-link a{
+    font-size: 14px;
+    color: #444;
+}
+
+.profile-container .blog-link a:hover{
+    text-decoration: underline;
+}
+
+.profile-container .required::before{
+    content: "*";
+}

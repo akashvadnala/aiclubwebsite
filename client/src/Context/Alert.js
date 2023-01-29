@@ -34,7 +34,8 @@ const Alert = ({ children }) => {
               role="alert"
               style={{ position:"fixed", top:"50px", right:"50px", height: "40px"}}
             >
-              <strong>{capitalize(alertType)}</strong>: {textAlert}
+              {/* <strong>{capitalize(alertType)}</strong>:  */}
+              {textAlert}
             </div>
       )}
     </alertContext.Provider>

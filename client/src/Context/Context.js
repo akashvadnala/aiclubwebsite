@@ -14,7 +14,7 @@ const ContextProvider = ({ children }) => {
     let [state, dispatch] = useReducer(Reducer, INIT_STATE);
     const newState = async () => {
         try{
-            await axios.get(`${SERVER_URL}/getUserData`,
+            axios.get(`${SERVER_URL}/getUserData`,
             {withCredentials: true})
             .then(res=>{
                 if(res.status===200){
@@ -28,7 +28,7 @@ const ContextProvider = ({ children }) => {
                 }
                 else{
                     dispatch({
-                        type: "LOGGED_IN",
+                        type: "LOGOUT",
                         payload: {
                             user: null,
                             logged_in: -1,
@@ -39,7 +39,11 @@ const ContextProvider = ({ children }) => {
             
         }catch(err){
             dispatch({
-                type: "LOGOUT"
+                type: "LOGOUT",
+                payload: {
+                    user: null,
+                    logged_in: -1,
+                }
             });
         }
     };

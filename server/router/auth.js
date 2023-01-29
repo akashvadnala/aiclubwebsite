@@ -97,7 +97,6 @@ router.route('/competesignup').post(async (req,res)=>{
 
 
 router.get('/getUserData', authenticate, (req,res)=>{
-    // console.log(`Hello ${req.rootUser?req.rootUser.username:'Not logged in'}`);
     if(req.rootUser){
         res.status(200).json(req.rootUser);
     }
@@ -116,9 +115,11 @@ router.route('/userExist/:username').get(async (req,res)=>{
     }
 });
 
-router.get('/logout', (req,res)=>{
+router.get('/logout', authenticate,async (req,res)=>{
+    const user = req.rootUser;
+    user.tokens = user.tokens.filter(to=>to===user.tokens.find(t=>t.token===req.token));
+    await user.save();
     res.clearCookie('jwtoken',{path:'/'});
-    res.clearCookie('cjwtoken',{path:'/'});
     res.status(200).send({msg:'Logged Out Succesfully'});
 });
 

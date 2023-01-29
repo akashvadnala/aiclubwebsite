@@ -108,16 +108,19 @@ router.route('/teamadd').post(async (req,res) => {
         const teamExist = await Team.findOne({email:email});
         
         if(teamExist){
+            console.log("Email already exist");
             return res.status(201).json({ error: "Email already exist" });
-        }else if(password != cpassword){
-            return res.status(201).json({ error: "Passwords not matched" });
+        }
+        teamExist = await Team.findOne({username:req.body.username});
+        if(teamExist){
+            console.log("Username already exist");
+            return res.status(201).json({ error: "Username already exist" });
         }
 
-        const team = new Team(req.body);
+        let team = new Team(req.body);
 
         const saltRounds = 10;
         team.password = await bcrypt.hash(password,saltRounds);
-        team.cpassword = team.password;
         await team.save();
 
         console.log(`${team} user registered successfully`);
@@ -190,7 +193,42 @@ router.route('/teamupdate/:username').put(async (req,res)=>{
         });
 
         console.log('Team Updated!');
-        res.status(201).json(updateduser);
+        res.status(200).json(updateduser);
+
+    } catch (error) {
+        res.status(201).json(error);
+    }
+});
+
+router.route('/changePassword/:username').put(async (req,res)=>{
+    try {
+        const {username} = req.params;
+        const {password,newPassword,cPassword} = req.body;
+        if(newPassword!==cPassword){
+            return res.status(201).json({ error: "Password Not Matched" });
+        }
+        let team = await Team.findOne({username:username});
+
+        bcrypt.compare(password, team.password, async (err,isMatch) => {
+            if(!isMatch){
+                console.log('Invalid Credentials');
+                return res.status(201).json({ error: "Invalid Credentials" });
+            }
+            else{
+                console.log('Changing password..')
+                const saltRounds = 10;
+                team.password = await bcrypt.hash(newPassword,saltRounds);
+                team.tokens = [];
+                await team.save();
+                token = await team.generateAuthToken();
+                res.cookie('jwtoken',token,{  // jwtoken->name
+                    expires: new Date(Date.now() + 258920000000), //30 days
+                    httpOnly: true
+                });
+                console.log('Password Changed Successfully');
+                return res.status(200).json({ msg: "Password Updated Successfully"});
+            }
+        });
 
     } catch (error) {
         res.status(201).json(error);
