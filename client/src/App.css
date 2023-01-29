@@ -9,6 +9,10 @@ body{
   /* background-color: rgb(250,250,250); */
 }
 
+html {
+  overflow-y: scroll;
+}
+
 .right-panel{
   text-align: center;
   padding-top: 1rem;

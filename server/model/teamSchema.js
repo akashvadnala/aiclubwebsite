@@ -25,6 +25,13 @@ const teamSchema = new mongoose.Schema({
     profession: {
         type: String,
     },
+    position:{
+        type: String,
+        default: "Member at AI Club NITC"
+    },
+    branch:{
+        type:String
+    },
     description: {
         type: String,
     },
@@ -76,6 +83,10 @@ const teamSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    canChangePassword: {
+        type: Boolean,
+        default: false
+    },
     tokens: [
         {
             token: {
@@ -100,6 +111,17 @@ teamSchema.methods.generateAuthToken = async function(){
         let token_d = jwt.sign({ _id: this._id, password:this.password }, process.env.SECRET_KEY);
         this.tokens = this.tokens.concat({ token: token_d });
         await this.save();
+        return token_d;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+teamSchema.methods.generateForgetPasswordToken = async function(){
+    try{
+        let token_d = jwt.sign({ _id: this._id ,email: this.email}, process.env.SECRET_KEY, {
+            expiresIn: "5m",
+          });
         return token_d;
     }catch(err){
         console.log(err);

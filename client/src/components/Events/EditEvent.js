@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import "./AddEvent.css";
 import { Context } from "../../Context/Context";
-import {alertContext} from "../../Context/Alert";
+import { alertContext } from "../../Context/Alert";
 import { useNavigate } from "react-router-dom";
 import Error from "../Error";
 import { CLIENT_URL, SERVER_URL } from "../../EditableStuff/Config";
@@ -108,10 +108,22 @@ const EditEvent = () => {
     var imgurl;
     const data = new FormData();
     const photoname = Date.now() + event.poster.name;
-    if (typeof event.poster !== 'string'){
+    if (typeof event.poster !== "string") {
       data.append("name", photoname);
       data.append("photo", event.poster);
-  
+
+      try {
+        axios.post(
+          `${SERVER_URL}/imgdelete`,
+          { url: event.poster },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      } catch (err) {
+        console.log("photoerr", err);
+      }
+
       try {
         const img = await axios.post(`${SERVER_URL}/imgupload`, data);
         imgurl = img.data;

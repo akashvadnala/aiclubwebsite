@@ -10,9 +10,11 @@ import { Context } from "../../../Context/Context";
 import { SERVER_URL } from "../../../EditableStuff/Config";
 import axios from "axios";
 import { getImageSize } from 'react-image-size';
+import {alertContext} from "../../../Context/Alert";
 
 const AllPhotos = () => {
   const { user, logged_in } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
   const [index, setIndex] = useState(-1);
   const [photos, setPhotos] = useState([]);
   const [canDelete, setCanDelete] = useState(false);
@@ -80,6 +82,7 @@ const AllPhotos = () => {
       } else {
         console.log("data");
         console.log(response);
+        showAlert("Image Deleted Successfully","success");
         console.log("deleted Successfull");
         window.location.reload(true);
       }
@@ -139,6 +142,7 @@ const AllPhotos = () => {
       } else {
         console.log("data");
         console.log(imagedata);
+        showAlert("Image Uploaded Successfully","success");
         console.log("Posting Successfull");
         window.location.reload(true);
       }

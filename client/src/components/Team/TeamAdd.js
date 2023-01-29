@@ -75,10 +75,10 @@ const TeamAdd = () => {
         const {firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember,canCreateCompetitions} = team;
         // console.log(firstname,lastname,profession,description,username,email,year,photo,password,cpassword,isadmin,ismember);
         console.log('photo',photo);
-        if(!firstname || !lastname || !profession || !description || !username || !email || !year || !photo || !password || !cpassword ){
-            console.log('Fill required Details');
-        }
-        else{
+        // if(!firstname || !lastname || !profession || !description || !username || !email || !year || !photo || !password || !cpassword ){
+        //     console.log('Fill required Details');
+        // }
+        // else{
             setAdd(true);
             const data = new FormData();
             const photoname = Date.now() + photo.name;
@@ -124,7 +124,7 @@ const TeamAdd = () => {
             }catch(err){
                 console.log('err',err);
             }
-        }
+        // }
     }
 
     const forms=[
