@@ -22,6 +22,13 @@ const teamSchema = new mongoose.Schema({
     profession: {
         type: String,
     },
+    position:{
+        type: String,
+        default: "Member at AI Club NITC"
+    },
+    branch:{
+        type:String
+    },
     description: {
         type: String,
     },

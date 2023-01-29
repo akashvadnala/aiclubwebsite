@@ -224,7 +224,7 @@ router.route("/getMyProjects/:user").get(async (req, res) => {
         }
       })
     );
-    projects.sort({ createdAt: -1 });
+    projects.sort((a,b)=>b.createdAt - a.createdAt);
     res.status(200).json(projects);
   } else {
     res.status(422).json(null);
