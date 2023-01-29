@@ -50,15 +50,18 @@ function ForgetPassword() {
           { password: password },
           {
             headers: { "Content-Type": "application/json" },
+            withCredentials: true 
           }
         );
         if (res.status === 200) {
           setReset2("");
           setReset("Reset Password");
           navigate("/");
+          window.location.reload(true);
         } else {
           setMsg("Something went wrong! Please try after sometime");
           navigate("/");
+          window.location.reload(true);
         }
       } catch (err) {
         console.log("err", err);

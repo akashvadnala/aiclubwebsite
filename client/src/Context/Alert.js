@@ -32,7 +32,7 @@ const Alert = ({ children }) => {
             <div
               className={`alert-container alert alert-${alertType} alert-dismissible fade show p-2 m-2`}
               role="alert"
-              style={{ position:"fixed", top:"50px", right:"50px", height: "40px"}}
+              style={{ position:"fixed", top:"50px", right:"50px"}}
             >
               {/* <strong>{capitalize(alertType)}</strong>:  */}
               {textAlert}
