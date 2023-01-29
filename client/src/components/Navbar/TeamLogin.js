@@ -116,15 +116,25 @@ function TeamLogin(props) {
                   />
                 </div>
               </div>
-            </div>
-            {
-              signin ?
-                <button type="submit" class="cust btn btn-primary btn-block mb-4" disabled>Signing in<i class="fa fa-spinner fa-spin"></i></button>
-                :
-                <button type="submit" class="cust btn btn-primary btn-block mb-4" >Sign in</button>
-            }
-          </form>
-          <button
+              {signin ? (
+                <button
+                  type="submit"
+                  class="cust btn btn-primary btn-block mb-4"
+                  disabled
+                >
+                  Signing in<i class="fa fa-spinner fa-spin"></i>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  class="cust btn btn-primary btn-block mb-4"
+                  onClick={Login}
+                >
+                  Sign in
+                </button>
+              )}
+            </form>
+            <button
               type="reset"
               class="cust btn btn-danger btn-block mb-4 mx-4"
               onClick={() => {
@@ -134,7 +144,7 @@ function TeamLogin(props) {
             >
               Forget Password
             </button>
-        </div>
+          </div>
         ) : (
           <div className="login-container">
             <form method="POST">

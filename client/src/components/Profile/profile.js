@@ -321,7 +321,7 @@ const Profile = () => {
                                                     <>
                                                         <div className="row align-items-center">
                                                             <div className="col-sm-3 py-2">
-                                                                <p className="mb-0">{form.required && <>*</>}{form.name}</p>
+                                                                <p className="mb-0">{editMode && form.required && <>*</>}{form.name}</p>
                                                             </div>
                                                             {
                                                                 editMode ?

@@ -56,7 +56,15 @@ hr{
   height: 30px;
 }
 
+.form-control:focus {
+  border-color: #6265e4 !important;
+  box-shadow: 0 0 2px rgba(98, 101, 228, 1) !important;
+}
 
+/* .form-control-sm:focus {
+  border-color: #6265e4 !important;
+  box-shadow: 0 0 2px rgba(98, 101, 228, 1) !important;
+} */
 
 .error-container img{
   width: 30rem;
