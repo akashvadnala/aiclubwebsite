@@ -14,10 +14,10 @@ const connectDB = require('./db/conn');
 app.use(cookieParser());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
-console.log('client url: ',Config.CLIENT_URL);
+console.log('client url: ',Config.CLIENT_URL.split(','));
 app.use(cors({ 
     credentials: true, 
-    origin: [Config.CLIENT_URL.split(',')],
+    origin: Config.CLIENT_URL.split(','),
     exposedHeaders: ['set-cookie'] 
 }));
 // app.use(cors({ credentials: true, origin: "*" }));

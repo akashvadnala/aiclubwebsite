@@ -1,5 +1,5 @@
 module.exports = {
-    SERVER_URL: "https://aiclubnitcserver.adaptable.app",
-    // SERVER_URL: "http://localhost:5000",
-    CLIENT_URL: "http://localhost:8080",
+    // SERVER_URL: "https://aiclubnitcserver.adaptable.app",
+    SERVER_URL: "http://localhost:5000",
+    CLIENT_URL: "http://localhost:3000",
 } 
