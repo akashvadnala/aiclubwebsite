@@ -43,7 +43,7 @@ router.post("/login", async (req, res, next) => {
                         // jwtoken->name
                         expires: new Date(Date.now() + 258920000000), //30 days
                         httpOnly: true,
-                        secure: !(process.env.NODE_ENV === "development"),
+                        secure: process.env.NODE_ENV === "development",
                         sameSite: false
                     });
                     if (compete) {
@@ -136,7 +136,7 @@ router.get('/logout', authenticate, async (req, res) => {
     res.cookie('jwtoken', "", { 
         expires: new Date(Date.now() + 258920000000), //30 days
         httpOnly: true,
-        secure: !(process.env.NODE_ENV === "development"),
+        secure: process.env.NODE_ENV === "development",
         sameSite: false
     });
     res.status(200).send({ msg: 'Logged Out Succesfully' });
