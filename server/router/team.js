@@ -225,9 +225,11 @@ router.route('/changePassword/:username').put(async (req,res)=>{
                 team.tokens = [];
                 await team.save();
                 token = await team.generateAuthToken();
-                res.cookie('jwtoken',token,{  // jwtoken->name
+                res.cookie('jwtoken',token,{  
                     expires: new Date(Date.now() + 258920000000), //30 days
-                    httpOnly: true
+                    httpOnly: true,
+                    secure: !(process.env.NODE_ENV === "development"),
+                    sameSite: false
                 });
                 console.log('Password Changed Successfully');
                 return res.status(200).json({ msg: "Password Updated Successfully"});
