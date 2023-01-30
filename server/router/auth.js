@@ -43,6 +43,8 @@ router.post("/login", async (req, res, next) => {
                         // jwtoken->name
                         expires: new Date(Date.now() + 258920000000), //30 days
                         httpOnly: true,
+                        secure: !(process.env.NODE_ENV === "development"),
+                        sameSite: false
                     });
                     if (compete) {
                         if (team.competitions.indexOf(compete) === -1) {
