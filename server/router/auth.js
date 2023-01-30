@@ -133,7 +133,12 @@ router.get('/logout', authenticate, async (req, res) => {
         user.tokens = user.tokens.filter(to => to === user.tokens.find(t => t.token === req.token));
         await user.save();
     }
-    res.clearCookie('jwtoken', { path: '/' });
+    res.cookie('jwtoken', "", { 
+        expires: new Date(Date.now() + 258920000000), //30 days
+        httpOnly: true,
+        secure: !(process.env.NODE_ENV === "development"),
+        sameSite: false
+    });
     res.status(200).send({ msg: 'Logged Out Succesfully' });
 });
 
@@ -172,9 +177,10 @@ router.put("/reset-password/:id/:token",authenticate, async (req, res) => {
         await oldUser.save();
         const token = await oldUser.generateAuthToken();
         res.cookie("jwtoken", token, {
-            // jwtoken->name
             expires: new Date(Date.now() + 258920000000), //30 days
             httpOnly: true,
+            secure: !(process.env.NODE_ENV === "development"),
+            sameSite: false
         });
         return res.status(200).json({ status: "Password Changed Successfully" });
     } catch (error) {
