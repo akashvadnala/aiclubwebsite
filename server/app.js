@@ -15,7 +15,7 @@ app.set("trust proxy",1);
 app.use(cookieParser());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
-console.log('client url: ',Config.CLIENT_URL.split(','));
+// console.log('client url: ',Config.CLIENT_URL.split(','));
 app.use(cors({ 
     credentials: true, 
     origin: Config.CLIENT_URL.split(','),

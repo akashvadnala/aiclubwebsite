@@ -15,8 +15,6 @@ const Projects = () => {
   const [load, setLoad] = useState(0);
   const getProjects = async () => {
     try {
-      console.log('helo');
-      console.log();
       await axios.get(`${SERVER_URL}/getProjects`).then((data) => {
         if (data.status === 200) {
           setProjects(data.data);
@@ -40,15 +38,15 @@ const Projects = () => {
         <Loading />
       ) : load === 1 ? (
         <div className="project-container container">
+          <Helmet>
+            <title>Projects - AI Club</title>
+          </Helmet>
           <div>
             <div className="row py-4">
-              <div className="col-4">
-                <Helmet>
-                  <title>Projects - AI Club</title>
-                </Helmet>
+              <div className="col-md-4 text-center text-md-start">
                 <h2>Projects</h2>
               </div>
-              <div className="col-8 text-end">
+              <div className="col-md-8 text-center text-md-end">
                 {user ? (
                   <>
                     {user.isadmin && <NavLink

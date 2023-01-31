@@ -11,14 +11,21 @@ import Loading from '../Loading';
 
 const Home = () => {
 
-  const [slides, setSlides] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [publications, setPublicationList] = useState([]);
-  const [blogs, setBlogs] = useState([]);
+  const [slides, setSlides] = useState(null);
+  const [events, setEvents] = useState(null);
+  const [projects, setProjects] = useState(null);
+  const [publications, setPublicationList] = useState(null);
+  const [blogs, setBlogs] = useState(null);
+  const [photos, setPhotos] = useState(null);
   const [load, setLoad] = useState(0);
-  const [photos, setPhotos] = useState([]);
 
+  // console.log('slides',slides);
+  // console.log('events',events);
+  // console.log('projects',projects);
+  // console.log('publications',publications);
+  // console.log('blogs',blogs);
+  // console.log('photos',photos);
+  
   const getHome = async () => {
     try {
       //slides

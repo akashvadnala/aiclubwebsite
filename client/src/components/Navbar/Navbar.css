@@ -9,17 +9,21 @@
 
 .navbar{
     background-color: rgba(240,240,240,.6);
-    /* background-color: #449ce9; */
     position: sticky !important;
     top: 0 !important;
     backdrop-filter: saturate(180%) blur(10px) !important;
     z-index: 1000 !important;
     border-bottom: solid 1px rgba(220,220,220,.6);
-    padding: 0 !important;
+    padding: 2px 0 2px 0 !important;
 }
 
 .navbar-nav{
     padding: 0;
+}
+
+.navbar-collapse{
+    
+    transition: top 1s;
 }
 
 #navbarSupportedContent ul li a span:nth-child(2){
@@ -60,6 +64,25 @@ ul{
     max-width: 550px !important;
     text-align: center !important;
 }
+
+.navbar{
+    z-index: 1000 !important;
+}
+
+.close-navbar-toggler{
+    position:absolute !important;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+    z-index: 1;
+    cursor:pointer;
+  }
+  
+  .close-navbar-toggler.collapsed{
+    z-index:-1;
+  }
+
 
 @media (min-width: 100px){
     .modal-dialog{

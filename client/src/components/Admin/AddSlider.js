@@ -25,7 +25,7 @@ const AddSlider = () => {
     const [add,setAdd] = useState(0);
     const addSlider = async (e) => {
         e.preventDefault();
-        console.log('addding');
+        // console.log('adding');
         setAdd(1);
         const photo = xSlider.photo;
         const data = new FormData();
@@ -33,11 +33,10 @@ const AddSlider = () => {
         data.append("name",photoname);
         data.append("photo",photo);
         var imgurl;
-        console.log('photoname',photoname);
+        // console.log('photoname',photoname);
         try{
-            console.log('helo');
             const img = await axios.post(`${SERVER_URL}/imgupload`,data);
-            console.log('img',img);
+            // console.log('img',img);
             imgurl = img.data;
             xSlider.photo=imgurl;
         }catch(err){

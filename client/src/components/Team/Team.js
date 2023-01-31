@@ -71,14 +71,13 @@ function Team() {
       <div className='team-container'>
         <div className='head-img'>
           <h1>Team Members</h1>
-          {/* <img src='https://miro.medium.com/max/657/1*MdInuEHHzcTQvjlzs8wpKA.png' /> */}
         </div>
           <div className='container team'>
-              <div className='row align-items-center'>
-                <div className='col-12 col-md-4 col-lg-4 text-md-left'>
+              <div className='row align-items-center pt-3'>
+                <div className='col-12 col-md-4 text-center text-md-start'>
                   <h3>{archTeam && <span>Archieved</span>} Team Members</h3>
                 </div>
-                <div className='col-12 col-md-5 col-lg-6 text-lg-right'>
+                <div className='col-12 col-md-5 text-center text-md-end'>
                   {
                     user?user.isadmin?
                       <div className='right-panel'>
@@ -110,7 +109,7 @@ function Team() {
                   }
                 </div>
                 
-                <div className='right-panel col-12 col-md-3 col-lg-2'>
+                <div className='right-panel col-12 col-md-3 text-center'>
                   <select name="year" value={year} onChange={(e)=>setYear(e.target.value)} className="form-select" aria-label="year">
                     {/* <option value="">Select Year</option> */}
                       <option value={y+1}>Present</option>
