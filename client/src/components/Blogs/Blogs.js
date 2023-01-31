@@ -74,15 +74,15 @@ const Blogs = () => {
         <Loading />
       ) : load === 1 ? (
         <div className="blog-container container">
+          <Helmet>
+            <title>Blogs - AI Club</title>
+          </Helmet>
           <div>
             <div className="row py-4">
-              <div className="col-4">
-                <Helmet>
-                  <title>Blogs - AI Club</title>
-                </Helmet>
+              <div className="col-md-4 text-center text-md-start">
                 <h2>Blogs</h2>
               </div>
-              <div className="col-8 text-end">
+              <div className="col-md-8 text-center text-md-end">
                 {user ? (
                   <>
                     {user.isadmin && (

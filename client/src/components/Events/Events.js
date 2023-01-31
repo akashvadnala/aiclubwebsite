@@ -48,10 +48,10 @@ const Events = () => {
             <title>Events - AI Club</title>
           </Helmet>
           <div className="row py-4">
-            <div className="col-4">
+            <div className="col-md-4 text-center text-md-start">
               <h2>Events</h2>
             </div>
-            <div className="col-8 text-end">
+            <div className="col-md-8 text-center text-md-end">
               {user && user.isadmin ? (
                 <NavLink
                   rel="noreferrer"
