@@ -26,7 +26,7 @@ const welcomeMail = async (toaddress) => {
         from: 'aiclubnitc_messenger@outlook.com', // Sender address
         to: toaddress, // List of recipients
         subject: "Thanks for signing up for Latest updates", // Subject line
-        text: "This is the best desicion you have made.", // Plain text body
+        text: "Greeting from AI Club NITC,\nThanks for subscribing for the latest updated from AI Club.\nStay updated with every event that happens at AI Club. ", // Plain text body
     };
 
     transport.sendMail(mailOptions, function(err, info) {
