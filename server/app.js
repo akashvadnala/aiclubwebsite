@@ -11,6 +11,7 @@ const Config = require('./Config');
 // require('./db/conn');
 const connectDB = require('./db/conn');
 
+app.set("trust proxy",1);
 app.use(cookieParser());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
@@ -34,7 +35,6 @@ app.use(require('./router/rules'));
 app.use(require('./router/blogs'));
 app.use(require('./router/leaderboard'));
 app.use(require('./router/projects'));
-app.use(require('./router/CTeam'));
 app.use(require('./router/about'));
 app.use('/events',require('./router/events'));
 app.use('/gallery',require('./router/gallery'));
