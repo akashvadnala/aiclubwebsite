@@ -77,7 +77,7 @@ const ProjectDisplay = () => {
       );
       if (res.status === 200) {
         proj.public = !proj.public ? true : false;
-        showAlert(`Blog made ${proj.public?"public":"private"}`,"success");
+        showAlert(`Project made ${proj.public?"public":"private"}`,"success");
         setPub(`${!proj.public ? "Make Public" : "Make Private"}`);
         setPub2();
         navigate(`/projects/${proj.url}`);

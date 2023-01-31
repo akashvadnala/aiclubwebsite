@@ -104,6 +104,7 @@ const TeamAdd = () => {
                 else if(team.year<ly){
                     team.year=ly;
                 }
+                team.ismember = team.ismember || team.isadmin;
                 const teamdata = await axios.post(`${SERVER_URL}/teamadd`,
                     team,
                     {
