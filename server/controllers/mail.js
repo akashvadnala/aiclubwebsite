@@ -7,18 +7,23 @@ const Subscribers = require('../model/subscribeSchema');
 let ejs = require('ejs');
 
 const transport = nodemailer.createTransport({
-  host: "smtp.mailtrap.io",
-  port: 2525,
-  auth: {
-    user: process.env.USER,
-    pass: process.env.PASS
-  }
+
+    host: "smtp-mail.outlook.com", // hostname
+    secureConnection: false, // TLS requires secureConnection to be false
+    port: 587, // port for secure SMTP
+    tls: {
+       ciphers:'SSLv3'
+    },
+    auth: {
+        user: process.env.USER,
+        pass: process.env.PASS
+    }
 });
 
 const welcomeMail = async (toaddress) => {
 
     const mailOptions = {
-        from: 'staranirudh88477@gmail.com', // Sender address
+        from: 'aiclubnitc_messenger@outlook.com', // Sender address
         to: toaddress, // List of recipients
         subject: "Thanks for signing up for Latest updates", // Subject line
         text: "This is the best desicion you have made.", // Plain text body
@@ -38,7 +43,7 @@ const broadcastMail = async (subject,body) => {
     const subsmails = await Subscribers.find({},{"_id":false,"__v":false});
     
      const mailOptions = {
-        from: 'staranirudh88477@gmail.com', // Sender address
+        from: 'aiclubnitc_messenger@outlook.com', // Sender address
         to: subsmails, // List of recipients
         subject: subject, // Subject line
         html: body, 
@@ -60,7 +65,7 @@ const passwordResetMail = async (toAddress,content) => {
   const htmlToSend = ejs.render(emailTemplateSource,content);
 
   const mailOptions = {
-      from: 'staranirudh88477@gmail.com', // Sender address
+      from: 'aiclubnitc_messenger@outlook.com', // Sender address
       to: toAddress, // List of recipients
       subject: "Reset password AI Club", // Subject line
       html:htmlToSend,
