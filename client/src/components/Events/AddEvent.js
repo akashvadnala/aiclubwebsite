@@ -258,8 +258,8 @@ const AddEvent = () => {
                     selected={startDate}
                     onChange={(date) => seteventStartDate(date)}
                     showTimeSelect
-                    minDate={new Date()}
-                    filterTime={filterPassedTime}
+                    // minDate={new Date()}
+                    // filterTime={filterPassedTime}
                     dateFormat="MMMM d, yyyy h:mm aa"
                   />
                 </div>
@@ -274,8 +274,8 @@ const AddEvent = () => {
                     selected={endDate}
                     onChange={(date) => seteventEndDate(date)}
                     showTimeSelect
-                    minDate={new Date()}
-                    filterTime={filterPassedTime}
+                    // minDate={new Date()}
+                    // filterTime={filterPassedTime}
                     dateFormat="MMMM d, yyyy h:mm aa"
                   />
                 </div>

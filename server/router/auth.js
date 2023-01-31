@@ -35,7 +35,7 @@ router.post("/login", async (req, res, next) => {
             console.log("isMatch", isMatch);
             if (!isMatch) {
                 console.log("password not matched");
-                return res.status(200).json({ error: "Invalid Credentials" });
+                return res.status(401).json({ error: "Invalid Credentials" });
             } else {
                 if (team) {
                     token = await team.generateAuthToken();
@@ -117,7 +117,6 @@ router.post("/forgot-password", async (req, res) => {
         const content = {
             link: link,
             contact: "aiclubnitc",
-            date: new Date(),
         }
         passwordResetMail(email, content);
         res.status(200).send({ msg: "Mail sent successfully" });
