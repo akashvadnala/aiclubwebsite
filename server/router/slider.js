@@ -5,8 +5,7 @@ const Slider = require('../model/sliderSchema');
 router.route('/getSlides').get(async (req,res)=>{
     try{
         let slides = await Slider.find({}).sort({index:"desc"});
-        const status=slides?200:201;
-        res.status(status).json(slides);
+        res.status(200).json(slides);
     }catch(err){
         console.log(err);
     }

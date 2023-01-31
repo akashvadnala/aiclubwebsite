@@ -1,48 +1,45 @@
 import React from "react";
-import { useContext, useState, useEffect } from "react";
+import { useState } from "react";
 import PhotoAlbum from "react-photo-album";
 import Lightbox from "yet-another-react-lightbox";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/captions.css";
 import "./gallery.css";
-import { Context } from "../../../Context/Context";
-import { SERVER_URL } from "../../../EditableStuff/Config";
-import axios from "axios";
 import { NavLink } from "react-router-dom";
 
-const PhotoGallery = () => {
+const PhotoGallery = ({photos}) => {
   const [index, setIndex] = useState(-1);
-  const [photos, setPhotos] = useState([]);
+  // const [photos, setPhotos] = useState([]);
 
-  const getHomePhotos = async () => {
-    try {
-      let imagedata = [];
-      const data = await axios.get(`${SERVER_URL}/gallery/getHomepagePhotos`);
+  // const getHomePhotos = async () => {
+  //   try {
+  //     let imagedata = [];
+  //     const data = await axios.get(`${SERVER_URL}/gallery/getHomepagePhotos`);
 
-      imagedata = data.data;
-      // console.log("imagedata", imagedata);
+  //     imagedata = data.data;
+  //     // console.log("imagedata", imagedata);
 
-      let photoArray = imagedata.map((photo, index) => {
-        const width = photo.width * 4;
-        const height = photo.height * 4;
-        return {
-          src: photo.imgurl,
-          key: `${index}`,
-          width,
-          height,
-          title: photo.caption,
-        };
-      });
-      setPhotos(photoArray);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  //     let photoArray = imagedata.map((photo, index) => {
+  //       const width = photo.width * 4;
+  //       const height = photo.height * 4;
+  //       return {
+  //         src: photo.imgurl,
+  //         key: `${index}`,
+  //         width,
+  //         height,
+  //         title: photo.caption,
+  //       };
+  //     });
+  //     setPhotos(photoArray);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
-  useEffect(() => {
-    getHomePhotos();
-  }, []);
+  // useEffect(() => {
+  //   getHomePhotos();
+  // }, []);
 
   return (
     <div className="gallery-container adjust">
