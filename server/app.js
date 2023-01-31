@@ -45,7 +45,7 @@ app.use(require('./router/slider'));
 const PORT = process.env.PORT || 5000;
 // const url = process.env.DATABASE;
 const url = Config.DATABASE;
-
+console.log("database url: ",[url]);
 const start = async () => {
     try{
         connectDB(url);
