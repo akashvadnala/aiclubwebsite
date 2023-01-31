@@ -21,14 +21,15 @@ function TeamCard({ team, isadmin, isdelete }) {
     }
   };
   return (
-    <div className="col-lg-3 col-md-4 col-sm-6 col-6">
+    <div className="team-card-container col-lg-3 col-md-4 col-sm-6 col-6">
       <div className="card" style={{'border':"solid"}}>
-        <img className="card-img-top" src={team.photo} alt={team.firstname} />
+        <div className="card-img">
+          <img className="card-img-top" src={team.photo} alt={team.firstname} />
+        </div>
         <div className="card-body">
-          <h5>
-            {team.firstname} {team.lastname}
-          </h5>
-          <h7>{team.profession}</h7>
+          <h5>{team.firstname} {team.lastname}</h5>
+          <h7>{team.position}</h7>
+          <h6>{team.profession}</h6>
           <TextTruncate
             title={team.description}
             line={2}
@@ -37,7 +38,7 @@ function TeamCard({ team, isadmin, isdelete }) {
             text={team.description}
             textTruncateChild="..."
           />
-          <div className="d-flex justify-content-evenly my-4">
+          <div className="d-flex justify-content-evenly">
             <a
               href={`mailto:${team.email}`}
             >
@@ -64,7 +65,7 @@ function TeamCard({ team, isadmin, isdelete }) {
             </a>
           </div>
           {isadmin ? (
-            <div className="admin-opt d-flex justify-content-evenly">
+            <div className="admin-opt d-flex justify-content-evenly pt-3">
               <span>
                 <NavLink type="button" to={`/team/edit/${team.username}`} className="btn btn-sm btn-primary"><i className="fas fa-edit"></i> Edit</NavLink>
               </span>

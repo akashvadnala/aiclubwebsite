@@ -12,7 +12,6 @@ router.route('/getSlides').get(async (req,res)=>{
 });
 
 router.route('/addSlider').post(async (req,res)=>{
-    console.log('sliderhelo')
     try{
         const slides = await Slider.find({});
         const index = slides.length+1;

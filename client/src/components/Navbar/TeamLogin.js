@@ -50,7 +50,7 @@ function TeamLogin(props) {
           username: username,
         })
         .then((res) => {
-          console.log("res", res);
+          // console.log("res", res);
           if (res.status === 401) {
             setMsg("User Not Found");
           } else if (res.status === 200) {
@@ -61,7 +61,7 @@ function TeamLogin(props) {
       console.log("Login err", err);
     }
   };
-  console.log(reset);
+  // console.log(reset);
   return (
     <Modal
       {...props}
