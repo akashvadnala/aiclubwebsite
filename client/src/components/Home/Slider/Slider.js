@@ -1,55 +1,8 @@
 import Carousel from 'react-bootstrap/Carousel';
 import './Slider.css';
-import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import axios from 'axios';
-import { SERVER_URL } from '../../../EditableStuff/Config';
+import React from 'react';
 
-function Slider() {
-  // const slides = [
-  //   {
-  //       'imgsrc':'https://i2.wp.com/myblogs.pw/wp-content/uploads/2018/08/AI-Web.jpg?fit=1034%2C480&ssl=1',
-  //       'title':'Inductions For B20 and B21',
-  //       'caption1':'AI CLUB Inductions for batch B20 and B21.',
-  //       'caption2':'NITC',
-  //       'linktitle':'Inductions',
-  //       'link':'/competitions/ai-club-inductions'
-  //   },
-  //   {
-  //     'imgsrc':'https://media.istockphoto.com/photos/artificial-intelligence-concept-picture-id1364859722?b=1&k=20&m=1364859722&s=170667a&w=0&h=o7emaeAZHOvBP1_o5ewQH9y9279rQWS9xO_xU4r-u-4=',
-  //     'title':'Inductions For B20 and B21',
-  //     'caption1':'AI CLUB Inductions for batch B20 and B21.',
-  //     'caption2':'AI CLUB Inductions for batch B20 and B21.',
-  //     'linktitle':'Inductions',
-  //     'link':'/competitions/ai-club-inductions'
-  //   },
-  //   {
-  //     'imgsrc':'https://miro.medium.com/max/657/1*MdInuEHHzcTQvjlzs8wpKA.png',
-  //     'title':'Inductions For B20 and B21',
-  //     'caption1':'AI CLUB Inductions for batch B20 and B21.',
-  //     'linktitle':'Inductions',
-  //     'link':'/competitions/ai-club-inductions',
-  //     'color':'#99ff00'
-  //   }
-  // ]
-  const [slides,setSlides] = useState([]);
-
-  const getSlides = async () => {
-    try{
-        axios.get(`${SERVER_URL}/getSlides`)
-        .then(data=>{
-            if(data.status===200){
-              setSlides(data.data);
-            }
-        })
-    }catch(err){
-        console.log(err);
-    }
-}
-
-useEffect(()=>{
-    getSlides();
-},[]);
+function Slider({slides}) {
 
   return (
     <>
