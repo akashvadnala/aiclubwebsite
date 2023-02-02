@@ -74,11 +74,13 @@ const EditProject = () => {
 
   useEffect(() => {
     if (logged_in === 1) {
-      getProject();
+      if(url){
+        getProject();
+      }
     } else if (logged_in === -1) {
       setLoad(-1);
     }
-  }, [logged_in]);
+  }, [logged_in,url]);
 
   const handlePhoto = (e) => {
     setImg(e.target.files[0]);
