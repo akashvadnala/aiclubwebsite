@@ -9,6 +9,7 @@ function TeamLogin(props) {
   const [reset, setReset] = useState(false);
   const [signin, setsignin] = useState(false);
   const [msg, setMsg] = useState();
+  const [showSpinner,setShowSpinner] = useState(false);
 
   const Login = async (e) => {
     e.preventDefault();
@@ -44,6 +45,8 @@ function TeamLogin(props) {
 
   const ResetPassword = async (e) => {
     e.preventDefault();
+    setShowSpinner(true);
+    setMsg("Sending Reset Password Link...");
     try {
       await axios
         .post(`${SERVER_URL}/forgot-password`, {
@@ -54,8 +57,9 @@ function TeamLogin(props) {
           if (res.status === 401) {
             setMsg("User Not Found");
           } else if (res.status === 200) {
-            setMsg("Reset Link sent your Mail");
+            setMsg("Reset Link sent your Mail (please also check the spam folder)");
           }
+          setShowSpinner(false);
         });
     } catch (err) {
       console.log("Login err", err);
@@ -171,7 +175,9 @@ function TeamLogin(props) {
                 class="cust btn btn-primary btn-block mb-4"
                 onClick={ResetPassword}
               >
-                Reset Password
+                Reset Password{
+                  showSpinner && <i class="fa fa-spinner fa-spin"></i>
+                }
               </button>
             </form>
             <button
