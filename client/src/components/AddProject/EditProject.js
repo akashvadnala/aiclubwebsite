@@ -141,7 +141,7 @@ const EditProject = () => {
     setAdd2(<i className="fa fa-spinner fa-spin"></i>);
     try {
       const projdata = await axios.put(
-        `${SERVER_URL}/updateProject/${url}`,
+        `${SERVER_URL}/updateProject/${proj._id}`,
         proj,
         {
           headers: { "Content-Type": "application/json" },

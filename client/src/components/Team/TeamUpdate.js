@@ -120,7 +120,7 @@ const TeamUpdate = () => {
             else if(team.year<ly){
                 team.year=ly;
             }
-            const teamdata = await axios.put(`${SERVER_URL}/teamupdate/${username}`,
+            const teamdata = await axios.put(`${SERVER_URL}/teamupdate/${team._id}`,
                 team,
                 {
                     headers:{"Content-Type" : "application/json"}

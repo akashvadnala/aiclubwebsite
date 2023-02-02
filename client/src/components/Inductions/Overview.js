@@ -13,7 +13,7 @@ const Overview = ({props}) => {
   const [ load, setLoad ] = useState(0);
   const [ desc, setDesc ] = useState('');
   const getOverview = () => {
-    axios.get(`${SERVER_URL}/getOverview/${props.c.url}`)
+    axios.get(`${SERVER_URL}/getOverview/${props.c._id}`)
     .then(data=>{
       if(data.status===200){
         setOverview(data.data);

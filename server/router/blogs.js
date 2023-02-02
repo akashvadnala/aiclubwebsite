@@ -3,10 +3,10 @@ const router = express.Router();
 const Blog = require("../model/BlogSchema");
 const Team = require("../model/teamSchema");
 
-router.route("/updateBlog/:url").put(async (req, res) => {
+router.route("/updateBlog/:id").put(async (req, res) => {
   try {
-    const { url } = req.params;
-    const updatedBlog = await Blog.findOneAndUpdate({ url: url }, req.body, {
+    const { id } = req.params;
+    const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     console.log("Project Updated", updatedBlog);
@@ -79,14 +79,14 @@ router.route("/getpendingBlogApprovals").get(async (req, res) => {
   res.status(200).json(blogData);
 });
 
-router.route("/getuserBlogs/:name").get(async (req, res) => {
-  const {name} = req.params;
+router.route("/getuserBlogs/:id").get(async (req, res) => {
+  const {id} = req.params;
   try {
-    const blogData = await Blog.find({ authorName: name }).sort({createdAt:-1});
+    const blogData = await Blog.find({ authorName: id }).sort({createdAt:-1});
     res.status(200).json(blogData);
   } catch (err) {
     console.log(err);
-    res.status(422).send(`${username} not found`);
+    res.status(422).json(`Blog not found`);
   }
 });
 
@@ -139,10 +139,10 @@ router.route("/deleteBlog/:url").post(async (req, res) => {
   }
 });
 
-router.route("/getprofileblogs/:username").get(async (req,res)=>{
+router.route("/getprofileblogs/:id").get(async (req,res)=>{
   try {
-    const user = req.params.username;
-    const blogs = await Blog.find({authorName:user}).sort({createdAt:-1}).select("title url -_id").limit(5);
+    const id = req.params.id;
+    const blogs = await Blog.find({authorName:id}).sort({createdAt:-1}).select("title url -_id").limit(5);
     res.status(200).json({blogs:blogs});
   } catch (error) {
     console.log(error);

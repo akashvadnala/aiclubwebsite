@@ -22,15 +22,16 @@ const Profile = () => {
     const [newPassword, setNewPassword] = useState("");
     const [cPassword, setCPassword] = useState("");
     const [change, setChange] = useState(false);
-    const [ msg, setMsg ] = useState("");
+    const [pChange, setPChange] = useState(false);
+    const [msg, setMsg] = useState("");
     const { showAlert } = useContext(alertContext);
 
     const getBlogsAndProjects = async () => {
         if (logged_in === 1) {
             try {
                 setTeam(user);
-                const blogsdata = await axios.get(`${SERVER_URL}/getprofileblogs/${user.username}`);
-                const projectdata = await axios.get(`${SERVER_URL}/getMyProjects/${user.username}`);
+                const blogsdata = await axios.get(`${SERVER_URL}/getprofileblogs/${user._id}`);
+                const projectdata = await axios.get(`${SERVER_URL}/getMyProjects/${user._id}`);
                 if ((blogsdata.status === 200) && (projectdata.status === 200)) {
                     setBlogs(blogsdata.data.blogs);
                     setProjects(projectdata.data);
@@ -57,31 +58,31 @@ const Profile = () => {
             'name': 'First Name',
             'link': 'firstname',
             'val': team.firstname,
-            'required':true
+            'required': true
         },
         {
             'name': 'Last Name',
             'link': 'lastname',
             'val': team.lastname,
-            'required':false
+            'required': false
         },
         {
             'name': 'Username',
             'link': 'username',
             'val': team.username,
-            'required':true
+            'required': true
         },
         {
             'name': 'Mobile',
             'link': 'phone',
             'val': team.phone,
-            'required':false
+            'required': false
         },
         {
             'name': 'Description',
             'link': 'description',
             'val': team.description,
-            'required':false
+            'required': false
         },
     ]
     const handleInputs = (e) => {
@@ -95,10 +96,24 @@ const Profile = () => {
 
     const UpdateTeam = async (e) => {
         e.preventDefault();
-        if(!team.firstname || !team.username || !team.position || !team.email){
-            showAlert("Fill required Details","danger");
-            return ;
+        if (!team.firstname || !team.username || !team.position || !team.email) {
+            showAlert("Fill required Details!", "danger");
+            return;
         }
+        if (team.username !== user.username) {
+            console.log('Username changed');
+            try {
+                const res = await axios.get(`${SERVER_URL}/userExist/${team.username}`);
+                if (res.status === 200) {
+                    console.log('Username Already Exists!');
+                    showAlert("Username Already Exists!", "danger");
+                    return ;
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        setPChange(true);
         var imgurl;
         if (Img) {
             const data = new FormData();
@@ -127,18 +142,19 @@ const Profile = () => {
         }
         console.log('imgurl', imgurl);
         try {
-            const teamdata = await axios.put(`${SERVER_URL}/teamupdate/${team.username}`,
+            const teamdata = await axios.put(`${SERVER_URL}/teamupdate/${team._id}`,
                 team,
                 {
                     headers: { "Content-Type": "application/json" }
                 }
             );
             console.log('teamdata', teamdata);
-            if(teamdata.status===200) {
+            if (teamdata.status === 200) {
                 setEditMode(false);
-                showAlert("Profile Updated Successfully","success");
+                setPChange(false);
+                showAlert("Profile Updated Successfully!", "success");
             }
-            else{
+            else {
                 console.log('Username not found');
             }
         } catch (err) {
@@ -148,33 +164,33 @@ const Profile = () => {
 
     const changePassword = async (e) => {
         e.preventDefault();
-        if(password==="" || newPassword==="" || cPassword===""){
+        if (password === "" || newPassword === "" || cPassword === "") {
             setMsg("Fill All Details");
-            return ;
+            return;
         }
         setMsg("");
         setChange(true);
         try {
-            axios.put(`${SERVER_URL}/changePassword/${user.username}`,
-            {
-                password:password,
-                newPassword:newPassword,
-                cPassword:cPassword
-            },
-            {
-                headers:{"Content-Type" : "application/json"},
-                withCredentials: true
-            }).then(res=>{
-                if(res.status===200){
-                    document.getElementById("modalClose"). click();
-                    showAlert(res.data.msg,"success");
-                    setChange(false);
-                }
-                else{
-                    setMsg(res.data.error);
-                    setChange(false);
-                }
-            })
+            axios.put(`${SERVER_URL}/changePassword/${user._id}`,
+                {
+                    password: password,
+                    newPassword: newPassword,
+                    cPassword: cPassword
+                },
+                {
+                    headers: { "Content-Type": "application/json" },
+                    withCredentials: true
+                }).then(res => {
+                    if (res.status === 200) {
+                        document.getElementById("modalClose").click();
+                        showAlert(`${res.data.msg}!`, "success");
+                        setChange(false);
+                    }
+                    else {
+                        setMsg(res.data.error);
+                        setChange(false);
+                    }
+                })
         } catch (err) {
             console.log(err);
         }
@@ -222,12 +238,18 @@ const Profile = () => {
                                                             setTeam(user);
                                                             setEditMode(false);
                                                         }} className="btn btn-sm ms-1">Cancel</button>
-                                                        <button type="button" onClick={UpdateTeam} className="btn btn-sm btn-outline-success ms-1">Save Profile</button>
+                                                        {
+                                                            pChange?
+                                                                <button type="button" className="btn btn-sm btn-outline-success ms-1" disabled>Saving <i class="fa fa-spinner fa-spin"></i></button>
+                                                            :
+                                                                <button type="button" onClick={UpdateTeam} className="btn btn-sm btn-outline-success ms-1">Save Profile</button>
+                                                        }
+                                                        
                                                     </>
                                                     :
                                                     <>
                                                         <button type="button" onClick={() => setEditMode(true)} className="btn btn-sm btn-outline-primary ms-1"><i className="fas fa-edit"></i> Edit Profile</button>
-                                                        <button type="button" className="btn btn-sm btn-outline-danger ms-1" data-bs-toggle="modal" data-bs-target="#passwordModal" onClick={()=>setMsg("")}>Change Password</button>
+                                                        <button type="button" className="btn btn-sm btn-outline-danger ms-1" data-bs-toggle="modal" data-bs-target="#passwordModal" onClick={() => setMsg("")}>Change Password</button>
                                                         <div className="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
                                                             <div className="modal-dialog">
                                                                 <div className="modal-content">
@@ -236,15 +258,15 @@ const Profile = () => {
                                                                     </div>
                                                                     <form method="POST" encType="multipart/form-data">
                                                                         <div className="text-start modal-body">
-                                                                        {msg ? <div className="alert alert-danger">{msg}</div> : null}
+                                                                            {msg ? <div className="alert alert-danger">{msg}</div> : null}
                                                                             <div className="form-group my-3">
-                                                                                <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control form-control-lg" id="passsword" aria-describedby="password" placeholder="Old Password" required={true}/>
+                                                                                <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control form-control-lg" id="passsword" aria-describedby="password" placeholder="Old Password" required={true} />
                                                                             </div>
                                                                             <div className="form-group my-3">
-                                                                                <input type="password" name="newpassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="form-control form-control-lg" id="newpassword" aria-describedby="newpassword" placeholder="New Password" required={true}/>
+                                                                                <input type="password" name="newpassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="form-control form-control-lg" id="newpassword" aria-describedby="newpassword" placeholder="New Password" required={true} />
                                                                             </div>
                                                                             <div className="form-group my-3">
-                                                                                <input type="password" name="cpassword" value={cPassword} onChange={(e) => setCPassword(e.target.value)} className="form-control form-control-lg" id="password" aria-describedby="cpassword" placeholder="Confirm Password" required={true}/>
+                                                                                <input type="password" name="cpassword" value={cPassword} onChange={(e) => setCPassword(e.target.value)} className="form-control form-control-lg" id="password" aria-describedby="cpassword" placeholder="Confirm Password" required={true} />
                                                                             </div>
                                                                         </div>
                                                                         <div className="modal-footer">
@@ -293,15 +315,15 @@ const Profile = () => {
                                                     </>
                                                     :
                                                     <>
-                                                        {team.github && <a href={team.github} target="_blank" className="list-group-item d-flex justify-content-between align-items-center p-3">
+                                                        {team.github && <a href={team.github} rel="noreferrer" target="_blank" className="list-group-item d-flex justify-content-between align-items-center p-3">
                                                             <i className="fab fa-github fa-lg" style={{ "color": "#333333" }}></i>
                                                             <p className="mb-0">Github</p>
                                                         </a>}
-                                                        <a href={`tomail:${team.email}`} target="_blank" className="list-group-item d-flex justify-content-between align-items-center p-3">
+                                                        <a href={`tomail:${team.email}`} rel="noreferrer" target="_blank" className="list-group-item d-flex justify-content-between align-items-center p-3">
                                                             <i className="fas fa-envelope fa-lg" style={{ "color": "#55acee" }}></i>
                                                             <p className="mb-0">{team.email}</p>
                                                         </a>
-                                                        {team.linkedin && <a href={team.linkedin} target="_blank" className="list-group-item d-flex justify-content-between align-items-center p-3">
+                                                        {team.linkedin && <a href={team.linkedin} rel="noreferrer" target="_blank" className="list-group-item d-flex justify-content-between align-items-center p-3">
                                                             <i className="fab fa-linkedin-in fa-lg" style={{ "color": "#3b5998" }}></i>
                                                             <p className="mb-0">Linkedin</p>
                                                         </a>}
@@ -326,15 +348,15 @@ const Profile = () => {
                                                             {
                                                                 editMode ?
                                                                     <div className="col-sm-9 p-0">
-                                                                        <input 
-                                                                            type="text" 
-                                                                            name={form.link} 
-                                                                            value={form.val} 
-                                                                            onChange={handleInputs} 
-                                                                            className="form-control form-control-sm text-muted" 
-                                                                            id={form.link} 
-                                                                            placeholder="" 
-                                                                            required 
+                                                                        <input
+                                                                            type="text"
+                                                                            name={form.link}
+                                                                            value={form.val}
+                                                                            onChange={handleInputs}
+                                                                            className="form-control form-control-sm text-muted"
+                                                                            id={form.link}
+                                                                            placeholder=""
+                                                                            required
                                                                         />
                                                                     </div>
                                                                     :
