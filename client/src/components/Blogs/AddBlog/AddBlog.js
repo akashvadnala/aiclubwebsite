@@ -2,33 +2,39 @@ import React, { useContext, useState, useEffect } from "react";
 import "./AddBlog.css";
 import { Context } from "../../../Context/Context";
 import { useNavigate } from "react-router-dom";
-import Error from "../../Error";
 import { CLIENT_URL, SERVER_URL } from "../../../EditableStuff/Config";
 import axios from "axios";
 import {alertContext} from "../../../Context/Alert";
+import Loading from "../../Loading";
+import Error from "../../Error";
 
 const AddBlog = () => {
   const navigate = useNavigate();
-  const { user } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
-  const [add, setAdd] = useState("Create");
-  const [add2, setAdd2] = useState();
+  const [add, setAdd] = useState(false);
   const [xtag, setXtag] = useState("");
-  const [post, setPost] = useState({
+  const [post, setPost] = useState();
+  const [load, setLoad] = useState(0);
+  let pt = {
     title: "",
     url: "",
     tags: [],
     content: "",
-    authorName: user.username,
+    authorName: user._id,
     authorAvatar: user.photo,
     cover: "",
-  });
-
+  };
+  console.log('blog',post);
   useEffect(() => {
-    if (!user) {
-      navigate("/blogs");
+    if(logged_in===1){
+      setPost(pt);
+      setLoad(1);
     }
-  }, [user]);
+    else if(logged_in===-1){
+      setLoad(-1);
+    }
+  }, [logged_in]);
 
   const handlePhoto = (e) => {
     setPost({ ...post, ["cover"]: e.target.files[0] });
@@ -54,8 +60,7 @@ const AddBlog = () => {
 
   const PostBlog = async (e) => {
     e.preventDefault();
-    setAdd("Creating ");
-    setAdd2(<i className="fa fa-spinner fa-spin"></i>);
+    setAdd(true);
     const data = new FormData();
     const photoname = Date.now() + post.cover.name;
     data.append("name", photoname);
@@ -86,7 +91,7 @@ const AddBlog = () => {
 
   return (
     <>
-      {user ? (
+      {load===0?<Loading />:load===1? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <h3>Add Blog</h3>
@@ -124,7 +129,7 @@ const AddBlog = () => {
                         className="input-group-text text-end"
                         id="basic-addon3"
                       >
-                        {CLIENT_URL}/blogs/{post.url}
+                        {CLIENT_URL}/blogs/
                       </span>
                     </div>
                     <input
@@ -209,15 +214,16 @@ const AddBlog = () => {
                   />
                 </div>
               </div>
-              <button
-                type="submit"
-                name="submit"
-                id="submit"
-                className="btn btn-primary"
-              >
-                {add}
-                {add2}
-              </button>
+              {
+                add?
+                  <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
+                    Creating <i className="fa fa-spinner fa-spin"></i>
+                  </button>
+                  :
+                  <button type="submit" name="submit" id="submit" className="btn btn-primary">
+                    Create
+                  </button>
+              }
             </form>
           </div>
         </div>

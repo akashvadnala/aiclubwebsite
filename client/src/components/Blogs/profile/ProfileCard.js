@@ -21,11 +21,16 @@ const ProfileCard = (props) => {
                 />
               </button>
               <span className="name mt-3">{props.a.firstname} {props.a.lastname}</span>
-              <div className="text mt-3">
+              <div className="text mt-1">
                 <span>
-                  {props.a.description}{" "}
+                  {props.a.position}
                 </span>
-              </div>{" "}
+              </div>
+              <div className="text mt-2">
+                <span>
+                  {props.a.description}
+                </span>
+              </div>
               <div className=" px-2 rounded mt-4 date ">
                 <span className="join" onClick={() => window.location = `mailto:${props.a.email}`}>Contact : <i className="fa fa-envelope"></i></span>
               </div>

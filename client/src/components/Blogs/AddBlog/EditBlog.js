@@ -12,7 +12,7 @@ import { alertContext } from "../../../Context/Alert";
 const EditBlog = () => {
   const { url } = useParams();
   const editor = useRef(null);
-  const { user } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
 
   const [add, setAdd] = useState("Save as Draft");
@@ -25,9 +25,8 @@ const EditBlog = () => {
     try {
       axios.get(`${SERVER_URL}/getBlogEdit/${url}`).then((data) => {
         if (data.status === 200) {
-          console.log("blog", data.data);
           const post_ = data.data;
-          if (user && post_.authorName.indexOf(user.username) > -1) {
+          if (user && post_.authorName===user._id) {
             setpost(data.data);
             setLoad(1);
           } else {
@@ -42,8 +41,13 @@ const EditBlog = () => {
     }
   };
   useEffect(() => {
-    getBlog();
-  }, [user]);
+    if(logged_in===1){
+      getBlog();
+    }
+    else if(logged_in===-1){
+      setLoad(-1);
+    }
+  }, [logged_in]);
 
   const handleValue = (e) => {
     setpost({ ...post, ["content"]: e });

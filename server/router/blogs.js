@@ -49,6 +49,7 @@ router.route("/blogadd").post(async (req, res) => {
   }
   console.log("Posting..");
   try {
+    console.log('blog',req.body);
     const blog = new Blog(req.body);
     await blog.save();
 
@@ -58,6 +59,7 @@ router.route("/blogadd").post(async (req, res) => {
     console.log("err", err);
   }
 });
+
 
 router.route("/getBlogs").get(async (req, res) => {
   const blogData = await Blog.find({ public: true }).sort({createdAt:-1}).select(
@@ -95,10 +97,8 @@ router.route("/getBlog/:url").get(async (req, res) => {
   try {
     const blog = await Blog.findOne({ url: url });
     if (blog) {
-      const userdetails = await Team.findOne({
-        username: blog.authorName,
-      }).select(
-        "-__v -_id -username -password -cpassword -canCreateCompetitions -projects -isadmin -ismember -tokens"
+      const userdetails = await Team.findById(blog.authorName).select(
+        "firstname lastname email position description photo"
       );
       console.log("blog", blog);
       return res.status(200).json({ blog: blog, author: userdetails });
