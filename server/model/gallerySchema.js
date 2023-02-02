@@ -18,11 +18,7 @@ const gallerySchema =new Schema({
         type:Number,
         required:true
     },
-    createdAt:{
-        type: Date,
-        default: Date.now
-    },
-});
+},{ timestamps: true });
 
 const Photo = mongoose.model('photo',gallerySchema);
 module.exports = Photo;
