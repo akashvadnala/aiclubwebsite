@@ -10,12 +10,14 @@ const projectSchema = new mongoose.Schema({
     required: true,
   },
   creator: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: "Team"
   },
   authors: [
     {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Team"
     },
   ],
 
@@ -54,11 +56,7 @@ const projectSchema = new mongoose.Schema({
   approvalStatus: {
     type: String,
     default: "submit",
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  }
+},{ timestamps: true });
 
 module.exports = mongoose.model("Project", projectSchema);

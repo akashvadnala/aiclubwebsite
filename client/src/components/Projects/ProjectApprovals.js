@@ -9,7 +9,7 @@ import { NavLink } from "react-router-dom";
 import { Context } from "../../Context/Context";
 
 const ProjectApprovals = () => {
-  const { user } = useContext(Context);
+  const { user,logged_in } = useContext(Context);
   const [projects, setProjects] = useState([]);
   const [load, setLoad] = useState(0);
 
@@ -30,8 +30,13 @@ const ProjectApprovals = () => {
   };
 
   useEffect(() => {
-    getProjectApprovals();
-  }, [user]);
+    if(logged_in===1){
+      getProjectApprovals();
+    }
+    else if(logged_in===-1){
+      setLoad(-1);
+    }
+  }, [logged_in]);
 
   return (
     <>

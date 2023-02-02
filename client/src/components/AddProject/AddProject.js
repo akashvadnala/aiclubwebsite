@@ -13,46 +13,49 @@ const AddProject = () => {
   const navigate = useNavigate();
   const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
-  const [add, setAdd] = useState("Create");
-  const [add2, setAdd2] = useState();
+  const [add, setAdd] = useState(false);
   const [xauthor, setXAuthor] = useState("");
-  const [load, setLoad] = useState(0);
+  const [load, setLoad] = useState(0);     
   let project = {
     title: "",
     url: "",
-    creator: user ? user.username : "",
-    authors: [user ? user.username : ""],
+    creator: user ? user._id : null,
+    authors: [user ? user._id : null],
     content: "",
     cover: "",
   };
   const [proj, setProj] = useState({});
   const [teams, setTeams] = useState([]);
+  const [projTeams, setProjTeams] = useState([]);
   let team = [];
+  let projTeam = [];
+  let teamArray = [];
   const getTeams = () => {
-    if (logged_in === 1) {
       try {
-        axios.get(`${SERVER_URL}/getTeams`).then((data) => {
-          team = data.data;
-          if (user) {
-            team = team.filter((t) => t !== user.username);
-            setProj(project);
-            setTeams(team);
-            setLoad(1);
-          } else {
-            setLoad(-1);
-          }
+        axios.get(`${SERVER_URL}/getTeams`).then(async (data) => {
+          teamArray = data.data;
+          team = teamArray.filter((t) => t.id !== user._id);
+          projTeam = teamArray.filter((t) => t.id === user._id);
+          setTeams(team);
+          setProjTeams(projTeam);
+          setProj(project);
+          setLoad(1);
         });
       } catch (err) {
         console.log(err);
       }
-    } else if (logged_in === -1) {
-      setLoad(-1);
-    }
   };
   useEffect(() => {
-    getTeams();
+    if (logged_in === 1) {
+      getTeams();
+    } 
+    else if (logged_in === -1) {
+      setLoad(-1);
+    }
   }, [logged_in]);
-
+  console.log('teams',teams);
+  console.log('projTeams',projTeams);
+  console.log('xAuthor',xauthor);
   const handlePhoto = (e) => {
     setProj({ ...proj, ["cover"]: e.target.files[0] });
   };
@@ -61,27 +64,33 @@ const AddProject = () => {
     setProj({ ...proj, [e.target.name]: e.target.value });
   };
   const removeXAuthor = (author) => {
-    let current = proj.authors;
-    current = current.filter((x) => x !== author);
-    setProj({ ...proj, ["authors"]: current });
-    teams.push(author);
-    setTeams(teams);
+    let current = projTeams.filter(t=> t.id===author);
+    projTeam = projTeams.filter(t=> t.id !== author);
+    team = teams;
+    team.push(current[0]);
+    setTeams(team);
+    setProjTeams(projTeam);
+    let authors = proj.authors.filter(a=>a!==author);
+    setProj({...proj,["authors"]:authors});
     setXAuthor("");
   };
   const AddXAuthor = () => {
-    if (xauthor != "") {
-      team = teams.filter((t) => t !== xauthor);
+    if (xauthor !== "") {
+      let current = teams.filter((t) => t.id === xauthor);
+      team = teams.filter((t) => t.id !== xauthor);
+      projTeam = projTeams;
+      projTeam.push(current[0]);
       setTeams(team);
-      let current = proj.authors;
-      current.push(xauthor);
-      setProj({ ...proj, ["authors"]: current });
+      setProjTeams(projTeam);
+      let authors = proj.authors;
+      authors.push(xauthor);      
+      setProj({...proj,["authors"]:authors});
       setXAuthor("");
     }
   };
   const PostProject = async (e) => {
     e.preventDefault();
-    setAdd("Creating ");
-    setAdd2(<i class="fa fa-spinner fa-spin"></i>);
+    setAdd(true);
     const photo = proj.cover;
     const data = new FormData();
     const photoname = Date.now() + photo.name;
@@ -182,13 +191,13 @@ const AddProject = () => {
                   Authors :
                 </label>
                 <div className="col-sm-10">
-                  {proj.authors.map((a) => {
+                  {projTeams.map((t,i) => {
                     return (
-                      <div className="form-group my-2 row">
+                      <div className="form-group my-2 row" key={i}>
                         <div className="col col-9">
                           <input
                             type="text"
-                            value={a}
+                            value={t.name}
                             className="form-control"
                             id="author"
                             aria-describedby="title"
@@ -196,11 +205,11 @@ const AddProject = () => {
                           />
                         </div>
                         <div className="col col-3">
-                          {user.username !== a && (
+                          {user._id !== t.id && (
                             <input
                               type="reset"
                               className="btn btn-danger"
-                              onClick={() => removeXAuthor(a)}
+                              onClick={() => removeXAuthor(t.id)}
                               value="Remove"
                             />
                           )}
@@ -219,7 +228,7 @@ const AddProject = () => {
                       >
                         <option value="">Select Author</option>
                         {teams.map((t) => {
-                          return <option value={t}>{t}</option>;
+                          return <option value={t.id}>{t.name}</option>;
                         })}
                       </select>
                     </div>
@@ -251,15 +260,17 @@ const AddProject = () => {
                   />
                 </div>
               </div>
-              <button
-                type="submit"
-                name="submit"
-                id="submit"
-                className="btn btn-primary"
-              >
-                {add}
-                {add2}
-              </button>
+              {
+                add?
+                  <button type="submit" name="submit" className="btn btn-primary" disabled>
+                    Creating <i class="fa fa-spinner fa-spin"></i>
+                  </button>
+                  :
+                  <button type="submit" name="submit" className="btn btn-primary">
+                    Create
+                  </button>
+              }
+              
             </form>
           </div>
         </div>

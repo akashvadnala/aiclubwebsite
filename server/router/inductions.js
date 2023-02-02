@@ -35,19 +35,19 @@ router.route('/competitions').post(async (req,res) => {
         await compete.save();
 
         const overview = new Overview({
-            compete:compete.url,
+            compete:compete._id,
             description:`This is ${compete.title} overview`
         })
         await overview.save();
 
         const data = new Data({
-            compete:compete.url,
+            compete:compete._id,
             description:`This is ${compete.title} data`
         })
         await data.save();
 
         const rules = new Rules({
-            compete:compete.url,
+            compete:compete._id,
             description:`This is ${compete.title} rules`
         })
         await rules.save();
@@ -110,10 +110,10 @@ router.route('/joinCompete').post(async (req,res)=>{
 
 // overview-save
 
-router.route('/updateCompeteOverview/:url').put(async (req,res)=>{
+router.route('/updateCompeteOverview/:id').put(async (req,res)=>{
     try{
-        const {url}=req.params;
-        const updateData = await Competitions.findOneAndUpdate({url:url},req.body,{
+        const {id}=req.params;
+        const updateData = await Competitions.findByIdAndUpdate(id,req.body,{
             new:true
         });
         console.log('Updated Compete',updatedData);

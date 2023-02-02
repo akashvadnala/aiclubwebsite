@@ -5,29 +5,29 @@ import { Context } from "../../../Context/Context";
 import { NavLink, useParams } from "react-router-dom";
 import Error from "../../Error";
 import axios from "axios";
-import { SERVER_URL } from "../../../EditableStuff/Config";
+import { CLIENT_URL, SERVER_URL } from "../../../EditableStuff/Config";
 import Loading from "../../Loading";
 import { alertContext } from "../../../Context/Alert";
 
 const EditBlog = () => {
   const { url } = useParams();
   const editor = useRef(null);
-  const { user } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
 
-  const [add, setAdd] = useState("Save as Draft");
-  const [add2, setAdd2] = useState();
+  const [add, setAdd] = useState(false);
   const [xtag, setXTag] = useState("");
   const [post, setpost] = useState();
+  const [Img, setImg] = useState();
+  const [photo, setPhoto] = useState(null);
   const [load, setLoad] = useState(0);
   const [preview, setPreview] = useState(false);
   const getBlog = async () => {
     try {
       axios.get(`${SERVER_URL}/getBlogEdit/${url}`).then((data) => {
         if (data.status === 200) {
-          console.log("blog", data.data);
           const post_ = data.data;
-          if (user && post_.authorName.indexOf(user.username) > -1) {
+          if (user && post_.authorName === user._id) {
             setpost(data.data);
             setLoad(1);
           } else {
@@ -42,15 +42,27 @@ const EditBlog = () => {
     }
   };
   useEffect(() => {
-    getBlog();
-  }, [user]);
+    if (logged_in === 1) {
+      getBlog();
+    }
+    else if (logged_in === -1) {
+      setLoad(-1);
+    }
+  }, [logged_in]);
+
+  const handlePhoto = (e) => {
+    setImg(e.target.files[0]);
+    setPhoto(URL.createObjectURL(e.target.files[0]));
+  }
 
   const handleValue = (e) => {
     setpost({ ...post, ["content"]: e });
   };
+
   const handleInputs = (e) => {
     setpost({ ...post, [e.target.name]: e.target.value });
   };
+
   const removeXTag = (tag) => {
     let current = post.tags;
     current = current.filter((x) => x !== tag);
@@ -65,11 +77,37 @@ const EditBlog = () => {
   };
   const UpdateBlog = async (e) => {
     e.preventDefault();
-    setAdd("Saving ");
-    setAdd2(<i className="fa fa-spinner fa-spin"></i>);
+    setAdd(true);
+    var imgurl;
+    if (Img) {
+        const data = new FormData();
+        const photoname = Date.now() + Img.name;
+        data.append("name", photoname);
+        data.append("photo", Img);
+
+        try {
+            await axios.post(`${SERVER_URL}/imgdelete`,
+                { 'url': post.cover },
+                {
+                    headers: { "Content-Type": "application/json" },
+                });
+        } catch (err) {
+            console.log('photoerr', err);
+        }
+
+        try {
+            const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+            console.log('img', img);
+            imgurl = img.data;
+            post.cover = imgurl;
+        } catch (err) {
+            console.log('photoerr', err);
+        }
+    }
+    console.log('imgurl', imgurl);
     try {
       const postdata = await axios.put(
-        `${SERVER_URL}/updateBlog/${url}`,
+        `${SERVER_URL}/updateBlog/${post._id}`,
         post,
         {
           headers: { "Content-Type": "application/json" },
@@ -80,8 +118,7 @@ const EditBlog = () => {
         showAlert("Failed to save", "danger");
         console.log("Project not found");
       } else {
-        setAdd("Save as Draft");
-        setAdd2("");
+        setAdd(false);
         showAlert("Saved as Draft", "success");
         setPreview(true);
       }
@@ -131,6 +168,33 @@ const EditBlog = () => {
                     placeholder="Enter Project Title"
                     required
                   />
+                </div>
+
+                <div className="form-group mb-1">
+                  <label htmlFor="title">Blog Url :</label>
+                </div>
+                <div className="form-group mb-4">
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend">
+                      <span
+                        className="input-group-text text-end"
+                        id="basic-addon3"
+                      >
+                        {CLIENT_URL}/blogs/
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      name="url"
+                      value={post.url}
+                      onChange={handleInputs}
+                      className="form-control"
+                      id="basic-url"
+                      aria-describedby="basic-addon3"
+                      placeholder="Enter Blog Url"
+                      required
+                    />
+                  </div>
                 </div>
 
                 <div className="form-group my-1">
@@ -202,17 +266,46 @@ const EditBlog = () => {
                 </div>
               </div>
               <div className="col-12 col-md-3">
+                <div className="form-group mb-1">
+                  <label htmlFor="title">Blog Cover Photo :</label>
+                </div>
+                <div className="form-group mb-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="photo"
+                    onChange={handlePhoto}
+                    className="form-control"
+                    id="photo"
+                    aria-describedby="photo"
+                  />
+                </div>
+                <div className="form-group mb-1">
+                  <img src={photo ? photo : post.cover} alt={post.title} style={{ width: "100%", objectFit: "contain" }} />
+                </div>
                 <div>
-                  <button
-                    type="submit"
-                    name="submit"
-                    id="submit"
-                    className="btn btn-primary my-3"
-                    onClick={()=>{setpost({ ...post, ["approvalStatus"]: "submit", ["public"]: false });}}
-                  >
-                    {add}
-                    {add2}
-                  </button>
+                  {
+                    add ?
+                      <button
+                        type="submit"
+                        name="submit"
+                        id="submit"
+                        className="btn btn-primary my-3"
+                        disabled
+                      >
+                        Saving <i className="fa fa-spinner fa-spin"></i>
+                      </button>
+                      :
+                      <button
+                        type="submit"
+                        name="submit"
+                        id="submit"
+                        className="btn btn-primary my-3"
+                        onClick={() => { setpost({ ...post, ["approvalStatus"]: "submit", ["public"]: false }); }}
+                      >
+                        Save as Draft
+                      </button>
+                  }
                 </div>
               </div>
             </div>

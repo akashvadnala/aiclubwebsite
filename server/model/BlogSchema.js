@@ -3,8 +3,9 @@ const { Schema } = mongoose;
 
 const BlogSchema = new Schema({
     authorName:{
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Team"
     },
     title:{
         type: String,
@@ -16,31 +17,21 @@ const BlogSchema = new Schema({
     },
     content:{
         type: String,
-        required: false, 
     },
     tags:[{
         type: String
     }],
-    authorAvatar:{
-        type: String,
-        required: true, 
-    },
     cover:{
         type: String,
         required: true, 
     },
     public:{
         type:Boolean,
-        default:false
     },
     approvalStatus: {
         type: String,
         default: "submit",
       },
-    createdAt:{
-        type: Date,
-        default: Date.now
-    },
-  });
+  },{ timestamps: true });
 
   module.exports = mongoose.model('Blog', BlogSchema);

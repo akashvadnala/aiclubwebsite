@@ -13,7 +13,7 @@ const Rules = ({props}) => {
   const [ load, setLoad ] = useState(0);
   const [ desc, setDesc ] = useState('');
   const getRules = () => {
-    axios.get(`${SERVER_URL}/getRules/${props.c.url}`)
+    axios.get(`${SERVER_URL}/getRules/${props.c._id}`)
     .then(data=>{
       if(data.status===200){
         setRules(data.data);

@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 
 const fileSchema = new mongoose.Schema(
   {
-    // owner: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   required: true,
-    //   ref: "User",
-    // },
     key: {
       type: String,
       required: true,

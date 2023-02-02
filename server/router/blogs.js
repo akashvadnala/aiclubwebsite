@@ -3,10 +3,10 @@ const router = express.Router();
 const Blog = require("../model/BlogSchema");
 const Team = require("../model/teamSchema");
 
-router.route("/updateBlog/:url").put(async (req, res) => {
+router.route("/updateBlog/:id").put(async (req, res) => {
   try {
-    const { url } = req.params;
-    const updatedBlog = await Blog.findOneAndUpdate({ url: url }, req.body, {
+    const { id } = req.params;
+    const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     console.log("Project Updated", updatedBlog);
@@ -49,6 +49,7 @@ router.route("/blogadd").post(async (req, res) => {
   }
   console.log("Posting..");
   try {
+    console.log('blog',req.body);
     const blog = new Blog(req.body);
     await blog.save();
 
@@ -59,12 +60,23 @@ router.route("/blogadd").post(async (req, res) => {
   }
 });
 
+
 router.route("/getBlogs").get(async (req, res) => {
   const blogData = await Blog.find({ public: true }).sort({createdAt:-1}).select(
     "-_id -content -authorAvatar -public -approvalStatus"
   );
   res.status(200).json(blogData);
 });
+
+router.route("/getFirstLastNameForBlogs/:url").get(async (req,res)=>{
+  const blog = await Blog.findOne({url:req.params.url});
+  let name="";
+  if(blog){
+      const team = await Team.findById(blog.authorName);
+      name = `${team.firstname} ${team.lastname}`;
+  }
+  return res.status(200).json(name);
+})
 
 router.route("/getsixBlogs").get(async (req, res) => {
   let blogData = await Blog.find({ public: true }).sort({createdAt:-1}).select(
@@ -79,14 +91,14 @@ router.route("/getpendingBlogApprovals").get(async (req, res) => {
   res.status(200).json(blogData);
 });
 
-router.route("/getuserBlogs/:name").get(async (req, res) => {
-  const {name} = req.params;
+router.route("/getuserBlogs/:id").get(async (req, res) => {
+  const {id} = req.params;
   try {
-    const blogData = await Blog.find({ authorName: name }).sort({createdAt:-1});
+    const blogData = await Blog.find({ authorName: id }).sort({createdAt:-1});
     res.status(200).json(blogData);
   } catch (err) {
     console.log(err);
-    res.status(422).send(`${username} not found`);
+    res.status(422).json(`Blog not found`);
   }
 });
 
@@ -95,10 +107,8 @@ router.route("/getBlog/:url").get(async (req, res) => {
   try {
     const blog = await Blog.findOne({ url: url });
     if (blog) {
-      const userdetails = await Team.findOne({
-        username: blog.authorName,
-      }).select(
-        "-__v -_id -username -password -cpassword -canCreateCompetitions -projects -isadmin -ismember -tokens"
+      const userdetails = await Team.findById(blog.authorName).select(
+        "firstname lastname email position description photo"
       );
       console.log("blog", blog);
       return res.status(200).json({ blog: blog, author: userdetails });
@@ -126,23 +136,27 @@ router.route("/getBlogEdit/:url").get(async (req, res) => {
   }
 });
 
-router.route("/deleteBlog/:url").post(async (req, res) => {
-  const { url } = req.params;
-  console.log(url);
-  try {
-    await Blog.deleteOne({ url: url });
+router.route("/deleteBlog/:id").post(async (req, res) => {
+  const { id } = req.params;
+  const blog = await Blog.findById(id);
+  if(blog) {
+    const team = await Team.findById(blog._id);
+    team.blogs = team.blogs.filter(b=> b !== id);
+    await team.save();
+    await Blog.findByIdAndDelete(id);
     console.log("Deleted..");
     return res.status(200).json({ msg: "Project Deleted" });
-  } catch (err) {
+  } 
+  else{
     console.log("Cannot Delete the Project");
-    return res.status(422).json({ msg: "Cannot Delete the Project" });
+    return res.status(201).json({ msg: "Cannot Delete the Project" });
   }
 });
 
-router.route("/getprofileblogs/:username").get(async (req,res)=>{
+router.route("/getprofileblogs/:id").get(async (req,res)=>{
   try {
-    const user = req.params.username;
-    const blogs = await Blog.find({authorName:user}).sort({createdAt:-1}).select("title url -_id").limit(5);
+    const id = req.params.id;
+    const blogs = await Blog.find({authorName:id}).sort({createdAt:-1}).select("title url -_id").limit(5);
     res.status(200).json({blogs:blogs});
   } catch (error) {
     console.log(error);

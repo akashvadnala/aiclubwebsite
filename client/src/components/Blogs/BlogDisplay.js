@@ -16,7 +16,7 @@ import { Helmet } from "react-helmet";
 const BlogDisplay = () => {
   const params = new useParams();
   const url = params.url;
-  const { user } = useContext(Context);
+  const { user,logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
   const [blog, setBlog] = useState(null);
   const [edit, setedit] = useState(null);
@@ -31,7 +31,6 @@ const BlogDisplay = () => {
   const getBlog = async () => {
     try {
       const res = await axios.get(`${SERVER_URL}/getBlog/${url}`);
-      console.log("blog", res.status);
       if (res.status === 200) {
         const post_ = res.data.blog;
         setBlog(res.data.blog);
@@ -39,7 +38,7 @@ const BlogDisplay = () => {
         setApproval(res.data.blog.approvalStatus);
         setPub(`${!res.data.blog.public ? "Make Public" : "Make Private"}`);
         setLoad(1);
-        if (user && post_.authorName.indexOf(user.username) > -1) {
+        if (user && post_.authorName===user._id) {
           setedit(true);
         } else {
           setedit(false);

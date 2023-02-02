@@ -1,39 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { SERVER_URL } from "../../../EditableStuff/Config";
+import axios from "axios";
 import { NavLink } from "react-router-dom";
 import "./BlogCard.css";
 
-const Blogitem = (props) => {
-  const d = new Date(props.blog.createdAt);
+const Blogitem = ({blog}) => {
+  const d = new Date(blog.createdAt);
   const ddmmyy = d.getDate() + "/" + String(parseInt(d.getMonth()) + 1) + "/" + d.getFullYear();
 
   const addDefaultSrc = (ev) => {
     ev.target.src =
       "https://pbwebdev.co.uk/wp-content/uploads/2018/12/blogs.jpg";
   };
+
+  const [names,setNames] = useState("");
+  const getFirstLastNameForBlogs = async () => {
+      axios.get(`${SERVER_URL}/getFirstLastNameForBlogs/${blog.url}`)
+      .then(data=>{
+        if(data.status===200){
+          setNames(data.data);
+        }
+      });
+  }
+  useEffect(()=>{
+    if(blog){
+      getFirstLastNameForBlogs();
+    }
+  },[blog]);
+
   return (
     <div className="my-3 blogcard-container">
       <div className="card text-center">
         <img
           onError={addDefaultSrc}
           src={
-            !props.blog.cover
+            !blog.cover
               ? "https://pbwebdev.co.uk/wp-content/uploads/2018/12/blogs.jpg"
-              : props.blog.cover
+              : blog.cover
           }
           alt="blog"
           className="card-img-top"
         />
         <div className="card-body">
-          <h5 className="card-title">{props.blog.title} </h5>
+          <h5 className="card-title">{blog.title} </h5>
           <p className="card-text">
             <small className="text-muted">
-              By {!props.blog.authorName ? "Unknown" : props.blog.authorName} on{" "}
-              {ddmmyy}
+              By {names} 
+              <br />
+              on {ddmmyy}
             </small>
           </p>
           <NavLink
             rel="noreferrer"
-            to={`/blogs/${props.blog.url}`}
+            to={`/blogs/${blog.url}`}
             className="btn btn-sm btn-dark"
           >
             Read More

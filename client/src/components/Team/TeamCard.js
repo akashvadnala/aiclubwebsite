@@ -6,12 +6,12 @@ import TextTruncate from "react-text-truncate";
 
 function TeamCard({ team, isadmin, isdelete }) {
 
-  const PostDelete = async (username) => {
+  const PostDelete = async (username,id) => {
     const confirmed = window.confirm(
       `Are you sure to delete the user ${username}?`
     );
     if (confirmed) {
-      const res = await axios.post(`${SERVER_URL}/team/delete/${username}`);
+      const res = await axios.post(`${SERVER_URL}/team/delete/${id}`);
       if (res.status === 200) {
         console.log("User not deleted");
       } else if (res.status === 201) {
@@ -77,7 +77,7 @@ function TeamCard({ team, isadmin, isdelete }) {
                       rel="noreferrer"
                       className="btn btn-sm btn-outline-danger"
                       onClick={() => {
-                        PostDelete(team.username);
+                        PostDelete(team.username,team._id);
                       }}
                     >
                      <i className="fas fa-trash-alt"></i> Delete
