@@ -136,9 +136,13 @@ router.route('/teamadd').post(async (req,res) => {
 });
 
 router.route('/getTeams').get(async (req,res)=>{
-    const teams = await Team.find({ismember:true}).select("_id firstname lastname");
-    const teamId = await Team.find({ismember:true}).select("_id");
-    return res.status(200).json({teams:teams,teamId:teamId});
+    let teams = [];
+    const team = await Team.find({ismember:true});
+    await Promise.all(team.map(t=>{
+        teams.push({id:t._id,name:`${t.firstname} ${t.lastname}`})
+    }))
+    // console.log('teams',teams);
+    return res.status(200).json(teams);
 });
 
 router.route('/getTeam/:year').get(async (req,res)=>{
@@ -158,12 +162,12 @@ router.route('/getTeam/:year').get(async (req,res)=>{
     res.status(201).json(teamData);
 });
 
-
 router.route('/getArchTeam').get(async (req,res)=>{
     const teamData = await Team.find({ismember:false});
     // console.log(teamData);
     res.status(201).json(teamData);
 });
+
 
 
 router.route('/getUserDataForEdit/:username').get(async (req,res)=>{

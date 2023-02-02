@@ -126,16 +126,20 @@ router.route("/getBlogEdit/:url").get(async (req, res) => {
   }
 });
 
-router.route("/deleteBlog/:url").post(async (req, res) => {
-  const { url } = req.params;
-  console.log(url);
-  try {
-    await Blog.deleteOne({ url: url });
+router.route("/deleteBlog/:id").post(async (req, res) => {
+  const { id } = req.params;
+  const blog = await Blog.findById(id);
+  if(blog) {
+    const team = await Team.findById(blog._id);
+    team.blogs = team.blogs.filter(b=> b !== id);
+    await team.save();
+    await Blog.findByIdAndDelete(id);
     console.log("Deleted..");
     return res.status(200).json({ msg: "Project Deleted" });
-  } catch (err) {
+  } 
+  else{
     console.log("Cannot Delete the Project");
-    return res.status(422).json({ msg: "Cannot Delete the Project" });
+    return res.status(201).json({ msg: "Cannot Delete the Project" });
   }
 });
 
