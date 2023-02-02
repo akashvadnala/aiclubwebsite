@@ -2,11 +2,11 @@ import React, { useRef, useState, useMemo, useContext, useEffect } from "react";
 import "./AddProject.css";
 import JoditEditor from "jodit-react";
 import { Context } from "../../Context/Context";
-import {alertContext} from "../../Context/Alert";
+import { alertContext } from "../../Context/Alert";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Error from "../Error";
 import axios from "axios";
-import { SERVER_URL } from "../../EditableStuff/Config";
+import { CLIENT_URL, SERVER_URL } from "../../EditableStuff/Config";
 import Loading from "../Loading";
 import { Helmet } from "react-helmet";
 
@@ -16,60 +16,74 @@ const EditProject = () => {
   const navigate = useNavigate();
   const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
-  const [add, setAdd] = useState("Save as Draft");
-  const [add2, setAdd2] = useState();
+  const [add, setAdd] = useState(false);
   const [xauthor, setXAuthor] = useState("");
   const [xtag, setXTag] = useState("");
   const [xCoAuthor, setXCoAuthor] = useState("");
+  const [Img, setImg] = useState();
+  const [photo, setPhoto] = useState(null);
   const [proj, setProj] = useState();
   const [load, setLoad] = useState(0);
   const [preview, setPreview] = useState(false);
   const [teams, setTeams] = useState([]);
+  const [projTeams, setProjTeams] = useState([]);
   let team = [];
+  let projTeam = [];
+  let teamArray = [];
   let project = null;
   const getProject = async () => {
-    if (logged_in === 1) {
+    try {
+      // getTeams
+      team=[];
+      teamArray=[];
+      let projTeam = [];
       try {
-        // getTeams
-        try {
-          axios.get(`${SERVER_URL}/getTeams`).then((data) => {
-            team = data.data;
-            setTeams(team);
-          });
-        } catch (err) {
-          console.log(err);
-        }
-        // getProject
-        axios.get(`${SERVER_URL}/getProjectEdit/${url}`).then(async (data) => {
-          if (data.status === 200) {
-            project = data.data;
-            if (user && project.authors.indexOf(user.username) > -1) {
-              await Promise.all(
-                project.authors.map((author) => {
-                  team = team.filter((t) => t !== author);
-                })
-              );
-              setTeams(team);
-              setProj(project);
-              setLoad(1);
-            } else {
-              setLoad(-1);
-            }
-          } else {
-            setLoad(-1);
-          }
+        axios.get(`${SERVER_URL}/getTeams`).then((data) => {
+          teamArray = data.data;
+          team = teamArray;
         });
       } catch (err) {
         console.log(err);
       }
-    } else if (logged_in === -1) {
-      setLoad(-1);
+      // getProject
+      axios.get(`${SERVER_URL}/getProjectEdit/${url}`).then(async (data) => {
+        if (data.status === 200) {
+          project = data.data;
+          if (user && project.authors.indexOf(user._id) > -1) {
+            await Promise.all(
+              project.authors.map((author) => {
+                team = team.filter((t) => t.id !== author);
+                projTeam.push(teamArray.filter((t) => t.id == author)[0]);
+              })
+            );
+            setTeams(team);
+            setProjTeams(projTeam);
+            setProj(project);
+            setLoad(1);
+          } else {
+            setLoad(-1);
+          }
+        } else {
+          setLoad(-1);
+        }
+      });
+    } catch (err) {
+      console.log(err);
     }
   };
 
   useEffect(() => {
-    getProject();
+    if (logged_in === 1) {
+      getProject();
+    } else if (logged_in === -1) {
+      setLoad(-1);
+    }
   }, [logged_in]);
+
+  const handlePhoto = (e) => {
+    setImg(e.target.files[0]);
+    setPhoto(URL.createObjectURL(e.target.files[0]));
+  }
 
   const handleValue = (e) => {
     setProj({ ...proj, ["content"]: e });
@@ -86,21 +100,29 @@ const EditProject = () => {
     setPreview(false);
   };
   const removeXAuthor = (author) => {
-    let current = proj.authors;
-    current = current.filter((x) => x !== author);
-    setProj({ ...proj, ["authors"]: current });
-    teams.push(author);
-    setTeams(teams);
+    let current = projTeams.filter(t => t.id === author);
+    projTeam = projTeams.filter(t => t.id !== author);
+    team = teams;
+    team.push(current[0]);
+    setTeams(team);
+    setProjTeams(projTeam);
+    let authors = proj.authors.filter(a => a !== author);
+    setProj({ ...proj, ["authors"]: authors });
     setXAuthor("");
     setPreview(false);
   };
+
   const AddXAuthor = () => {
     if (xauthor !== "") {
-      team = teams.filter((t) => t !== xauthor);
+      let current = teams.filter((t) => t.id === xauthor);
+      team = teams.filter((t) => t.id !== xauthor);
+      projTeam = projTeams;
+      projTeam.push(current[0]);
       setTeams(team);
-      let current = proj.authors;
-      current.push(xauthor);
-      setProj({ ...proj, ["authors"]: current });
+      setProjTeams(projTeam);
+      let authors = proj.authors;
+      authors.push(xauthor);
+      setProj({ ...proj, ["authors"]: authors });
       setXAuthor("");
       setPreview(false);
     }
@@ -134,11 +156,37 @@ const EditProject = () => {
     setXCoAuthor("");
     setPreview(false);
   };
-
+console.log('proj',proj);
   const UpdateProject = async (e) => {
     e.preventDefault();
-    setAdd("Saving ");
-    setAdd2(<i className="fa fa-spinner fa-spin"></i>);
+    setAdd(true);
+    var imgurl;
+    if (Img) {
+      const data = new FormData();
+      const photoname = Date.now() + Img.name;
+      data.append("name", photoname);
+      data.append("photo", Img);
+
+      try {
+        await axios.post(`${SERVER_URL}/imgdelete`,
+          { 'url': proj.cover },
+          {
+            headers: { "Content-Type": "application/json" },
+          });
+      } catch (err) {
+        console.log('photoerr', err);
+      }
+
+      try {
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+        console.log('img', img);
+        imgurl = img.data;
+        proj.cover = imgurl;
+      } catch (err) {
+        console.log('photoerr', err);
+      }
+    }
+    console.log('imgurl', imgurl);
     try {
       const projdata = await axios.put(
         `${SERVER_URL}/updateProject/${proj._id}`,
@@ -151,8 +199,7 @@ const EditProject = () => {
       if (projdata.status === 422 || !projdata) {
         showAlert("Failed to save", "danger");
       } else {
-        setAdd("Save as Draft");
-        setAdd2("");
+        setAdd(false);
         showAlert("Saved as Draft", "success");
         setPreview(true);
       }
@@ -206,7 +253,34 @@ const EditProject = () => {
                     required
                   />
                 </div>
-
+                <div className="form-group mb-1">
+                  <div className="form-group mb-1">
+                    <label htmlFor="url">Project Url :</label>
+                  </div>
+                  <div className="">
+                    <div className="input-group mb-3">
+                      <div className="input-group-prepend">
+                        <span
+                          className="input-group-text text-end"
+                          id="basic-addon3"
+                        >
+                          {CLIENT_URL}/projects/
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        name="url"
+                        value={proj.url}
+                        onChange={handleInputs}
+                        className="form-control"
+                        id="basic-url"
+                        aria-describedby="basic-addon3"
+                        placeholder="Enter Project Url"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="form-group my-1">
                   <label>Project Tags :</label>
                 </div>
@@ -285,33 +359,32 @@ const EditProject = () => {
                 <div className="form-group my-1">
                   <label>Collaborators :</label>
                 </div>
-                {proj &&
-                  proj.authors.map((a, i) => {
-                    return (
-                      <div className="form-group my-2 row" key={i}>
-                        <div className="col col-9">
-                          <input
-                            type="text"
-                            value={a}
-                            className="form-control"
-                            id="author"
-                            aria-describedby="title"
-                            disabled
-                          />
-                        </div>
-                        <div className="col col-3">
-                          {user.username !== a && proj.creator !== a && (
-                            <input
-                              type="reset"
-                              className="btn btn-danger"
-                              onClick={() => removeXAuthor(a)}
-                              value="Remove"
-                            />
-                          )}
-                        </div>
+                {projTeams.map((t, i) => {
+                  return (
+                    <div className="form-group my-2 row" key={i}>
+                      <div className="col col-9">
+                        <input
+                          type="text"
+                          value={t.name}
+                          className="form-control"
+                          id="author"
+                          aria-describedby="title"
+                          disabled
+                        />
                       </div>
-                    );
-                  })}
+                      <div className="col col-3">
+                        {user._id !== t.id && proj.creator !== t.id && (
+                          <input
+                            type="reset"
+                            className="btn btn-danger"
+                            onClick={() => removeXAuthor(t.id)}
+                            value="Remove"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
                 <div className="form-group my-2 row">
                   <div className="col col-9">
                     <select
@@ -323,7 +396,7 @@ const EditProject = () => {
                     >
                       <option value="">Select Collaborator</option>
                       {teams.map((t) => {
-                        return <option value={t}>{t}</option>;
+                        return <option value={t.id}>{t.name}</option>;
                       })}
                     </select>
                   </div>
@@ -335,6 +408,25 @@ const EditProject = () => {
                       value="+Add"
                     />
                   </div>
+                </div>
+                <div className="form-group my-3">
+                  <label for="photo">
+                    Project Cover Photo :
+                  </label>
+                  <div className="">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      name="photo"
+                      onChange={handlePhoto}
+                      className="form-control"
+                      id="photo"
+                      aria-describedby="photo"
+                    />
+                  </div>
+                </div>
+                <div className="form-group mt-2 mb-4">
+                  <img src={photo?photo:proj.cover} alt={proj.title} style={{width:"100%",objectFit:"contain"}}/>
                 </div>
                 <div className="form-group my-2">
                   <div className="form-check">
@@ -448,16 +540,28 @@ const EditProject = () => {
                   </div>
                 </div>
                 <div>
-                  <button
-                    type="submit"
-                    name="submit"
-                    id="submit"
-                    className="btn btn-primary my-3"
-                    onClick={()=>{setProj({ ...proj, ["approvalStatus"]: "submit" , ["public"]: false});}}
-                  >
-                    {add}
-                    {add2}
-                  </button>
+                  {
+                    add?
+                      <button
+                        type="submit"
+                        name="submit"
+                        id="submit"
+                        className="btn btn-primary my-3"
+                        disabled
+                      >
+                        Saving <i className="fa fa-spinner fa-spin"></i>
+                      </button>
+                      :
+                      <button
+                        type="submit"
+                        name="submit"
+                        id="submit"
+                        className="btn btn-primary my-3"
+                        onClick={() => { setProj({ ...proj, ["approvalStatus"]: "submit", ["public"]: false }); }}
+                      >
+                        Save as Draft
+                      </button>
+                  }
                 </div>
               </div>
             </div>

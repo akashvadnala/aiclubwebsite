@@ -10,7 +10,7 @@ import { Context } from "../../Context/Context";
 import { Helmet } from "react-helmet";
 
 const Projects = () => {
-  const { user,logged_in } = useContext(Context);
+  const { user } = useContext(Context);
   const [projects, setProjects] = useState([]);
   const [load, setLoad] = useState(0);
   const getProjects = async () => {
@@ -27,7 +27,7 @@ const Projects = () => {
       console.log(err);
     }
   };
-
+  console.log('projects',projects);
   useEffect(() => {
     getProjects();
   }, []);

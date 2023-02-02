@@ -8,24 +8,26 @@ router.route("/updateProject/:id").put(async (req, res) => {
   try {
     const { id } = req.params;
     const proj = await Project.findById(id);
-    let removeAuthors = proj.authors;
+    let removeProject = proj.authors;
     const updatedProj = await Project.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    let insertAuthors = updatedProj.authors;
+    let insertProject = updatedProj.authors;
     await Promise.all(
-      removeAuthors.map(async (author) => {
+      removeProject.map(async (author) => {
         try {
           const team = await Team.findById(author);
-          team.projects = team.projects.filter((x) => x !== id);
+          console.log('before',team.username,team.projects)
+          team.projects = team.projects.filter((x) => x != id);
           await team.save();
+          console.log('after',team.username,team.projects)
         } catch (err) {
           console.log("Project Not Found");
         }
       })
     );
     await Promise.all(
-      insertAuthors.map(async (author) => {
+      insertProject.map(async (author) => {
         try {
           const team = await Team.findById(author);
           team.projects.push(id);
@@ -82,8 +84,8 @@ router.route("/projectAdd").post(async (req, res) => {
     await Promise.all(
       project.authors.map(async (author) => {
         try {
-          const team = await Team.findOne({ username: author });
-          team.projects.push(project.url);
+          const team = await Team.findById(author);
+          team.projects.push(project._id);
           await team.save();
         } catch (err) {
           console.log("Author Not Found");
@@ -111,6 +113,22 @@ router.route("/getProjects").get(async (req, res) => {
   });
   res.status(200).json(projectData);
 });
+
+router.route("/getFirstLastNameForProjects/:url").get(async (req,res)=>{
+  const project = await Project.findOne({url:req.params.url});
+  let nameList = [];
+  if(project){
+    const authors = project.authors;
+    await Promise.all(
+      authors.map(async (a)=>{
+        const team = await Team.findById(a);
+        nameList.push(`${team.firstname} ${team.lastname}`);
+      })
+    )
+  }
+  const names = nameList.join(", ");
+  return res.status(200).json(names);
+})
 
 router.route("/getResearchPapers").get(async (req, res) => {
   const projectData = await Project.find({ isPublished: true, public: true })
@@ -144,13 +162,8 @@ router.route("/getProject/:url").get(async (req, res) => {
       const authors = project.authors;
       await Promise.all(
         authors.map(async (user) => {
-          const author = await Team.findOne({ username: user });
-          auth.push({
-            firstname: author.firstname,
-            lastname: author.lastname,
-            photo: author.photo,
-            description: author.description,
-          });
+          const author = await Team.findById(user).select("firstname lastname photo description");
+          auth.push(author);
         })
       );
       return res.status(200).json({ project: project, authors: auth });
@@ -178,23 +191,23 @@ router.route("/getProjectEdit/:url").get(async (req, res) => {
   }
 });
 
-router.route("/deleteProject/:url").post(async (req, res) => {
-  const { url } = req.params;
-  const proj = await Project.findOne({ url: url });
+router.route("/deleteProject/:id").post(async (req, res) => {
+  const { id } = req.params;
+  const proj = await Project.findById(id);
   if (proj) {
     const authors = proj.authors;
     await Promise.all(
       authors.map(async (author) => {
         try {
-          const team = await Team.findOne({ username: author });
-          team.projects = team.projects.filter((p) => p != url);
+          const team = await Team.findById(author);
+          team.projects = team.projects.filter((p) => p != id);
           await team.save();
         } catch (err) {
           console.log(err);
         }
       })
     );
-    await Project.deleteOne({ url: url });
+    await Project.findByIdAndDelete(id);
     console.log("Deleted..");
     return res.status(200).json({ msg: "Project Deleted" });
   } else {
@@ -210,20 +223,19 @@ router.route("/getMyProjects/:id").get(async (req, res) => {
     await Promise.all(
       team.projects.map(async (project) => {
         try {
-          const proj = await Project.findById(project);
-          projects.push({
-            title: proj.title,
-            url: proj.url,
-            cover: proj.cover,
-            authors: proj.authors,
-            createdAt: proj.createdAt,
-          });
+          const proj = await Project.findById(project).select("title url cover authors createdAt");
+          if(proj){
+            projects.push(proj);
+          }
         } catch (err) {
           console.log("Project Not Found");
         }
       })
     );
-    projects.sort((a,b)=>b.createdAt - a.createdAt);
+    if(projects){
+      console.log('projetcs',projects);
+      projects.sort((a,b)=>b.createdAt - a.createdAt);
+    }
     res.status(200).json(projects);
   } else {
     res.status(201).json(null);
