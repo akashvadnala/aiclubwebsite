@@ -23,7 +23,7 @@ const transport = nodemailer.createTransport({
 const welcomeMail = async (toaddress) => {
 
     const mailOptions = {
-        from: 'aiclubnitc_messenger@outlook.com', // Sender address
+        from: 'AI Club <aiclubnitc_messenger@outlook.com>', // Sender address
         to: toaddress, // List of recipients
         subject: "Thanks for signing up for Latest updates", // Subject line
         text: "Greeting from AI Club NITC,\nThanks for subscribing for the latest updated from AI Club.\nStay updated with every event that happens at AI Club. ", // Plain text body
@@ -43,7 +43,7 @@ const broadcastMail = async (subject,body) => {
     const subsmails = await Subscribers.find({},{"_id":false,"__v":false});
     
      const mailOptions = {
-        from: 'aiclubnitc_messenger@outlook.com', // Sender address
+        from: 'AI Club <aiclubnitc_messenger@outlook.com>', // Sender address
         to: subsmails, // List of recipients
         subject: subject, // Subject line
         html: body, 
