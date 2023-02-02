@@ -54,11 +54,7 @@ const projectSchema = new mongoose.Schema({
   approvalStatus: {
     type: String,
     default: "submit",
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  }
+},{ timestamps: true });
 
 module.exports = mongoose.model("Project", projectSchema);
