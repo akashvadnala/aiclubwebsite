@@ -17,7 +17,6 @@ const BlogSchema = new Schema({
     },
     content:{
         type: String,
-        required: false, 
     },
     tags:[{
         type: String
@@ -28,7 +27,6 @@ const BlogSchema = new Schema({
     },
     public:{
         type:Boolean,
-        default:false
     },
     approvalStatus: {
         type: String,
