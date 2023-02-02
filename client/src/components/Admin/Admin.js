@@ -75,7 +75,6 @@ const Admin = () => {
         var imgurl;
         console.log('photoname',photoname);
         try{
-            console.log('helo');
             const img = await axios.post(`${SERVER_URL}/imgupload`,data);
             console.log('img',img);
             imgurl = img.data;
