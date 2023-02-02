@@ -13,7 +13,7 @@ const Data = ({props}) => {
   const [ load, setLoad ] = useState(0);
   const [ desc, setDesc ] = useState('');
   const getCData = () => {
-    axios.get(`${SERVER_URL}/getCData/${props.c.url}`)
+    axios.get(`${SERVER_URL}/getCData/${props.c._id}`)
     .then(data=>{
       if(data.status===200){
         setCData(data.data);

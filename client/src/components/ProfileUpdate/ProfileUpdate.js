@@ -59,16 +59,6 @@ const ProfileUpdate = () => {
             navigate('/');
         }
         });
-        // const data = await res.json();
-        // if(data.status === 422 || !data){
-        //   window.alert("Invalid Regsitration");
-        //   console.log("Invalid Regsitration");
-        // }
-        // else{
-        //   window.alert("Regsitration Successfull");
-        //   console.log("Regsitration Successfull");
-        //   history.push('/')
-        // }
     }
     const forms=[
         {

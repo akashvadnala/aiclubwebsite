@@ -3,9 +3,9 @@ const router = express.Router();
 
 const Rules = require('../model/rulesSchema');
 
-router.route('/getRules/:url').get(async (req,res)=>{
+router.route('/getRules/:id').get(async (req,res)=>{
     try{
-        const data = await Rules.findOne({compete:req.params.url});
+        const data = await Rules.findOne({compete:req.params.id});
         if(data){
             res.status(200).json(data);
         }

@@ -16,31 +16,36 @@ const AddProject = () => {
   const [add, setAdd] = useState("Create");
   const [add2, setAdd2] = useState();
   const [xauthor, setXAuthor] = useState("");
-  const [load, setLoad] = useState(0);
+  const [load, setLoad] = useState(0);     
   let project = {
     title: "",
     url: "",
-    creator: user ? user.username : "",
-    authors: [user ? user.username : ""],
+    creator: user ? user._id : null,
+    authors: [user ? user._id : null],
     content: "",
     cover: "",
   };
   const [proj, setProj] = useState({});
   const [teams, setTeams] = useState([]);
   let team = [];
+  let teamArray = [];
+  const getName = (id)=>{
+    const t = teamArray.find(t=>t._id === id);
+    if(t) return t.firstname;
+    return "";
+  }
   const getTeams = () => {
     if (logged_in === 1) {
       try {
-        axios.get(`${SERVER_URL}/getTeams`).then((data) => {
-          team = data.data;
-          if (user) {
-            team = team.filter((t) => t !== user.username);
-            setProj(project);
-            setTeams(team);
-            setLoad(1);
-          } else {
-            setLoad(-1);
-          }
+        axios.get(`${SERVER_URL}/getTeams`).then(async (data) => {
+          team = data.data.teamId;
+          teamArray = data.data.teams;
+          console.log(data.data.teamId,data.data.teams);
+          console.log('getName',getName(user._id))
+          setProj(project);
+          team = team.filter((t) => t._id !== user._id);
+          setTeams(team);
+          setLoad(1);
         });
       } catch (err) {
         console.log(err);
@@ -69,7 +74,7 @@ const AddProject = () => {
     setXAuthor("");
   };
   const AddXAuthor = () => {
-    if (xauthor != "") {
+    if (xauthor !== "") {
       team = teams.filter((t) => t !== xauthor);
       setTeams(team);
       let current = proj.authors;
@@ -188,7 +193,7 @@ const AddProject = () => {
                         <div className="col col-9">
                           <input
                             type="text"
-                            value={a}
+                            value={getName(a)}
                             className="form-control"
                             id="author"
                             aria-describedby="title"
@@ -196,7 +201,7 @@ const AddProject = () => {
                           />
                         </div>
                         <div className="col col-3">
-                          {user.username !== a && (
+                          {user._id !== a && (
                             <input
                               type="reset"
                               className="btn btn-danger"
@@ -218,8 +223,8 @@ const AddProject = () => {
                         aria-label="authors"
                       >
                         <option value="">Select Author</option>
-                        {teams.map((t) => {
-                          return <option value={t}>{t}</option>;
+                        {teams.map((id) => {
+                          return <option value={id}>{getName(id)}</option>;
                         })}
                       </select>
                     </div>

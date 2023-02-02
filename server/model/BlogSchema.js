@@ -3,8 +3,9 @@ const { Schema } = mongoose;
 
 const BlogSchema = new Schema({
     authorName:{
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Team"
     },
     title:{
         type: String,
@@ -21,10 +22,6 @@ const BlogSchema = new Schema({
     tags:[{
         type: String
     }],
-    authorAvatar:{
-        type: String,
-        required: true, 
-    },
     cover:{
         type: String,
         required: true, 

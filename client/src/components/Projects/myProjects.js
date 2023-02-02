@@ -16,7 +16,7 @@ const Projects = () => {
 
   const getMyProjects = () => {
     try {
-      axios.get(`${SERVER_URL}/getMyProjects/${user.username}`).then((data) => {
+      axios.get(`${SERVER_URL}/getMyProjects/${user._id}`).then((data) => {
         if (user && data.status === 200) {
           setProjects(data.data);
           setLoad(1);

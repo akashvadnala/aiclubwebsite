@@ -5,9 +5,9 @@ const mongoose = express('mongoose');
 const Competitions = require('../model/competitionSchema');
 const Leaderboard = require('../model/leaderboardSchema');
 
-router.route('/getLeaderboard/:url').get(async (req,res)=>{
+router.route('/getLeaderboard/:id').get(async (req,res)=>{
     try{
-        const lb = await Leaderboard.find({compete:req.params.url});
+        const lb = await Leaderboard.find({compete:req.params.id});
         if(lb){
             lb.sort((a,b)=>{a.score>b.score});
             res.status(200).json(lb);

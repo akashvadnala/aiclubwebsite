@@ -4,20 +4,20 @@ const Project = require("../model/projectSchema");
 const Team = require("../model/teamSchema");
 require("../db/conn");
 
-router.route("/updateProject/:url").put(async (req, res) => {
+router.route("/updateProject/:id").put(async (req, res) => {
   try {
-    const { url } = req.params;
-    const proj = await Project.findOne({ url: url });
+    const { id } = req.params;
+    const proj = await Project.findById(id);
     let removeAuthors = proj.authors;
-    const updatedProj = await Project.findOneAndUpdate({ url: url }, req.body, {
+    const updatedProj = await Project.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     let insertAuthors = updatedProj.authors;
     await Promise.all(
       removeAuthors.map(async (author) => {
         try {
-          const team = await Team.findOne({ username: author });
-          team.projects = team.projects.filter((x) => x !== proj.url);
+          const team = await Team.findById(author);
+          team.projects = team.projects.filter((x) => x !== id);
           await team.save();
         } catch (err) {
           console.log("Project Not Found");
@@ -27,8 +27,8 @@ router.route("/updateProject/:url").put(async (req, res) => {
     await Promise.all(
       insertAuthors.map(async (author) => {
         try {
-          const team = await Team.findOne({ username: author });
-          team.projects.push(proj.url);
+          const team = await Team.findById(author);
+          team.projects.push(id);
           await team.save();
         } catch (err) {
           console.log("Project Not Found");
@@ -203,14 +203,14 @@ router.route("/deleteProject/:url").post(async (req, res) => {
   }
 });
 
-router.route("/getMyProjects/:user").get(async (req, res) => {
-  const team = await Team.findOne({ username: req.params.user });
+router.route("/getMyProjects/:id").get(async (req, res) => {
+  const team = await Team.findById(req.params.id);
   let projects = [];
   if (team) {
     await Promise.all(
       team.projects.map(async (project) => {
         try {
-          const proj = await Project.findOne({ url: project });
+          const proj = await Project.findById(project);
           projects.push({
             title: proj.title,
             url: proj.url,
@@ -226,7 +226,7 @@ router.route("/getMyProjects/:user").get(async (req, res) => {
     projects.sort((a,b)=>b.createdAt - a.createdAt);
     res.status(200).json(projects);
   } else {
-    res.status(422).json(null);
+    res.status(201).json(null);
   }
 });
 
