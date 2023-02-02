@@ -14,11 +14,13 @@ const competitionSchema = new mongoose.Schema({
         requied: true
     },
     creator:{
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Team"
     },
     access:[{
-        type:String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Team"
     }],
     public:{
         type: Boolean

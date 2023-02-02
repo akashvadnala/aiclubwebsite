@@ -136,13 +136,10 @@ router.route('/teamadd').post(async (req,res) => {
 });
 
 router.route('/getTeams').get(async (req,res)=>{
-    let users=[];
-    const teams = await Team.find({ismember:true});
-    await Promise.all(
-        teams.map(t=>users.push(t.username))
-    );
-    return res.status(200).json(users);
-})
+    const teams = await Team.find({ismember:true}).select("_id firstname lastname");
+    const teamId = await Team.find({ismember:true}).select("_id");
+    return res.status(200).json({teams:teams,teamId:teamId});
+});
 
 router.route('/getTeam/:year').get(async (req,res)=>{
     let teamData = [];
@@ -188,11 +185,11 @@ router.route('/getUserDataForEdit/:username').get(async (req,res)=>{
 });
 
 
-router.route('/teamupdate/:username').put(async (req,res)=>{
+router.route('/teamupdate/:id').put(async (req,res)=>{
     try {
-        const {username} = req.params;
+        const {id} = req.params;
 
-        const updateduser = await Team.findOneAndUpdate({username:username},req.body,{
+        const updateduser = await Team.findByIdAndUpdate(id,req.body,{
             new:true
         });
 
@@ -204,14 +201,14 @@ router.route('/teamupdate/:username').put(async (req,res)=>{
     }
 });
 
-router.route('/changePassword/:username').put(async (req,res)=>{
+router.route('/changePassword/:id').put(async (req,res)=>{
     try {
-        const {username} = req.params;
+        const {id} = req.params;
         const {password,newPassword,cPassword} = req.body;
         if(newPassword!==cPassword){
             return res.status(201).json({ error: "Password Not Matched" });
         }
-        let team = await Team.findOne({username:username});
+        let team = await Team.findById(id);
 
         bcrypt.compare(password, team.password, async (err,isMatch) => {
             if(!isMatch){
@@ -242,17 +239,17 @@ router.route('/changePassword/:username').put(async (req,res)=>{
 });
 
 
-router.route('/team/delete/:username').post(async (req, res) => {
-    const {username} = req.params;
-    const team = await Team.findOne({ username: username });
+router.route('/team/delete/:id').post(async (req, res) => {
+    const {id} = req.params;
+    const team = await Team.findById(id);
     if(team){
         const projects = team.projects;
         await Promise.all(projects.map(async p=>{
-            const proj = await Project.findOne({url:p});
-            proj.authors = proj.authors.filter(t=>t!==username);
+            const proj = await Project.findById(p);
+            proj.authors = proj.authors.filter(t=>t!==id);
             await proj.save();
         }))
-        await Team.deleteOne({ username: username });
+        await Team.findByIdAndDelete(id);
         console.log('Deleted..');
         return res.status(201).json({ message: "Team Member Deleted Successfully"});
     }

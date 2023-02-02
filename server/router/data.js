@@ -5,9 +5,9 @@ const mongoose = express('mongoose');
 const Competitions = require('../model/competitionSchema');
 const Data = require('../model/dataSchema');
 
-router.route('/getCData/:url').get(async (req,res)=>{
+router.route('/getCData/:id').get(async (req,res)=>{
     try{
-        const data = await Data.findOne({compete:req.params.url});
+        const data = await Data.findOne({compete:req.params.id});
         if(data){
             res.status(200).json(data);
         }

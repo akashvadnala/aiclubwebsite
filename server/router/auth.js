@@ -69,15 +69,6 @@ router.post("/login", async (req, res, next) => {
     }
 });
 
-router.get("/getUserData", authenticate, (req, res) => {
-    // console.log(`Hello ${req.rootUser?req.rootUser.username:'Not logged in'}`);
-    if (req.rootUser) {
-        res.status(200).json(req.rootUser);
-    } else {
-        res.status(201).json(null);
-    }
-});
-
 router.get('/getUserData', authenticate, (req, res) => {
     if (req.rootUser) {
         res.status(200).json(req.rootUser);
@@ -90,7 +81,7 @@ router.get('/getUserData', authenticate, (req, res) => {
 router.route("/userExist/:username").get(async (req, res) => {
     const user = await Team.findOne({ username: req.params.username });
     if (user) {
-        return res.status(200).json(null);
+        return res.status(200).json(user.username);
     } else {
         return res.status(201).json(null);
     }

@@ -69,7 +69,7 @@ const EditBlog = () => {
     setAdd2(<i className="fa fa-spinner fa-spin"></i>);
     try {
       const postdata = await axios.put(
-        `${SERVER_URL}/updateBlog/${url}`,
+        `${SERVER_URL}/updateBlog/${post._id}`,
         post,
         {
           headers: { "Content-Type": "application/json" },

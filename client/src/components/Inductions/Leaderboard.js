@@ -6,7 +6,7 @@ const Leaderboard = ({props}) => {
   const [count,setCount] = useState(1);
   const getLeaderboard = async () =>{
     try{
-      axios.get(`${SERVER_URL}/getLeaderboard/${props.c.url}`)
+      axios.get(`${SERVER_URL}/getLeaderboard/${props.c._id}`)
       .then(data=>{
         if(data.status===200){
           setLB(data.data);

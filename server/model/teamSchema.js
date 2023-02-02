@@ -4,13 +4,13 @@ const jwt = require('jsonwebtoken');
 
 const teamSchema = new mongoose.Schema({
     projects:[{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
     }],
     blogs:[{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
     }],
     competitions:[{
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
     }], 
     firstname: {
         type: String,
