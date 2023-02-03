@@ -111,6 +111,7 @@ router.post("/forgot-password", async (req, res) => {
         passwordResetMail(email, content);
         res.status(200).send({ msg: "Mail sent successfully" });
     } catch (error) {
+        res.status(201).send({msg:"There is a problem in the server"});
         console.log(error);
     }
 });

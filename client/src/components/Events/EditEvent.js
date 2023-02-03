@@ -4,7 +4,6 @@ import "./AddEvent.css";
 import { Context } from "../../Context/Context";
 import { alertContext } from "../../Context/Alert";
 import { useNavigate } from "react-router-dom";
-import Error from "../Error";
 import { CLIENT_URL, SERVER_URL } from "../../EditableStuff/Config";
 import axios from "axios";
 import DatePicker from "react-datepicker";
@@ -12,20 +11,22 @@ import "react-datepicker/dist/react-datepicker.css";
 import JoditEditor from "jodit-react";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import Loading from "../Loading";
+import Error from "../Error";
 
 const EditEvent = () => {
   const params = new useParams();
   const url = params.url;
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const editor = useRef(null);
-  const { user } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
-  const [add, setAdd] = useState("Save as Draft");
-  const [add2, setAdd2] = useState();
+  const [add, setAdd] = useState(false);
   const [xspeakers, setXspeakers] = useState("");
   const [preview, setPreview] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [load, setLoad] = useState(0);
   const [event, setEvent] = useState({
     title: "",
     url: "",
@@ -41,13 +42,13 @@ const EditEvent = () => {
   const getEvent = async () => {
     try {
       const res = await axios.get(`${SERVER_URL}/events/getEvent/${url}`);
-      console.log("blog", res.status);
       if (res.status === 200) {
-        console.log("blog", res.data);
         setEvent(res.data);
+        setLoad(1);
       }
     } catch (err) {
       console.log(err);
+      setLoad(-1);
     }
   };
 
@@ -63,11 +64,18 @@ const EditEvent = () => {
   };
 
   useEffect(() => {
-    getEvent();
-    if (!(user && user.isadmin)) {
-      navigate("/events");
+    if (logged_in === 1) {
+      if (url && user && user.isadmin) {
+        getEvent();
+      }
+      else {
+        setLoad(-1);
+      }
     }
-  }, [user]);
+    else if (logged_in === -1) {
+      setLoad(-1);
+    }
+  }, [logged_in, url]);
 
   const handleposterPhoto = (e) => {
     setEvent({ ...event, ["poster"]: e.target.files[0] });
@@ -103,8 +111,7 @@ const EditEvent = () => {
 
   const EditEvent = async (e) => {
     e.preventDefault();
-    setAdd("Saving ");
-    setAdd2(<i className="fa fa-spinner fa-spin"></i>);
+    setAdd(true);
     var imgurl;
     const data = new FormData();
     const photoname = Date.now() + event.poster.name;
@@ -144,8 +151,7 @@ const EditEvent = () => {
       if (eventdata.status === 422 || !eventdata) {
         showAlert("Failed to save", "danger");
       } else {
-        setAdd("Save as Draft");
-        setAdd2("");
+        setAdd(false);
         showAlert("Saved as Draft", "success");
         setPreview(true);
       }
@@ -156,7 +162,7 @@ const EditEvent = () => {
 
   return (
     <>
-      {user ? (
+      {load === 0 ? <Loading /> : load === 1 ? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <Helmet>
@@ -209,7 +215,7 @@ const EditEvent = () => {
                         className="input-group-text text-end"
                         id="basic-addon3"
                       >
-                        {CLIENT_URL}/events/{event.url}
+                        {CLIENT_URL}/events/
                       </span>
                     </div>
                     <input
@@ -373,15 +379,27 @@ const EditEvent = () => {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                name="submit"
-                id="submit"
-                className="btn btn-primary"
-              >
-                {add}
-                {add2}
-              </button>
+              {
+                add ?
+                  <button
+                    type="submit"
+                    name="submit"
+                    id="submit"
+                    className="btn btn-primary"
+                    disabled
+                  >
+                    Updating <i className="fa fa-spinner fa-spin"></i>
+                  </button>
+                  :
+                  <button
+                    type="submit"
+                    name="submit"
+                    id="submit"
+                    className="btn btn-primary"
+                  >
+                    Update
+                  </button>
+              }
             </form>
           </div>
         </div>

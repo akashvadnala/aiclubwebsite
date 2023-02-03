@@ -13,7 +13,7 @@ import { Helmet } from "react-helmet";
 
 const ProjectDisplay = () => {
   const { url } = useParams();
-  const { user } = useContext(Context);
+  const { user,logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
   var project = null;
   const [proj, setProj] = useState();
@@ -35,7 +35,7 @@ const ProjectDisplay = () => {
         return;
       }
       project = data.data.project;
-      if (user && data.data.project.authors.indexOf(user.username) > -1) {
+      if (user && data.data.project.authors.indexOf(user._id) > -1) {
         setEdit(true);
       }
       setProj(data.data.project);
@@ -49,12 +49,17 @@ const ProjectDisplay = () => {
   };
 
   useEffect(() => {
-    getProject();
-  }, [user, url]);
+    if(logged_in===1){
+      getProject();
+    }
+    else if(logged_in===-1){
+      setLoad(-1);
+    }
+  }, [logged_in, url]);
 
   const deleteProject = async (status) => {
     if (status) {
-      const res = await axios.post(`${SERVER_URL}/deleteProject/${proj.url}`);
+      const res = await axios.post(`${SERVER_URL}/deleteProject/${proj._id}`);
       if (res.status === 200) {
         showAlert("Project deleted successfully","success");
         navigate("/projects");

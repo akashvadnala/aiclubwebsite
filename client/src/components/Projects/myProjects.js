@@ -10,7 +10,7 @@ import { Context } from "../../Context/Context";
 import { Helmet } from "react-helmet";
 
 const Projects = () => {
-  const { user } = useContext(Context);
+  const { user,logged_in } = useContext(Context);
   const [projects, setProjects] = useState([]);
   const [load, setLoad] = useState(0);
 
@@ -31,8 +31,13 @@ const Projects = () => {
   };
 
   useEffect(() => {
-    getMyProjects();
-  }, [user]);
+    if(logged_in===1){
+      getMyProjects();
+    }
+    else if(logged_in===-1){
+      setLoad(-1);
+    }
+  }, [logged_in]);
 
   return (
     <>
