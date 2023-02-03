@@ -111,8 +111,8 @@ router.post("/forgot-password", async (req, res) => {
         passwordResetMail(email, content);
         res.status(200).send({ msg: "Mail sent successfully" });
     } catch (error) {
-        res.status(201).send({msg:"There is a problem in the server"});
         console.log(error);
+        res.status(201).send({msg:"There is a problem in the server"});
     }
 });
 
@@ -147,6 +147,7 @@ router.get("/reset-password/:id/:token", async (req, res) => {
             return res.status(201).json({ status: "Not Verified" });
         }
     } catch (error) {
+        console.log(error);
         return res.status(201).json({ status: "Not Verified" });
     }
 });
@@ -174,6 +175,7 @@ router.put("/reset-password/:id/:token",authenticate, async (req, res) => {
         });
         return res.status(200).json({ status: "Password Changed Successfully" });
     } catch (error) {
+        console.log(error);
         res.status(201).json({ status: "Something Went Wrong" });
     }
 });
