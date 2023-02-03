@@ -87,7 +87,7 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
     }
     catch(err){
         console.log(err);
-        res.status(500).json({'msg':err})
+        res.status(500).json({msg:"Internal server error"});
     }
     
 });
@@ -143,11 +143,11 @@ router.route('/deleteEvent/:url').delete(async (req,res)=> {
     try{
         await Event.deleteOne({url:url});
         console.log('Deleted..');
-        return res.status(200).json({msg:"Event Deleted"});
+        res.status(200).json({msg:"Event Deleted"});
     } 
     catch(err){
         console.log("Cannot Delete the Event");
-        return res.status(422).json({msg:"Cannot Delete the Event"});
+        res.status(422).json({msg:"Cannot Delete the Event"});
     }
 });
 

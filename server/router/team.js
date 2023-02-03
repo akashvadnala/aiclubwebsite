@@ -78,6 +78,7 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
         return res.status(200).send(url);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 });
 
@@ -132,6 +133,7 @@ router.route('/teamadd').post(async (req,res) => {
         
     }catch(err){
         console.log('err',err);
+        res.status(500).json({msg:"Internal server error"});
     }  
 });
 
@@ -255,10 +257,10 @@ router.route('/team/delete/:id').post(async (req, res) => {
         }))
         await Team.findByIdAndDelete(id);
         console.log('Deleted..');
-        return res.status(201).json({ message: "Team Member Deleted Successfully"});
+        res.status(201).json({ message: "Team Member Deleted Successfully"});
     }
     else{
-        return res.status(200).json({ error: "Cannot Delete Team Member"});
+        res.status(200).json({ error: "Cannot Delete Team Member"});
     }
 })
 
