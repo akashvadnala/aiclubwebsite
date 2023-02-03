@@ -1,24 +1,25 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import "./AddEvent.css";
 import { Context } from "../../Context/Context";
-import {alertContext} from "../../Context/Alert";
+import { alertContext } from "../../Context/Alert";
 import { useNavigate } from "react-router-dom";
-import Error from "../Error";
 import { CLIENT_URL, SERVER_URL } from "../../EditableStuff/Config";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import JoditEditor from "jodit-react";
 import { Helmet } from "react-helmet";
+import Loading from "../Loading";
+import Error from "../Error";
 
 const AddEvent = () => {
   const navigate = useNavigate();
   const editor = useRef(null);
-  const { user } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
-  const [add, setAdd] = useState("Create");
-  const [add2, setAdd2] = useState();
+  const [add, setAdd] = useState(false);
   const [xspeakers, setXspeakers] = useState("");
+  const [load, setLoad] = useState(0);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [event, setEvent] = useState({
@@ -27,10 +28,10 @@ const AddEvent = () => {
     speakers: [],
     poster: "",
     abstract: "",
-    eventStart:new Date(),
-    eventEnd:new Date(),
-    eventLink:"",
-    eventLocation:""
+    eventStart: new Date(),
+    eventEnd: new Date(),
+    eventLink: "",
+    eventLocation: ""
   });
 
   const filterPassedTime = (time) => {
@@ -44,10 +45,18 @@ const AddEvent = () => {
   };
 
   useEffect(() => {
-    if (!user) {
-      navigate("/events");
+    if (logged_in === 1) {
+      if (user && user.isadmin) {
+        setLoad(1);
+      }
+      else {
+        setLoad(-1);
+      }
     }
-  }, [user]);
+    else if (logged_in === -1) {
+      setLoad(-1);
+    }
+  }, [logged_in]);
 
   const handleposterPhoto = (e) => {
     setEvent({ ...event, ["poster"]: e.target.files[0] });
@@ -83,9 +92,8 @@ const AddEvent = () => {
 
   const PostEvent = async (e) => {
     e.preventDefault();
-    setAdd("Creating ");
+    setAdd(true);
     console.log("start-end", startDate, endDate);
-    setAdd2(<i className="fa fa-spinner fa-spin"></i>);
     var imgurl;
     const data = new FormData();
     console.log(data);
@@ -120,7 +128,7 @@ const AddEvent = () => {
 
   return (
     <>
-      {user && user.isadmin ? (
+      {load === 1 ? <Loading /> : load === 1 ? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <Helmet>
@@ -163,7 +171,7 @@ const AddEvent = () => {
                         className="input-group-text text-end"
                         id="basic-addon3"
                       >
-                        {CLIENT_URL}/events/{event.url}
+                        {CLIENT_URL}/events/
                       </span>
                     </div>
                     <input
@@ -328,15 +336,26 @@ const AddEvent = () => {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                name="submit"
-                id="submit"
-                className="btn btn-primary"
-              >
-                {add}
-                {add2}
-              </button>
+              {
+                add ?
+                  <button
+                    type="submit"
+                    name="submit"
+                    id="submit"
+                    className="btn btn-primary"
+                    disabled
+                  >
+                    Creating <i className="fa fa-spinner fa-spin"></i>
+                  </button>
+                  : <button
+                    type="submit"
+                    name="submit"
+                    id="submit"
+                    className="btn btn-primary"
+                  >
+                    Create
+                  </button>
+              }
             </form>
           </div>
         </div>
