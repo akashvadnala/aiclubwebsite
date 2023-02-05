@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Slider = require('../model/sliderSchema');
+const authenticate = require("../middleware/authenticate");
 
 router.route('/getSlides').get(async (req,res)=>{
     try{
@@ -12,7 +13,7 @@ router.route('/getSlides').get(async (req,res)=>{
     }
 });
 
-router.route('/addSlider').post(async (req,res)=>{
+router.route('/addSlider').post(authenticate,async (req,res)=>{
     try{
         const slides = await Slider.find({});
         const index = slides.length+1;
@@ -27,7 +28,7 @@ router.route('/addSlider').post(async (req,res)=>{
     }
 });
 
-router.route('/updateSlider/:id').put(async (req,res)=>{
+router.route('/updateSlider/:id').put(authenticate,async (req,res)=>{
     try{
         const data = await Slider.findById(req.params.id);
         if(data){
@@ -46,7 +47,7 @@ router.route('/updateSlider/:id').put(async (req,res)=>{
     }    
 });
 
-router.route('/deleteSlider/:id').post(async (req,res)=>{
+router.route('/deleteSlider/:id').post(authenticate,async (req,res)=>{
     try{
         await Slider.findByIdAndDelete(req.params.id);
         res.status(200).json(null);
@@ -56,7 +57,7 @@ router.route('/deleteSlider/:id').post(async (req,res)=>{
     }
 })
 
-router.route('/sliderMoveDown').post(async (req,res)=>{
+router.route('/sliderMoveDown').post(authenticate,async (req,res)=>{
     const {index} = req.body;
     try{
         let slide = await Slider.findOne({index:index});
@@ -72,7 +73,7 @@ router.route('/sliderMoveDown').post(async (req,res)=>{
     }
 });
 
-router.route('/sliderMoveUp').post(async (req,res)=>{
+router.route('/sliderMoveUp').post(authenticate,async (req,res)=>{
     let {index} = req.body;
     try{
         let slide = await Slider.findOne({index:index});

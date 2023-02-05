@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Blog = require("../model/BlogSchema");
 const Team = require("../model/teamSchema");
+const authenticate = require("../middleware/authenticate");
 
-router.route("/updateBlog/:id").put(async (req, res) => {
+router.route("/updateBlog/:id").put(authenticate,async (req, res) => {
   try {
     const { id } = req.params;
     const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, {
@@ -16,7 +17,7 @@ router.route("/updateBlog/:id").put(async (req, res) => {
   }
 });
 
-router.route("/updateblogPublicStatus/:url").put(async (req, res) => {
+router.route("/updateblogPublicStatus/:url").put(authenticate,async (req, res) => {
   try {
     const { url } = req.params;
     const updatedBlog = await Blog.findOne({ url: url });
@@ -29,7 +30,7 @@ router.route("/updateblogPublicStatus/:url").put(async (req, res) => {
   }
 });
 
-router.route("/updateblogApprovalStatus/:url").put(async (req, res) => {
+router.route("/updateblogApprovalStatus/:url").put(authenticate,async (req, res) => {
   try {
     const { url } = req.params;
     const updatedBlog = await Blog.findOne({ url: url });
@@ -42,7 +43,7 @@ router.route("/updateblogApprovalStatus/:url").put(async (req, res) => {
   }
 });
 
-router.route("/blogadd").post(async (req, res) => {
+router.route("/blogadd").post(authenticate,async (req, res) => {
   const title = req.body.title;
   if (!title) {
     return res.status(400).json({ error: "Plz fill the field properly" });
@@ -137,7 +138,7 @@ router.route("/getBlogEdit/:url").get(async (req, res) => {
   }
 });
 
-router.route("/deleteBlog/:id").post(async (req, res) => {
+router.route("/deleteBlog/:id").post(authenticate,async (req, res) => {
   const { id } = req.params;
   const blog = await Blog.findById(id);
   if(blog) {

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const About = require('../model/AboutSchema');
+const authenticate = require("../middleware/authenticate");
 
-router.route('/updateAbout/:id').put(async (req,res) => {
+router.route('/updateAbout/:id').put(authenticate,async (req,res) => {
     try{
         console.log('body',req.body);
         const updatedAbout = await About.findByIdAndUpdate(req.params.id,req.body,{

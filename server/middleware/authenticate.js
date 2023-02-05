@@ -14,6 +14,7 @@ const Authenticate = async (req,res,next) => {
             req.token=token;
             req.rootUser=rootUser;
         }catch(err){
+            res.status(401).json({msg:"Login to access this page"});
             console.log(err);
         }
     }

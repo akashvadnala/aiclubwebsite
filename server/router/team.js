@@ -82,7 +82,7 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
     }
 });
 
-router.route('/imgdelete').post(async (req,res)=>{
+router.route('/imgdelete').post(authenticate,async (req,res)=>{
     try {
         const url = req.body.url;
         const key =  url.split('=')[2];
@@ -99,7 +99,7 @@ router.route('/imgdelete').post(async (req,res)=>{
 });
 
 
-router.route('/teamadd').post(async (req,res) => {
+router.route('/teamadd').post(authenticate,async (req,res) => {
     // const {  firstname,lastname,profession,description,username,email,password,cpassword } = req.body;
     console.log('body');
     const photo = req.body.photo;
@@ -191,7 +191,7 @@ router.route('/getUserDataForEdit/:username').get(async (req,res)=>{
 });
 
 
-router.route('/teamupdate/:id').put(async (req,res)=>{
+router.route('/teamupdate/:id').put(authenticate,async (req,res)=>{
     try {
         const {id} = req.params;
 
@@ -207,7 +207,7 @@ router.route('/teamupdate/:id').put(async (req,res)=>{
     }
 });
 
-router.route('/changePassword/:id').put(async (req,res)=>{
+router.route('/changePassword/:id').put(authenticate,async (req,res)=>{
     try {
         const {id} = req.params;
         const {password,newPassword,cPassword} = req.body;
@@ -245,7 +245,7 @@ router.route('/changePassword/:id').put(async (req,res)=>{
 });
 
 
-router.route('/team/delete/:id').post(async (req, res) => {
+router.route('/team/delete/:id').post(authenticate,async (req, res) => {
     const {id} = req.params;
     const team = await Team.findById(id);
     if(team){
