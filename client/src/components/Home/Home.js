@@ -37,7 +37,7 @@ const Home = () => {
       axios.get(`${SERVER_URL}/getsixBlogs`).then(data => { setBlogs(data.data) });
       axios.get(`${SERVER_URL}/gallery/getHomepagePhotos`).then(data => {
         let imagedata = [];
-        imagedata = getImages.data;
+        imagedata = data.data;
 
         let photoArray = imagedata.map((photo, index) => {
           const width = photo.width * 4;
