@@ -63,8 +63,7 @@ router.post("/login", async (req, res, next) => {
             }
         });
     } catch (err) {
-        console.log("Invalid Credentials");
-        res.status(500).json({message:"Internal server Error"});
+        res.status(400).json({message:"Internal server Error"});
     }
 });
 
