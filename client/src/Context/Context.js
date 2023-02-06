@@ -13,46 +13,32 @@ export const Context = createContext(INIT_STATE);
 const ContextProvider = ({ children }) => {
     let [state, dispatch] = useReducer(Reducer, INIT_STATE);
     const newState = async () => {
-        try{
-            axios.get(`${SERVER_URL}/getUserData`,
-            {withCredentials: true})
-            .then(res=>{
-                if(res.status===200){
-                    dispatch({
-                        type: "LOGGED_IN",
-                        payload: {
-                            user: res.data,
-                            logged_in: 1
-                        }
-                    });
-                }
-                else{
-                    dispatch({
-                        type: "LOGOUT",
-                        payload: {
-                            user: null,
-                            logged_in: -1,
-                        }
-                    });
-                }
-            })
-            
-        }catch(err){
-            dispatch({
-                type: "LOGOUT",
-                payload: {
-                    user: null,
-                    logged_in: -1,
-                }
+        axios.get(`${SERVER_URL}/getUserData`,
+            { withCredentials: true })
+            .then(res => {
+                dispatch({
+                    type: "LOGGED_IN",
+                    payload: {
+                        user: res.data,
+                        logged_in: 1
+                    }
+                });
+            }).catch(err => {
+                dispatch({
+                    type: "LOGOUT",
+                    payload: {
+                        user: null,
+                        logged_in: -1,
+                    }
+                });
             });
-        }
     };
     useEffect(() => {
         newState();
-    },[]);
+    }, []);
 
-    return(
-        <Context.Provider value={{...state, dispatch}}>
+    return (
+        <Context.Provider value={{ ...state, dispatch }}>
             {children}
         </Context.Provider>
     )
