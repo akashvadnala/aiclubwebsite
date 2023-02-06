@@ -128,7 +128,7 @@ const AddEvent = () => {
 
   return (
     <>
-      {load === 1 ? <Loading /> : load === 1 ? (
+      {load === 0 ? <Loading /> : load === 1 ? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <Helmet>
