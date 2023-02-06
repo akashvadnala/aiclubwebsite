@@ -57,6 +57,7 @@ router.route("/blogadd").post(async (req, res) => {
   } catch (err) {
     
     console.log("err", err);
+    res.status(500).json({msg:"Internal server error"});
   }
 });
 

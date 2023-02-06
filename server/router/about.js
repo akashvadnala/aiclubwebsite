@@ -8,8 +8,10 @@ router.route('/updateAbout/:id').put(async (req,res) => {
         const updatedAbout = await About.findByIdAndUpdate(req.params.id,req.body,{
             new:true
         });
+        res.status(201).json({msg:"About updated sucessfully"});
     }catch (err) {
         console.log(err);
+        res.status(500).json({msg:"problem at server"});
     }
 });
 

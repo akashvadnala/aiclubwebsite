@@ -8,6 +8,7 @@ router.route('/getSlides').get(async (req,res)=>{
         res.status(200).json(slides);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 });
 
@@ -22,6 +23,7 @@ router.route('/addSlider').post(async (req,res)=>{
         res.status(200).json(null);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 });
 
@@ -36,9 +38,11 @@ router.route('/updateSlider/:id').put(async (req,res)=>{
         }
         else{
             console.log('Slider Not Found');
+            res.status(204).json({msg:"Slider Not Found"});
         }
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }    
 });
 
@@ -48,6 +52,7 @@ router.route('/deleteSlider/:id').post(async (req,res)=>{
         res.status(200).json(null);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 })
 
@@ -63,6 +68,7 @@ router.route('/sliderMoveDown').post(async (req,res)=>{
         res.status(200).json(null);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 });
 
@@ -78,6 +84,7 @@ router.route('/sliderMoveUp').post(async (req,res)=>{
         res.status(200).json(null);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 });
 

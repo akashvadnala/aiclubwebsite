@@ -16,6 +16,7 @@ router.route('/getCData/:id').get(async (req,res)=>{
         }
     }catch(err){
         console.log('err');
+        res.status(500).json({msg:"Internal server error"});
     }
     
 })
@@ -28,6 +29,7 @@ router.route('/editCData/:id').put(async (req,res)=>{
         console.log('Updated Data',updatedData);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 })
 

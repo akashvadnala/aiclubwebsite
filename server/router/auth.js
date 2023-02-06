@@ -59,11 +59,12 @@ router.post("/login", async (req, res, next) => {
                     }
                     console.log("Logged in");
                 }
-                return res.json({ message: "User Signin Successfully", user: team });
+                return res.json({ message: "User Signin Successfully"});
             }
         });
     } catch (err) {
         console.log("Invalid Credentials");
+        res.status(500).json({message:"Internal server Error"});
     }
 });
 
@@ -72,7 +73,7 @@ router.get('/getUserData', authenticate, (req, res) => {
         res.status(200).json(req.rootUser);
     }
     else {
-        res.status(201).json(null);
+        res.status(200).json(null);
     }
 });
 
@@ -81,7 +82,7 @@ router.route("/userExist/:username").get(async (req, res) => {
     if (user) {
         return res.status(200).json(user.username);
     } else {
-        return res.status(201).json(null);
+        return res.status(200).json(null);
     }
 });
 
@@ -146,6 +147,7 @@ router.get("/reset-password/:id/:token", async (req, res) => {
             return res.status(201).json({ status: "Not Verified" });
         }
     } catch (error) {
+        console.log(error);
         return res.status(201).json({ status: "Not Verified" });
     }
 });
@@ -173,6 +175,7 @@ router.put("/reset-password/:id/:token",authenticate, async (req, res) => {
         });
         return res.status(200).json({ status: "Password Changed Successfully" });
     } catch (error) {
+        console.log(error);
         res.status(201).json({ status: "Something Went Wrong" });
     }
 });
