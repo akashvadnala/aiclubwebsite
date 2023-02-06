@@ -4,21 +4,22 @@ const Team = require('../model/teamSchema');
 const Authenticate = async (req,res,next) => {
     
     const token = req.cookies.jwtoken;
-    if(token){
-        try{
-            // const verifyToken = jwt.decode(token);
-            const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
-            const rootUser = await Team.findOne({_id:verifyToken._id, password:verifyToken.password, "tokens:token":token});
-            // console.log('rootUser',rootUser.username);
-            if(!rootUser){ throw new Error("User not found")}
-            req.token=token;
-            req.rootUser=rootUser;
-        }catch(err){
-            res.status(401).json({msg:"Login to access this page"});
-            console.log(err);
-        }
+    console.log("token :",token);
+    if(!token) return res.status(401).json({msg:"Login to access this page"});
+    try{
+        // const verifyToken = jwt.decode(token);
+        const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
+        console.log("verigyToken: ",verifyToken);
+        const rootUser = await Team.findOne({_id:verifyToken._id, password:verifyToken.password, "tokens:token":token});
+        // console.log('rootUser',rootUser.username);
+        if(!rootUser){ throw new Error("User not found")}
+        req.token=token;
+        req.rootUser=rootUser;
+        next();
+    }catch(err){
+        console.log(err);
+        return res.status(401).json({msg:"Login to access this page"});
     }
-    next();
 }
 
 module.exports = Authenticate
