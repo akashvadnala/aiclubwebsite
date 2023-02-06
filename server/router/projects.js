@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Project = require("../model/projectSchema");
 const Team = require("../model/teamSchema");
+const authenticate = require("../middleware/authenticate");
 require("../db/conn");
 
-router.route("/updateProject/:id").put(async (req, res) => {
+router.route("/updateProject/:id").put(authenticate,async (req, res) => {
   try {
     const { id } = req.params;
     const proj = await Project.findById(id);
@@ -44,7 +45,7 @@ router.route("/updateProject/:id").put(async (req, res) => {
   }
 });
 
-router.route("/updateprojPublicStatus/:url").put(async (req, res) => {
+router.route("/updateprojPublicStatus/:url").put(authenticate,async (req, res) => {
   try {
     const { url } = req.params;
     const updatedProj = await Project.findOne({ url: url });
@@ -56,7 +57,7 @@ router.route("/updateprojPublicStatus/:url").put(async (req, res) => {
   }
 });
 
-router.route("/updateprojApprovalStatus/:url").put(async (req, res) => {
+router.route("/updateprojApprovalStatus/:url").put(authenticate,async (req, res) => {
   try {
     const { url } = req.params;
     const updatedProj = await Project.findOne({ url: url });
@@ -69,7 +70,7 @@ router.route("/updateprojApprovalStatus/:url").put(async (req, res) => {
   }
 });
 
-router.route("/projectAdd").post(async (req, res) => {
+router.route("/projectAdd").post(authenticate,async (req, res) => {
   const { title, url, creator, authors, content, cover } = req.body;
   try {
     const project = new Project({
@@ -191,7 +192,7 @@ router.route("/getProjectEdit/:url").get(async (req, res) => {
   }
 });
 
-router.route("/deleteProject/:id").post(async (req, res) => {
+router.route("/deleteProject/:id").post(authenticate,async (req, res) => {
   const { id } = req.params;
   const proj = await Project.findById(id);
   if (proj) {

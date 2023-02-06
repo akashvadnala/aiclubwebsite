@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../model/eventSchema');
+const authenticate = require("../middleware/authenticate");
 
 router.route('/getEvents').get(async (req,res)=> {
 
@@ -92,7 +93,7 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
     
 });
 
-router.route('/addEvent').post(async (req,res)=>{
+router.route('/addEvent').post(authenticate, async (req,res)=>{
     try{
         const event = req.body;
         // console.log("server ",event);
@@ -123,7 +124,7 @@ router.route('/getEvent/:url').get(async (req,res)=>{
     }
 })
 
-router.route('/updateEvent/:url').put(async (req,res)=>{
+router.route('/updateEvent/:url').put(authenticate, async (req,res)=>{
     try{
         const {url} = req.params;
         // console.log('req.body',req.body.url,req.body)
@@ -137,7 +138,7 @@ router.route('/updateEvent/:url').put(async (req,res)=>{
     }
 });
 
-router.route('/deleteEvent/:url').delete(async (req,res)=> {
+router.route('/deleteEvent/:url').delete(authenticate, async (req,res)=> {
     const {url} = req.params;
 
     try{

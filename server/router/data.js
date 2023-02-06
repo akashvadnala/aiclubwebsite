@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = express('mongoose');
-
+const authenticate = require("../middleware/authenticate");
 const Competitions = require('../model/competitionSchema');
 const Data = require('../model/dataSchema');
 
@@ -21,7 +21,7 @@ router.route('/getCData/:id').get(async (req,res)=>{
     
 })
 
-router.route('/editCData/:id').put(async (req,res)=>{
+router.route('/editCData/:id').put(authenticate,async (req,res)=>{
     try{
         const updatedData = await Data.findByIdAndUpdate(req.params.id,req.body,{
             new:true
