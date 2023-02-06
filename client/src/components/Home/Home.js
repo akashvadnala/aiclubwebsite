@@ -30,7 +30,7 @@ const Home = () => {
     try {
       //slides
       let getSlides, getEvents, getProjects, getPublications, getBlogs, getImages;
-      axios.get(`${SERVER_URL}/getSlides`).then(data => { setSlides(data.data);setLoad(1) });
+      axios.get(`${SERVER_URL}/getSlides`).then(data => { setSlides(data.data);setLoad(1); });
       axios.get(`${SERVER_URL}/events/gethomepageEvents`).then(data => { setEvents(data.data) });
       axios.get(`${SERVER_URL}/getfiveprojects`).then(data => { setProjects(data.data) });
       axios.get(`${SERVER_URL}/getResearchPapers`).then(data => { setPublicationList(data.data) });
