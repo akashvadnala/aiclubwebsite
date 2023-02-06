@@ -155,25 +155,24 @@ router.route("/getProjectApprovals").get(async (req, res) => {
 
 router.route("/getProject/:url").get(async (req, res) => {
   const { url } = req.params;
-  var auth = [];
-  try {
-    var project = await Project.findOne({ url: url });
-    if (project) {
-      const authors = project.authors;
-      await Promise.all(
-        authors.map(async (user) => {
-          const author = await Team.findById(user).select("firstname lastname photo description");
-          auth.push(author);
-        })
-      );
-      return res.status(200).json({ project: project, authors: auth });
-    } else {
-      return res.status(201).json(null);
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(422).send(`${url} not found`);
-  }
+    Project.findOne({ url: url }).then(async project => {
+      if(project){
+        const authors = project.authors;
+        let auth = [];
+        await Promise.all(
+          authors.map(async (user) => {
+            const author = await Team.findById(user).select("firstname lastname photo description");
+            auth.push(author);
+          })
+        );
+        res.json({project:project,authors:auth});
+      }
+      else{
+        res.status(404).json();
+      }
+    }).catch(err=>{
+      res.status(400).json();
+    });
 });
 
 router.route("/getProjectEdit/:url").get(async (req, res) => {

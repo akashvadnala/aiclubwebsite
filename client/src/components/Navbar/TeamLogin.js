@@ -13,7 +13,6 @@ function TeamLogin(props) {
 
   const Login = async (e) => {
     e.preventDefault();
-    console.log("Logging..");
     setMsg("");
     setsignin(true);
     await axios
@@ -140,7 +139,7 @@ function TeamLogin(props) {
           </div>
         ) : (
           <div className="login-container">
-            <form method="POST">
+            <form method="POST" onSubmit={ResetPassword}>
               <div class="form-group my-3 row">
                 <label for="username" className="col-4 text-end">
                   Username/Email :
@@ -162,7 +161,6 @@ function TeamLogin(props) {
               <button
                 type="submit"
                 class="cust btn btn-primary btn-block mb-4"
-                onClick={ResetPassword}
               >
                 Reset Password{
                   showSpinner && <i class="fa fa-spinner fa-spin"></i>
