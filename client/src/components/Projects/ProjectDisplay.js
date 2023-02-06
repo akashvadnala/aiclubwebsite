@@ -13,7 +13,7 @@ import { Helmet } from "react-helmet";
 
 const ProjectDisplay = () => {
   const { url } = useParams();
-  const { user,logged_in } = useContext(Context);
+  const { user } = useContext(Context);
   const { showAlert } = useContext(alertContext);
   var project = null;
   const [proj, setProj] = useState();
@@ -30,10 +30,6 @@ const ProjectDisplay = () => {
   const getProject = async () => {
     try {
       const data = await axios.get(`${SERVER_URL}/getProject/${url}`);
-      if (data.status !== 200) {
-        setLoad(-1);
-        return;
-      }
       project = data.data.project;
       if (user && data.data.project.authors.indexOf(user._id) > -1) {
         setEdit(true);
@@ -44,18 +40,13 @@ const ProjectDisplay = () => {
       setPub(`${!data.data.project.public ? "Make Public" : "Make Private"}`);
       setLoad(1);
     } catch (err) {
-      console.log(err);
+      setLoad(-1);
     }
   };
 
   useEffect(() => {
-    if(logged_in===1){
-      getProject();
-    }
-    else if(logged_in===-1){
-      setLoad(-1);
-    }
-  }, [logged_in, url]);
+    getProject();
+  }, [user, url]);
 
   const deleteProject = async (status) => {
     if (status) {

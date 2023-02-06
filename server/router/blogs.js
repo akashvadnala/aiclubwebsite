@@ -13,7 +13,7 @@ router.route("/updateBlog/:id").put(authenticate,async (req, res) => {
     console.log("Project Updated", updatedBlog);
     res.status(200).json(updatedBlog);
   } catch (err) {
-    res.status(422).json(err);
+    res.status(201).json(err);
   }
 });
 
@@ -48,15 +48,15 @@ router.route("/blogadd").post(authenticate,async (req, res) => {
   if (!title) {
     return res.status(400).json({ error: "Plz fill the field properly" });
   }
-  console.log("Posting..");
   try {
     console.log('blog',req.body);
     const blog = new Blog(req.body);
     await blog.save();
 
-    console.log(`${blog.title} registered successfully`);
+    console.log(`${blog.title} blog created successfully`);
     res.status(201).json({ message: "Blog posting Successfully" });
   } catch (err) {
+    
     console.log("err", err);
     res.status(500).json({msg:"Internal server error"});
   }
@@ -104,6 +104,17 @@ router.route("/getuserBlogs/:id").get(async (req, res) => {
   }
 });
 
+router.route("/isBlogUrlExist/:url").get(async (req,res)=>{
+  const {url} = req.params;
+  const blog = await Blog.findOne({url:url});
+  if(blog){
+    return res.status(200).json(null);
+  }
+  else{
+    return res.status(201).json(null);
+  }
+})
+
 router.route("/getBlog/:url").get(async (req, res) => {
   const { url } = req.params;
   try {
@@ -142,8 +153,8 @@ router.route("/deleteBlog/:id").post(authenticate,async (req, res) => {
   const { id } = req.params;
   const blog = await Blog.findById(id);
   if(blog) {
-    const team = await Team.findById(blog._id);
-    team.blogs = team.blogs.filter(b=> b !== id);
+    const team = await Team.findById(blog.authorName);
+    team.blogs = team.blogs.filter(b=> b != id);
     await team.save();
     await Blog.findByIdAndDelete(id);
     console.log("Deleted..");

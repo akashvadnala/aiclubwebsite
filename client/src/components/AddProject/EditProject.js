@@ -34,8 +34,8 @@ const EditProject = () => {
   const getProject = async () => {
     try {
       // getTeams
-      team=[];
-      teamArray=[];
+      team = [];
+      teamArray = [];
       let projTeam = [];
       try {
         axios.get(`${SERVER_URL}/getTeams`).then((data) => {
@@ -74,13 +74,16 @@ const EditProject = () => {
 
   useEffect(() => {
     if (logged_in === 1) {
-      if(url){
+      if (url) {
         getProject();
+      }
+      else{
+        setLoad(-1);
       }
     } else if (logged_in === -1) {
       setLoad(-1);
     }
-  }, [logged_in,url]);
+  }, [logged_in, url]);
 
   const handlePhoto = (e) => {
     setImg(e.target.files[0]);
@@ -158,56 +161,69 @@ const EditProject = () => {
     setXCoAuthor("");
     setPreview(false);
   };
-console.log('proj',proj);
+  console.log('proj', proj);
   const UpdateProject = async (e) => {
     e.preventDefault();
-    setAdd(true);
-    var imgurl;
-    if (Img) {
-      const data = new FormData();
-      const photoname = Date.now() + Img.name;
-      data.append("name", photoname);
-      data.append("photo", Img);
-
-      try {
-        await axios.post(`${SERVER_URL}/imgdelete`,
-          { 'url': proj.cover },
-          {
-            headers: { "Content-Type": "application/json" },
-          });
-      } catch (err) {
-        console.log('photoerr', err);
-      }
-
-      try {
-        const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-        console.log('img', img);
-        imgurl = img.data;
-        proj.cover = imgurl;
-      } catch (err) {
-        console.log('photoerr', err);
-      }
-    }
-    console.log('imgurl', imgurl);
     try {
-      const projdata = await axios.put(
-        `${SERVER_URL}/updateProject/${proj._id}`,
-        proj,
-        {
-          headers: { "Content-Type": "application/json" },
+      if(url!==proj.url){
+        const projectExist = await axios.get(`${SERVER_URL}/isProjectUrlExist/${proj.url}`);
+        if (projectExist.status === 200) {
+          showAlert("Url Already Exist!", "danger");
+          return ; 
         }
-      );
-      console.log("projdata", projdata);
-      if (projdata.status === 422 || !projdata) {
-        showAlert("Failed to save", "danger");
-      } else {
-        setAdd(false);
-        showAlert("Saved as Draft", "success");
-        setPreview(true);
       }
+      
+      setAdd(true);
+        var imgurl;
+        if (Img) {
+          const data = new FormData();
+          const photoname = Date.now() + Img.name;
+          data.append("name", photoname);
+          data.append("photo", Img);
+
+          try {
+            await axios.post(`${SERVER_URL}/imgdelete`,
+              { 'url': proj.cover },
+              {
+                headers: { "Content-Type": "application/json" },
+              });
+          } catch (err) {
+            console.log('photoerr', err);
+          }
+
+          try {
+            const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+            console.log('img', img);
+            imgurl = img.data;
+            proj.cover = imgurl;
+          } catch (err) {
+            console.log('photoerr', err);
+          }
+        }
+        console.log('imgurl', imgurl);
+        try {
+          const projdata = await axios.put(
+            `${SERVER_URL}/updateProject/${proj._id}`,
+            proj,
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          console.log("projdata", projdata);
+          if (projdata.status === 422 || !projdata) {
+            showAlert("Failed to save", "danger");
+          } else {
+            setAdd(false);
+            showAlert("Saved as Draft", "success");
+            setPreview(true);
+          }
+        } catch (err) {
+          console.log("err", err);
+        }
     } catch (err) {
-      console.log("err", err);
+      console.log(err);
     }
+
   };
   return (
     <>
@@ -428,7 +444,7 @@ console.log('proj',proj);
                   </div>
                 </div>
                 <div className="form-group mt-2 mb-4">
-                  <img src={photo?photo:proj.cover} alt={proj.title} style={{width:"100%",objectFit:"contain"}}/>
+                  <img src={photo ? photo : proj.cover} alt={proj.title} style={{ width: "100%", objectFit: "contain" }} />
                 </div>
                 <div className="form-group my-2">
                   <div className="form-check">
@@ -543,7 +559,7 @@ console.log('proj',proj);
                 </div>
                 <div>
                   {
-                    add?
+                    add ?
                       <button
                         type="submit"
                         name="submit"
