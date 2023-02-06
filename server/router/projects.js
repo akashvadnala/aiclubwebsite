@@ -216,6 +216,17 @@ router.route("/deleteProject/:id").post(async (req, res) => {
   }
 });
 
+router.route("/isProjectUrlExist/:url").get(async (req,res)=>{
+  const {url}=req.params;
+  const project = await Project.findOne({url:url});
+  if(project){
+    return res.status(200).json(null)
+  }
+  else{
+    return res.status(201).json(null)
+  }
+})
+
 router.route("/getMyProjects/:id").get(async (req, res) => {
   const team = await Team.findById(req.params.id);
   let projects = [];

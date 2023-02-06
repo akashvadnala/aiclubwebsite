@@ -54,8 +54,10 @@ const BlogDisplay = () => {
   };
 
   useEffect(() => {
-    getBlog();
-  }, [user]);
+    if(url){
+      getBlog();
+    }
+  }, [user,url]);
 
   const returnDDMMYYYY = (inp) => {
     const d = new Date(inp);
@@ -93,7 +95,7 @@ const BlogDisplay = () => {
 
   const deleteBlog = async (status) => {
     if (status) {
-      const res = await axios.post(`${SERVER_URL}/deleteBlog/${blog.url}`);
+      const res = await axios.post(`${SERVER_URL}/deleteBlog/${blog._id}`);
       if (res.status === 200) {
         showAlert("Blog deleted successfully","success");
         navigate("/blogs");

@@ -21,13 +21,13 @@ router.post("/login", async (req, res, next) => {
         const { username, password, compete } = req.body;
         console.log(username, password);
         if (!username || !password) {
-            return res.status(200).json({ error: "Plz fill the field properly" });
+            return res.status(401).json({ error: "Plz fill the field properly" });
         }
         var team = await Team.findOne({ username: username });
         if (!team) {
             team = await Team.findOne({ email: username });
             if (!team) {
-                return res.status(200).json({ error: "Invalid Credentials" });
+                return res.status(401).json({ error: "Invalid Credentials" });
             }
         }
 
@@ -59,9 +59,7 @@ router.post("/login", async (req, res, next) => {
                     }
                     console.log("Logged in");
                 }
-                return res
-                    .status(201)
-                    .json({ message: "User Signin Successfully", user: team });
+                return res.json({ message: "User Signin Successfully", user: team });
             }
         });
     } catch (err) {

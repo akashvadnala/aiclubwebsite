@@ -24,33 +24,35 @@ const EditBlog = () => {
   const [preview, setPreview] = useState(false);
   const getBlog = async () => {
     try {
-      axios.get(`${SERVER_URL}/getBlogEdit/${url}`).then((data) => {
-        if (data.status === 200) {
-          const post_ = data.data;
-          if (user && post_.authorName === user._id) {
-            setpost(data.data);
-            setLoad(1);
-          } else {
-            setLoad(-1);
-          }
+      const data = await axios.get(`${SERVER_URL}/getBlogEdit/${url}`);
+      if (data.status === 200) {
+        const post_ = data.data;
+        if (user && post_.authorName === user._id) {
+          setpost(data.data);
+          setLoad(1);
         } else {
           setLoad(-1);
         }
-      });
+      } else {
+        setLoad(-1);
+      }
     } catch (err) {
       console.log(err);
     }
   };
   useEffect(() => {
     if (logged_in === 1) {
-      if(url){
+      if (url) {
         getBlog();
+      }
+      else{
+        setLoad(-1);
       }
     }
     else if (logged_in === -1) {
       setLoad(-1);
     }
-  }, [logged_in,url]);
+  }, [logged_in, url]);
 
   const handlePhoto = (e) => {
     setImg(e.target.files[0]);
@@ -79,54 +81,66 @@ const EditBlog = () => {
   };
   const UpdateBlog = async (e) => {
     e.preventDefault();
-    setAdd(true);
-    var imgurl;
-    if (Img) {
+    try {
+      if (url !== post.url) {
+        const blogExist = await axios.get(`${SERVER_URL}/isBlogurlExist/${post.url}`);
+        if (blogExist.status === 200) {
+          showAlert("Url Already Exist!", "danger");
+          return;
+        }
+      }
+      setAdd(true);
+      var imgurl;
+      if (Img) {
         const data = new FormData();
         const photoname = Date.now() + Img.name;
         data.append("name", photoname);
         data.append("photo", Img);
 
         try {
-            await axios.post(`${SERVER_URL}/imgdelete`,
-                { 'url': post.cover },
-                {
-                    headers: { "Content-Type": "application/json" },
-                });
+          await axios.post(`${SERVER_URL}/imgdelete`,
+            { 'url': post.cover },
+            {
+              headers: { "Content-Type": "application/json" },
+            });
         } catch (err) {
-            console.log('photoerr', err);
+          console.log('photoerr', err);
         }
 
         try {
-            const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-            console.log('img', img);
-            imgurl = img.data;
-            post.cover = imgurl;
+          const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+          console.log('img', img);
+          imgurl = img.data;
+          post.cover = imgurl;
         } catch (err) {
-            console.log('photoerr', err);
+          console.log('photoerr', err);
         }
-    }
-    console.log('imgurl', imgurl);
-    try {
-      const postdata = await axios.put(
-        `${SERVER_URL}/updateBlog/${post._id}`,
-        post,
-        {
-          headers: { "Content-Type": "application/json" },
+      }
+      console.log('imgurl', imgurl);
+      try {
+        const postdata = await axios.put(
+          `${SERVER_URL}/updateBlog/${post._id}`,
+          post,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        console.log("projdata", postdata);
+        if (postdata.status === 201 || !postdata) {
+          showAlert("Failed to save", "danger");
+          console.log("Project not found");
+        } else {
+          setAdd(false);
+          showAlert("Saved as Draft!", "success");
+          setPreview(true);
         }
-      );
-      console.log("projdata", postdata);
-      if (postdata.status === 422 || !postdata) {
-        showAlert("Failed to save", "danger");
-        console.log("Project not found");
-      } else {
-        setAdd(false);
-        showAlert("Saved as Draft", "success");
-        setPreview(true);
+      } catch (err) {
+        console.log("err", err);
       }
     } catch (err) {
-      console.log("err", err);
+      console.log(err);
     }
+
   };
   return (
     <>

@@ -9,38 +9,27 @@ function TeamLogin(props) {
   const [reset, setReset] = useState(false);
   const [signin, setsignin] = useState(false);
   const [msg, setMsg] = useState();
-  const [showSpinner,setShowSpinner] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const Login = async (e) => {
     e.preventDefault();
     console.log("Logging..");
     setMsg("");
     setsignin(true);
-    try {
-      await axios
-        .post(
-          `${SERVER_URL}/login`,
-          {
-            username: username,
-            password: password,
-          },
-          { withCredentials: true }
-        )
-        .then((res) => {
-          console.log("res", res);
-          if (res.status === 200) {
-            setMsg("Invalid Credentials");
-            setsignin(false);
-            console.log("Invalid Credentials");
-          } else if (res.status === 201) {
-            window.location.reload(true);
-          }
-        });
-    } catch (err) {
-      setsignin(true);
-      setMsg();
-      console.log("Login err", "Invalid Credentials");
-    }
+    await axios
+      .post(
+        `${SERVER_URL}/login`,
+        {
+          username: username,
+          password: password,
+        },
+        { withCredentials: true }
+      ).then((res) => {
+        window.location.reload(true);
+      }).catch((err) => {
+        setMsg(err.response.data.error);
+        setsignin(false);
+      });
   };
 
   const ResetPassword = async (e) => {

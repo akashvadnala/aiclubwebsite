@@ -15,7 +15,7 @@ const AddProject = () => {
   const { showAlert } = useContext(alertContext);
   const [add, setAdd] = useState(false);
   const [xauthor, setXAuthor] = useState("");
-  const [load, setLoad] = useState(0);     
+  const [load, setLoad] = useState(0);
   let project = {
     title: "",
     url: "",
@@ -31,31 +31,31 @@ const AddProject = () => {
   let projTeam = [];
   let teamArray = [];
   const getTeams = () => {
-      try {
-        axios.get(`${SERVER_URL}/getTeams`).then(async (data) => {
-          teamArray = data.data;
-          team = teamArray.filter((t) => t.id !== user._id);
-          projTeam = teamArray.filter((t) => t.id === user._id);
-          setTeams(team);
-          setProjTeams(projTeam);
-          setProj(project);
-          setLoad(1);
-        });
-      } catch (err) {
-        console.log(err);
-      }
+    try {
+      axios.get(`${SERVER_URL}/getTeams`).then(async (data) => {
+        teamArray = data.data;
+        team = teamArray.filter((t) => t.id !== user._id);
+        projTeam = teamArray.filter((t) => t.id === user._id);
+        setTeams(team);
+        setProjTeams(projTeam);
+        setProj(project);
+        setLoad(1);
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     if (logged_in === 1) {
       getTeams();
-    } 
+    }
     else if (logged_in === -1) {
       setLoad(-1);
     }
   }, [logged_in]);
-  console.log('teams',teams);
-  console.log('projTeams',projTeams);
-  console.log('xAuthor',xauthor);
+  console.log('teams', teams);
+  console.log('projTeams', projTeams);
+  console.log('xAuthor', xauthor);
   const handlePhoto = (e) => {
     setProj({ ...proj, ["cover"]: e.target.files[0] });
   };
@@ -64,14 +64,14 @@ const AddProject = () => {
     setProj({ ...proj, [e.target.name]: e.target.value });
   };
   const removeXAuthor = (author) => {
-    let current = projTeams.filter(t=> t.id===author);
-    projTeam = projTeams.filter(t=> t.id !== author);
+    let current = projTeams.filter(t => t.id === author);
+    projTeam = projTeams.filter(t => t.id !== author);
     team = teams;
     team.push(current[0]);
     setTeams(team);
     setProjTeams(projTeam);
-    let authors = proj.authors.filter(a=>a!==author);
-    setProj({...proj,["authors"]:authors});
+    let authors = proj.authors.filter(a => a !== author);
+    setProj({ ...proj, ["authors"]: authors });
     setXAuthor("");
   };
   const AddXAuthor = () => {
@@ -83,45 +83,56 @@ const AddProject = () => {
       setTeams(team);
       setProjTeams(projTeam);
       let authors = proj.authors;
-      authors.push(xauthor);      
-      setProj({...proj,["authors"]:authors});
+      authors.push(xauthor);
+      setProj({ ...proj, ["authors"]: authors });
       setXAuthor("");
     }
   };
   const PostProject = async (e) => {
     e.preventDefault();
-    setAdd(true);
-    const photo = proj.cover;
-    const data = new FormData();
-    const photoname = Date.now() + photo.name;
-    data.append("name", photoname);
-    data.append("photo", photo);
-    var imgurl;
-
     try {
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-      console.log("img", img);
-      imgurl = img.data;
-      proj.cover = imgurl;
-    } catch (err) {
-      console.log("photoerr", err);
-    }
-    console.log("imgurl", imgurl);
-
-    try {
-      const projdata = await axios.post(`${SERVER_URL}/projectAdd`, proj, {
-        headers: { "Content-Type": "application/json" },
-      });
-      console.log("projdata", projdata);
-      if (projdata.status === 422 || !projdata) {
-        showAlert("Project Posting failed", "danger");
-      } else {
-        showAlert("Project Created Successfull", "success");
-        navigate(`/projects/${proj.url}/edit`);
+      const projectExist = await axios.get(`${SERVER_URL}/isProjectUrlExist/${proj.url}`);
+      if (projectExist.status === 200) {
+        showAlert("Url Already Exist!","danger");
+        return;
       }
-    } catch (err) {
-      console.log("err", err);
+      setAdd(true);
+        const photo = proj.cover;
+        const data = new FormData();
+        const photoname = Date.now() + photo.name;
+        data.append("name", photoname);
+        data.append("photo", photo);
+        var imgurl;
+
+        try {
+          const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+          console.log("img", img);
+          imgurl = img.data;
+          proj.cover = imgurl;
+        } catch (err) {
+          console.log("photoerr", err);
+        }
+        console.log("imgurl", imgurl);
+
+        try {
+          const projdata = await axios.post(`${SERVER_URL}/projectAdd`, proj, {
+            headers: { "Content-Type": "application/json" },
+          });
+          console.log("projdata", projdata);
+          if (projdata.status === 422 || !projdata) {
+            showAlert("Project Posting failed", "danger");
+          } else {
+            showAlert("Project Created Successfully!", "success");
+            navigate(`/projects/${proj.url}/edit`);
+          }
+        } catch (err) {
+          console.log("err", err);
+        }
     }
+    catch (err) {
+      console.log(err);
+    }
+
   };
   console.log("proj", proj);
   return (
@@ -191,7 +202,7 @@ const AddProject = () => {
                   Authors :
                 </label>
                 <div className="col-sm-10">
-                  {projTeams.map((t,i) => {
+                  {projTeams.map((t, i) => {
                     return (
                       <div className="form-group my-2 row" key={i}>
                         <div className="col col-9">
@@ -261,7 +272,7 @@ const AddProject = () => {
                 </div>
               </div>
               {
-                add?
+                add ?
                   <button type="submit" name="submit" className="btn btn-primary" disabled>
                     Creating <i class="fa fa-spinner fa-spin"></i>
                   </button>
@@ -270,7 +281,7 @@ const AddProject = () => {
                     Create
                   </button>
               }
-              
+
             </form>
           </div>
         </div>
