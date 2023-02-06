@@ -1,10 +1,8 @@
-const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-let path = require('path');
+const multer = require('multer');
 const authenticate = require('../middleware/authenticate');
-
 const Team = require('../model/teamSchema');
 const File = require('../model/fileSchema');
 
@@ -12,26 +10,15 @@ router.route('/').get((req,res)=>{
     res.send(`Hello world from the server router js`);
 });
 
-const mime = require("mime-types");
-const { Readable } = require("stream");
+// const mime = require("mime-types");
+// const { Readable } = require("stream");
 
-const fs = require('fs');
-const { google } = require('googleapis');
+// const { google } = require('googleapis');
 
-const GOOGLE_API_FOLDER_ID = '1K5UVYYZS6PrDEJRX6QfVj8d7Ng-tBtY0';
+// const GOOGLE_API_FOLDER_ID = '1K5UVYYZS6PrDEJRX6QfVj8d7Ng-tBtY0';
 
-const bufferToStream = (buffer) => {
-    var stream = new Readable();
-    stream.push(buffer);
-    stream.push(null);
-  
-    return stream;
-};
 
 const { InitFileUpload } = require('../file_upload');
-const multer = require('multer');
-const { json } = require('stream/consumers');
-
 const fileUpload = InitFileUpload();
 
 
@@ -40,48 +27,27 @@ const storage = multer.diskStorage({
         cb(null, 'uploads')
     },
     filename: (req, file, cb)=> {
-        cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname)
+        const t=new Date();
+        cb(null, `${t}.png`);
     }
 })
 
-const fileFilter = (req, file, cb)=>{
-    if( file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg'){
-        cb(null, true)
-    }else {
-        cb(null, false)
-    }
-}
-
-
 router.route('/imgupload').post(multer({ storage }).single('photo'), async (req, res) => {
-    // if(req.file === null){
-    //     return res.status(400).json({ msg: "No file uploaded" });
-    // }
-    console.log('files',req.body);
+
     const file = req.file.path;
     const name = req.file.filename;
-    console.log('name',name);
-    console.log('file',file);
     const mimeType = req.file.mimetype;
 
     try{
         const key = await fileUpload.uploadFile({ name, file, mimeType });
         const url = fileUpload.getUrl(key);
-
-        const fileDoc = new File({
-            'key':key,
-            'name':name,
-            'url':url
-        });
-        await fileDoc.save();
-        console.log('img-url',fileDoc.url);
-        return res.status(200).send(url);
+        res.send(url);
     }catch(err){
-        console.log(err);
+        res.status(400).json({error:"Something went wrong!"});
     }
 });
 
-router.route('/imgdelete').post(async (req,res)=>{
+router.route('/imgdelete').post(authenticate,async (req,res)=>{
     try {
         const url = req.body.url;
         const key =  url.split('=')[2];
@@ -98,7 +64,7 @@ router.route('/imgdelete').post(async (req,res)=>{
 });
 
 
-router.route('/teamadd').post(async (req,res) => {
+router.route('/teamadd').post(authenticate,async (req,res) => {
     // const {  firstname,lastname,profession,description,username,email,password,cpassword } = req.body;
     console.log('body');
     const photo = req.body.photo;
@@ -132,6 +98,7 @@ router.route('/teamadd').post(async (req,res) => {
         
     }catch(err){
         console.log('err',err);
+        res.status(500).json({msg:"Internal server error"});
     }  
 });
 
@@ -142,7 +109,7 @@ router.route('/getTeams').get(async (req,res)=>{
         teams.push({id:t._id,name:`${t.firstname} ${t.lastname}`})
     }))
     // console.log('teams',teams);
-    return res.status(200).json(teams);
+    return res.json(teams);
 });
 
 router.route('/getTeam/:year').get(async (req,res)=>{
@@ -189,7 +156,7 @@ router.route('/getUserDataForEdit/:username').get(async (req,res)=>{
 });
 
 
-router.route('/teamupdate/:id').put(async (req,res)=>{
+router.route('/teamupdate/:id').put(authenticate,async (req,res)=>{
     try {
         const {id} = req.params;
 
@@ -205,7 +172,7 @@ router.route('/teamupdate/:id').put(async (req,res)=>{
     }
 });
 
-router.route('/changePassword/:id').put(async (req,res)=>{
+router.route('/changePassword/:id').put(authenticate,async (req,res)=>{
     try {
         const {id} = req.params;
         const {password,newPassword,cPassword} = req.body;
@@ -243,7 +210,7 @@ router.route('/changePassword/:id').put(async (req,res)=>{
 });
 
 
-router.route('/team/delete/:id').post(async (req, res) => {
+router.route('/team/delete/:id').post(authenticate,async (req, res) => {
     const {id} = req.params;
     const team = await Team.findById(id);
     if(team){
@@ -255,10 +222,10 @@ router.route('/team/delete/:id').post(async (req, res) => {
         }))
         await Team.findByIdAndDelete(id);
         console.log('Deleted..');
-        return res.status(201).json({ message: "Team Member Deleted Successfully"});
+        res.status(201).json({ message: "Team Member Deleted Successfully"});
     }
     else{
-        return res.status(200).json({ error: "Cannot Delete Team Member"});
+        res.status(200).json({ error: "Cannot Delete Team Member"});
     }
 })
 

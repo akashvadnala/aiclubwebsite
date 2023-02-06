@@ -39,7 +39,14 @@ router.route('/subscribe').post(async (req,res)=> {
 });
 
 router.route('/unsubscribe/:email').get(async (req,res)=> {
-    res.send('unsubscribed');
+    const {email} = req.params.email;
+    try {
+        const subscriber = await Subscribe.findOneAndDelete({email:email});
+        res.status(201).json({msg:`${email} has been unsubscribed sucessfully`})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Internal server ERROR"});
+    }
 });
 
 module.exports = router;

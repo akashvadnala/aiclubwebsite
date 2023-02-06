@@ -16,22 +16,25 @@ const ProjectApprovals = () => {
   const getProjectApprovals = () => {
     try {
       axios.get(`${SERVER_URL}/getpendingProjApprovals`).then((data) => {
-        if (user && data.status === 200) {
           setProjects(data.data);
-          setLoad(1);
-        } else {
-          setLoad(-1);
-        }
+      }).catch(err=>{
+        setLoad(-1)
       });
     } catch (err) {
-      setLoad(-1);
       console.log(err);
+      setLoad(-1);
     }
   };
 
   useEffect(() => {
     if(logged_in===1){
-      getProjectApprovals();
+      if(user.isadmin){
+        getProjectApprovals();
+        setLoad(1)
+      }
+      else{
+        setLoad(-1)
+      }
     }
     else if(logged_in===-1){
       setLoad(-1);

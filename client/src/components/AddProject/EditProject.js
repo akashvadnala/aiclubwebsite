@@ -33,54 +33,47 @@ const EditProject = () => {
   let project = null;
   const getProject = async () => {
     try {
-      // getTeams
-      team=[];
-      teamArray=[];
+      team = [];
+      teamArray = [];
       let projTeam = [];
-      try {
-        axios.get(`${SERVER_URL}/getTeams`).then((data) => {
-          teamArray = data.data;
-          team = teamArray;
-        });
-      } catch (err) {
-        console.log(err);
-      }
-      // getProject
-      axios.get(`${SERVER_URL}/getProjectEdit/${url}`).then(async (data) => {
-        if (data.status === 200) {
-          project = data.data;
-          if (user && project.authors.indexOf(user._id) > -1) {
-            await Promise.all(
-              project.authors.map((author) => {
-                team = team.filter((t) => t.id !== author);
-                projTeam.push(teamArray.filter((t) => t.id == author)[0]);
-              })
-            );
-            setTeams(team);
-            setProjTeams(projTeam);
-            setProj(project);
-            setLoad(1);
-          } else {
-            setLoad(-1);
-          }
+      await axios.get(`${SERVER_URL}/getTeams`).then((data) => {
+        teamArray = data.data;
+        team = teamArray;
+      });
+      await axios.get(`${SERVER_URL}/getProjectEdit/${url}`).then(async (data) => {
+        project = data.data;
+        if (user && project.authors.indexOf(user._id) > -1) {
+          await Promise.all(
+            project.authors.map((author) => {
+              team = team.filter((t) => t.id !== author);
+              projTeam.push(teamArray.filter((t) => t.id == author)[0]);
+            })
+          );
+          setTeams(team);
+          setProjTeams(projTeam);
+          setProj(project);
+          setLoad(1);
         } else {
           setLoad(-1);
         }
       });
     } catch (err) {
-      console.log(err);
+      setLoad(-1)
     }
   };
 
   useEffect(() => {
     if (logged_in === 1) {
-      if(url){
+      if (url) {
         getProject();
+      }
+      else {
+        setLoad(-1);
       }
     } else if (logged_in === -1) {
       setLoad(-1);
     }
-  }, [logged_in,url]);
+  }, [logged_in, url]);
 
   const handlePhoto = (e) => {
     setImg(e.target.files[0]);
@@ -158,56 +151,47 @@ const EditProject = () => {
     setXCoAuthor("");
     setPreview(false);
   };
-console.log('proj',proj);
+
   const UpdateProject = async (e) => {
     e.preventDefault();
-    setAdd(true);
-    var imgurl;
-    if (Img) {
-      const data = new FormData();
-      const photoname = Date.now() + Img.name;
-      data.append("name", photoname);
-      data.append("photo", Img);
+    try {
+      if (url !== proj.url) {
+        await axios.get(`${SERVER_URL}/isProjectUrlExist/${proj.url}`);
+      }
 
-      try {
+      setAdd(true);
+
+      if (Img) {
+
         await axios.post(`${SERVER_URL}/imgdelete`,
-          { 'url': proj.cover },
           {
+            'url': proj.cover,
             headers: { "Content-Type": "application/json" },
           });
-      } catch (err) {
-        console.log('photoerr', err);
+
+        const data = new FormData();
+        data.append("photo", Img);
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+        proj.cover = img.data;
+
       }
 
-      try {
-        const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-        console.log('img', img);
-        imgurl = img.data;
-        proj.cover = imgurl;
-      } catch (err) {
-        console.log('photoerr', err);
-      }
-    }
-    console.log('imgurl', imgurl);
-    try {
       const projdata = await axios.put(
         `${SERVER_URL}/updateProject/${proj._id}`,
         proj,
         {
+          withCredentials: true,
           headers: { "Content-Type": "application/json" },
         }
       );
-      console.log("projdata", projdata);
-      if (projdata.status === 422 || !projdata) {
-        showAlert("Failed to save", "danger");
-      } else {
-        setAdd(false);
-        showAlert("Saved as Draft", "success");
-        setPreview(true);
-      }
+      setAdd(false);
+      showAlert("Saved as Draft!", "success");
+      setPreview(true);
     } catch (err) {
-      console.log("err", err);
+      console.log(err);
+      showAlert(err.response.data.error, "danger");
     }
+
   };
   return (
     <>
@@ -428,7 +412,7 @@ console.log('proj',proj);
                   </div>
                 </div>
                 <div className="form-group mt-2 mb-4">
-                  <img src={photo?photo:proj.cover} alt={proj.title} style={{width:"100%",objectFit:"contain"}}/>
+                  <img src={photo ? photo : proj.cover} alt={proj.title} style={{ width: "100%", objectFit: "contain" }} />
                 </div>
                 <div className="form-group my-2">
                   <div className="form-check">
@@ -543,7 +527,7 @@ console.log('proj',proj);
                 </div>
                 <div>
                   {
-                    add?
+                    add ?
                       <button
                         type="submit"
                         name="submit"

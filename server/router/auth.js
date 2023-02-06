@@ -21,13 +21,13 @@ router.post("/login", async (req, res, next) => {
         const { username, password, compete } = req.body;
         console.log(username, password);
         if (!username || !password) {
-            return res.status(200).json({ error: "Plz fill the field properly" });
+            return res.status(401).json({ error: "Plz fill the field properly" });
         }
         var team = await Team.findOne({ username: username });
         if (!team) {
             team = await Team.findOne({ email: username });
             if (!team) {
-                return res.status(200).json({ error: "Invalid Credentials" });
+                return res.status(401).json({ error: "Invalid Credentials" });
             }
         }
 
@@ -59,13 +59,12 @@ router.post("/login", async (req, res, next) => {
                     }
                     console.log("Logged in");
                 }
-                return res
-                    .status(201)
-                    .json({ message: "User Signin Successfully", user: team });
+                return res.json({ message: "User Signin Successfully"});
             }
         });
     } catch (err) {
         console.log("Invalid Credentials");
+        res.status(500).json({message:"Internal server Error"});
     }
 });
 
@@ -74,7 +73,7 @@ router.get('/getUserData', authenticate, (req, res) => {
         res.status(200).json(req.rootUser);
     }
     else {
-        res.status(201).json(null);
+        res.status(200).json(null);
     }
 });
 
@@ -83,7 +82,7 @@ router.route("/userExist/:username").get(async (req, res) => {
     if (user) {
         return res.status(200).json(user.username);
     } else {
-        return res.status(201).json(null);
+        return res.status(200).json(null);
     }
 });
 
@@ -148,6 +147,7 @@ router.get("/reset-password/:id/:token", async (req, res) => {
             return res.status(201).json({ status: "Not Verified" });
         }
     } catch (error) {
+        console.log(error);
         return res.status(201).json({ status: "Not Verified" });
     }
 });
@@ -175,6 +175,7 @@ router.put("/reset-password/:id/:token",authenticate, async (req, res) => {
         });
         return res.status(200).json({ status: "Password Changed Successfully" });
     } catch (error) {
+        console.log(error);
         res.status(201).json({ status: "Something Went Wrong" });
     }
 });

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = express('mongoose');
-
+const authenticate = require("../middleware/authenticate");
 const Competitions = require('../model/competitionSchema');
 const Data = require('../model/dataSchema');
 
@@ -16,11 +16,12 @@ router.route('/getCData/:id').get(async (req,res)=>{
         }
     }catch(err){
         console.log('err');
+        res.status(500).json({msg:"Internal server error"});
     }
     
 })
 
-router.route('/editCData/:id').put(async (req,res)=>{
+router.route('/editCData/:id').put(authenticate,async (req,res)=>{
     try{
         const updatedData = await Data.findByIdAndUpdate(req.params.id,req.body,{
             new:true
@@ -28,6 +29,7 @@ router.route('/editCData/:id').put(async (req,res)=>{
         console.log('Updated Data',updatedData);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 })
 

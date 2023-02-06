@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Slider = require('../model/sliderSchema');
+const authenticate = require("../middleware/authenticate");
 
 router.route('/getSlides').get(async (req,res)=>{
     try{
@@ -8,10 +9,11 @@ router.route('/getSlides').get(async (req,res)=>{
         res.status(200).json(slides);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 });
 
-router.route('/addSlider').post(async (req,res)=>{
+router.route('/addSlider').post(authenticate,async (req,res)=>{
     try{
         const slides = await Slider.find({});
         const index = slides.length+1;
@@ -22,10 +24,11 @@ router.route('/addSlider').post(async (req,res)=>{
         res.status(200).json(null);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 });
 
-router.route('/updateSlider/:id').put(async (req,res)=>{
+router.route('/updateSlider/:id').put(authenticate,async (req,res)=>{
     try{
         const data = await Slider.findById(req.params.id);
         if(data){
@@ -36,22 +39,25 @@ router.route('/updateSlider/:id').put(async (req,res)=>{
         }
         else{
             console.log('Slider Not Found');
+            res.status(204).json({msg:"Slider Not Found"});
         }
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }    
 });
 
-router.route('/deleteSlider/:id').post(async (req,res)=>{
+router.route('/deleteSlider/:id').post(authenticate,async (req,res)=>{
     try{
         await Slider.findByIdAndDelete(req.params.id);
         res.status(200).json(null);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 })
 
-router.route('/sliderMoveDown').post(async (req,res)=>{
+router.route('/sliderMoveDown').post(authenticate,async (req,res)=>{
     const {index} = req.body;
     try{
         let slide = await Slider.findOne({index:index});
@@ -63,10 +69,11 @@ router.route('/sliderMoveDown').post(async (req,res)=>{
         res.status(200).json(null);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 });
 
-router.route('/sliderMoveUp').post(async (req,res)=>{
+router.route('/sliderMoveUp').post(authenticate,async (req,res)=>{
     let {index} = req.body;
     try{
         let slide = await Slider.findOne({index:index});
@@ -78,6 +85,7 @@ router.route('/sliderMoveUp').post(async (req,res)=>{
         res.status(200).json(null);
     }catch(err){
         console.log(err);
+        res.status(500).json({msg:"Internal server error"});
     }
 });
 

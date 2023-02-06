@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Photo = require('../model/gallerySchema');
 const { InitFileUpload } = require('../file_upload');
+const authenticate = require("../middleware/authenticate");
 
 const fileUpload = InitFileUpload();
 
@@ -25,7 +26,7 @@ router.route('/getAllPhotos').get(async (req,res)=>{
     }
 });
 
-router.route('/addPhoto').post(async (req,res)=> {
+router.route('/addPhoto').post(authenticate,async (req,res)=> {
     try {
         const photo = req.body;
         console.log(photo);
@@ -39,7 +40,7 @@ router.route('/addPhoto').post(async (req,res)=> {
     }
 });
 
-router.route('/deleteImages').delete(async (req,res)=>{
+router.route('/deleteImages').delete(authenticate,async (req,res)=>{
     try {
         const urls = req.body.urls;
         console.log("urls: ",urls);

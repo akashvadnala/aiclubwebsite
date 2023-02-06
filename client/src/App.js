@@ -8,7 +8,6 @@ import Footer from './components/Footer/Footer';
 import Routing from './Routing.js';
 
 function App() {
-  
   return (
     <>
       <Helmet>
