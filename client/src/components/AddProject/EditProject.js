@@ -33,42 +33,32 @@ const EditProject = () => {
   let project = null;
   const getProject = async () => {
     try {
-      // getTeams
       team = [];
       teamArray = [];
       let projTeam = [];
-      try {
-        axios.get(`${SERVER_URL}/getTeams`).then((data) => {
-          teamArray = data.data;
-          team = teamArray;
-        });
-      } catch (err) {
-        console.log(err);
-      }
-      // getProject
-      axios.get(`${SERVER_URL}/getProjectEdit/${url}`).then(async (data) => {
-        if (data.status === 200) {
-          project = data.data;
-          if (user && project.authors.indexOf(user._id) > -1) {
-            await Promise.all(
-              project.authors.map((author) => {
-                team = team.filter((t) => t.id !== author);
-                projTeam.push(teamArray.filter((t) => t.id == author)[0]);
-              })
-            );
-            setTeams(team);
-            setProjTeams(projTeam);
-            setProj(project);
-            setLoad(1);
-          } else {
-            setLoad(-1);
-          }
+      await axios.get(`${SERVER_URL}/getTeams`).then((data) => {
+        teamArray = data.data;
+        team = teamArray;
+      });
+      await axios.get(`${SERVER_URL}/getProjectEdit/${url}`).then(async (data) => {
+        project = data.data;
+        if (user && project.authors.indexOf(user._id) > -1) {
+          await Promise.all(
+            project.authors.map((author) => {
+              team = team.filter((t) => t.id !== author);
+              projTeam.push(teamArray.filter((t) => t.id == author)[0]);
+            })
+          );
+          setTeams(team);
+          setProjTeams(projTeam);
+          setProj(project);
+          setLoad(1);
         } else {
           setLoad(-1);
         }
       });
     } catch (err) {
-      console.log(err);
+      setLoad(-1)
     }
   };
 
@@ -77,7 +67,7 @@ const EditProject = () => {
       if (url) {
         getProject();
       }
-      else{
+      else {
         setLoad(-1);
       }
     } else if (logged_in === -1) {
@@ -161,67 +151,45 @@ const EditProject = () => {
     setXCoAuthor("");
     setPreview(false);
   };
-  console.log('proj', proj);
+
   const UpdateProject = async (e) => {
     e.preventDefault();
     try {
-      if(url!==proj.url){
-        const projectExist = await axios.get(`${SERVER_URL}/isProjectUrlExist/${proj.url}`);
-        if (projectExist.status === 200) {
-          showAlert("Url Already Exist!", "danger");
-          return ; 
-        }
+      if (url !== proj.url) {
+        await axios.get(`${SERVER_URL}/isProjectUrlExist/${proj.url}`);
       }
-      
+
       setAdd(true);
-        var imgurl;
-        if (Img) {
-          const data = new FormData();
-          const photoname = Date.now() + Img.name;
-          data.append("name", photoname);
-          data.append("photo", Img);
 
-          try {
-            await axios.post(`${SERVER_URL}/imgdelete`,
-              { 'url': proj.cover },
-              {
-                headers: { "Content-Type": "application/json" },
-              });
-          } catch (err) {
-            console.log('photoerr', err);
-          }
+      if (Img) {
 
-          try {
-            const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-            console.log('img', img);
-            imgurl = img.data;
-            proj.cover = imgurl;
-          } catch (err) {
-            console.log('photoerr', err);
-          }
+        await axios.post(`${SERVER_URL}/imgdelete`,
+          {
+            'url': proj.cover,
+            headers: { "Content-Type": "application/json" },
+          });
+
+        const data = new FormData();
+        data.append("photo", Img);
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+        proj.cover = img.data;
+
+      }
+
+      const projdata = await axios.put(
+        `${SERVER_URL}/updateProject/${proj._id}`,
+        proj,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
         }
-        console.log('imgurl', imgurl);
-        try {
-          const projdata = await axios.put(
-            `${SERVER_URL}/updateProject/${proj._id}`,
-            proj,
-            {
-              headers: { "Content-Type": "application/json" },
-            }
-          );
-          console.log("projdata", projdata);
-          if (projdata.status === 422 || !projdata) {
-            showAlert("Failed to save", "danger");
-          } else {
-            setAdd(false);
-            showAlert("Saved as Draft", "success");
-            setPreview(true);
-          }
-        } catch (err) {
-          console.log("err", err);
-        }
+      );
+      setAdd(false);
+      showAlert("Saved as Draft!", "success");
+      setPreview(true);
     } catch (err) {
       console.log(err);
+      showAlert(err.response.data.error, "danger");
     }
 
   };

@@ -10,24 +10,18 @@ import { Context } from "../../Context/Context";
 import { Helmet } from "react-helmet";
 
 const Projects = () => {
+  
   const { user } = useContext(Context);
   const [projects, setProjects] = useState([]);
   const [load, setLoad] = useState(0);
+
   const getProjects = async () => {
-    try {
-      await axios.get(`${SERVER_URL}/getProjects`).then((data) => {
-        if (data.status === 200) {
-          setProjects(data.data);
-          setLoad(1);
-        } else {
-          setLoad(-1);
-        }
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    await axios.get(`${SERVER_URL}/getProjects`).then((data) => {
+      setProjects(data.data);
+      setLoad(1);
+    });
   };
-  console.log('projects',projects);
+
   useEffect(() => {
     getProjects();
   }, []);

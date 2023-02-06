@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../Context/Context";
-import {alertContext} from "../../Context/Alert";
+import { alertContext } from "../../Context/Alert";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import Error from "../Error";
 import Loading from "../Loading";
@@ -49,61 +49,64 @@ const ProjectDisplay = () => {
   }, [user, url]);
 
   const deleteProject = async (status) => {
-    if (status) {
-      const res = await axios.post(`${SERVER_URL}/deleteProject/${proj._id}`);
-      if (res.status === 200) {
-        showAlert("Project deleted successfully","success");
+    try {
+      if (status) {
+        const res = await axios.delete(`${SERVER_URL}/deleteProject/${proj._id}`,{withCredentials:true});
+        showAlert("Project deleted successfully", "success");
         navigate("/projects");
-      } else {
-        showAlert("Project Deletion failed","danger");
       }
+    } catch (err) {
+      showAlert(err.response.data.error, "danger");
     }
+
   };
 
   const TogglePublic = async (status) => {
-    if (status) {
-      setPub(`${!proj.public ? "Publishing" : "Making Private"}`);
-      setPub2(<i className="fa fa-spinner fa-spin"></i>);
-      const res = await axios.put(
-        `${SERVER_URL}/updateprojPublicStatus/${proj.url}`,
-        { public: !proj.public ? true : false },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (res.status === 200) {
-        proj.public = !proj.public ? true : false;
-        showAlert(`Project made ${proj.public?"public":"private"}`,"success");
-        setPub(`${!proj.public ? "Make Public" : "Make Private"}`);
-        setPub2();
-        navigate(`/projects/${proj.url}`);
-      } else {
-        showAlert("Operation failed. Please try again.","success");
-      }
-    }
-  };
-
-  const ChangeApprovalStatus = async (status) => {
-    if (proj.approvalStatus === "submit") {
+    try {
       if (status) {
-        setApproval("pending");
-        setApproval2(<i className="fa fa-spinner fa-spin"></i>);
+        setPub(`${!proj.public ? "Publishing" : "Making Private"}`);
+        setPub2(<i className="fa fa-spinner fa-spin"></i>);
         const res = await axios.put(
-          `${SERVER_URL}/updateprojApprovalStatus/${proj.url}`,
-          { approvalStatus: "pending" },
+          `${SERVER_URL}/updateprojPublicStatus/${proj.url}`,
+          { public: !proj.public ? true : false },
           {
             headers: { "Content-Type": "application/json" },
           }
         );
-        if (res.status === 200) {
-          showAlert("Submitted for Admin approval","success");
+        proj.public = !proj.public ? true : false;
+        showAlert(`Project made ${proj.public ? "public" : "private"}`, "success");
+        setPub(`${!proj.public ? "Make Public" : "Make Private"}`);
+        setPub2();
+        navigate(`/projects/${proj.url}`);
+
+      }
+    } catch (err) {
+      showAlert(err.response.data.error, "success");
+    }
+
+  };
+
+  const ChangeApprovalStatus = async (status) => {
+    try {
+      if (proj.approvalStatus === "submit") {
+        if (status) {
+          setApproval("pending");
+          setApproval2(<i className="fa fa-spinner fa-spin"></i>);
+          const res = await axios.put(
+            `${SERVER_URL}/updateprojApprovalStatus/${proj.url}`,
+            { approvalStatus: "pending" },
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          showAlert("Submitted for Admin approval", "success");
           setProj({ ...proj, ["approvalStatus"]: "pending" });
           setApproval2();
           navigate(`/projects/${proj.url}`);
-        } else {
-          showAlert("Submission failed. PLease try again!","danger");
         }
       }
+    } catch (err) {
+      showAlert("Submission failed. PLease try again!", "danger");
     }
   };
 
@@ -125,12 +128,12 @@ const ProjectDisplay = () => {
       }
     );
     if (res.status === 200) {
-      showAlert(`${response === "Approved"?"Approved & Published.":response}.`,"success");
+      showAlert(`${response === "Approved" ? "Approved & Published." : response}.`, "success");
       setProj({ ...proj, ["approvalStatus"]: response, ["public"]: status });
       setApproval2();
       navigate(`/projects/${proj.url}`);
     } else {
-      showAlert("Response not recorded. Please try again","success");
+      showAlert("Response not recorded. Please try again", "success");
     }
   };
 
@@ -215,15 +218,14 @@ const ProjectDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
-                          className={`btn btn-${
-                            proj.approvalStatus === "submit"
-                              ? "success"
-                              : proj.approvalStatus === "pending"
+                          className={`btn btn-${proj.approvalStatus === "submit"
+                            ? "success"
+                            : proj.approvalStatus === "pending"
                               ? "warning"
                               : proj.approvalStatus === "Rejected"
-                              ? "danger"
-                              : "primary"
-                          } btn-sm mx-1`}
+                                ? "danger"
+                                : "primary"
+                            } btn-sm mx-1`}
                         >
                           {" "}
                           {"Approve/Reject"}
@@ -285,15 +287,14 @@ const ProjectDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#submitForApproval"
-                          className={`btn btn-${
-                            proj.approvalStatus === "submit"
-                              ? "success"
-                              : proj.approvalStatus === "pending"
+                          className={`btn btn-${proj.approvalStatus === "submit"
+                            ? "success"
+                            : proj.approvalStatus === "pending"
                               ? "warning"
                               : proj.approvalStatus === "Rejected"
-                              ? "danger"
-                              : "primary"
-                          } btn-sm mx-1`}
+                                ? "danger"
+                                : "primary"
+                            } btn-sm mx-1`}
                         >
                           {" "}
                           {approval}
@@ -342,15 +343,14 @@ const ProjectDisplay = () => {
                     ) : (
                       <NavLink
                         rel="noreferrer"
-                        className={`btn btn-${
-                          proj.approvalStatus === "submit"
-                            ? "success"
-                            : proj.approvalStatus === "pending"
+                        className={`btn btn-${proj.approvalStatus === "submit"
+                          ? "success"
+                          : proj.approvalStatus === "pending"
                             ? "warning"
                             : proj.approvalStatus === "Rejected"
-                            ? "danger"
-                            : "primary"
-                        } btn-sm mx-1`}
+                              ? "danger"
+                              : "primary"
+                          } btn-sm mx-1`}
                       >
                         {" "}
                         {approval}
@@ -363,11 +363,9 @@ const ProjectDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#publicOrPrivate"
-                          className={`btn btn-${
-                            proj.public ? "warning" : "success"
-                          } btn-sm mx-1 ${
-                            proj.approvalStatus === "Rejected" ? "disabled" : ""
-                          }`}
+                          className={`btn btn-${proj.public ? "warning" : "success"
+                            } btn-sm mx-1 ${proj.approvalStatus === "Rejected" ? "disabled" : ""
+                            }`}
                         >
                           {" "}
                           {pub}
@@ -387,9 +385,8 @@ const ProjectDisplay = () => {
                                   className="modal-title fs-5"
                                   id="publicOrPrivateLabel"
                                 >
-                                  {`Are you sure to make project "${
-                                    proj.title
-                                  }" ${!proj.public ? "Public" : "Private"}?`}
+                                  {`Are you sure to make project "${proj.title
+                                    }" ${!proj.public ? "Public" : "Private"}?`}
                                 </h1>
                               </div>
                               <div className="modal-footer">

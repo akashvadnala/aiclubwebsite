@@ -53,9 +53,7 @@ const AddProject = () => {
       setLoad(-1);
     }
   }, [logged_in]);
-  console.log('teams', teams);
-  console.log('projTeams', projTeams);
-  console.log('xAuthor', xauthor);
+
   const handlePhoto = (e) => {
     setProj({ ...proj, ["cover"]: e.target.files[0] });
   };
@@ -91,50 +89,25 @@ const AddProject = () => {
   const PostProject = async (e) => {
     e.preventDefault();
     try {
-      const projectExist = await axios.get(`${SERVER_URL}/isProjectUrlExist/${proj.url}`);
-      if (projectExist.status === 200) {
-        showAlert("Url Already Exist!","danger");
-        return;
-      }
+      await axios.get(`${SERVER_URL}/isProjectUrlExist/${proj.url}`);
       setAdd(true);
-        const photo = proj.cover;
-        const data = new FormData();
-        const photoname = Date.now() + photo.name;
-        data.append("name", photoname);
-        data.append("photo", photo);
-        var imgurl;
-
-        try {
-          const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-          console.log("img", img);
-          imgurl = img.data;
-          proj.cover = imgurl;
-        } catch (err) {
-          console.log("photoerr", err);
-        }
-        console.log("imgurl", imgurl);
-
-        try {
-          const projdata = await axios.post(`${SERVER_URL}/projectAdd`, proj, {
-            headers: { "Content-Type": "application/json" },
-          });
-          console.log("projdata", projdata);
-          if (projdata.status === 422 || !projdata) {
-            showAlert("Project Posting failed", "danger");
-          } else {
-            showAlert("Project Created Successfully!", "success");
-            navigate(`/projects/${proj.url}/edit`);
-          }
-        } catch (err) {
-          console.log("err", err);
-        }
+      const data = new FormData();
+      data.append("photo", proj.cover);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+      proj.cover = img.data;
+      const projdata = await axios.post(`${SERVER_URL}/projectAdd`, proj, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+      showAlert("Project Created Successfully!", "success");
+      navigate(`/projects/${proj.url}/edit`);
     }
     catch (err) {
       console.log(err);
+      showAlert(err.response.data.error,"danger");
     }
-
   };
-  console.log("proj", proj);
+  
   return (
     <>
       {load === 0 ? (

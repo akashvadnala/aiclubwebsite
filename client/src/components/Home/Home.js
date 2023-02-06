@@ -25,57 +25,33 @@ const Home = () => {
   // console.log('publications',publications);
   // console.log('blogs',blogs);
   // console.log('photos',photos);
-  
+
   const getHome = async () => {
     try {
       //slides
       let getSlides, getEvents, getProjects, getPublications, getBlogs, getImages;
-      getSlides = await axios.get(`${SERVER_URL}/getSlides`)
-      if (getSlides.status === 200) {
-        setSlides(getSlides.data);
-        //events
-        getEvents = await axios.get(`${SERVER_URL}/events/gethomepageEvents`);
-        if (getEvents.status === 200) {
-          setEvents(getEvents.data);
-          //projects
-          getProjects = await axios.get(`${SERVER_URL}/getfiveprojects`);
-          if (getProjects.status === 200) {
-            setProjects(getProjects.data);
-            //publications
-            getPublications = await axios.get(`${SERVER_URL}/getResearchPapers`)
-            if (getPublications.status === 200) {
-              setPublicationList(getPublications.data);
-              //blogs
-              getBlogs = await axios.get(`${SERVER_URL}/getsixBlogs`)
-              if (getBlogs.status === 200) {
-                setBlogs(getBlogs.data);
-                //images
-                let imagedata = [];
-                getImages = await axios.get(`${SERVER_URL}/gallery/getHomepagePhotos`);
-                if (getImages.status === 200) {
-                  imagedata = getImages.data;
+      axios.get(`${SERVER_URL}/getSlides`).then(data => { setSlides(data.data);setLoad(1) });
+      axios.get(`${SERVER_URL}/events/gethomepageEvents`).then(data => { setEvents(data.data) });
+      axios.get(`${SERVER_URL}/getfiveprojects`).then(data => { setProjects(data.data) });
+      axios.get(`${SERVER_URL}/getResearchPapers`).then(data => { setPublicationList(data.data) });
+      axios.get(`${SERVER_URL}/getsixBlogs`).then(data => { setBlogs(data.data) });
+      axios.get(`${SERVER_URL}/gallery/getHomepagePhotos`).then(data => {
+        let imagedata = [];
+        imagedata = getImages.data;
 
-                  let photoArray = imagedata.map((photo, index) => {
-                    const width = photo.width * 4;
-                    const height = photo.height * 4;
-                    return {
-                      src: photo.imgurl,
-                      key: `${index}`,
-                      width,
-                      height,
-                      title: photo.caption,
-                    };
-                  });
-                  setPhotos(photoArray);
-                  setLoad(1);
-                }
-
-              }
-            }
-          }
-        }
-      }
-
+        let photoArray = imagedata.map((photo, index) => {
+          const width = photo.width * 4;
+          const height = photo.height * 4;
+          return {
+            src: photo.imgurl,
+            key: `${index}`,
+            width,
+            height,
+            title: photo.caption,
+          };
+        });
+        setPhotos(photoArray);
+      });
     } catch (err) {
       console.log(err);
     }
