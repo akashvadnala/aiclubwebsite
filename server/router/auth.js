@@ -59,7 +59,7 @@ router.post("/login", async (req, res, next) => {
                     }
                     console.log("Logged in");
                 }
-                return res.send(200).json({ message: "User Signin Successfully"});
+                return res.status(200).json({ message: "User Signin Successfully"});
             }
         });
     } catch (err) {

@@ -93,6 +93,7 @@ router.route("/getProjects").get(async (req, res) => {
   const projectData = await Project.find({ public: true }).sort({
     createdAt: -1,
   });
+  console.log('helo')
   res.status(200).json(projectData);
 });
 
