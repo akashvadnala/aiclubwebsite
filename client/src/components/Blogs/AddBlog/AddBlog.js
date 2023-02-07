@@ -75,8 +75,9 @@ const AddBlog = () => {
       console.log("photoerr", err);
     }
     try {
-      const blogdata = await axios.post(`${SERVER_URL}/blogadd`, post, {
+      const blogdata = await axios.post(`${SERVER_URL}/addBlog`, post, {
         headers: { "Content-Type": "application/json" },
+        withCredentials:true
       });
       if (blogdata.status === 422 || !blogdata) {
         showAlert("Blog Posting failed","danger");
@@ -86,6 +87,7 @@ const AddBlog = () => {
       }
     } catch (err) {
       console.log("err", err);
+      navigate('/blogs')
     }
   };
 

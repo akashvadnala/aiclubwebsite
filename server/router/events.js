@@ -104,7 +104,7 @@ router.route('/addEvent').post(authenticate, async (req,res)=>{
     }
     catch(err){
         console.log('err',err);
-        res.status(500).json({"msg":"Problem with adding event"});
+        res.status(500).json({error:"Problem with adding event"});
     }
 })
 
@@ -148,7 +148,7 @@ router.route('/deleteEvent/:url').delete(authenticate, async (req,res)=> {
     } 
     catch(err){
         console.log("Cannot Delete the Event");
-        res.status(422).json({msg:"Cannot Delete the Event"});
+        res.status(500).json({msg:"Cannot Delete the Event"});
     }
 });
 

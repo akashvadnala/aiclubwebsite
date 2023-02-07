@@ -46,7 +46,7 @@ const Home = () => {
             if (getPublications.status === 200) {
               setPublicationList(getPublications.data);
               //blogs
-              getBlogs = await axios.get(`${SERVER_URL}/getsixBlogs`)
+              getBlogs = await axios.get(`${SERVER_URL}/blogs/getsixBlogs`)
               if (getBlogs.status === 200) {
                 setBlogs(getBlogs.data);
                 //images

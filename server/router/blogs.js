@@ -43,7 +43,7 @@ router.route("/updateblogApprovalStatus/:url").put(authenticate,async (req, res)
   }
 });
 
-router.route("/blogadd").post(authenticate,async (req, res) => {
+router.route("/addBlog").post(authenticate,async (req, res) => {
   const title = req.body.title;
   if (!title) {
     return res.status(400).json({ error: "Plz fill the field properly" });
