@@ -98,7 +98,7 @@ router.route('/teamadd').post(authenticate,async (req,res) => {
         
     }catch(err){
         console.log('err',err);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(400).json({error:"Internal server error"});
     }  
 });
 
@@ -109,7 +109,7 @@ router.route('/getTeams').get(async (req,res)=>{
         teams.push({id:t._id,name:`${t.firstname} ${t.lastname}`})
     }))
     // console.log('teams',teams);
-    return res.json(teams);
+    return res.status(200).json(teams);
 });
 
 router.route('/getTeam/:year').get(async (req,res)=>{

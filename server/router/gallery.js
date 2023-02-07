@@ -9,10 +9,10 @@ const fileUpload = InitFileUpload();
 router.route('/getHomepagePhotos').get(async (req,res)=> {
     try {
         const somePhotos = await Photo.find({}).sort({createdAt:-1}).limit(8);
-        res.status(200).send(somePhotos);
+        res.status(200).json(somePhotos);
     } catch (error) {
         console.log(error);
-        res.status(500).json({"msg":"error while getting photos"});
+        res.status(400).json({error:"error while getting photos"});
     }
 });
 

@@ -9,7 +9,7 @@ router.route('/getSlides').get(async (req,res)=>{
         res.status(200).json(slides);
     }catch(err){
         console.log(err);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(400).json({error:"Internal server error"});
     }
 });
 

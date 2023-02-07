@@ -59,12 +59,11 @@ router.post("/login", async (req, res, next) => {
                     }
                     console.log("Logged in");
                 }
-                return res.json({ message: "User Signin Successfully"});
+                return res.status(200).json({ message: "User Signin Successfully"});
             }
         });
     } catch (err) {
-        console.log("Invalid Credentials");
-        res.status(500).json({message:"Internal server Error"});
+        res.status(400).json({error:"Internal server Error"});
     }
 });
 
@@ -73,7 +72,7 @@ router.get('/getUserData', authenticate, (req, res) => {
         res.status(200).json(req.rootUser);
     }
     else {
-        res.status(200).json(null);
+        res.status(400).json(null);
     }
 });
 

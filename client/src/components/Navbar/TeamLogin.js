@@ -26,6 +26,7 @@ function TeamLogin(props) {
       ).then((res) => {
         window.location.reload(true);
       }).catch((err) => {
+        console.log(err);
         setMsg(err.response.data.error);
         setsignin(false);
       });
