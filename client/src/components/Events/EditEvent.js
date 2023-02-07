@@ -125,14 +125,16 @@ const EditEvent = () => {
           { url: event.poster },
           {
             headers: { "Content-Type": "application/json" },
-          }
-        );
+            withCredentials: true
+          },
+          );
       } catch (err) {
         console.log("photoerr", err);
+        showAlert(err.response.error,"danger")
       }
 
       try {
-        const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data,{ withCredentials: true });
         imgurl = img.data;
         event.poster = imgurl;
       } catch (err) {
@@ -145,10 +147,11 @@ const EditEvent = () => {
         event,
         {
           headers: { "Content-Type": "application/json" },
-        }
-      );
+          withCredentials: true
+        },
+        );
       console.log("blogdata", eventdata);
-      if (eventdata.status === 422 || !eventdata) {
+      if (eventdata.status === 500 || !eventdata) {
         showAlert("Failed to save", "danger");
       } else {
         setAdd(false);
@@ -157,6 +160,8 @@ const EditEvent = () => {
       }
     } catch (err) {
       console.log("err", err);
+      navigate('/blogs');
+      showAlert(err.response.error,'danger');
     }
   };
 

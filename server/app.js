@@ -32,7 +32,7 @@ app.use(require('./router/inductions'));
 app.use(require('./router/overview'));
 app.use(require('./router/data'));
 app.use(require('./router/rules'));
-app.use(require('./router/blogs'));
+app.use('/blogs',require('./router/blogs'));
 app.use(require('./router/leaderboard'));
 app.use(require('./router/projects'));
 app.use(require('./router/about'));
@@ -45,6 +45,11 @@ app.use(require('./router/slider'));
 const PORT = process.env.PORT || 5000;
 
 const url = Config.DATABASE;
+
+//dummy api for testing
+app.get('/test',(req,res)=>{
+    res.status(500).send('testing')
+})
 
 const start = async () => {
     try{

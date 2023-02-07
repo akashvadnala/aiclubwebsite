@@ -20,7 +20,7 @@ const Blogs = () => {
 
   const getBlogData = async () => {
     try {
-      axios.get(`${SERVER_URL}/getBlogs`).then((data) => {
+      axios.get(`${SERVER_URL}/blogs/getBlogs`).then((data) => {
         if (data.status === 200) {
           console.log("data", data.data);
           setBlogs(data.data);

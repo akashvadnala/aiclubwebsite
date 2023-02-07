@@ -32,8 +32,11 @@ const storage = multer.diskStorage({
     }
 })
 
-router.route('/imgupload').post(multer({ storage }).single('photo'), async (req, res) => {
-
+router.route('/imgupload').post([multer({ storage }).single('photo'),authenticate], async (req, res) => {
+    // if(req.file === null){
+    //     return res.status(400).json({ msg: "No file uploaded" });
+    // }
+    console.log('files',req.body);
     const file = req.file.path;
     const name = req.file.filename;
     const mimeType = req.file.mimetype;
