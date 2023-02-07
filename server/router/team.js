@@ -1,10 +1,8 @@
-const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-let path = require('path');
+const multer = require('multer');
 const authenticate = require('../middleware/authenticate');
-
 const Team = require('../model/teamSchema');
 const File = require('../model/fileSchema');
 
@@ -12,26 +10,15 @@ router.route('/').get((req,res)=>{
     res.send(`Hello world from the server router js`);
 });
 
-const mime = require("mime-types");
-const { Readable } = require("stream");
+// const mime = require("mime-types");
+// const { Readable } = require("stream");
 
-const fs = require('fs');
-const { google } = require('googleapis');
+// const { google } = require('googleapis');
 
-const GOOGLE_API_FOLDER_ID = '1K5UVYYZS6PrDEJRX6QfVj8d7Ng-tBtY0';
+// const GOOGLE_API_FOLDER_ID = '1K5UVYYZS6PrDEJRX6QfVj8d7Ng-tBtY0';
 
-const bufferToStream = (buffer) => {
-    var stream = new Readable();
-    stream.push(buffer);
-    stream.push(null);
-  
-    return stream;
-};
 
 const { InitFileUpload } = require('../file_upload');
-const multer = require('multer');
-const { json } = require('stream/consumers');
-
 const fileUpload = InitFileUpload();
 
 
@@ -40,18 +27,10 @@ const storage = multer.diskStorage({
         cb(null, 'uploads')
     },
     filename: (req, file, cb)=> {
-        cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname)
+        const t=new Date();
+        cb(null, `${t}.png`);
     }
 })
-
-const fileFilter = (req, file, cb)=>{
-    if( file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg'){
-        cb(null, true)
-    }else {
-        cb(null, false)
-    }
-}
-
 
 router.route('/imgupload').post([multer({ storage }).single('photo'),authenticate], async (req, res) => {
     // if(req.file === null){
@@ -60,25 +39,14 @@ router.route('/imgupload').post([multer({ storage }).single('photo'),authenticat
     console.log('files',req.body);
     const file = req.file.path;
     const name = req.file.filename;
-    console.log('name',name);
-    console.log('file',file);
     const mimeType = req.file.mimetype;
 
     try{
         const key = await fileUpload.uploadFile({ name, file, mimeType });
         const url = fileUpload.getUrl(key);
-
-        const fileDoc = new File({
-            'key':key,
-            'name':name,
-            'url':url
-        });
-        await fileDoc.save();
-        console.log('img-url',fileDoc.url);
-        return res.status(200).send(url);
+        res.send(url);
     }catch(err){
-        console.log(err);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(400).json({error:"Something went wrong!"});
     }
 });
 
@@ -144,7 +112,7 @@ router.route('/getTeams').get(async (req,res)=>{
         teams.push({id:t._id,name:`${t.firstname} ${t.lastname}`})
     }))
     // console.log('teams',teams);
-    return res.status(200).json(teams);
+    return res.json(teams);
 });
 
 router.route('/getTeam/:year').get(async (req,res)=>{

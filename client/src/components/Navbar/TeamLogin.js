@@ -9,38 +9,26 @@ function TeamLogin(props) {
   const [reset, setReset] = useState(false);
   const [signin, setsignin] = useState(false);
   const [msg, setMsg] = useState();
-  const [showSpinner,setShowSpinner] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const Login = async (e) => {
     e.preventDefault();
-    console.log("Logging..");
     setMsg("");
     setsignin(true);
-    try {
-      await axios
-        .post(
-          `${SERVER_URL}/login`,
-          {
-            username: username,
-            password: password,
-          },
-          { withCredentials: true }
-        )
-        .then((res) => {
-          console.log("res", res);
-          if (res.status === 200) {
-            setMsg("Invalid Credentials");
-            setsignin(false);
-            console.log("Invalid Credentials");
-          } else if (res.status === 201) {
-            window.location.reload(true);
-          }
-        });
-    } catch (err) {
-      setsignin(true);
-      setMsg();
-      console.log("Login err", "Invalid Credentials");
-    }
+    await axios
+      .post(
+        `${SERVER_URL}/login`,
+        {
+          username: username,
+          password: password,
+        },
+        { withCredentials: true }
+      ).then((res) => {
+        window.location.reload(true);
+      }).catch((err) => {
+        setMsg(err.response.data.error);
+        setsignin(false);
+      });
   };
 
   const ResetPassword = async (e) => {
@@ -151,7 +139,7 @@ function TeamLogin(props) {
           </div>
         ) : (
           <div className="login-container">
-            <form method="POST">
+            <form method="POST" onSubmit={ResetPassword}>
               <div class="form-group my-3 row">
                 <label for="username" className="col-4 text-end">
                   Username/Email :
@@ -173,7 +161,6 @@ function TeamLogin(props) {
               <button
                 type="submit"
                 class="cust btn btn-primary btn-block mb-4"
-                onClick={ResetPassword}
               >
                 Reset Password{
                   showSpinner && <i class="fa fa-spinner fa-spin"></i>

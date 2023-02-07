@@ -7,14 +7,12 @@ const ProjectSpace = ({project}) => {
   const d = new Date(project.createdAt);
   const ddmmyy = d.getDate() + "/" + String(parseInt(d.getMonth()) + 1) + "/" + d.getFullYear();
   const [names,setNames] = useState("");
+  
   const getFirstLastNameForProjects = async () => {
       axios.get(`${SERVER_URL}/getFirstLastNameForProjects/${project.url}`)
-      .then(data=>{
-        if(data.status===200){
-          setNames(data.data);
-        }
-      });
+      .then(data=>{ setNames(data.data); });
   }
+
   useEffect(()=>{
     if(project){
       getFirstLastNameForProjects();

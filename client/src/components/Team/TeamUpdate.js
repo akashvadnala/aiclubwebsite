@@ -240,7 +240,7 @@ const TeamUpdate = () => {
                                     </button>
                                     :
                                     <button type="submit" name="submit" id="submit" onClick={UpdateTeam} className="btn btn-primary">
-                                        Updating <i class="fa fa-spinner fa-spin"></i>
+                                        Update
                                     </button>
                             }
                         </form>

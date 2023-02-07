@@ -4,7 +4,7 @@ import { Context } from "../../../Context/Context";
 import { useNavigate } from "react-router-dom";
 import { CLIENT_URL, SERVER_URL } from "../../../EditableStuff/Config";
 import axios from "axios";
-import {alertContext} from "../../../Context/Alert";
+import { alertContext } from "../../../Context/Alert";
 import Loading from "../../Loading";
 import Error from "../../Error";
 
@@ -21,17 +21,15 @@ const AddBlog = () => {
     url: "",
     tags: [],
     content: "",
-    authorName: user._id,
-    authorAvatar: user.photo,
+    authorName: user?user._id:"",
     cover: "",
   };
-  console.log('blog',post);
   useEffect(() => {
-    if(logged_in===1){
+    if (logged_in === 1) {
       setPost(pt);
       setLoad(1);
     }
-    else if(logged_in===-1){
+    else if (logged_in === -1) {
       setLoad(-1);
     }
   }, [logged_in]);
@@ -60,12 +58,19 @@ const AddBlog = () => {
 
   const PostBlog = async (e) => {
     e.preventDefault();
-    setAdd(true);
-    const data = new FormData();
-    const photoname = Date.now() + post.cover.name;
-    data.append("name", photoname);
-    data.append("photo", post.cover);
-    var imgurl;
+    try {
+      const blogExist = await axios.get(`${SERVER_URL}/isBlogurlExist/${post.url}`)
+      if (blogExist.status === 200) {
+        showAlert("Url Already Exist!", "danger");
+        return;
+      }
+      else {
+        setAdd(true);
+        const data = new FormData();
+        const photoname = Date.now() + post.cover.name;
+        data.append("name", photoname);
+        data.append("photo", post.cover);
+        var imgurl;
 
     try {
       const img = await axios.post(`${SERVER_URL}/imgupload`, data);
@@ -93,7 +98,7 @@ const AddBlog = () => {
 
   return (
     <>
-      {load===0?<Loading />:load===1? (
+      {load === 0 ? <Loading /> : load === 1 ? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <h3>Add Blog</h3>
@@ -217,7 +222,7 @@ const AddBlog = () => {
                 </div>
               </div>
               {
-                add?
+                add ?
                   <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
                     Creating <i className="fa fa-spinner fa-spin"></i>
                   </button>
