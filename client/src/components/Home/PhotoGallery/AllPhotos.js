@@ -11,10 +11,14 @@ import { SERVER_URL } from "../../../EditableStuff/Config";
 import axios from "axios";
 import { getImageSize } from 'react-image-size';
 import {alertContext} from "../../../Context/Alert";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AllPhotos = () => {
   const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
+
+  const navigate = useNavigate();
   const [index, setIndex] = useState(-1);
   const [photos, setPhotos] = useState([]);
   const [canDelete, setCanDelete] = useState(false);
@@ -44,6 +48,8 @@ const AllPhotos = () => {
       // console.log("photos ",photos);
     } catch (err) {
       console.log(err);
+      navigate('/gallery');
+      showAlert("Problem at fetching photos");
     }
   };
 
@@ -69,27 +75,23 @@ const AllPhotos = () => {
       const response = await axios.delete(
         `${SERVER_URL}/gallery/deleteImages`,
         {
-          data:
-            { urls: selectedImages }
+          urls: selectedImages 
         },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json"},
+          withCredentials:true
         });
 
-      if (response.status === 422 || !response) {
-        window.alert("Posting failed");
-        console.log("Posting failed");
-      } else {
+      
         console.log("data");
         console.log(response);
         showAlert("Image Deleted Successfully","success");
         console.log("deleted Successfull");
-        window.location.reload(true);
-      }
     } catch (error) {
       console.log(error);
+      window.alert('Error while deleting images please try again');
     }
-
+    window.location.reload(true);
   }
 
   useEffect(() => {
@@ -112,11 +114,13 @@ const AllPhotos = () => {
     data.append("photo", image);
     let imageurl;
     try {
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
       imageurl = img.data;
       console.log("final image", imageurl);
     } catch (err) {
       console.log("photoerr", err);
+      navigate('/gallery');
+      showAlert("Problem at fetching photos");
     }
 
     const { width, height } = await getImageSize(imageurl);
@@ -133,22 +137,19 @@ const AllPhotos = () => {
         imageDetails,
         {
           headers: { "Content-Type": "application/json" },
+          withCredentials:true,
         }
       );
 
-      if (imagedata.status === 422 || !imagedata) {
-        window.alert("Posting failed");
-        console.log("Posting failed");
-      } else {
         console.log("data");
         console.log(imagedata);
-        showAlert("Image Uploaded Successfully","success");
         console.log("Posting Successfull");
-        window.location.reload(true);
-      }
+        showAlert("Image Uploaded Successfully","success");
     } catch (err) {
-      console.log("err", err);
+      console.log("posting err", err);
+      showAlert("Problem at fetching photos");
     }
+    window.location.reload(true);
   };
 
 

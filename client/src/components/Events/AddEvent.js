@@ -102,7 +102,7 @@ const AddEvent = () => {
     data.append("photo", event.poster);
 
     try {
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data,{ withCredentials: true });
       imgurl = img.data;
       event.poster = imgurl;
       console.log("final post", event);
@@ -113,17 +113,20 @@ const AddEvent = () => {
     try {
       const eventdata = await axios.post(`${SERVER_URL}/events/addEvent`, event, {
         headers: { "Content-Type": "application/json" },
+        withCredentials: true
       });
       console.log("blogdata", eventdata);
-      if (eventdata.status === 422 || !eventdata) {
+      if (eventdata.status === 500 || !eventdata) {
         showAlert("Event Posting failed", "danger");
       } else {
         showAlert("Event Created Successfull", "success");
-        navigate("/events")
+        
       }
     } catch (err) {
       console.log("err", err);
+      showAlert(err.response.error, "danger");
     }
+    navigate("/events")
   };
 
   return (

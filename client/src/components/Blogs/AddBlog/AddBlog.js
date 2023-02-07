@@ -72,32 +72,28 @@ const AddBlog = () => {
         data.append("photo", post.cover);
         var imgurl;
 
-        try {
-          const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-          imgurl = img.data;
-          post.cover = imgurl;
-        } catch (err) {
-          console.log("photoerr", err);
-        }
-        
-        try {
-          const blogdata = await axios.post(`${SERVER_URL}/blogadd`, post, {
-            headers: { "Content-Type": "application/json" },
-          });
-          if (blogdata.status === 422 || !blogdata) {
-            showAlert("Blog Posting failed", "danger");
-          } else {
-            showAlert("Blog Created Successfully!", "success");
-            navigate(`/blogs/${post.url}/edit`);
-          }
-        } catch (err) {
-          console.log("err", err);
-        }
+    try {
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+      imgurl = img.data;
+      post.cover = imgurl;
+    } catch (err) {
+      console.log("photoerr", err);
+    }
+    try {
+      const blogdata = await axios.post(`${SERVER_URL}/addBlog`, post, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials:true
+      });
+      if (blogdata.status === 422 || !blogdata) {
+        showAlert("Blog Posting failed","danger");
+      } else {
+        showAlert("Blog Created Successfull","success");
+        navigate(`/blogs/${post.url}/edit`);
       }
     } catch (err) {
-      console.log(err);
+      console.log("err", err);
+      navigate('/blogs')
     }
-
   };
 
   return (
