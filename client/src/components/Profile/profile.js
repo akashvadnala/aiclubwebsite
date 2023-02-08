@@ -12,6 +12,7 @@ import { alertContext } from "../../Context/Alert";
 const Profile = () => {
     const { user, logged_in } = useContext(Context);
     const [team, setTeam] = useState({});
+    const [teamCopy, setTeamCopy] = useState({});
     const [photo, setPhoto] = useState(null);
     const [load, setLoad] = useState(0);
     const [blogs, setBlogs] = useState([]);
@@ -27,30 +28,32 @@ const Profile = () => {
     const { showAlert } = useContext(alertContext);
 
     const getBlogsAndProjects = async () => {
-        if (logged_in === 1) {
-            try {
-                setTeam(user);
-                const blogsdata = await axios.get(`${SERVER_URL}/getprofileblogs/${user._id}`);
-                const projectdata = await axios.get(`${SERVER_URL}/getMyProjects/${user._id}`);
-                if ((blogsdata.status === 200) && (projectdata.status === 200)) {
-                    setBlogs(blogsdata.data.blogs);
-                    setProjects(projectdata.data);
-                    setLoad(1);
-                }
-                else {
-                    setLoad(-1);
-                }
-            } catch (err) {
-                console.log(err);
+        try {
+            setTeam(user);
+            setTeamCopy(user);
+            const blogsdata = await axios.get(`${SERVER_URL}/getprofileblogs/${user._id}`);
+            const projectdata = await axios.get(`${SERVER_URL}/getMyProjects/${user._id}`);
+            if ((blogsdata.status === 200) && (projectdata.status === 200)) {
+                setBlogs(blogsdata.data.blogs);
+                setProjects(projectdata.data);
+                setLoad(1);
             }
-        }
-        else if (logged_in === -1) {
+            else {
+                setLoad(-1);
+            }
+        } catch (err) {
+            console.log(err);
             setLoad(-1);
         }
     }
 
     useEffect(() => {
-        getBlogsAndProjects();
+        if (logged_in === 1) {
+            getBlogsAndProjects();
+        }
+        else if (logged_in === -1) {
+            setLoad(-1);
+        }
     }, [logged_in]);
 
     const forms = [
@@ -96,69 +99,41 @@ const Profile = () => {
 
     const UpdateTeam = async (e) => {
         e.preventDefault();
-        if (!team.firstname || !team.username || !team.position || !team.email) {
-            showAlert("Fill required Details!", "danger");
-            return;
-        }
-        if (team.username !== user.username) {
-            console.log('Username changed');
-            try {
-                const res = await axios.get(`${SERVER_URL}/userExist/${team.username}`);
-                if (res.status === 200) {
-                    console.log('Username Already Exists!');
-                    showAlert("Username Already Exists!", "danger");
-                    return ;
-                }
-            } catch (err) {
-                console.log(err);
+        try {
+            if(teamCopy.username!==team.username){
+                await axios.get(`${SERVER_URL}/isUsernameExist/${team.username}`);
             }
-        }
-        setPChange(true);
-        var imgurl;
-        if (Img) {
-            const data = new FormData();
-            const photoname = Date.now() + Img.name;
-            data.append("name", photoname);
-            data.append("photo", Img);
+            if(teamCopy.email!==team.email){
+                await axios.get(`${SERVER_URL}/isEmailExist/${team.email}`);
+            }
+            setChange(true);
+            team.ismember = team.ismember || team.isadmin;
+            if (Img) {
+                const data = new FormData();
+                data.append("photo", Img);
 
-            try {
-                axios.post(`${SERVER_URL}/imgdelete`,
+                await axios.post(`${SERVER_URL}/imgdelete`,
                     { 'url': team.photo },
                     {
+                        withCredentials:true,
                         headers: { "Content-Type": "application/json" },
                     });
-            } catch (err) {
-                console.log('photoerr', err);
-            }
 
-            try {
-                const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-                console.log('img', img);
-                imgurl = img.data;
-                team.photo = imgurl;
-            } catch (err) {
-                console.log('photoerr', err);
+                const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
+                team.photo = img.data;
             }
-        }
-        console.log('imgurl', imgurl);
-        try {
-            const teamdata = await axios.put(`${SERVER_URL}/teamupdate/${team._id}`,
+            await axios.put(`${SERVER_URL}/teamupdate/${team._id}`,
                 team,
                 {
+                    withCredentials: true,
                     headers: { "Content-Type": "application/json" }
                 }
             );
-            console.log('teamdata', teamdata);
-            if (teamdata.status === 200) {
-                setEditMode(false);
-                setPChange(false);
-                showAlert("Profile Updated Successfully!", "success");
-            }
-            else {
-                console.log('Username not found');
-            }
+            showAlert("Profile Updated Successfully!", "success");
+            setChange(false);
         } catch (err) {
-            console.log('err', err);
+            setChange(false);
+            showAlert(err.response.data.error, "danger");
         }
     }
 
@@ -239,12 +214,12 @@ const Profile = () => {
                                                             setEditMode(false);
                                                         }} className="btn btn-sm ms-1">Cancel</button>
                                                         {
-                                                            pChange?
+                                                            pChange ?
                                                                 <button type="button" className="btn btn-sm btn-outline-success ms-1" disabled>Saving <i class="fa fa-spinner fa-spin"></i></button>
-                                                            :
+                                                                :
                                                                 <button type="button" onClick={UpdateTeam} className="btn btn-sm btn-outline-success ms-1">Save Profile</button>
                                                         }
-                                                        
+
                                                     </>
                                                     :
                                                     <>

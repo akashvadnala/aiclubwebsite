@@ -26,28 +26,19 @@ function Team() {
 
   const { user,logged_in } = useContext(Context);
   const getTeamData = async() => {
-    console.log('year',year);
-    try{
       axios.get(`${SERVER_URL}/getTeam/${year}`)
       .then(data => {
         setTeams(data.data);
         setArchTeam(false);
-      })
-    }catch(err){
-      console.log(err);
-    }
+      });
   }
 
   const getArchTeamData = async() => {
-    try{
       axios.get(`${SERVER_URL}/getArchTeam`)
       .then(data => {
         setTeams(data.data);
         setArchTeam(true);
       })
-    }catch(err){
-      console.log(err);
-    }
   }
 
   useEffect(() => {

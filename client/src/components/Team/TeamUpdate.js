@@ -5,74 +5,62 @@ import { Context } from '../../Context/Context';
 import { SERVER_URL } from '../../EditableStuff/Config';
 import Loading from '../Loading';
 import Error from '../Error';
+import { alertContext } from '../../Context/Alert';
 
 const TeamUpdate = () => {
     const navigate = useNavigate();
     const params = new useParams();
     const username = params.username;
-    // console.log(username);
+    const { showAlert } = useContext(alertContext);
     const [team, setTeam] = useState([]);
+    const [teamCopy, setTeamCopy] = useState([]);
     const [checkbox, setCheckbox] = useState(false);
     const [Img, setImg] = useState();
     const [photo, setPhoto] = useState(null);
     const [submit, setSubmit] = useState(false);
-    // const { user } = useContext(Context);
+    const { user, logged_in } = useContext(Context);
     const [load, setLoad] = useState(0);
     const getUserDataForEdit = async () => {
         try {
-            axios.get(`${SERVER_URL}/getUserData`,
-                { withCredentials: true })
-                .then(async data => {
-                    if (data.status === 200) {
-                        const user = data.data;
-                        const res = await axios.get(`${SERVER_URL}/getUserDataForEdit/${username}`);
-                        if (res.status === 200) {
-                            setTeam(res.data);
-                            if (user.isadmin) {
-                                if (user.username !== res.data.username) {
-                                    setCheckbox(true);
-                                }
-                                setLoad(1);
-                            }
-                        }
-                        else {
-                            setLoad(-1);
-                        }
-                    }
-                    else {
-                        setLoad(-1);
-                    }
-                })
+            const res = await axios.get(`${SERVER_URL}/getUserDataForEdit/${username}`);
+            setTeam(res.data);
+            setTeamCopy(res.data);
+            if (user.username !== res.data.username) {
+                setCheckbox(true);
+            }
+            setLoad(1);
         } catch (err) {
-            console.log(err);
             setLoad(-1);
+            showAlert(err.response.data.error)
         }
     }
 
     useEffect(() => {
-        getUserDataForEdit();
-    }, []);
+        if (logged_in === 1) {
+            if (user.isadmin) {
+                getUserDataForEdit();
+            }
+            else {
+                setLoad(-1)
+            }
+        }
+        else if (logged_in === -1) {
+            setLoad(-1)
+        }
+    }, [logged_in]);
 
 
     const d = new Date();
     var y = d.getFullYear();
     const ly = 2019;
 
-    let name, value;
     const handleInputs = (e) => {
-        name = e.target.name;
-        value = e.target.value;
-        console.log(name);
-        console.log(value);
-        setTeam({ ...team, [name]: value });
-        console.log('team', team);
+        setTeam({ ...team, [e.target.name]: e.target.value });
     }
 
 
     const handleCheck = (e) => {
-        const name = e.target.name;
-        const checked = e.target.checked
-        setTeam({ ...team, [name]: checked });
+        setTeam({ ...team, [e.target.name]: e.target.checked });
     }
 
     const handlePhoto = (e) => {
@@ -82,57 +70,46 @@ const TeamUpdate = () => {
 
     const UpdateTeam = async (e) => {
         e.preventDefault();
-        setSubmit(true);
-        team.ismember = team.ismember || team.isadmin;
-        var imgurl;
-        if (Img) {
-            const data = new FormData();
-            const photoname = Date.now() + Img.name;
-            data.append("name", photoname);
-            data.append("photo", Img);
+        try {
+            if(teamCopy.username!==team.username){
+                await axios.get(`${SERVER_URL}/isUsernameExist/${team.username}`);
+            }
+            if(teamCopy.email!==team.email){
+                await axios.get(`${SERVER_URL}/isEmailExist/${team.email}`);
+            }
+            setSubmit(true);
+            team.ismember = team.ismember || team.isadmin;
+            if (Img) {
+                const data = new FormData();
+                data.append("photo", Img);
 
-            try {
                 await axios.post(`${SERVER_URL}/imgdelete`,
                     { 'url': team.photo },
                     {
+                        withCredentials:true,
                         headers: { "Content-Type": "application/json" },
                     });
-            } catch (err) {
-                console.log('photoerr', err);
-            }
 
-            try {
-                const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-                console.log('img', img);
-                imgurl = img.data;
-                team.photo = imgurl;
-            } catch (err) {
-                console.log('photoerr', err);
+                const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
+                team.photo = img.data;
             }
-        }
-        console.log('imgurl', imgurl);
-        try {
             if (team.year > y) {
                 team.year = y;
             }
             else if (team.year < ly) {
                 team.year = ly;
             }
-            const teamdata = await axios.put(`${SERVER_URL}/teamupdate/${team._id}`,
+            await axios.put(`${SERVER_URL}/teamupdate/${team._id}`,
                 team,
                 {
+                    withCredentials: true,
                     headers: { "Content-Type": "application/json" }
                 }
             );
-            console.log('teamdata', teamdata);
-            if (teamdata.status === 422 || !teamdata) {
-                console.log('Username not found');
-            }
-            else {
-                navigate('/team');
-            }
+            showAlert("Team Updated Successfully!", "success");
+            navigate('/team');
         } catch (err) {
-            console.log('err', err);
+            showAlert(err.response.data.error, "danger");
         }
     }
 
@@ -142,31 +119,57 @@ const TeamUpdate = () => {
             'type': 'text',
             'id': 'firstname',
             'des': 'First Name',
-            'val': team.firstname
+            'val': team.firstname,
+            'req': true
         },
         {
             'type': 'text',
             'id': 'lastname',
             'des': 'Last Name',
-            'val': team.lastname
+            'val': team.lastname,
+            'req': false
         },
         {
             'type': 'text',
-            'id': 'profession',
-            'des': 'Profession',
-            'val': team.profession
-        },
-        {
-            'type': 'text',
-            'id': 'description',
-            'des': 'Description',
-            'val': team.description
+            'id': 'username',
+            'des': 'Username',
+            'val': team.username,
+            'req': true
         },
         {
             'type': 'email',
             'id': 'email',
             'des': 'EMail',
-            'val': team.email
+            'val': team.email,
+            'req': true
+        },
+        {
+            'type': 'text',
+            'id': 'position',
+            'des': 'position',
+            'val': team.position,
+            'req': true
+        },
+        {
+            'type': 'text',
+            'id': 'phone',
+            'des': 'Contact No',
+            'val': team.phone,
+            'req': false
+        },
+        {
+            'type': 'text',
+            'id': 'profession',
+            'des': 'Profession',
+            'val': team.profession,
+            'req': false
+        },
+        {
+            'type': 'text',
+            'id': 'description',
+            'des': 'Description',
+            'val': team.description,
+            'req': false
         },
     ]
     return (
@@ -182,7 +185,7 @@ const TeamUpdate = () => {
                                         <div className="form-group my-3 row">
                                             <label for={f.id} className='col-sm-2 text-end'>{f.des} :</label>
                                             <div className='col-sm-10'>
-                                                <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} className="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} />
+                                                <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} className="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} required={f.req} />
                                             </div>
                                         </div>
                                     )

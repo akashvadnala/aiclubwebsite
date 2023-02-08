@@ -72,14 +72,10 @@ const AddBlog = () => {
         data.append("photo", post.cover);
         var imgurl;
 
-    try {
       const img = await axios.post(`${SERVER_URL}/imgupload`, data);
       imgurl = img.data;
       post.cover = imgurl;
-    } catch (err) {
-      console.log("photoerr", err);
-    }
-    try {
+      
       const blogdata = await axios.post(`${SERVER_URL}/addBlog`, post, {
         headers: { "Content-Type": "application/json" },
         withCredentials:true
@@ -89,6 +85,8 @@ const AddBlog = () => {
       } else {
         showAlert("Blog Created Successfull","success");
         navigate(`/blogs/${post.url}/edit`);
+      }
+
       }
     } catch (err) {
       console.log("err", err);

@@ -1,28 +1,29 @@
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import TextTruncate from "react-text-truncate";
+import { alertContext } from "../../Context/Alert";
 
 function TeamCard({ team, isadmin, isdelete }) {
-
-  const PostDelete = async (username,id) => {
-    const confirmed = window.confirm(
-      `Are you sure to delete the user ${username}?`
-    );
-    if (confirmed) {
-      const res = await axios.post(`${SERVER_URL}/team/delete/${id}`);
-      if (res.status === 200) {
-        console.log("User not deleted");
-      } else if (res.status === 201) {
-        // navigate('/team');
+  const {showAlert} = useContext(alertContext);
+  const PostDelete = async (username, id) => {
+    try {
+      const confirmed = window.confirm(
+        `Are you sure to delete the user ${username}?`
+      );
+      if (confirmed) {
+        await axios.delete(`${SERVER_URL}/team/delete/${id}`,{withCredentials:true});
         window.location.reload(true);
+        showAlert("User deleted successfully!","success");
       }
+    } catch (err) {
+      showAlert(err.response.data.error,"danger");
     }
   };
   return (
     <div className="team-card-container col-lg-3 col-md-4 col-sm-6 col-6">
-      <div className="card" style={{'border':"solid"}}>
+      <div className="card" style={{ 'border': "solid" }}>
         <div className="card-img">
           <img className="card-img-top" src={team.photo} alt={team.firstname} />
         </div>
@@ -77,10 +78,10 @@ function TeamCard({ team, isadmin, isdelete }) {
                       rel="noreferrer"
                       className="btn btn-sm btn-outline-danger"
                       onClick={() => {
-                        PostDelete(team.username,team._id);
+                        PostDelete(team.username, team._id);
                       }}
                     >
-                     <i className="fas fa-trash-alt"></i> Delete
+                      <i className="fas fa-trash-alt"></i> Delete
                     </NavLink>
                   </span>
                 </>
