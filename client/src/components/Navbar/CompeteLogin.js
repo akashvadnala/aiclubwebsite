@@ -15,7 +15,7 @@ function CompeteLogin(props) {
     e.preventDefault();
     console.log("Logging..");
     setMsg("");
-    setsignin(<i class="fa fa-spinner fa-spin"></i>);
+    setsignin(<i className="fa fa-spinner fa-spin"></i>);
     setsignin2("Signing in ");
     try {
       await axios
@@ -62,7 +62,7 @@ function CompeteLogin(props) {
           {msg ? <div className="alert alert-danger">{msg}</div> : null}
           <div className="login-container">
             <form onSubmit={Login} method="POST">
-              <div class="form-group my-3 row">
+              <div className="form-group my-3 row">
                 <label for="username" className="col-4 text-end">
                   Username :
                 </label>
@@ -72,7 +72,7 @@ function CompeteLogin(props) {
                     name="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    class="form-control"
+                    clasNames="form-control"
                     id="username"
                     aria-describedby="username"
                     placeholder="Enter Username or EMail ID"
@@ -80,7 +80,7 @@ function CompeteLogin(props) {
                   />
                 </div>
               </div>
-              <div class="form-group my-3 row">
+              <div className="form-group my-3 row">
                 <label for="password" className="col-4 text-end">
                   Password :
                 </label>
@@ -90,7 +90,7 @@ function CompeteLogin(props) {
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    class="form-control"
+                    className="form-control"
                     id="password"
                     aria-describedby="password"
                     placeholder="Enter Password"
@@ -98,7 +98,7 @@ function CompeteLogin(props) {
                   />
                 </div>
               </div>
-              <button type="submit" class="cust btn btn-primary btn-block mb-4">
+              <button type="submit" className="cust btn btn-primary btn-block mb-4">
                 {signin2}
                 {signin}
               </button>

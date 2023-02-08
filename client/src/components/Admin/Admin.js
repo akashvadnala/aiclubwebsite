@@ -317,13 +317,13 @@ const Admin = () => {
                                                     addOrEdit?
                                                         <button type="submit" onClick={updateSlider} className="btn btn-sm btn-primary">
                                                             {
-                                                                edit?<span>Updating <i class="fa fa-spinner fa-spin"></i></span>:<span>Update</span>
+                                                                edit?<span>Updating <i className="fa fa-spinner fa-spin"></i></span>:<span>Update</span>
                                                             }
                                                         </button>
                                                     :
                                                         <button type="submit" onClick={addSlider} className="btn btn-sm btn-primary">
                                                             {
-                                                                add?<span>Adding <i class="fa fa-spinner fa-spin"></i></span>:<span>Add</span>
+                                                                add?<span>Adding <i className="fa fa-spinner fa-spin"></i></span>:<span>Add</span>
                                                             }
                                                         </button>
                                                 }
@@ -341,7 +341,7 @@ const Admin = () => {
                                 return (
                                     <>
                                         <div className='slider-card card py-2 mb-3' style={{overflow:"hidden"}}>
-                                            <div class="card slider-card-in flex-row" style={{ cursor: "pointer" }}>
+                                            <div className="card slider-card-in flex-row" style={{ cursor: "pointer" }}>
                                                 <div className="swap mx-2">
                                                     <div type="button" className='arrow py-1' onClick={()=>sliderMoveUp(slide.index)}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="45" width="48"><path d="M14.15 30.75 12 28.6l12-12 12 11.95-2.15 2.15L24 20.85Z"/></svg>

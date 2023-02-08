@@ -93,28 +93,37 @@ const AddEvent = () => {
   const PostEvent = async (e) => {
     e.preventDefault();
     setAdd(true);
+    console.log("start-end", startDate, endDate);
+    var imgurl;
+    const data = new FormData();
+    console.log(data);
+    const photoname = Date.now() + event.poster.name;
+    data.append("name", photoname);
+    data.append("photo", event.poster);
+
     try {
-      console.log("start-end", startDate, endDate);
-
-      const data = new FormData();
-      data.append("photo", event.poster);
-
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-
-      event.poster = img.data;
-
-      await axios.post(`${SERVER_URL}/events/addEvent`, event, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true
-      });
-      showAlert("Event Created Successfull", "success");
-
-      navigate("/events")
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data,{ withCredentials: true });
+      imgurl = img.data;
+      event.poster = imgurl;
+      console.log("final post", event);
+      try {
+        const eventdata = await axios.post(`${SERVER_URL}/events/addEvent`, event, {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true
+        });
+        console.log("blogdata", eventdata);
+        if (eventdata && eventdata.status === 201) {
+          showAlert("Event Created Successfull", "success");
+        }
+      } catch (err) {
+        console.log("err", err);
+        showAlert("Event creation failed", "danger");
+      }
     } catch (err) {
-      console.log('err', err)
-      setAdd(false);
-      showAlert(err.response.data.error, "danger");
+      showAlert("Image upload failed","danger");
+      console.log("photoerr", err);
     }
+    navigate("/events")
 
   };
 

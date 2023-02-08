@@ -144,6 +144,7 @@ const TeamAdd = () => {
             'req': true
         }
     ]
+
     return (
         <>
             {load === 0 ? <Loading /> : load === 1 ?
@@ -197,8 +198,9 @@ const TeamAdd = () => {
                             }
                             {/* <div className="form-group form-check my-3">
                         <input type="checkbox" checked={team.canCreateCompetitions} name="canCreateCompetitions" onChange={handleCheck} className="form-check-input" id="canCreateCompetitions" />
-                        <label class="form-check-label" for="canCreateCompetitions">Can Create Competitions</label>
+                        <label className="form-check-label" for="canCreateCompetitions">Can Create Competitions</label>
                     </div> */}
+
                             {
                                 add ?
                                     <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>

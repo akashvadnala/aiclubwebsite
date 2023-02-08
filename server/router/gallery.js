@@ -42,7 +42,7 @@ router.route('/addPhoto').post(authenticate,async (req,res)=> {
 
 router.route('/deleteImages').delete(authenticate,async (req,res)=>{
     const urls = req.body.urls;
-    // console.log("urls: ",urls);
+    // console.log("urls: ",req.body);
 
     const keys = urls.map((url)=>{
         return url.split('=')[2];

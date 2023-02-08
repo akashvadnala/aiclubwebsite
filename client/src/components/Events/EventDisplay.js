@@ -85,7 +85,7 @@ const EventDisplay = () => {
         {withCredentials:true}
       );
       if (res.status === 200) {
-        showAlert("Deletion successful");
+        showAlert("Deletion successful","success");
         navigate("/events");
       } else {
         showAlert("Failed to delete the event, try again","danger");

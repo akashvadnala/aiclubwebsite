@@ -239,7 +239,7 @@ const TeamUpdate = () => {
                             {
                                 submit ?
                                     <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
-                                        Updating <i class="fa fa-spinner fa-spin"></i>
+                                        Updating <i className="fa fa-spinner fa-spin"></i>
                                     </button>
                                     :
                                     <button type="submit" name="submit" id="submit" onClick={UpdateTeam} className="btn btn-primary">
