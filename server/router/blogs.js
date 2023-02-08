@@ -171,12 +171,11 @@ router.route("/deleteBlog/:id").delete(authenticate,async (req, res) => {
 
 router.route("/getprofileblogs/:id").get(async (req,res)=>{
   try {
-    const id = req.params.id;
+    const {id} = req.params;
     const blogs = await Blog.find({authorName:id}).sort({createdAt:-1}).select("title url -_id").limit(5);
-    res.status(200).json({blogs:blogs});
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({"msg":"Internal server Error"});
+    return res.status(200).json(blogs);
+  } catch (err) {
+    res.status(401).json({error:"Internal server Error"});
   }
 })
 

@@ -124,6 +124,7 @@ const AddEvent = () => {
       console.log("photoerr", err);
     }
     navigate("/events")
+
   };
 
   return (
