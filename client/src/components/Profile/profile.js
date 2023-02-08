@@ -30,8 +30,8 @@ const Profile = () => {
     const getBlogs = async () => {
         try {
             const blogsdata = await axios.get(`${SERVER_URL}/blogs/getprofileblogs/${user._id}`);
-            console.log('blogs',blogsdata);
-            setBlogs(blogsdata.data);
+            console.log('blogs',blogsdata.data.blogs);
+            setBlogs(blogsdata.data.blogs);
             setLoad(1);
         } catch (err) {
             console.log(err);
@@ -229,7 +229,7 @@ const Profile = () => {
                                                     <>
                                                         <button type="button" onClick={() => setEditMode(true)} className="btn btn-sm btn-outline-primary ms-1"><i className="fas fa-edit"></i> Edit Profile</button>
                                                         <button type="button" className="btn btn-sm btn-outline-danger ms-1" data-bs-toggle="modal" data-bs-target="#passwordModal" onClick={() => setMsg("")}>Change Password</button>
-                                                        <div className="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+                                                        <div className="modal fade" id="passwordModal" tabIndex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
                                                             <div className="modal-dialog">
                                                                 <div className="modal-content">
                                                                     <div className="modal-header">
@@ -363,10 +363,10 @@ const Profile = () => {
                                                     My Blogs
                                                 </h6>
                                                 {blogs && (
-                                                    blogs.map((blog) => {
+                                                    blogs.map((blog,index) => {
                                                         return (
                                                             <>
-                                                                <div className="mt-1 blog-link">
+                                                                <div key={index} className="mt-1 blog-link">
                                                                     <NavLink to={`/blogs/${blog.url}`}>{blog.title}</NavLink>
                                                                 </div>
                                                             </>
@@ -386,10 +386,10 @@ const Profile = () => {
                                                     My Projects
                                                 </h6>
                                                 {projects && (
-                                                    projects.map((project) => {
+                                                    projects.map((project,index) => {
                                                         return (
                                                             <>
-                                                                <div className="mt-1 blog-link">
+                                                                <div key={index} className="mt-1 blog-link">
                                                                     <NavLink to={`/projects/${project.url}`}>{project.title}</NavLink>
                                                                 </div>
                                                             </>
