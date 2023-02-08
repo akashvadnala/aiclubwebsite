@@ -27,20 +27,23 @@ const Profile = () => {
     const [msg, setMsg] = useState("");
     const { showAlert } = useContext(alertContext);
 
-    const getBlogsAndProjects = async () => {
+    const getBlogs = async () => {
         try {
-            setTeam(user);
-            setTeamCopy(user);
-            const blogsdata = await axios.get(`${SERVER_URL}/getprofileblogs/${user._id}`);
+            const blogsdata = await axios.get(`${SERVER_URL}/blogs/getprofileblogs/${user._id}`);
+            console.log('blogs',blogsdata);
+            setBlogs(blogsdata.data);
+            setLoad(1);
+        } catch (err) {
+            console.log(err);
+            setLoad(-1);
+        }
+    }
+
+    const getProjects = async () => {
+        try {
             const projectdata = await axios.get(`${SERVER_URL}/getMyProjects/${user._id}`);
-            if ((blogsdata.status === 200) && (projectdata.status === 200)) {
-                setBlogs(blogsdata.data.blogs);
-                setProjects(projectdata.data);
-                setLoad(1);
-            }
-            else {
-                setLoad(-1);
-            }
+            setProjects(projectdata.data);
+            setLoad(1);
         } catch (err) {
             console.log(err);
             setLoad(-1);
@@ -49,7 +52,10 @@ const Profile = () => {
 
     useEffect(() => {
         if (logged_in === 1) {
-            getBlogsAndProjects();
+            setTeam(user);
+            setTeamCopy(user);
+            getBlogs();
+            getProjects();
         }
         else if (logged_in === -1) {
             setLoad(-1);
@@ -100,10 +106,10 @@ const Profile = () => {
     const UpdateTeam = async (e) => {
         e.preventDefault();
         try {
-            if(teamCopy.username!==team.username){
+            if (teamCopy.username !== team.username) {
                 await axios.get(`${SERVER_URL}/isUsernameExist/${team.username}`);
             }
-            if(teamCopy.email!==team.email){
+            if (teamCopy.email !== team.email) {
                 await axios.get(`${SERVER_URL}/isEmailExist/${team.email}`);
             }
             setChange(true);
@@ -115,11 +121,11 @@ const Profile = () => {
                 await axios.post(`${SERVER_URL}/imgdelete`,
                     { 'url': team.photo },
                     {
-                        withCredentials:true,
+                        withCredentials: true,
                         headers: { "Content-Type": "application/json" },
                     });
 
-                const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
+                const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
                 team.photo = img.data;
             }
             await axios.put(`${SERVER_URL}/teamupdate/${team._id}`,
@@ -131,6 +137,8 @@ const Profile = () => {
             );
             showAlert("Profile Updated Successfully!", "success");
             setChange(false);
+            setEditMode(false);
+            setPChange(false);
         } catch (err) {
             setChange(false);
             showAlert(err.response.data.error, "danger");
@@ -156,17 +164,13 @@ const Profile = () => {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true
                 }).then(res => {
-                    if (res.status === 200) {
-                        document.getElementById("modalClose").click();
-                        showAlert(`${res.data.msg}!`, "success");
-                        setChange(false);
-                    }
-                    else {
-                        setMsg(res.data.error);
-                        setChange(false);
-                    }
+                    document.getElementById("modalClose").click();
+                    showAlert(`${res.data.msg}!`, "success");
+                    setChange(false);
                 })
         } catch (err) {
+            setMsg(err.response.data.error);
+            setChange(false);
             console.log(err);
         }
     }
@@ -253,11 +257,15 @@ const Profile = () => {
                                                                                     setMsg("");
                                                                                 }}
                                                                             >Cancel</button>
-                                                                            <button type="submit" onClick={changePassword} className="btn btn-sm btn-primary">
-                                                                                {
-                                                                                    change ? <span>Updating <i class="fa fa-spinner fa-spin"></i></span> : <span>Update</span>
-                                                                                }
-                                                                            </button>
+                                                                            {
+                                                                                change ?
+                                                                                    <button type="submit" onClick={changePassword} className="btn btn-sm btn-primary" disabled>
+                                                                                        <span>Updating <i class="fa fa-spinner fa-spin"></i></span>
+                                                                                    </button>
+                                                                                    : <button type="submit" onClick={changePassword} className="btn btn-sm btn-primary">
+                                                                                        Update
+                                                                                    </button>
+                                                                            }
                                                                         </div>
                                                                     </form>
 
