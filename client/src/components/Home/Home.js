@@ -32,7 +32,7 @@ const Home = () => {
       axios.get(`${SERVER_URL}/events/gethomepageEvents`).then(data => { setEvents(data.data) });
       axios.get(`${SERVER_URL}/getfiveprojects`).then(data => { setProjects(data.data) });
       axios.get(`${SERVER_URL}/getResearchPapers`).then(data => { setPublicationList(data.data) });
-      axios.get(`${SERVER_URL}/getsixBlogs`).then(data => { setBlogs(data.data) });
+      axios.get(`${SERVER_URL}/blogs/getsixBlogs`).then(data => { setBlogs(data.data) });
       axios.get(`${SERVER_URL}/gallery/getHomepagePhotos`).then(data => {
         let imagedata = [];
         imagedata = data.data;

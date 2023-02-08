@@ -10,7 +10,7 @@ router.route("/updateBlog/:id").put(authenticate,async (req, res) => {
     const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    console.log("Project Updated", updatedBlog);
+    console.log("Blog Updated");
     res.status(200).json(updatedBlog);
   } catch (err) {
     res.status(201).json(err);
@@ -23,10 +23,10 @@ router.route("/updateblogPublicStatus/:url").put(authenticate,async (req, res) =
     const updatedBlog = await Blog.findOne({ url: url });
     updatedBlog.public = req.body.public;
     updatedBlog.save();
-    console.log("Project Updated", updatedBlog);
+    console.log("blog status Updated");
     res.status(200).json(updatedBlog);
   } catch (err) {
-    res.status(422).json(err);
+    res.status(500).json(err);
   }
 });
 
@@ -39,7 +39,7 @@ router.route("/updateblogApprovalStatus/:url").put(authenticate,async (req, res)
     updatedBlog.save();
     res.status(200).json(updatedBlog);
   } catch (err) {
-    res.status(422).json(err);
+    res.status(500).json(err);
   }
 });
 
@@ -49,14 +49,13 @@ router.route("/addBlog").post(authenticate,async (req, res) => {
     return res.status(400).json({ error: "Plz fill the field properly" });
   }
   try {
-    console.log('blog',req.body);
+    // console.log('blog',req.body);
     const blog = new Blog(req.body);
     await blog.save();
 
     console.log(`${blog.title} blog created successfully`);
     res.status(201).json({ message: "Blog posting Successfully" });
   } catch (err) {
-    
     console.log("err", err);
     res.status(500).json({msg:"Internal server error"});
   }
@@ -106,31 +105,33 @@ router.route("/getuserBlogs/:id").get(async (req, res) => {
 
 router.route("/isBlogUrlExist/:url").get(async (req,res)=>{
   const {url} = req.params;
-  const blog = await Blog.findOne({url:url});
-  if(blog){
-    return res.status(200).json(null);
-  }
-  else{
-    return res.status(201).json(null);
-  }
+  Blog.findOne({url:url}).then(data=>{
+    if(data){
+      res.status(200).json({msg:"Yes"});
+    }else{
+      res.status(200).json({msg:"No"});
+    }
+  }).catch(error=>{
+    res.status(500).json({error:"Internal server Error"});
+  });
 })
 
 router.route("/getBlog/:url").get(async (req, res) => {
   const { url } = req.params;
   try {
     const blog = await Blog.findOne({ url: url });
-    if (blog) {
+    if (!blog) {
+      return res.status(404).json("Blog does not exist");
+    } else {
       const userdetails = await Team.findById(blog.authorName).select(
         "firstname lastname email position description photo"
       );
       console.log("blog", blog);
       return res.status(200).json({ blog: blog, author: userdetails });
-    } else {
-      return res.status(201).json(null);
     }
   } catch (err) {
     console.log(err);
-    res.status(422).send(`${url} not found`);
+    res.status(500).send(`${url} not found`);
   }
 });
 
@@ -145,24 +146,26 @@ router.route("/getBlogEdit/:url").get(async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(422).send(`${url} not found`);
+    res.status(500).json({error:"Internal server error"});
   }
 });
 
-router.route("/deleteBlog/:id").post(authenticate,async (req, res) => {
+router.route("/deleteBlog/:id").delete(authenticate,async (req, res) => {
   const { id } = req.params;
-  const blog = await Blog.findById(id);
-  if(blog) {
-    const team = await Team.findById(blog.authorName);
-    team.blogs = team.blogs.filter(b=> b != id);
-    await team.save();
-    await Blog.findByIdAndDelete(id);
-    console.log("Deleted..");
-    return res.status(200).json({ msg: "Project Deleted" });
-  } 
-  else{
-    console.log("Cannot Delete the Project");
-    return res.status(201).json({ msg: "Cannot Delete the Project" });
+
+  try {
+    const blog = await Blog.findById(id);
+    if(blog) {
+      const team = await Team.findById(blog.authorName);
+      team.blogs = team.blogs.filter(b=> b != id);
+      await team.save();
+      await Blog.findByIdAndDelete(id);
+      console.log("Deleted..");
+      return res.status(200).json({ msg: "Blog Deleted" });
+    } 
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error:"Internal server error"});
   }
 });
 
