@@ -352,7 +352,7 @@ const Admin = () => {
                                                 </div>
                                                 <div className='card slider-card-in flex-row actual-card' onClick={() => setSlider(slide)}>
                                                     <img className="card-img-left" src={slide.photo} alt={slide.title} />
-                                                    <div class="card-body p-0 small px-2">
+                                                    <div className="card-body p-0 small px-2">
                                                         <div>Title:<strong> {slide.title}</strong></div>
                                                         <div>Caption1: <strong> {slide.caption1}</strong></div>
                                                         <div>Caption2:<strong> {slide.caption2}</strong></div>
