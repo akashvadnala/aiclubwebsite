@@ -75,7 +75,7 @@ const Navbar = () => {
 
   return (
     <>
-      {/* <a class="close-navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      {/* <a className="close-navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       </a> */}
       <NavLink className={navOpen?"close-navbar-toggler":"close-navbar-toggler collapsed"} onClick={toggleNav}></NavLink>
       <nav variant="primary" className="navbar navbar-expand-lg">

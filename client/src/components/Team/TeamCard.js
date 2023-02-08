@@ -28,7 +28,7 @@ function TeamCard({ team, isadmin, isdelete }) {
         </div>
         <div className="card-body">
           <h5>{team.firstname} {team.lastname}</h5>
-          <h7>{team.position}</h7>
+          <h6>{team.position}</h6>
           <h6>{team.profession}</h6>
           <TextTruncate
             title={team.description}

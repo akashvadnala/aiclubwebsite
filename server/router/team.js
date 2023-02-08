@@ -5,7 +5,7 @@ const multer = require('multer');
 const authenticate = require('../middleware/authenticate');
 const Team = require('../model/teamSchema');
 const File = require('../model/fileSchema');
-
+const path = require('path');
 router.route('/').get((req,res)=>{
     res.send(`Hello world from the server router js`);
 });
@@ -24,12 +24,12 @@ const fileUpload = InitFileUpload();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb)=>{
-        cb(null, 'uploads')
+        cb(null, path.join(__dirname, '../uploads/'))
     },
-    filename: (req, file, cb)=> {
-        const t=new Date();
-        cb(null, `${t}.png`);
+    filename: (req, file, cb) => {
+        cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname)
     }
+    
 })
 
 router.route('/imgupload').post([multer({ storage }).single('photo'),authenticate], async (req, res) => {

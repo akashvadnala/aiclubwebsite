@@ -106,25 +106,22 @@ const AddEvent = () => {
       imgurl = img.data;
       event.poster = imgurl;
       console.log("final post", event);
-    } catch (err) {
-      console.log("photoerr", err);
-    }
-
-    try {
-      const eventdata = await axios.post(`${SERVER_URL}/events/addEvent`, event, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true
-      });
-      console.log("blogdata", eventdata);
-      if (eventdata.status === 500 || !eventdata) {
-        showAlert("Event Posting failed", "danger");
-      } else {
-        showAlert("Event Created Successfull", "success");
-        
+      try {
+        const eventdata = await axios.post(`${SERVER_URL}/events/addEvent`, event, {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true
+        });
+        console.log("blogdata", eventdata);
+        if (eventdata && eventdata.status === 201) {
+          showAlert("Event Created Successfull", "success");
+        }
+      } catch (err) {
+        console.log("err", err);
+        showAlert("Event creation failed", "danger");
       }
     } catch (err) {
-      console.log("err", err);
-      showAlert(err.response.error, "danger");
+      showAlert("Image upload failed","danger");
+      console.log("photoerr", err);
     }
     navigate("/events")
   };

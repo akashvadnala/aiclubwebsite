@@ -132,14 +132,14 @@ const ProfileUpdate = () => {
                         })
                     }
                     <div class="form-group form-check my-3">
-                        <input type="checkbox" name="admin" onChange={handleInputs} class="form-check-input" id="admin" />
-                        <label class="form-check-label" for="admin">Make Admin</label>
+                        <input type="checkbox" name="admin" onChange={handleInputs} className="form-check-input" id="admin" />
+                        <label className="form-check-label" for="admin">Make Admin</label>
                     </div>
-                    <div class="form-group form-check my-3">
-                        <input type="checkbox" name="member" onChange={handleInputs} class="form-check-input" id="member" />
-                        <label class="form-check-label" for="member">Make Member</label>
+                    <div className="form-group form-check my-3">
+                        <input type="checkbox" name="member" onChange={handleInputs} className="form-check-input" id="member" />
+                        <label className="form-check-label" for="member">Make Member</label>
                     </div>
-                    <button type="submit" name="submit" id="submit" onClick={PostTeam} class="btn btn-primary">Submit</button>
+                    <button type="submit" name="submit" id="submit" onClick={PostTeam} className="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>

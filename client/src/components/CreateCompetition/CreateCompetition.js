@@ -87,7 +87,7 @@ const CreateCompetition = () => {
   const createCompete = async (e) => {
     e.preventDefault();    
     setAdd('Creating ');
-    setAdd2(<i class="fa fa-spinner fa-spin"></i>);
+    setAdd2(<i className="fa fa-spinner fa-spin"></i>);
     const urlExist = await axios.get(`${SERVER_URL}/urlExist/${compete.url}`);
     if(urlExist){
       
@@ -199,11 +199,11 @@ const CreateCompetition = () => {
                   </div>                  
                   <div className="form-group form-check my-3">
                         <input type="radio" name="public" checked={compete.public} onChange={(e)=>{setCompete({...compete, public:e.target.checked})}} className="form-check-input" id="public" />
-                        <label class="form-check-label" for="public">Public</label>
+                        <label className="form-check-label" for="public">Public</label>
                     </div>
                     <div className="form-group form-check my-3">
                         <input type="radio" name="private" checked={!compete.public} onChange={(e)=>{setCompete({...compete, public:!e.target.checked})}} className="form-check-input" id="private"/>
-                        <label class="form-check-label" for="private">Invite Only</label>
+                        <label className="form-check-label" for="private">Invite Only</label>
                     </div>
                   <button type="submit" name="submit" id="submit" className="btn btn-primary">{add}{add2}</button>
                 </form>
