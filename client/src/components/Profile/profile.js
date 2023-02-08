@@ -30,7 +30,7 @@ const Profile = () => {
         if (logged_in === 1) {
             try {
                 setTeam(user);
-                const blogsdata = await axios.get(`${SERVER_URL}/getprofileblogs/${user._id}`);
+                const blogsdata = await axios.get(`${SERVER_URL}/blogs/getprofileblogs/${user._id}`);
                 const projectdata = await axios.get(`${SERVER_URL}/getMyProjects/${user._id}`);
                 if ((blogsdata.status === 200) && (projectdata.status === 200)) {
                     setBlogs(blogsdata.data.blogs);
