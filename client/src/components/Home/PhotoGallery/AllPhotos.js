@@ -14,7 +14,7 @@ import { alertContext } from "../../../Context/Alert";
 import { useNavigate } from "react-router-dom";
 
 const AllPhotos = () => {
-  const { user, logged_in } = useContext(Context);
+  const { user } = useContext(Context);
   const { showAlert } = useContext(alertContext);
 
   const navigate = useNavigate();

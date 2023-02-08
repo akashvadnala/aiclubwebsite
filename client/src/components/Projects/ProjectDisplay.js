@@ -70,18 +70,19 @@ const ProjectDisplay = () => {
           `${SERVER_URL}/updateprojPublicStatus/${proj.url}`,
           { public: !proj.public ? true : false },
           {
+            withCredentials:true,
             headers: { "Content-Type": "application/json" },
           }
         );
         proj.public = !proj.public ? true : false;
         showAlert(`Project made ${proj.public ? "public" : "private"}`, "success");
         setPub(`${!proj.public ? "Make Public" : "Make Private"}`);
-        setPub2();
+        setPub2("");
         navigate(`/projects/${proj.url}`);
 
       }
     } catch (err) {
-      showAlert(err.response.data.error, "success");
+      showAlert(err.response.data.error, "danger");
     }
 
   };
@@ -96,12 +97,13 @@ const ProjectDisplay = () => {
             `${SERVER_URL}/updateprojApprovalStatus/${proj.url}`,
             { approvalStatus: "pending" },
             {
+              withCredentials:true,
               headers: { "Content-Type": "application/json" },
             }
           );
           showAlert("Submitted for Admin approval", "success");
           setProj({ ...proj, ["approvalStatus"]: "pending" });
-          setApproval2();
+          setApproval2("");
           navigate(`/projects/${proj.url}`);
         }
       }
@@ -111,28 +113,29 @@ const ProjectDisplay = () => {
   };
 
   const ApproveOrReject = async (status) => {
-    var response;
-    if (status) {
-      response = "Approved";
-      setPub("Make Private");
-    } else {
-      response = "Rejected";
-    }
-    setApproval(response);
-    setApproval2(<i className="fa fa-spinner fa-spin"></i>);
-    const res = await axios.put(
-      `${SERVER_URL}/updateprojApprovalStatus/${proj.url}`,
-      { approvalStatus: response, public: status },
-      {
-        headers: { "Content-Type": "application/json" },
+    try{
+      var response;
+      if (status) {
+        response = "Approved";
+        setPub("Make Private");
+      } else {
+        response = "Rejected";
       }
-    );
-    if (res.status === 200) {
-      showAlert(`${response === "Approved" ? "Approved & Published." : response}.`, "success");
-      setProj({ ...proj, ["approvalStatus"]: response, ["public"]: status });
-      setApproval2();
-      navigate(`/projects/${proj.url}`);
-    } else {
+      setApproval(response);
+      setApproval2(<i className="fa fa-spinner fa-spin"></i>);
+      const res = await axios.put(
+        `${SERVER_URL}/updateprojApprovalStatus/${proj.url}`,
+        { approvalStatus: response, public: status },
+        {
+          withCredentials:true,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+        showAlert(`${response === "Approved" ? "Approved & Published." : response}.`, "success");
+        setProj({ ...proj, ["approvalStatus"]: response, ["public"]: status });
+        setApproval2();
+        navigate(`/projects/${proj.url}`);
+    }catch(err){
       showAlert("Response not recorded. Please try again", "success");
     }
   };
