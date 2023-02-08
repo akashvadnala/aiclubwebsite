@@ -30,7 +30,7 @@ const BlogDisplay = () => {
 
   const getBlog = async () => {
     try {
-      const res = await axios.get(`${SERVER_URL}/getBlog/${url}`);
+      const res = await axios.get(`${SERVER_URL}/blogs/getBlog/${url}`);
       if (res.status === 200) {
         const post_ = res.data.blog;
         setBlog(res.data.blog);
@@ -43,13 +43,13 @@ const BlogDisplay = () => {
         } else {
           setedit(false);
         }
-      } else {
-        setLoad(-1);
-        setedit(false);
-        console.log("No Blog Found");
-      }
+      } 
     } catch (err) {
       console.log(err);
+      setLoad(-1);
+      setedit(false);
+      console.log("No Blog Found");
+      navigate('/error');
     }
   };
 
@@ -75,7 +75,7 @@ const BlogDisplay = () => {
       setPub(`${!blog.public ? "Publishing" : "Making Private"}`);
       setPub2(<i className="fa fa-spinner fa-spin"></i>);
       const res = await axios.put(
-        `${SERVER_URL}/updateblogPublicStatus/${blog.url}`,
+        `${SERVER_URL}/blogs/updateblogPublicStatus/${blog.url}`,
         { public: !blog.public ? true : false },
         {
           headers: { "Content-Type": "application/json" },
@@ -95,11 +95,13 @@ const BlogDisplay = () => {
 
   const deleteBlog = async (status) => {
     if (status) {
-      const res = await axios.post(`${SERVER_URL}/deleteBlog/${blog._id}`);
-      if (res.status === 200) {
-        showAlert("Blog deleted successfully","success");
-        navigate("/blogs");
-      } else {
+      try {
+        const res = await axios.delete(`${SERVER_URL}/blogs/deleteBlog/${blog._id}`,{withCredentials:true});
+        if (res.status === 200) {
+          showAlert("Blog deleted successfully","success");
+          navigate("/blogs");
+        }
+      } catch (error) {
         showAlert("Blog Deletion failed","danger");
       }
     }
@@ -111,10 +113,11 @@ const BlogDisplay = () => {
         setApproval("pending");
         setApproval2(<i className="fa fa-spinner fa-spin"></i>);
         const res = await axios.put(
-          `${SERVER_URL}/updateblogApprovalStatus/${blog.url}`,
+          `${SERVER_URL}/blogs/updateblogApprovalStatus/${blog.url}`,
           { approvalStatus: "pending" },
           {
             headers: { "Content-Type": "application/json" },
+            withCredentials:true,
           }
         );
         if (res.status === 200) {
@@ -140,10 +143,11 @@ const BlogDisplay = () => {
     setApproval(response);
     setApproval2(<i className="fa fa-spinner fa-spin"></i>);
     const res = await axios.put(
-      `${SERVER_URL}/updateblogApprovalStatus/${blog.url}`,
+      `${SERVER_URL}/blogs/updateblogApprovalStatus/${blog.url}`,
       { approvalStatus: response, public: status },
       {
         headers: { "Content-Type": "application/json" },
+        withCredentials:true,
       }
     );
     if (res.status === 200) {

@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useContext, useEffect } from "react";
 import "./AddBlog.css";
 import JoditEditor from "jodit-react";
 import { Context } from "../../../Context/Context";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Error from "../../Error";
 import axios from "axios";
 import { CLIENT_URL, SERVER_URL } from "../../../EditableStuff/Config";
@@ -11,6 +11,7 @@ import { alertContext } from "../../../Context/Alert";
 
 const EditBlog = () => {
   const { url } = useParams();
+  const navigate = useNavigate();
   const editor = useRef(null);
   const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
@@ -24,7 +25,7 @@ const EditBlog = () => {
   const [preview, setPreview] = useState(false);
   const getBlog = async () => {
     try {
-      const data = await axios.get(`${SERVER_URL}/getBlogEdit/${url}`);
+      const data = await axios.get(`${SERVER_URL}/blogs/getBlogEdit/${url}`);
       if (data.status === 200) {
         const post_ = data.data;
         if (user && post_.authorName === user._id) {
@@ -38,6 +39,7 @@ const EditBlog = () => {
       }
     } catch (err) {
       console.log(err);
+      navigate('/blogs');
     }
   };
   useEffect(() => {
@@ -83,7 +85,7 @@ const EditBlog = () => {
     e.preventDefault();
     try {
       if (url !== post.url) {
-        const blogExist = await axios.get(`${SERVER_URL}/isBlogurlExist/${post.url}`);
+        const blogExist = await axios.get(`${SERVER_URL}/blogs/isBlogurlExist/${post.url}`);
         if (blogExist.status === 200) {
           showAlert("Url Already Exist!", "danger");
           return;
@@ -119,7 +121,7 @@ const EditBlog = () => {
       console.log('imgurl', imgurl);
       try {
         const postdata = await axios.put(
-          `${SERVER_URL}/updateBlog/${post._id}`,
+          `${SERVER_URL}/blogs/updateBlog/${post._id}`,
           post,
           {
             headers: { "Content-Type": "application/json" },

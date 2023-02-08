@@ -21,7 +21,7 @@ const BlogApprovals = () => {
 
   const getBlogApprovals = async () => {
     try {
-      axios.get(`${SERVER_URL}/getpendingBlogApprovals`).then((data) => {
+      axios.get(`${SERVER_URL}/blogs/getpendingBlogApprovals`).then((data) => {
         if (data.status === 200) {
           console.log("data", data.data);
           setBlogs(data.data);
