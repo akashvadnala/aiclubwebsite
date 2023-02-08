@@ -44,7 +44,7 @@ router.route("/updateprojPublicStatus/:url").put(authenticate, async (req, res) 
     const updatedProj = await Project.findOne({ url: url });
     updatedProj.public = req.body.public;
     updatedProj.save();
-    res.status().json();
+    res.status(200).json();
   } catch (err) {
     res.status(400).json({ error: "Somthing went wrong!" });
   }
