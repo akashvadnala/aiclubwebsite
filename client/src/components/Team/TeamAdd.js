@@ -177,15 +177,15 @@ const TeamAdd = () => {
                             </div>}
                             <div className="form-group form-check my-3">
                                 <input type="checkbox" checked={team.isadmin} name="isadmin" onChange={handleCheck} className="form-check-input" id="admin" />
-                                <label class="form-check-label" for="admin">Make Admin</label>
+                                <label className="form-check-label" for="admin">Make Admin</label>
                             </div>
                             <div className="form-group form-check my-3">
                                 <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
-                                <label class="form-check-label" for="member">Make Member</label>
+                                <label className="form-check-label" for="member">Make Member</label>
                             </div>
                             <div className="form-group form-check my-3">
                                 <input type="checkbox" checked={team.isalumni} name="isalumni" onChange={handleCheck} className="form-check-input" id="isalumni" />
-                                <label class="form-check-label" for="isalumni">Make Alumni</label>
+                                <label className="form-check-label" for="isalumni">Make Alumni</label>
                             </div>
                             {
                                 team.isalumni &&
@@ -205,7 +205,7 @@ const TeamAdd = () => {
                                 add ?
                                     <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
                                         <span>Submitting </span>
-                                        <i class="fa fa-spinner fa-spin"></i>
+                                        <i className="fa fa-spinner fa-spin"></i>
                                     </button>
                                     :
                                     <button type="submit" name="submit" id="submit" className="btn btn-primary">

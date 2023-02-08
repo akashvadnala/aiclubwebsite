@@ -73,7 +73,7 @@ function TeamLogin(props) {
         {!reset ? (
           <div className="login-container">
             <form method="POST">
-              <div class="form-group my-3 row">
+              <div className="form-group my-3 row">
                 <label for="username" className="col-4 text-end">
                   Username/Email :
                 </label>

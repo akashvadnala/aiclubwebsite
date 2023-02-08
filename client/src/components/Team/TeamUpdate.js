@@ -215,7 +215,7 @@ const TeamUpdate = () => {
                                         </div>
                                         <div className="form-group form-check my-3">
                                             <input type="checkbox" checked={team.isalumni} name="isalumni" onChange={handleCheck} className="form-check-input" id="alumni" />
-                                            <label class="form-check-label" for="alumni">Make Alumni</label>
+                                            <label className="form-check-label" for="alumni">Make Alumni</label>
                                         </div>
                                         {
                                             team.isalumni ?

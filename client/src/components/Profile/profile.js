@@ -219,7 +219,7 @@ const Profile = () => {
                                                         }} className="btn btn-sm ms-1">Cancel</button>
                                                         {
                                                             pChange ?
-                                                                <button type="button" className="btn btn-sm btn-outline-success ms-1" disabled>Saving <i class="fa fa-spinner fa-spin"></i></button>
+                                                                <button type="button" className="btn btn-sm btn-outline-success ms-1" disabled>Saving <i className="fa fa-spinner fa-spin"></i></button>
                                                                 :
                                                                 <button type="button" onClick={UpdateTeam} className="btn btn-sm btn-outline-success ms-1">Save Profile</button>
                                                         }
@@ -260,7 +260,7 @@ const Profile = () => {
                                                                             {
                                                                                 change ?
                                                                                     <button type="submit" onClick={changePassword} className="btn btn-sm btn-primary" disabled>
-                                                                                        <span>Updating <i class="fa fa-spinner fa-spin"></i></span>
+                                                                                        <span>Updating <i className="fa fa-spinner fa-spin"></i></span>
                                                                                     </button>
                                                                                     : <button type="submit" onClick={changePassword} className="btn btn-sm btn-primary">
                                                                                         Update
