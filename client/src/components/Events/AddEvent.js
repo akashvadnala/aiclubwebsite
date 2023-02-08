@@ -123,7 +123,7 @@ const AddEvent = () => {
       showAlert("Image upload failed","danger");
       console.log("photoerr", err);
     }
-    navigate("/events")
+    navigate("/events");
   };
 
   return (

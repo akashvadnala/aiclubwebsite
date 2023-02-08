@@ -85,11 +85,7 @@ const EditBlog = () => {
     e.preventDefault();
     try {
       if (url !== post.url) {
-        const blogExist = await axios.get(`${SERVER_URL}/blogs/isBlogurlExist/${post.url}`);
-        if (blogExist.status === 200) {
-          showAlert("Url Already Exist!", "danger");
-          return;
-        }
+        const blogExist = await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`);
       }
       setAdd(true);
       var imgurl;
@@ -98,49 +94,35 @@ const EditBlog = () => {
         const photoname = Date.now() + Img.name;
         data.append("name", photoname);
         data.append("photo", Img);
-
-        try {
-          await axios.post(`${SERVER_URL}/imgdelete`,
+        await axios.post(`${SERVER_URL}/imgdelete`,
             { 'url': post.cover },
             {
               headers: { "Content-Type": "application/json" },
+              withCredentials:true,
             });
-        } catch (err) {
-          console.log('photoerr', err);
-        }
-
-        try {
-          const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-          console.log('img', img);
-          imgurl = img.data;
-          post.cover = imgurl;
-        } catch (err) {
-          console.log('photoerr', err);
-        }
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
+        console.log('img', img);
+        imgurl = img.data;
+        post.cover = imgurl;
+        
       }
       console.log('imgurl', imgurl);
-      try {
-        const postdata = await axios.put(
-          `${SERVER_URL}/blogs/updateBlog/${post._id}`,
-          post,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        console.log("projdata", postdata);
-        if (postdata.status === 201 || !postdata) {
-          showAlert("Failed to save", "danger");
-          console.log("Project not found");
-        } else {
-          setAdd(false);
-          showAlert("Saved as Draft!", "success");
-          setPreview(true);
+      const postdata = await axios.put(
+        `${SERVER_URL}/blogs/updateBlog/${post._id}`,
+        post,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials:true,
         }
-      } catch (err) {
-        console.log("err", err);
-      }
+      );
+      setAdd(false);
+      showAlert("Saved as Draft!", "success");
+      setPreview(true);
+      
     } catch (err) {
       console.log(err);
+      showAlert(`${err.response.data.error}`,"danger");
+      navigate('/myblogs');
     }
 
   };

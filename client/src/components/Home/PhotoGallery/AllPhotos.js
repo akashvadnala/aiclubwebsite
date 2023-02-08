@@ -11,7 +11,6 @@ import { SERVER_URL } from "../../../EditableStuff/Config";
 import axios from "axios";
 import { getImageSize } from 'react-image-size';
 import { alertContext } from "../../../Context/Alert";
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const AllPhotos = () => {
