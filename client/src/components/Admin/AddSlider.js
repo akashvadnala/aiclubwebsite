@@ -131,7 +131,7 @@ const AddSlider = () => {
                     >Cancel</button>
                     <button type="submit" className="btn btn-sm btn-primary">
                         {
-                            add ? <span>Adding <i class="fa fa-spinner fa-spin"></i></span> : <span>Add</span>
+                            add ? <span>Adding <i className="fa fa-spinner fa-spin"></i></span> : <span>Add</span>
                         }
                     </button>
                 </div>

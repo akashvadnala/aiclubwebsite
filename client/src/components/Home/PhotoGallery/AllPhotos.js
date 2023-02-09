@@ -10,7 +10,7 @@ import { Context } from "../../../Context/Context";
 import { SERVER_URL } from "../../../EditableStuff/Config";
 import axios from "axios";
 import { getImageSize } from 'react-image-size';
-import {alertContext} from "../../../Context/Alert";
+import { alertContext } from "../../../Context/Alert";
 import { useNavigate } from "react-router-dom";
 
 const AllPhotos = () => {
@@ -48,7 +48,7 @@ const AllPhotos = () => {
     } catch (err) {
       console.log(err);
       navigate('/gallery');
-      showAlert("Problem at fetching photos");
+      showAlert("Problem at fetching photos","danger");
     }
   };
 
@@ -66,26 +66,27 @@ const AllPhotos = () => {
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    if(selectedImages.length===0){
-      return ;
+    if (selectedImages.length === 0) {
+      return;
     }
     setDel(true);
     try {
       const response = await axios.delete(
         `${SERVER_URL}/gallery/deleteImages`,
         {
-          urls: selectedImages 
-        },
-        {
-          headers: { "Content-Type": "application/json"},
-          withCredentials:true
+          data:{
+            urls: selectedImages
+          },
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true
+          
         });
 
-      
-        console.log("data");
-        console.log(response);
-        showAlert("Image Deleted Successfully","success");
-        console.log("deleted Successfull");
+
+      console.log("data");
+      console.log(response);
+      showAlert("Image Deleted Successfully", "success");
+      console.log("deleted Successfull");
     } catch (error) {
       console.log(error);
       window.alert('Error while deleting images please try again');
@@ -112,42 +113,42 @@ const AllPhotos = () => {
     data.append("name", photoname);
     data.append("photo", image);
     let imageurl;
+
     try {
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
       imageurl = img.data;
       console.log("final image", imageurl);
-    } catch (err) {
-      console.log("photoerr", err);
-      navigate('/gallery');
-      showAlert("Problem at fetching photos");
-    }
-
-    const { width, height } = await getImageSize(imageurl);
-    let imageDetails = {
-      imgurl: imageurl,
-      caption: caption,
-      width: width,
-      height: height,
-    };
-    console.log("ImageDetails ", imageDetails);
-    try {
-      const imagedata = await axios.post(
-        `${SERVER_URL}/gallery/addPhoto`,
-        imageDetails,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials:true,
-        }
-      );
+      const { width, height } = await getImageSize(imageurl);
+      let imageDetails = {
+        imgurl: imageurl,
+        caption: caption,
+        width: width,
+        height: height,
+      };
+      console.log("ImageDetails ", imageDetails);
+      try {
+        const imagedata = await axios.post(
+          `${SERVER_URL}/gallery/addPhoto`,
+          imageDetails,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
 
         console.log("data");
         console.log(imagedata);
         console.log("Posting Successfull");
-        showAlert("Image Uploaded Successfully","success");
+        showAlert("Image Uploaded Successfully", "success");
+      } catch (err) {
+        console.log("posting err", err);
+        showAlert("Image upload failed","danger");
+      }
     } catch (err) {
-      console.log("posting err", err);
-      showAlert("Problem at fetching photos");
+      console.log("photoerr", err);
+      showAlert("Image Upload failed","danger");
     }
+
     window.location.reload(true);
   };
 
@@ -254,6 +255,7 @@ const AllPhotos = () => {
           </div>
         </div>
       </div>
+
       <div
         className="modal fade"
         id="staticBackdrop"

@@ -247,7 +247,7 @@ const AddProject = () => {
               {
                 add ?
                   <button type="submit" name="submit" className="btn btn-primary" disabled>
-                    Creating <i class="fa fa-spinner fa-spin"></i>
+                    Creating <i className="fa fa-spinner fa-spin"></i>
                   </button>
                   :
                   <button type="submit" name="submit" className="btn btn-primary">

@@ -82,7 +82,7 @@ function ForgetPassword() {
               onSubmit={changePassword}
               encType="multipart/form-data"
             >
-              <div class="form-group my-3 row">
+              <div classname="form-group my-3 row">
                 <label for="password" className="col-4 text-end">
                   Password :
                 </label>
@@ -92,7 +92,7 @@ function ForgetPassword() {
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    class="form-control"
+                    className="form-control"
                     id="password"
                     aria-describedby="password"
                     placeholder="Enter Password"
@@ -100,7 +100,7 @@ function ForgetPassword() {
                   />
                 </div>
               </div>
-              <div class="form-group my-3 row">
+              <div className="form-group my-3 row">
                 <label for="cpassword" className="col-4 text-end">
                   Confirm Password :
                 </label>
@@ -110,7 +110,7 @@ function ForgetPassword() {
                     name="cpassword"
                     value={cpassword}
                     onChange={(e) => setCPassword(e.target.value)}
-                    class="form-control"
+                    className="form-control"
                     id="cpassword"
                     aria-describedby="cpassword"
                     placeholder="Confirm Password"

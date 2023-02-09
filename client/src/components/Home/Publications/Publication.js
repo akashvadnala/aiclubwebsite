@@ -16,7 +16,7 @@ const Publications = ({ publications }) => {
             <div className="carousel-inner">
               {publications.map((publication) => {
                 return (
-                  <div class="carousel-item active">
+                  <div className="carousel-item active">
                     <PublicationCard publication={publication} />
                   </div>
                 );
