@@ -65,22 +65,20 @@ const AddBlog = () => {
   const PostBlog = async (e) => {
     e.preventDefault();
     try {
-      const blogExist = await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`)
-        setAdd(true);
-        const data = new FormData();
-        data.append("photo", post.cover);
-        const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
-        post.cover = img.data;
-        const blogdata = await axios.post(`${SERVER_URL}/blogs/addBlog`, post, {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true
-        });
-        navigate(`/blogs/${post.url}/edit`);
-        showAlert("Blog added sucessful","success")
+      await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`);
+      setAdd(true);
+      const data = new FormData();
+      data.append("photo", post.cover);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
+      post.cover = img.data;
+      const blogdata = await axios.post(`${SERVER_URL}/blogs/addBlog`, post, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true
+      });
+      navigate(`/blogs/${post.url}/edit`);
+      showAlert("Blog added sucessfully!", "success");
     } catch (error) {
-      console.log(error);
       showAlert(`${error.response.data.error}`, "danger");
-      navigate('/blogs');
     }
     setAdd(false);
   }

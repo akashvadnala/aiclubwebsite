@@ -34,7 +34,7 @@ router.route("/updateProject/:id").put(authenticate, async (req, res) => {
     );
     res.status(200).json();
   } catch (err) {
-    res.status(400).json({ error: "Something went wrong!" });
+    res.status(500).json({ error: "Something went wrong!" });
   }
 });
 
@@ -46,7 +46,7 @@ router.route("/updateprojPublicStatus/:url").put(authenticate, async (req, res) 
     updatedProj.save();
     res.status(200).json();
   } catch (err) {
-    res.status(400).json({ error: "Somthing went wrong!" });
+    res.status(500).json({ error: "Somthing went wrong!" });
   }
 });
 
@@ -77,7 +77,7 @@ router.route("/projectAdd").post(authenticate, async (req, res) => {
     );
     res.status(200).json();
   }).catch((err) => {
-    res.status(400).json({ error: "Cannot Add Project!" });
+    res.status(500).json({ error: "Cannot Add Project!" });
   })
 });
 
@@ -164,7 +164,7 @@ router.route("/getProjectEdit/:url").get(async (req, res) => {
   if (project) {
     res.status(200).json(project);
   } else {
-    res.status(400).json({ error: 'Project not found!' });
+    res.status(500).json({ error: 'Project not found!' });
   }
 });
 
@@ -186,7 +186,7 @@ router.route("/deleteProject/:id").delete(authenticate, async (req, res) => {
     await Project.findByIdAndDelete(id);
     return res.status(200).json({ msg: "Project Deleted" });
   } else {
-    return res.status(400).json({ error: "Project Deletion failed!" });
+    return res.status(500).json({ error: "Project Deletion failed!" });
   }
 });
 

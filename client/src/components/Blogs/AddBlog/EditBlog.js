@@ -131,7 +131,7 @@ const EditBlog = () => {
       {load === 0 ? (
         <Loading />
       ) : load === 1 ? (
-        <div className="container addproject-container py-3">
+        <div className="container editblog-container py-3">
           <h3 className="text-center">Edit Blog</h3>
           <div className="text-center fs-6 pb-1">
             {preview ? (
@@ -165,7 +165,7 @@ const EditBlog = () => {
                     className="form-control"
                     id="title"
                     aria-describedby="title"
-                    placeholder="Enter Project Title"
+                    placeholder="Enter Tags"
                     required
                   />
                 </div>
@@ -239,7 +239,7 @@ const EditBlog = () => {
                         className="form-control"
                         id="tags"
                         aria-describedby="tags"
-                        placeholder="Enter Project Title"
+                        placeholder="Enter Tags"
                       />
                     </div>
                     <div className="col-4 paddl">
