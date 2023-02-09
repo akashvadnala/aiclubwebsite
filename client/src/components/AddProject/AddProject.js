@@ -93,7 +93,7 @@ const AddProject = () => {
       setAdd(true);
       const data = new FormData();
       data.append("photo", proj.cover);
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
       proj.cover = img.data;
       const projdata = await axios.post(`${SERVER_URL}/projectAdd`, proj, {
         withCredentials: true,

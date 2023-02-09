@@ -165,13 +165,16 @@ const EditProject = () => {
 
         await axios.post(`${SERVER_URL}/imgdelete`,
           {
-            'url': proj.cover,
+            'url': proj.cover
+          },
+          {
+            withCredentials: true,
             headers: { "Content-Type": "application/json" },
           });
 
         const data = new FormData();
         data.append("photo", Img);
-        const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
         proj.cover = img.data;
 
       }
