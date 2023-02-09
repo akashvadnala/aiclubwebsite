@@ -17,9 +17,7 @@ const Blogitem = ({blog}) => {
   const getFirstLastNameForBlogs = async () => {
       axios.get(`${SERVER_URL}/blogs/getFirstLastNameForBlogs/${blog.url}`)
       .then(data=>{
-        if(data.status===200){
           setNames(data.data);
-        }
       });
   }
   useEffect(()=>{
