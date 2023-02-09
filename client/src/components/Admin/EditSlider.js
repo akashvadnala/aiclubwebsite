@@ -61,13 +61,13 @@ const EditSlider = () => {
                         addOrEdit ?
                             <button type="submit" onClick={updateSlider} className="btn btn-sm btn-primary">
                                 {
-                                    edit ? <span>Updating <i class="fa fa-spinner fa-spin"></i></span> : <span>Update</span>
+                                    edit ? <span>Updating <i className="fa fa-spinner fa-spin"></i></span> : <span>Update</span>
                                 }
                             </button>
                             :
                             <button type="submit" onClick={addSlider} className="btn btn-sm btn-primary">
                                 {
-                                    add ? <span>Adding <i class="fa fa-spinner fa-spin"></i></span> : <span>Add</span>
+                                    add ? <span>Adding <i className="fa fa-spinner fa-spin"></i></span> : <span>Add</span>
                                 }
                             </button>
                     }

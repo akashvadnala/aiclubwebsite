@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useContext, useEffect } from "react";
 import "./AddBlog.css";
 import JoditEditor from "jodit-react";
 import { Context } from "../../../Context/Context";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Error from "../../Error";
 import axios from "axios";
 import { CLIENT_URL, SERVER_URL } from "../../../EditableStuff/Config";
@@ -11,6 +11,7 @@ import { alertContext } from "../../../Context/Alert";
 
 const EditBlog = () => {
   const { url } = useParams();
+  const navigate = useNavigate();
   const editor = useRef(null);
   const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
@@ -24,7 +25,7 @@ const EditBlog = () => {
   const [preview, setPreview] = useState(false);
   const getBlog = async () => {
     try {
-      const data = await axios.get(`${SERVER_URL}/getBlogEdit/${url}`);
+      const data = await axios.get(`${SERVER_URL}/blogs/getBlogEdit/${url}`);
       if (data.status === 200) {
         const post_ = data.data;
         if (user && post_.authorName === user._id) {
@@ -38,6 +39,7 @@ const EditBlog = () => {
       }
     } catch (err) {
       console.log(err);
+      navigate('/blogs');
     }
   };
   useEffect(() => {
@@ -83,11 +85,7 @@ const EditBlog = () => {
     e.preventDefault();
     try {
       if (url !== post.url) {
-        const blogExist = await axios.get(`${SERVER_URL}/isBlogurlExist/${post.url}`);
-        if (blogExist.status === 200) {
-          showAlert("Url Already Exist!", "danger");
-          return;
-        }
+        const blogExist = await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`);
       }
       setAdd(true);
       var imgurl;
@@ -96,49 +94,35 @@ const EditBlog = () => {
         const photoname = Date.now() + Img.name;
         data.append("name", photoname);
         data.append("photo", Img);
-
-        try {
-          await axios.post(`${SERVER_URL}/imgdelete`,
+        await axios.post(`${SERVER_URL}/imgdelete`,
             { 'url': post.cover },
             {
               headers: { "Content-Type": "application/json" },
+              withCredentials:true,
             });
-        } catch (err) {
-          console.log('photoerr', err);
-        }
-
-        try {
-          const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-          console.log('img', img);
-          imgurl = img.data;
-          post.cover = imgurl;
-        } catch (err) {
-          console.log('photoerr', err);
-        }
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
+        console.log('img', img);
+        imgurl = img.data;
+        post.cover = imgurl;
+        
       }
       console.log('imgurl', imgurl);
-      try {
-        const postdata = await axios.put(
-          `${SERVER_URL}/updateBlog/${post._id}`,
-          post,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        console.log("projdata", postdata);
-        if (postdata.status === 201 || !postdata) {
-          showAlert("Failed to save", "danger");
-          console.log("Project not found");
-        } else {
-          setAdd(false);
-          showAlert("Saved as Draft!", "success");
-          setPreview(true);
+      const postdata = await axios.put(
+        `${SERVER_URL}/blogs/updateBlog/${post._id}`,
+        post,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials:true,
         }
-      } catch (err) {
-        console.log("err", err);
-      }
+      );
+      setAdd(false);
+      showAlert("Saved as Draft!", "success");
+      setPreview(true);
+      
     } catch (err) {
       console.log(err);
+      showAlert(`${err.response.data.error}`,"danger");
+      navigate('/myblogs');
     }
 
   };
@@ -147,7 +131,7 @@ const EditBlog = () => {
       {load === 0 ? (
         <Loading />
       ) : load === 1 ? (
-        <div className="container addproject-container py-3">
+        <div className="container editblog-container py-3">
           <h3 className="text-center">Edit Blog</h3>
           <div className="text-center fs-6 pb-1">
             {preview ? (
@@ -181,7 +165,7 @@ const EditBlog = () => {
                     className="form-control"
                     id="title"
                     aria-describedby="title"
-                    placeholder="Enter Project Title"
+                    placeholder="Enter Tags"
                     required
                   />
                 </div>
@@ -255,7 +239,7 @@ const EditBlog = () => {
                         className="form-control"
                         id="tags"
                         aria-describedby="tags"
-                        placeholder="Enter Project Title"
+                        placeholder="Enter Tags"
                       />
                     </div>
                     <div className="col-4 paddl">

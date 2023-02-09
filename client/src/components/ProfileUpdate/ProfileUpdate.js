@@ -122,24 +122,24 @@ const ProfileUpdate = () => {
                     {
                         forms.map((f)=>{
                             return(
-                                <div class="form-group my-3 row">
+                                <div className="form-group my-3 row">
                                     <label for={f.id} className='col-sm-2 text-end'>{f.des} :</label>
                                     <div className='col-sm-10'>
-                                        <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} class="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} />
+                                        <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} className="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} />
                                     </div>
                                 </div>
                             )
                         })
                     }
-                    <div class="form-group form-check my-3">
-                        <input type="checkbox" name="admin" onChange={handleInputs} class="form-check-input" id="admin" />
-                        <label class="form-check-label" for="admin">Make Admin</label>
+                    <div className="form-group form-check my-3">
+                        <input type="checkbox" name="admin" onChange={handleInputs} className="form-check-input" id="admin" />
+                        <label className="form-check-label" for="admin">Make Admin</label>
                     </div>
-                    <div class="form-group form-check my-3">
-                        <input type="checkbox" name="member" onChange={handleInputs} class="form-check-input" id="member" />
-                        <label class="form-check-label" for="member">Make Member</label>
+                    <div className="form-group form-check my-3">
+                        <input type="checkbox" name="member" onChange={handleInputs} className="form-check-input" id="member" />
+                        <label className="form-check-label" for="member">Make Member</label>
                     </div>
-                    <button type="submit" name="submit" id="submit" onClick={PostTeam} class="btn btn-primary">Submit</button>
+                    <button type="submit" name="submit" id="submit" onClick={PostTeam} className="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>

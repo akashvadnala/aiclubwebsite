@@ -7,13 +7,16 @@ import axios from "axios";
 import Loading from "../Loading";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import { Context } from "../../Context/Context";
+import { alertContext } from "../../Context/Alert";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 const EventDisplay = () => {
   const params = new useParams();
+
   const url = params.url;
   const { user } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
   const [event, setEvent] = useState(null);
   const [edit, setedit] = useState(null);
   const [load, setLoad] = useState(0);
@@ -78,11 +81,14 @@ const EventDisplay = () => {
     );
     if (confirmed) {
       const res = await axios.delete(
-        `${SERVER_URL}/events/deleteEvent/${event.url}`
+        `${SERVER_URL}/events/deleteEvent/${event.url}`,
+        {withCredentials:true}
       );
       if (res.status === 200) {
+        showAlert("Deletion successful","success");
         navigate("/events");
       } else {
+        showAlert("Failed to delete the event, try again","danger");
         console.log("Blog Cannot be deleted");
       }
     }

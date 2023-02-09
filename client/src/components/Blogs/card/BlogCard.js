@@ -15,11 +15,9 @@ const Blogitem = ({blog}) => {
 
   const [names,setNames] = useState("");
   const getFirstLastNameForBlogs = async () => {
-      axios.get(`${SERVER_URL}/getFirstLastNameForBlogs/${blog.url}`)
+      axios.get(`${SERVER_URL}/blogs/getFirstLastNameForBlogs/${blog.url}`)
       .then(data=>{
-        if(data.status===200){
           setNames(data.data);
-        }
       });
   }
   useEffect(()=>{

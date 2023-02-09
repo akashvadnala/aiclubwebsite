@@ -81,7 +81,7 @@ const Footer = () => {
                 onChange={(e)=>setName(e.target.value)}
                 placeholder='Enter Name' 
                 required/> */}
-                <div class="input-group mb-3 align-items-center">
+                <div className="input-group mb-3 align-items-center">
                   <input 
                     className='form-control'
                     name='email' 
@@ -89,7 +89,7 @@ const Footer = () => {
                     placeholder='Enter Email' 
                     onChange={(e)=>setEmail(e.target.value)}
                     required/>
-                  <div class="input-group-append">
+                  <div className="input-group-append">
                     <button type="submit" name="submit" id="submit" className='btn btn-primary input-group-text rounded-right'>Subscribe</button>
                   </div>
                 </div>

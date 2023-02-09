@@ -21,13 +21,19 @@ const AddBlog = () => {
     url: "",
     tags: [],
     content: "",
-    authorName: user?user._id:"",
+    authorName: user ? user._id : "",
     cover: "",
   };
+  console.log('load', load);
   useEffect(() => {
     if (logged_in === 1) {
-      setPost(pt);
-      setLoad(1);
+      if (user && user.isadmin) {
+        setPost(pt);
+        setLoad(1);
+      }
+      else {
+        setLoad(-1);
+      }
     }
     else if (logged_in === -1) {
       setLoad(-1);
@@ -59,46 +65,28 @@ const AddBlog = () => {
   const PostBlog = async (e) => {
     e.preventDefault();
     try {
-      const blogExist = await axios.get(`${SERVER_URL}/isBlogurlExist/${post.url}`)
-      if (blogExist.status === 200) {
-        showAlert("Url Already Exist!", "danger");
-        return;
-      }
-      else {
-        setAdd(true);
-        const data = new FormData();
-        const photoname = Date.now() + post.cover.name;
-        data.append("name", photoname);
-        data.append("photo", post.cover);
-        var imgurl;
-
-    try {
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data);
-      imgurl = img.data;
-      post.cover = imgurl;
-    } catch (err) {
-      console.log("photoerr", err);
-    }
-    try {
-      const blogdata = await axios.post(`${SERVER_URL}/addBlog`, post, {
+      await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`);
+      setAdd(true);
+      const data = new FormData();
+      data.append("photo", post.cover);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
+      post.cover = img.data;
+      const blogdata = await axios.post(`${SERVER_URL}/blogs/addBlog`, post, {
         headers: { "Content-Type": "application/json" },
-        withCredentials:true
+        withCredentials: true
       });
-      if (blogdata.status === 422 || !blogdata) {
-        showAlert("Blog Posting failed","danger");
-      } else {
-        showAlert("Blog Created Successfull","success");
-        navigate(`/blogs/${post.url}/edit`);
-      }
-    } catch (err) {
-      console.log("err", err);
-      navigate('/blogs')
+      navigate(`/blogs/${post.url}/edit`);
+      showAlert("Blog added sucessfully!", "success");
+    } catch (error) {
+      showAlert(`${error.response.data.error}`, "danger");
     }
-  };
-
+    setAdd(false);
+  }
   return (
     <>
-      {load === 0 ? <Loading /> : load === 1 ? (
+      {load === 0 ? (
+        <Loading />
+      ) : load === 1 ?
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <h3>Add Blog</h3>
@@ -234,11 +222,12 @@ const AddBlog = () => {
             </form>
           </div>
         </div>
-      ) : (
-        <Error />
-      )}
+        : (
+          <Error />
+        )}
+
     </>
   );
-};
+}
 
 export default AddBlog;

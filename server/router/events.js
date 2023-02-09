@@ -96,15 +96,14 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
 router.route('/addEvent').post(authenticate, async (req,res)=>{
     try{
         const event = req.body;
-        // console.log("server ",event);
+        console.log("Event : ",event);
         const newEvent = new Event(event);
         await newEvent.save();
         console.log(`${event.title} created sucessfull`);
-        res.status(201).json({"msg":"Event created sucessfully"});
+        res.status(200).json({msg:"Event created sucessfully"});
     }
     catch(err){
-        console.log('err',err);
-        res.status(500).json({error:"Problem with adding event"});
+        res.status(400).json({error:"Problem with adding event"});
     }
 })
 
@@ -116,25 +115,23 @@ router.route('/getEvent/:url').get(async (req,res)=>{
             return res.status(200).json(event);
         }
         else{
-            return res.status(201).json(null);
+            res.status(400).json({error:"Event Not Found!"});
         }
     }catch(err){
-        console.log(err);
-        res.status(422).send(`${url} not found`);
+        res.status(400).json({error:"Event Not Found!"});
     }
 })
 
 router.route('/updateEvent/:url').put(authenticate, async (req,res)=>{
     try{
         const {url} = req.params;
-        // console.log('req.body',req.body.url,req.body)
         const updatedEvent = await Event.findOneAndUpdate({url:url},req.body,{
             new:true
         });
         console.log('Event Updated',updatedEvent);
-        res.status(200).json(updatedEvent);
+        res.status(200).json();
     }catch (err) {
-        res.status(422).json(err);
+        res.status(400).json({error:"Counld not update event!"});
     }
 });
 
@@ -148,7 +145,7 @@ router.route('/deleteEvent/:url').delete(authenticate, async (req,res)=> {
     } 
     catch(err){
         console.log("Cannot Delete the Event");
-        res.status(500).json({msg:"Cannot Delete the Event"});
+        res.status(400).json({error:"Cannot Delete the Event!"});
     }
 });
 

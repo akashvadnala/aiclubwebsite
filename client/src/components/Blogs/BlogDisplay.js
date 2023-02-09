@@ -9,14 +9,14 @@ import axios from "axios";
 import Loading from "../Loading";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import { Context } from "../../Context/Context";
-import {alertContext} from "../../Context/Alert";
+import { alertContext } from "../../Context/Alert";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 const BlogDisplay = () => {
   const params = new useParams();
   const url = params.url;
-  const { user,logged_in } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
   const [blog, setBlog] = useState(null);
   const [edit, setedit] = useState(null);
@@ -30,7 +30,7 @@ const BlogDisplay = () => {
 
   const getBlog = async () => {
     try {
-      const res = await axios.get(`${SERVER_URL}/getBlog/${url}`);
+      const res = await axios.get(`${SERVER_URL}/blogs/getBlog/${url}`);
       if (res.status === 200) {
         const post_ = res.data.blog;
         setBlog(res.data.blog);
@@ -38,26 +38,26 @@ const BlogDisplay = () => {
         setApproval(res.data.blog.approvalStatus);
         setPub(`${!res.data.blog.public ? "Make Public" : "Make Private"}`);
         setLoad(1);
-        if (user && post_.authorName===user._id) {
+        if (user && post_.authorName === user._id) {
           setedit(true);
         } else {
           setedit(false);
         }
-      } else {
-        setLoad(-1);
-        setedit(false);
-        console.log("No Blog Found");
       }
     } catch (err) {
       console.log(err);
+      setLoad(-1);
+      setedit(false);
+      showAlert(`${err.response.data.error}`, "danger");
+      navigate('/error');
     }
   };
 
   useEffect(() => {
-    if(url){
+    if (url) {
       getBlog();
     }
-  }, [user,url]);
+  }, [user, url]);
 
   const returnDDMMYYYY = (inp) => {
     const d = new Date(inp);
@@ -71,88 +71,96 @@ const BlogDisplay = () => {
   };
 
   const TogglePublic = async (status) => {
-    if (status) {
-      setPub(`${!blog.public ? "Publishing" : "Making Private"}`);
-      setPub2(<i className="fa fa-spinner fa-spin"></i>);
-      const res = await axios.put(
-        `${SERVER_URL}/updateblogPublicStatus/${blog.url}`,
-        { public: !blog.public ? true : false },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (res.status === 200) {
+    try {
+      if (status) {
+        setPub(`${!blog.public ? "Publishing" : "Making Private"}`);
+        setPub2(<i className="fa fa-spinner fa-spin"></i>);
+        const res = await axios.put(
+          `${SERVER_URL}/blogs/updateblogPublicStatus/${blog.url}`,
+          { public: !blog.public ? true : false },
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
         blog.public = !blog.public ? true : false;
-        showAlert(`Blog made ${blog.public?"public":"private"}`,"success");
+        showAlert(`Blog made ${blog.public ? "public" : "private"}`, "success");
         setPub(`${!blog.public ? "Make Public" : "Make Private"}`);
         setPub2();
         navigate(`/blogs/${blog.url}`);
-      } else {
-        showAlert("Operation failed. Please try again.","success");
       }
+    } catch (error) {
+      showAlert(`${error.response.data.error}`, "danger");
+      navigate('/blogs');
     }
   };
 
   const deleteBlog = async (status) => {
     if (status) {
-      const res = await axios.post(`${SERVER_URL}/deleteBlog/${blog._id}`);
-      if (res.status === 200) {
-        showAlert("Blog deleted successfully","success");
-        navigate("/blogs");
-      } else {
-        showAlert("Blog Deletion failed","danger");
+      try {
+        const res = await axios.delete(`${SERVER_URL}/blogs/deleteBlog/${blog._id}`, { withCredentials: true });
+        if (res.status === 200) {
+          showAlert("Blog deleted successfully", "success");
+          navigate("/myblogs");
+        }
+      } catch (error) {
+        showAlert("Blog Deletion failed", "danger");
       }
     }
   };
 
   const ChangeApprovalStatus = async (status) => {
-    if (blog.approvalStatus === "submit") {
-      if (status) {
-        setApproval("pending");
-        setApproval2(<i className="fa fa-spinner fa-spin"></i>);
-        const res = await axios.put(
-          `${SERVER_URL}/updateblogApprovalStatus/${blog.url}`,
-          { approvalStatus: "pending" },
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        if (res.status === 200) {
-          showAlert("Submitted for Admin approval","success");
+    try {
+      if (blog.approvalStatus === "submit") {
+        if (status) {
+          setApproval("pending");
+          setApproval2(<i className="fa fa-spinner fa-spin"></i>);
+          const res = await axios.put(
+            `${SERVER_URL}/blogs/updateblogApprovalStatus/${blog.url}`,
+            { approvalStatus: "pending" },
+            {
+              headers: { "Content-Type": "application/json" },
+              withCredentials: true,
+            }
+          );
+          showAlert("Submitted for Admin approval", "success");
           setBlog({ ...blog, ["approvalStatus"]: "pending" });
           setApproval2();
           navigate(`/blogs/${blog.url}`);
-        } else {
-          showAlert("Submission failed. PLease try again!","danger");
         }
       }
+    } catch (error) {
+      showAlert(`${error.response.data.error}`, "danger");
     }
+
   };
 
   const ApproveOrReject = async (status) => {
-    var response;
-    if (status) {
-      response = "Approved";
-      setPub("Make Private");
-    } else {
-      response = "Rejected";
-    }
-    setApproval(response);
-    setApproval2(<i className="fa fa-spinner fa-spin"></i>);
-    const res = await axios.put(
-      `${SERVER_URL}/updateblogApprovalStatus/${blog.url}`,
-      { approvalStatus: response, public: status },
-      {
-        headers: { "Content-Type": "application/json" },
+
+    try {
+      var response;
+      if (status) {
+        response = "Approved";
+        setPub("Make Private");
+      } else {
+        response = "Rejected";
       }
-    );
-    if (res.status === 200) {
-      showAlert(`${response === "Approved"?"Approved & Published.":response}.`,"success");
+      setApproval(response);
+      setApproval2(<i className="fa fa-spinner fa-spin"></i>);
+      const res = await axios.put(
+        `${SERVER_URL}/blogs/updateblogApprovalStatus/${blog.url}`,
+        { approvalStatus: response, public: status },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      showAlert(`${response === "Approved" ? "Approved & Published." : response}.`, "success");
       setBlog({ ...blog, ["approvalStatus"]: response, ["public"]: status });
       setApproval2();
       navigate(`/blogs/${blog.url}`);
-    } else {
-      showAlert("Response not recorded. Please try again","success");
+    } catch (error) {
+      showAlert(`${error.response.data.error}`,"danger");
     }
   };
 
@@ -240,15 +248,14 @@ const BlogDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#approveOrReject"
-                          className={`btn btn-${
-                            blog.approvalStatus === "submit"
-                              ? "success"
-                              : blog.approvalStatus === "pending"
+                          className={`btn btn-${blog.approvalStatus === "submit"
+                            ? "success"
+                            : blog.approvalStatus === "pending"
                               ? "warning"
                               : blog.approvalStatus === "Rejected"
-                              ? "danger"
-                              : "primary"
-                          } btn-sm mx-1`}
+                                ? "danger"
+                                : "primary"
+                            } btn-sm mx-1`}
                         >
                           {" "}
                           {"Approve/Reject"}
@@ -310,15 +317,14 @@ const BlogDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#submitForApproval"
-                          className={`btn btn-${
-                            blog.approvalStatus === "submit"
-                              ? "success"
-                              : blog.approvalStatus === "pending"
+                          className={`btn btn-${blog.approvalStatus === "submit"
+                            ? "success"
+                            : blog.approvalStatus === "pending"
                               ? "warning"
                               : blog.approvalStatus === "Rejected"
-                              ? "danger"
-                              : "primary"
-                          } btn-sm mx-1`}
+                                ? "danger"
+                                : "primary"
+                            } btn-sm mx-1`}
                         >
                           {" "}
                           {approval}
@@ -367,15 +373,14 @@ const BlogDisplay = () => {
                     ) : (
                       <NavLink
                         rel="noreferrer"
-                        className={`btn btn-${
-                          blog.approvalStatus === "submit"
-                            ? "success"
-                            : blog.approvalStatus === "pending"
+                        className={`btn btn-${blog.approvalStatus === "submit"
+                          ? "success"
+                          : blog.approvalStatus === "pending"
                             ? "warning"
                             : blog.approvalStatus === "Rejected"
-                            ? "danger"
-                            : "primary"
-                        } btn-sm mx-1`}
+                              ? "danger"
+                              : "primary"
+                          } btn-sm mx-1`}
                       >
                         {" "}
                         {approval}
@@ -388,11 +393,9 @@ const BlogDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#publicOrPrivate"
-                          className={`btn btn-${
-                            blog.public ? "warning" : "success"
-                          } btn-sm mx-1 ${
-                            blog.approvalStatus === "Rejected" ? "disabled" : ""
-                          }`}
+                          className={`btn btn-${blog.public ? "warning" : "success"
+                            } btn-sm mx-1 ${blog.approvalStatus === "Rejected" ? "disabled" : ""
+                            }`}
                         >
                           {" "}
                           {pub}
@@ -412,9 +415,8 @@ const BlogDisplay = () => {
                                   className="modal-title fs-5"
                                   id="publicOrPrivateLabel"
                                 >
-                                  {`Are you sure to make blog "${blog.title}" ${
-                                    !blog.public ? "Public" : "Private"
-                                  }?`}
+                                  {`Are you sure to make blog "${blog.title}" ${!blog.public ? "Public" : "Private"
+                                    }?`}
                                 </h1>
                               </div>
                               <div className="modal-footer">
