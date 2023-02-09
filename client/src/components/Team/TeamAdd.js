@@ -67,7 +67,7 @@ const TeamAdd = () => {
             const data = new FormData();
             data.append("photo", team.photo);
 
-            const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+            const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
             team.photo = img.data;
 
             if (team.year > y) {
