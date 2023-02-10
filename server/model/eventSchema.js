@@ -32,11 +32,11 @@ const eventSchema = new Schema({
     },
     eventLink:{
         type:String,
-        default: null
+        default: ""
     },
     eventLocation:{
         type:String,
-        default: null
+        default: ""
     },
 },{ timestamps: true });
 
