@@ -51,7 +51,7 @@ function TeamLogin(props) {
           setShowSpinner(false);
         });
     } catch (err) {
-      console.log("Login err", err);
+      setMsg(err.response.data.err);
     }
   };
   // console.log(reset);

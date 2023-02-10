@@ -14,7 +14,7 @@ const ProfileCard = (props) => {
             <div className=" image d-flex flex-column justify-content-center align-items-center">
               <button className="btn">
                 <img onError={addDefaultSrc} className="rounded-circle"
-                  src={!props.a.photo?"https://i.imgur.com/wvxPV9S.png":props.a.photo}
+                  src={(props.a && props.a.photo)?props.a.photo:"https://i.imgur.com/wvxPV9S.png"}
                   alt="profile"
                   height="120"
                   width="120"
