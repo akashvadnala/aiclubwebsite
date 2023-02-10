@@ -68,31 +68,31 @@ function Team() {
                 <div className='col-12 col-md-4 text-center text-md-start'>
                   <h3>{archTeam && <span>Archieved</span>} Team Members</h3>
                 </div>
-                <div className='col-12 col-md-5 text-center text-md-end'>
+                <div className='col-12 col-md-5 text-center text-md-end align-items-center'>
                   {
                     user?user.isadmin?
                       <div className='right-panel'>
                         {
                           archTeam?
-                            <NavLink rel="noreferrer" className='btn btn-sm' onClick={getTeamData}>
+                            <NavLink rel="noreferrer" className='btn mx-2' onClick={getTeamData}>
                               Team
                             </NavLink>
                           :
-                            <NavLink rel="noreferrer" className='btn btn-sm' onClick={getArchTeamData}>
+                            <NavLink rel="noreferrer" className='btn mx-2' onClick={getArchTeamData}>
                               Archieved
                             </NavLink>
                         }
-                        <NavLink className='btn btn-sm btn-primary' to='/team/add'>
-                          <span><svg
+                        <NavLink className='btn btn-outline-primary mx-2' to='/team/add'>
+                          <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"
                             height="20"
                             fill="currentColor"
                             className="bi bi-plus-circle-fill"
-                            viewBox="0 0 16 16"
+                            viewBox="0 0 16 18"
                           >
                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                          </svg></span>
+                          </svg>
                           {' '}Add
                       </NavLink>
                       </div>

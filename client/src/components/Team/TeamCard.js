@@ -68,7 +68,7 @@ function TeamCard({ team, isadmin, isdelete }) {
           {isadmin ? (
             <div className="admin-opt d-flex justify-content-evenly pt-3">
               <span>
-                <NavLink type="button" to={`/team/edit/${team.username}`} className="btn btn-sm btn-primary"><i className="fas fa-edit"></i> Edit</NavLink>
+                <NavLink type="button" to={`/team/edit/${team.username}`} className="btn btn-sm btn-outline-primary"><i className="fas fa-edit"></i> Edit</NavLink>
               </span>
               {isdelete ? null : (
                 <>

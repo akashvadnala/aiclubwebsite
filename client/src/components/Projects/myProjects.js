@@ -51,7 +51,7 @@ const Projects = () => {
                       <NavLink
                         rel="noreferrer"
                         to="/projectapprovals"
-                        className="btn btn-sm btn-secondary mx-1"
+                        className="btn btn-sm btn-outline-secondary mx-1"
                       >
                         Approvals
                       </NavLink>
@@ -59,7 +59,7 @@ const Projects = () => {
                     <NavLink
                       rel="noreferrer"
                       to="/projects"
-                      className="btn btn-sm btn-primary mx-1"
+                      className="btn btn-sm btn-outline-primary mx-1"
                     >
                       All Projects
                     </NavLink>
@@ -67,7 +67,7 @@ const Projects = () => {
                     <NavLink
                       rel="noreferrer"
                       to="/addproject"
-                      className="btn btn-sm btn-success"
+                      className="btn btn-sm btn-outline-success"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +75,7 @@ const Projects = () => {
                         height="20"
                         fill="currentColor"
                         className="bi bi-plus-circle-fill"
-                        viewBox="0 0 16 16"
+                        viewBox="0 0 16 18"
                       >
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                       </svg>{" "}

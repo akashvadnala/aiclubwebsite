@@ -17,12 +17,12 @@ html {
   text-align: center;
   padding-top: 1rem;
 }
-
+/* 
 .right-panel a{
   padding: 7px 12px;
   border-radius: 18px;
   margin-left: 1rem;
-}
+} */
 
 .adjust{
   /* margin-left: 10px !important; */
@@ -70,6 +70,17 @@ hr{
 .error-container img{
   width: 30rem;
   height: 30rem;
+}
+
+.btn{
+  border-radius: 1.5rem !important;
+  padding-left: 0.8rem !important;
+  padding-right: 0.8rem !important;
+}
+
+.btn-sm{
+   border-radius: 0.95rem !important;
+  padding: 0.3rem 0.65rem !important;
 }
 
 .adjust{

@@ -203,12 +203,12 @@ const TeamAdd = () => {
 
                             {
                                 add ?
-                                    <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
+                                    <button type="submit" name="submit" id="submit" className="btn btn-outline-primary" disabled>
                                         <span>Submitting </span>
                                         <i className="fa fa-spinner fa-spin"></i>
                                     </button>
                                     :
-                                    <button type="submit" name="submit" id="submit" className="btn btn-primary">
+                                    <button type="submit" name="submit" id="submit" className="btn btn-outline-primary">
                                         Submit
                                     </button>
                             }
