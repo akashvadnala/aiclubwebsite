@@ -47,7 +47,7 @@ const EditBlog = () => {
       if (url) {
         getBlog();
       }
-      else{
+      else {
         setLoad(-1);
       }
     }
@@ -76,10 +76,14 @@ const EditBlog = () => {
     setXTag("");
   };
   const AddXTag = () => {
-    let current = post.tags;
-    current.push(xtag);
-    setpost({ ...post, ["tags"]: current });
-    setXTag("");
+    let s=xtag.trim();
+    if(s!=""){
+      let current = post.tags;
+      current.push(s);
+      setpost({ ...post, ["tags"]: current });
+      setXTag("");
+    }
+    
   };
   const UpdateBlog = async (e) => {
     e.preventDefault();
@@ -95,16 +99,16 @@ const EditBlog = () => {
         data.append("name", photoname);
         data.append("photo", Img);
         await axios.post(`${SERVER_URL}/imgdelete`,
-            { 'url': post.cover },
-            {
-              headers: { "Content-Type": "application/json" },
-              withCredentials:true,
-            });
-        const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
+          { 'url': post.cover },
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          });
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
         console.log('img', img);
         imgurl = img.data;
         post.cover = imgurl;
-        
+
       }
       console.log('imgurl', imgurl);
       const postdata = await axios.put(
@@ -112,16 +116,16 @@ const EditBlog = () => {
         post,
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials:true,
+          withCredentials: true,
         }
       );
       setAdd(false);
       showAlert("Saved as Draft!", "success");
       setPreview(true);
-      
+
     } catch (err) {
       console.log(err);
-      showAlert(`${err.response.data.error}`,"danger");
+      showAlert(`${err.response.data.error}`, "danger");
       // navigate('/myblogs');
     }
 
@@ -137,7 +141,8 @@ const EditBlog = () => {
             {preview ? (
               <NavLink
                 to={`/blogs/${post.url}`}
-                className="btn btn-success btn-sm"
+                rel="noreferrer"
+                className="btn btn-outline-success btn-sm"
               >
                 Preview
               </NavLink>
@@ -221,7 +226,7 @@ const EditBlog = () => {
                           <div className="col-4 paddl">
                             <input
                               type="reset"
-                              className="btn btn-danger"
+                              className="btn btn-outline-danger"
                               onClick={() => removeXTag(a)}
                               value="Remove"
                             />
@@ -243,12 +248,23 @@ const EditBlog = () => {
                       />
                     </div>
                     <div className="col-4 paddl">
-                      <input
+                      <button
                         type="reset"
-                        className="btn btn-success"
+                        className="btn btn-outline-success"
                         onClick={AddXTag}
-                        value="+Add"
-                      />
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          className="bi bi-plus-circle-fill"
+                          viewBox="0 0 16 18"
+                        >
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                        </svg>{" "}
+                        Add
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -290,7 +306,7 @@ const EditBlog = () => {
                         type="submit"
                         name="submit"
                         id="submit"
-                        className="btn btn-primary my-3"
+                        className="btn btn-outline-primary my-3"
                         disabled
                       >
                         Saving <i className="fa fa-spinner fa-spin"></i>
@@ -300,7 +316,7 @@ const EditBlog = () => {
                         type="submit"
                         name="submit"
                         id="submit"
-                        className="btn btn-primary my-3"
+                        className="btn btn-outline-primary my-3"
                         onClick={() => { setpost({ ...post, ["approvalStatus"]: "submit", ["public"]: false }); }}
                       >
                         Save as Draft

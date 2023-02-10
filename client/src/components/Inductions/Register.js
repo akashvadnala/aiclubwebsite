@@ -46,7 +46,7 @@ const Register = ({props}) => {
                         )
                     })
                 }
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-outline-primary">Submit</button>
             </form>
         </div>
     </>

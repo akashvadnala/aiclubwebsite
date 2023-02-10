@@ -14,11 +14,11 @@ function PublicationCard(props) {
         </h6>
         <NavLink
           to={"/projects/" + props.publication.url}
-          className="btn btn-primary mt-2"
+          className="btn btn-outline-primary mt-2"
         >
           View Project
         </NavLink>
-        <button className="btn btn-danger mx-2 mt-2">
+        <button className="btn btn-outline-danger mx-2 mt-2">
           <a
             href={props.publication.researchPaperLink}
             target="_blank"
