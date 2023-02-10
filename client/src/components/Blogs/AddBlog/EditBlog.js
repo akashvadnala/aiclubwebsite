@@ -122,7 +122,7 @@ const EditBlog = () => {
     } catch (err) {
       console.log(err);
       showAlert(`${err.response.data.error}`,"danger");
-      navigate('/myblogs');
+      // navigate('/myblogs');
     }
 
   };
