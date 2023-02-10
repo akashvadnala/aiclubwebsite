@@ -98,7 +98,7 @@ function CompeteLogin(props) {
                   />
                 </div>
               </div>
-              <button type="submit" className="cust btn btn-primary btn-block mb-4">
+              <button type="submit" className="cust btn btn-outline-primary btn-outline-block mb-4">
                 {signin2}
                 {signin}
               </button>

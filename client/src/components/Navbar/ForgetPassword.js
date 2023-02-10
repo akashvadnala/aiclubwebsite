@@ -122,7 +122,7 @@ function ForgetPassword() {
                 type="submit"
                 name="submit"
                 id="submit"
-                className="btn btn-primary"
+                className="btn btn-outline-primary"
               >
                 {reset}
                 {reset2}

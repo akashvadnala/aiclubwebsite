@@ -27,7 +27,7 @@
 
 .blog-subCategory {
   display: flex;
-  justify-content: center;
+  align-items: center;
 }
 .blog-subCategory > div {
   margin: 0.3rem 0.3rem 1rem 0.3rem;

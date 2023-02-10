@@ -21,10 +21,10 @@ router.route('/addSlider').post(authenticate,async (req,res)=>{
         slide.index = index;
         await slide.save();
         console.log(`${slide.title} added`);
-        res.status(200).json(null);
+        res.status(200).json();
     }catch(err){
         console.log(err);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(500).json({error:"Internal server error"});
     }
 });
 
@@ -35,25 +35,25 @@ router.route('/updateSlider/:id').put(authenticate,async (req,res)=>{
             await Slider.findByIdAndUpdate(req.params.id, req.body, {
                 new: true,
               });
-            res.status(200).json(null);
+            res.status(200).json();
         }
         else{
             console.log('Slider Not Found');
-            res.status(204).json({msg:"Slider Not Found"});
+            res.status(404).json({error:"Slider Not Found"});
         }
     }catch(err){
         console.log(err);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(500).json({error:"Internal server error"});
     }    
 });
 
 router.route('/deleteSlider/:id').post(authenticate,async (req,res)=>{
     try{
         await Slider.findByIdAndDelete(req.params.id);
-        res.status(200).json(null);
+        res.status(200).json();
     }catch(err){
         console.log(err);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(500).json({error:"Internal server error"});
     }
 })
 
@@ -66,10 +66,10 @@ router.route('/sliderMoveDown').post(authenticate,async (req,res)=>{
         await slide2.save();
         slide.index-=1;
         await slide.save();
-        res.status(200).json(null);
+        res.status(200).json();
     }catch(err){
         console.log(err);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(500).json({error:"Internal server error"});
     }
 });
 
@@ -82,10 +82,10 @@ router.route('/sliderMoveUp').post(authenticate,async (req,res)=>{
         await slide2.save();
         slide.index+=1;
         await slide.save();
-        res.status(200).json(null);
+        res.status(200).json();
     }catch(err){
         console.log(err);
-        res.status(500).json({msg:"Internal server error"});
+        res.status(500).json({error:"Internal server error"});
     }
 });
 

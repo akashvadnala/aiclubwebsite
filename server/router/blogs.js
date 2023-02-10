@@ -89,7 +89,7 @@ router.route("/getFirstLastNameForBlogs/:url").get(async (req, res) => {
       const team = await Team.findById(blog.authorName);
       name = `${team.firstname} ${team.lastname}`;
     }
-    return res.status(200).json(name);
+    res.status(200).json(name);
   } catch (error) {
     res.status(500).json({ error: "Problem At fetching first and last name" });
   }
@@ -135,12 +135,12 @@ router.route("/canAddBlog/:url").get(async (req, res) => {
   const { url } = req.params;
   Blog.findOne({ url: url }).then(data => {
     if (data) {
-      res.status(403).json({ msg: "Url Aready Exits" });
+      res.status(403).json({ error: "Url Aready Exits" });
     } else {
       res.status(200).json({ msg: "yes" });
     }
   }).catch(error => {
-    res.status(500).json({ error: "Internal server Error" });
+    res.status(500).json({ error: "Problem at server" });
   });
 })
 
@@ -149,7 +149,7 @@ router.route("/getBlog/:url").get(async (req, res) => {
   try {
     const blog = await Blog.findOne({ url: url });
     if (!blog) {
-      res.status(404).json({msg:"Blog does not exist"});
+      res.status(404).json({error:"Blog does not exist"});
     } else {
       const userdetails = await Team.findById(blog.authorName).select(
         "firstname lastname email position description photo"
@@ -184,11 +184,7 @@ router.route("/deleteBlog/:id").delete(authenticate, async (req, res) => {
   try {
     const blog = await Blog.findById(id);
     if (blog) {
-      const team = await Team.findById(blog.authorName);
-      team.blogs = team.blogs.filter(b => b != id);
-      await team.save();
       await Blog.findByIdAndDelete(id);
-      console.log("Deleted..");
       res.status(200).json({ msg: "Blog Deleted" });
     }else{
       res.status(404).json({error:"blog doesn't exist"});

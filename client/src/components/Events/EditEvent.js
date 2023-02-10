@@ -178,7 +178,7 @@ const EditEvent = () => {
               {preview ? (
                 <NavLink
                   to={`/events/${event.url}`}
-                  className="btn btn-success btn-sm"
+                  className="btn btn-outline-success btn-sm"
                 >
                   Preview
                 </NavLink>
@@ -256,7 +256,7 @@ const EditEvent = () => {
                         <div className="col col-3">
                           <input
                             type="reset"
-                            className="btn btn-danger"
+                            className="btn btn-outline-danger"
                             onClick={() => removeXspeakers(a)}
                             value="Remove"
                           />
@@ -278,12 +278,23 @@ const EditEvent = () => {
                       />
                     </div>
                     <div className="col col-3">
-                      <input
+                      <button
                         type="reset"
-                        className="btn btn-success"
+                        className="btn btn-outline-success"
                         onClick={AddXspeakers}
-                        value="+Add"
-                      />
+                      >
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="currentColor"
+                        className="bi bi-plus-circle-fill"
+                        viewBox="0 0 16 18"
+                      >
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                      </svg>{" "}
+                      Add
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -390,7 +401,7 @@ const EditEvent = () => {
                     type="submit"
                     name="submit"
                     id="submit"
-                    className="btn btn-primary"
+                    className="btn btn-outline-primary"
                     disabled
                   >
                     Updating <i className="fa fa-spinner fa-spin"></i>
@@ -400,7 +411,7 @@ const EditEvent = () => {
                     type="submit"
                     name="submit"
                     id="submit"
-                    className="btn btn-primary"
+                    className="btn btn-outline-primary"
                   >
                     Update
                   </button>

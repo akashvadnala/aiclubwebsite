@@ -67,7 +67,7 @@ const TeamAdd = () => {
             const data = new FormData();
             data.append("photo", team.photo);
 
-            const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+            const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
             team.photo = img.data;
 
             if (team.year > y) {
@@ -203,12 +203,12 @@ const TeamAdd = () => {
 
                             {
                                 add ?
-                                    <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
+                                    <button type="submit" name="submit" id="submit" className="btn btn-outline-primary" disabled>
                                         <span>Submitting </span>
                                         <i className="fa fa-spinner fa-spin"></i>
                                     </button>
                                     :
-                                    <button type="submit" name="submit" id="submit" className="btn btn-primary">
+                                    <button type="submit" name="submit" id="submit" className="btn btn-outline-primary">
                                         Submit
                                     </button>
                             }

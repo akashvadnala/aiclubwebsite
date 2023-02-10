@@ -65,22 +65,20 @@ const AddBlog = () => {
   const PostBlog = async (e) => {
     e.preventDefault();
     try {
-      const blogExist = await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`)
-        setAdd(true);
-        const data = new FormData();
-        data.append("photo", post.cover);
-        const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
-        post.cover = img.data;
-        const blogdata = await axios.post(`${SERVER_URL}/blogs/addBlog`, post, {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true
-        });
-        navigate(`/blogs/${post.url}/edit`);
-        showAlert("Blog added sucessful","success")
+      await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`);
+      setAdd(true);
+      const data = new FormData();
+      data.append("photo", post.cover);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
+      post.cover = img.data;
+      const blogdata = await axios.post(`${SERVER_URL}/blogs/addBlog`, post, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true
+      });
+      navigate(`/blogs/${post.url}/edit`);
+      showAlert("Blog added sucessfully!", "success");
     } catch (error) {
-      console.log(error);
       showAlert(`${error.response.data.error}`, "danger");
-      navigate('/blogs');
     }
     setAdd(false);
   }
@@ -97,7 +95,7 @@ const AddBlog = () => {
               onSubmit={PostBlog}
               encType="multipart/form-data"
             >
-              <div className="form-group my-3 row">
+              <div className="form-group my-3 row align-items-center">
                 <label htmlFor="title" className="col-sm-2 text-end">
                   Blog Title :
                 </label>
@@ -115,12 +113,12 @@ const AddBlog = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group my-3 row align-items-center">
                 <label htmlFor="url" className="col-sm-2 text-end">
                   Blog Url :
                 </label>
                 <div className="col-sm-10">
-                  <div className="input-group mb-3">
+                  <div className="input-group">
                     <div className="input-group-prepend">
                       <span
                         className="input-group-text text-end"
@@ -143,7 +141,7 @@ const AddBlog = () => {
                   </div>
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group my-3 row align-items-center">
                 <label className="col-sm-2 text-end">Tags :</label>
                 <div className="col-sm-10">
                   {post.tags.map((a) => {
@@ -162,7 +160,7 @@ const AddBlog = () => {
                         <div className="col col-3">
                           <input
                             type="reset"
-                            className="btn btn-danger"
+                            className="btn btn-outline-danger"
                             onClick={() => removeXtag(a)}
                             value="Remove"
                           />
@@ -184,17 +182,27 @@ const AddBlog = () => {
                       />
                     </div>
                     <div className="col col-3">
-                      <input
+                      <button
                         type="reset"
-                        className="btn btn-success"
+                        className="btn btn-outline-success"
                         onClick={AddXtag}
-                        value="+Add"
-                      />
+                      >
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="currentColor"
+                        className="bi bi-plus-circle-fill"
+                        viewBox="0 0 16 18"
+                      >
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                      </svg> Add
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group my-3 row align-items-center">
                 <label for="photo" className="col-sm-2 text-end">
                   Blog Cover Photo :
                 </label>
@@ -213,11 +221,11 @@ const AddBlog = () => {
               </div>
               {
                 add ?
-                  <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
+                  <button type="submit" name="submit" id="submit" className="btn btn-outline-primary" disabled>
                     Creating <i className="fa fa-spinner fa-spin"></i>
                   </button>
                   :
-                  <button type="submit" name="submit" id="submit" className="btn btn-primary">
+                  <button type="submit" name="submit" id="submit" className="btn btn-outline-primary">
                     Create
                   </button>
               }

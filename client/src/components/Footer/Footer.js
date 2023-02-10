@@ -90,7 +90,7 @@ const Footer = () => {
                     onChange={(e)=>setEmail(e.target.value)}
                     required/>
                   <div className="input-group-append">
-                    <button type="submit" name="submit" id="submit" className='btn btn-primary input-group-text rounded-right'>Subscribe</button>
+                    <button type="submit" name="submit" id="submit" className='btn btn-outline-primary input-group-text rounded-right'>Subscribe</button>
                   </div>
                 </div>
             </form>

@@ -43,7 +43,7 @@ const EditSlider = () => {
                     </div>
                 </div>
                 <div className="modal-footer">
-                    <button type="reset" id="modalClose" className="btn btn-sm btn-secondary" data-bs-dismiss="modal"
+                    <button type="reset" id="modalClose" className="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal"
                         onClick={() => {
                             setXSlider({
                                 photo: "",
@@ -59,13 +59,13 @@ const EditSlider = () => {
                     >Cancel</button>
                     {
                         addOrEdit ?
-                            <button type="submit" onClick={updateSlider} className="btn btn-sm btn-primary">
+                            <button type="submit" onClick={updateSlider} className="btn btn-sm btn-outline-primary">
                                 {
                                     edit ? <span>Updating <i className="fa fa-spinner fa-spin"></i></span> : <span>Update</span>
                                 }
                             </button>
                             :
-                            <button type="submit" onClick={addSlider} className="btn btn-sm btn-primary">
+                            <button type="submit" onClick={addSlider} className="btn btn-sm btn-outline-primary">
                                 {
                                     add ? <span>Adding <i className="fa fa-spinner fa-spin"></i></span> : <span>Add</span>
                                 }
