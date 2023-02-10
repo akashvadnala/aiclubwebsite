@@ -110,7 +110,7 @@ router.route('/teamadd').post(authenticate, async (req, res) => {
         team.password = await bcrypt.hash(req.body.password, saltRounds);
         await team.save();
         
-        const subject = "";
+        const subject = "New Account Created";
         const body=`Greetings from AI Club \n 
         As you are a part of AI Club NITC, a new account has been in the AI CLUB Website./n 
         Your credentials are:\n
