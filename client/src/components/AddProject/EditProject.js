@@ -130,11 +130,14 @@ const EditProject = () => {
     setPreview(false);
   };
   const AddXTag = () => {
-    let current = proj.tags;
-    current.push(xtag);
-    setProj({ ...proj, ["tags"]: current });
-    setXTag("");
-    setPreview(false);
+    let s = xtag.trim();
+    if (s != "") {
+      let current = proj.tags;
+      current.push(s);
+      setProj({ ...proj, ["tags"]: current });
+      setXTag("");
+      setPreview(false);
+    }
   };
 
   const removeXCoAuthor = (coAuthor) => {
@@ -209,8 +212,9 @@ const EditProject = () => {
           <div className="text-center fs-6 pb-1">
             {preview ? (
               <NavLink
+                rel="noreferrer"
                 to={`/projects/${proj.url}`}
-                className="btn btn-success btn-sm"
+                className="btn btn-outline-success btn-sm"
               >
                 Preview
               </NavLink>
@@ -294,7 +298,7 @@ const EditProject = () => {
                           <div className="col-4 paddl">
                             <input
                               type="reset"
-                              className="btn btn-danger"
+                              className="btn btn-outline-danger"
                               onClick={() => removeXTag(a)}
                               value="Remove"
                             />
@@ -316,12 +320,23 @@ const EditProject = () => {
                       />
                     </div>
                     <div className="col-4 paddl">
-                      <input
+                      <button
                         type="reset"
-                        className="btn btn-success"
+                        className="btn btn-outline-success"
                         onClick={AddXTag}
-                        value="+Add"
-                      />
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          className="bi bi-plus-circle-fill"
+                          viewBox="0 0 16 18"
+                        >
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                        </svg>{" "}
+                        Add
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -365,7 +380,7 @@ const EditProject = () => {
                         {user._id !== t.id && proj.creator !== t.id && (
                           <input
                             type="reset"
-                            className="btn btn-danger"
+                            className="btn btn-outline-danger"
                             onClick={() => removeXAuthor(t.id)}
                             value="Remove"
                           />
@@ -390,12 +405,13 @@ const EditProject = () => {
                     </select>
                   </div>
                   <div className="col col-3">
-                    <input
+                    <button
                       type="reset"
-                      className="btn btn-success"
+                      className="btn btn-outline-success"
                       onClick={AddXAuthor}
-                      value="+Add"
-                    />
+                    >
+                      Add
+                    </button>
                   </div>
                 </div>
                 <div className="form-group my-3">
@@ -496,7 +512,7 @@ const EditProject = () => {
                             {user.username !== a && proj.creator !== a && (
                               <input
                                 type="reset"
-                                className="btn btn-danger"
+                                className="btn btn-outline-danger"
                                 onClick={() => removeXCoAuthor(a)}
                                 value="Remove"
                               />
@@ -519,12 +535,23 @@ const EditProject = () => {
                       />
                     </div>
                     <div className="col col-3">
-                      <input
+                      <button
                         type="reset"
-                        className="btn btn-success"
+                        className="btn btn-outline-success"
                         onClick={AddXCoAuthor}
-                        value="+Add"
-                      />
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          className="bi bi-plus-circle-fill"
+                          viewBox="0 0 16 18"
+                        >
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                        </svg>{" "}
+                        Add
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -535,7 +562,7 @@ const EditProject = () => {
                         type="submit"
                         name="submit"
                         id="submit"
-                        className="btn btn-primary my-3"
+                        className="btn btn-outline-primary my-3"
                         disabled
                       >
                         Saving <i className="fa fa-spinner fa-spin"></i>
@@ -545,7 +572,7 @@ const EditProject = () => {
                         type="submit"
                         name="submit"
                         id="submit"
-                        className="btn btn-primary my-3"
+                        className="btn btn-outline-primary my-3"
                         onClick={() => { setProj({ ...proj, ["approvalStatus"]: "submit", ["public"]: false }); }}
                       >
                         Save as Draft
@@ -554,8 +581,8 @@ const EditProject = () => {
                 </div>
               </div>
             </div>
-          </form>
-        </div>
+          </form >
+        </div >
       ) : (
         <Error />
       )}

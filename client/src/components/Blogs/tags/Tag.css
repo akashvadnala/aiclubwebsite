@@ -1,9 +1,9 @@
 .Tagchip {
-    font-size: 0.8rem;
-    background: linear-gradient(to right, #000000, #3c3f3c);
-    color: #fff;
-    padding: 0.3rem 0.3rem;
-    margin: 0.3rem;
+    /* background: linear-gradient(to right, #000000, #3c3f3c); */
+    color: black;
+    border: solid 1px black;
+    padding: 0.2rem 0.3rem;
+    margin: 0.2rem;
     border-radius: 7px;
     width: fit-content;
     text-transform: capitalize;

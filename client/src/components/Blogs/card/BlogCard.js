@@ -57,7 +57,7 @@ const Blogitem = ({ blog }) => {
           <NavLink
             rel="noreferrer"
             to={`/blogs/${blog.url}`}
-            className="btn btn-sm btn-dark"
+            className="btn btn-sm btn-outline-dark"
           >
             Read More
           </NavLink>

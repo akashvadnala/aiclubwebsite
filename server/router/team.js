@@ -5,6 +5,7 @@ const multer = require('multer');
 const authenticate = require('../middleware/authenticate');
 const Team = require('../model/teamSchema');
 const File = require('../model/fileSchema');
+const {generalMail} = require('../controllers/mail');
 
 router.route('/').get((req, res) => {
     res.send(`Hello world from the server router js`);
@@ -108,7 +109,17 @@ router.route('/teamadd').post(authenticate, async (req, res) => {
         const saltRounds = 10;
         team.password = await bcrypt.hash(req.body.password, saltRounds);
         await team.save();
-
+        
+        const subject = "";
+        const body=`Greetings from AI Club \n 
+        As you are a part of AI Club NITC, a new account has been in the AI CLUB Website./n 
+        Your credentials are:\n
+        Username: ${team.username}\n
+        Password:${team.username}\n
+        Login to change your account details.\n
+        Regards\n
+        AI Club NITC`;
+        generalMail(team.email,subject,body);
         console.log(`${team.username} user registered successfully`);
         res.status(200).json({ message: "user Login Successfully" });
 

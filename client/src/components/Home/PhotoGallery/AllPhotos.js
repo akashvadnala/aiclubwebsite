@@ -206,7 +206,7 @@ const AllPhotos = () => {
                     <button
                       type="button"
                       name="submit"
-                      className="btn btn-sm btn-danger ms-2"
+                      className="btn btn-sm btn-outline-danger ms-2"
                       onClick={handleDelete}
                     >
                       {del ? (
@@ -222,7 +222,7 @@ const AllPhotos = () => {
                 ) : (
                   <button
                     type="button"
-                    className="btn btn-sm btn-warning"
+                    className="btn btn-sm btn-outline-warning"
                     onClick={() => setCanDelete(true)}
                   >
                     Enable Delete
@@ -235,7 +235,7 @@ const AllPhotos = () => {
             {user && user.isadmin ? (
               <button
                 type="button"
-                className="btn btn-success btn-rounded btn-sm my-3"
+                className="btn btn-outline-success btn-outline-rounded btn-sm my-3"
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"
               >
@@ -245,7 +245,7 @@ const AllPhotos = () => {
                   height="20"
                   fill="currentColor"
                   className="bi bi-plus-circle-fill"
-                  viewBox="0 0 16 16"
+                  viewBox="0 0 16 18"
                 >
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                 </svg>{" "}
@@ -273,7 +273,7 @@ const AllPhotos = () => {
               </h1>
               <button
                 type="button"
-                className="btn-close"
+                className="btn-outline-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -308,7 +308,7 @@ const AllPhotos = () => {
                   type="submit"
                   name="submit"
                   id="submit"
-                  className="btn btn-primary"
+                  className="btn btn-outline-primary"
                 >
                   {add ? (
                     <>
@@ -320,7 +320,7 @@ const AllPhotos = () => {
                   )}
                 </button>
                 {/* <div className="modal-footer">
-                      <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Upload</button>
+                      <button type="button" className="btn btn-outline-primary" data-bs-dismiss="modal">Upload</button>
                     </div> */}
               </form>
             </div>

@@ -69,21 +69,25 @@ const Navbar = () => {
   ];
 
   const [navOpen,setNavOpen] = useState(false);
-  const toggleNav = () => {
-    setNavOpen(!navOpen);
+  const openNavFunc = () => {
+    setNavOpen(true);
+  }
+
+  const closeNavFunc = () => {
+    setNavOpen(false);
   }
 
   return (
     <>
       {/* <a className="close-navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       </a> */}
-      <NavLink className={navOpen?"close-navbar-toggler":"close-navbar-toggler collapsed"} onClick={toggleNav}></NavLink>
+      <NavLink className={navOpen?"close-navbar-toggler":"close-navbar-toggler collapsed"} onClick={closeNavFunc}></NavLink>
       <nav variant="primary" className="navbar navbar-expand-lg">
         <div className="container-fluid">
-          <NavLink className="navbar-brand title" to='/' onClick={toggleNav} aria-current="page"><span><img src={Logo} arc="Logo" style={{ width: "30px", borderRadius: "5px" }} /></span><span>&nbsp;Club</span></NavLink>
+          <NavLink className="navbar-brand title" to='/' onClick={closeNavFunc} aria-current="page"><span><img src={Logo} arc="Logo" style={{ width: "30px", borderRadius: "5px" }} /></span><span>&nbsp;Club</span></NavLink>
 
           <button
-            onClick={toggleNav}
+            onClick={openNavFunc}
             className={navOpen ? "navbar-toggler" : "navbar-toggler collapsed"}
             // className="navbar-toggler"
             type="button"
@@ -109,7 +113,7 @@ const Navbar = () => {
                 if (nav.show) {
                   return (
                     <li className="nav-item" key={nav.link}>
-                      <NavLink className="nav-link" to={nav.link} onClick={toggleNav} aria-current="page">
+                      <NavLink className="nav-link" to={nav.link} onClick={closeNavFunc} aria-current="page">
                         {nav.name}
                       </NavLink>
                     </li>
@@ -132,14 +136,14 @@ const Navbar = () => {
                       Hello {user.firstname}
                     </NavLink>
                     <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                      <NavLink className="dropdown-item" to="/profile" onClick={toggleNav} aria-current="page">
+                      <NavLink className="dropdown-item" to="/profile" onClick={closeNavFunc} aria-current="page">
                         My Profile
                       </NavLink>
                       <hr />
                       {user ? (
                         user.isadmin ? (
                           <>
-                            <NavLink className="dropdown-item" to="/admin" onClick={toggleNav} aria-current="page">
+                            <NavLink className="dropdown-item" to="/admin" onClick={closeNavFunc} aria-current="page">
                               Admin
                             </NavLink>
                             <hr />

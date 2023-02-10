@@ -208,7 +208,7 @@ const Profile = () => {
                                             </>
                                         }
                                         <div className="d-flex justify-content-center mb-2">
-                                            {/* <button type="button" className="btn btn-primary">Edit</button> */}
+                                            {/* <button type="button" className="btn btn-outline-primary">Edit</button> */}
                                             {
                                                 editMode ?
                                                     <>
@@ -249,7 +249,7 @@ const Profile = () => {
                                                                             </div>
                                                                         </div>
                                                                         <div className="modal-footer">
-                                                                            <button type="reset" id="modalClose" className="btn btn-sm btn-secondary" data-bs-dismiss="modal"
+                                                                            <button type="reset" id="modalClose" className="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal"
                                                                                 onClick={() => {
                                                                                     setPassword("");
                                                                                     setNewPassword("");
@@ -259,10 +259,10 @@ const Profile = () => {
                                                                             >Cancel</button>
                                                                             {
                                                                                 change ?
-                                                                                    <button type="submit" onClick={changePassword} className="btn btn-sm btn-primary" disabled>
+                                                                                    <button type="submit" onClick={changePassword} className="btn btn-sm btn-outline-primary" disabled>
                                                                                         <span>Updating <i className="fa fa-spinner fa-spin"></i></span>
                                                                                     </button>
-                                                                                    : <button type="submit" onClick={changePassword} className="btn btn-sm btn-primary">
+                                                                                    : <button type="submit" onClick={changePassword} className="btn btn-sm btn-outline-primary">
                                                                                         Update
                                                                                     </button>
                                                                             }
