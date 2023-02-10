@@ -115,7 +115,7 @@ router.route('/teamadd').post(authenticate, async (req, res) => {
         As you are a part of AI Club NITC, a new account has been in the AI CLUB Website./n 
         Your credentials are:\n
         Username: ${team.username}\n
-        Password:${team.password}\n
+        Password:${team.username}\n
         Login to change your account details.\n
         Regards\n
         AI Club NITC`;
