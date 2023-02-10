@@ -89,7 +89,7 @@ router.route("/getFirstLastNameForBlogs/:url").get(async (req, res) => {
       const team = await Team.findById(blog.authorName);
       name = `${team.firstname} ${team.lastname}`;
     }
-    return res.status(200).json(name);
+    res.status(200).json(name);
   } catch (error) {
     res.status(500).json({ error: "Problem At fetching first and last name" });
   }
@@ -184,11 +184,7 @@ router.route("/deleteBlog/:id").delete(authenticate, async (req, res) => {
   try {
     const blog = await Blog.findById(id);
     if (blog) {
-      const team = await Team.findById(blog.authorName);
-      team.blogs = team.blogs.filter(b => b != id);
-      await team.save();
       await Blog.findByIdAndDelete(id);
-      console.log("Deleted..");
       res.status(200).json({ msg: "Blog Deleted" });
     }else{
       res.status(404).json({error:"blog doesn't exist"});

@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SERVER_URL } from "../../../EditableStuff/Config";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./BlogCard.css";
+import { alertContext } from "../../../Context/Alert";
 
-const Blogitem = ({blog}) => {
+const Blogitem = ({ blog }) => {
+  const { showAlert } = useContext(alertContext);
+  const navigate = useNavigate();
   const d = new Date(blog.createdAt);
   const ddmmyy = d.getDate() + "/" + String(parseInt(d.getMonth()) + 1) + "/" + d.getFullYear();
 
@@ -13,18 +16,21 @@ const Blogitem = ({blog}) => {
       "https://pbwebdev.co.uk/wp-content/uploads/2018/12/blogs.jpg";
   };
 
-  const [names,setNames] = useState("");
+  const [names, setNames] = useState("");
   const getFirstLastNameForBlogs = async () => {
-      axios.get(`${SERVER_URL}/blogs/getFirstLastNameForBlogs/${blog.url}`)
-      .then(data=>{
-          setNames(data.data);
+    axios.get(`${SERVER_URL}/blogs/getFirstLastNameForBlogs/${blog.url}`)
+      .then(data => {
+        setNames(data.data);
+      }).catch(err => {
+        navigate('/blogs');
+        showAlert(err.response.data.error, "danger");
       });
   }
-  useEffect(()=>{
-    if(blog){
+  useEffect(() => {
+    if (blog) {
       getFirstLastNameForBlogs();
     }
-  },[blog]);
+  }, [blog]);
 
   return (
     <div className="my-3 blogcard-container">
@@ -43,7 +49,7 @@ const Blogitem = ({blog}) => {
           <h5 className="card-title">{blog.title} </h5>
           <p className="card-text">
             <small className="text-muted">
-              By {names} 
+              By {names}
               <br />
               on {ddmmyy}
             </small>
