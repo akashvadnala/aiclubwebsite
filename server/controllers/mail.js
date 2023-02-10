@@ -82,7 +82,9 @@ const passwordResetMail = async (toAddress, content) => {
 
 
 const generalMail = async (toAddress ,subject, body) => {
-
+  console.log("Gmail: ",toAddress);
+  console.log("subject:",subject);
+  console.log("Body:",body);
   const mailOptions = {
     from: 'AI Club <aiclubnitc_messenger@outlook.com>', // Sender address
     to: toAddress, // List of recipients

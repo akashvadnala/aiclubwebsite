@@ -27,13 +27,8 @@ const AddBlog = () => {
   console.log('load', load);
   useEffect(() => {
     if (logged_in === 1) {
-      if (user && user.isadmin) {
         setPost(pt);
         setLoad(1);
-      }
-      else {
-        setLoad(-1);
-      }
     }
     else if (logged_in === -1) {
       setLoad(-1);
