@@ -96,11 +96,12 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
 router.route('/addEvent').post(authenticate, async (req,res)=>{
     try{
         const event = req.body;
+        event.url = event.url.trim().replace(/\s+/g, '-').toLowerCase();
         console.log("Event : ",event);
         const newEvent = new Event(event);
         await newEvent.save();
         console.log(`${event.title} created sucessfull`);
-        res.status(200).json({msg:"Event created sucessfully"});
+        res.status(200).json({msg:"Event created sucessfully",url:newEvent.url});
     }
     catch(err){
         res.status(400).json({error:"Problem with adding event"});
