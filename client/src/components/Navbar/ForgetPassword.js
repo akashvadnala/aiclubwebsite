@@ -82,7 +82,7 @@ function ForgetPassword() {
               onSubmit={changePassword}
               encType="multipart/form-data"
             >
-              <div classname="form-group my-3 row">
+              <div className="form-group my-3 row">
                 <label for="password" className="col-4 text-end">
                   Password :
                 </label>
