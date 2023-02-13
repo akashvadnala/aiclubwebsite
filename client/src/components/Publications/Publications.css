@@ -1,0 +1,9 @@
+.publicationSpace {
+    background-color: rgb(255, 255, 255);
+}
+
+.publicationSpace:hover {
+    border-color: rgb(196, 192, 192);
+    background-color: rgb(248 249 251);
+    cursor: pointer;
+}
