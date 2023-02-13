@@ -185,7 +185,7 @@ const BlogDisplay = () => {
                     {edit && (
                       <NavLink
                         to={`/blogs/${blog.url}/edit`}
-                        className="btn btn-outline-primary btn-sm mx-1"
+                        className="btn btn-primary btn-sm mx-1"
                       >
                         Edit{" "}
                       </NavLink>
@@ -196,7 +196,7 @@ const BlogDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#delete"
-                          className="btn btn-outline-danger btn-sm mx-1"
+                          className="btn btn-danger btn-sm mx-1"
                         >
                           {" "}
                           Delete
@@ -221,14 +221,14 @@ const BlogDisplay = () => {
                               <div className="modal-footer">
                                 <button
                                   type="button"
-                                  className="btn btn-outline-secondary"
+                                  className="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                 >
                                   No
                                 </button>
                                 <button
                                   type="button"
-                                  className="btn btn-outline-primary"
+                                  className="btn btn-primary"
                                   data-bs-dismiss="modal"
                                   onClick={() => {
                                     deleteBlog(true);
@@ -248,7 +248,7 @@ const BlogDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#approveOrReject"
-                          className={`btn btn-outline-${blog.approvalStatus === "submit"
+                          className={`btn btn-${blog.approvalStatus === "submit"
                             ? "success"
                             : blog.approvalStatus === "pending"
                               ? "warning"
@@ -281,14 +281,14 @@ const BlogDisplay = () => {
                               <div className="modal-footer">
                                 <button
                                   type="button"
-                                  className="btn btn-outline-secondary"
+                                  className="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                 >
                                   Close
                                 </button>
                                 <button
                                   type="button"
-                                  className="btn btn-outline-primary"
+                                  className="btn btn-primary"
                                   data-bs-dismiss="modal"
                                   onClick={() => {
                                     ApproveOrReject(true);
@@ -298,7 +298,7 @@ const BlogDisplay = () => {
                                 </button>
                                 <button
                                   type="button"
-                                  className="btn btn-outline-danger"
+                                  className="btn btn-danger"
                                   data-bs-dismiss="modal"
                                   onClick={() => {
                                     ApproveOrReject(false);
@@ -317,7 +317,7 @@ const BlogDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#submitForApproval"
-                          className={`btn btn-outline-${blog.approvalStatus === "submit"
+                          className={`btn btn-${blog.approvalStatus === "submit"
                             ? "success"
                             : blog.approvalStatus === "pending"
                               ? "warning"
@@ -350,14 +350,14 @@ const BlogDisplay = () => {
                               <div className="modal-footer">
                                 <button
                                   type="button"
-                                  className="btn btn-outline-secondary"
+                                  className="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                 >
                                   No
                                 </button>
                                 <button
                                   type="button"
-                                  className="btn btn-outline-primary"
+                                  className="btn btn-primary"
                                   data-bs-dismiss="modal"
                                   onClick={() => {
                                     ChangeApprovalStatus(true);
@@ -373,7 +373,7 @@ const BlogDisplay = () => {
                     ) : (
                       <button
                         rel="noreferrer"
-                        className={`btn btn-outline-${blog.approvalStatus === "submit"
+                        className={`btn btn-${blog.approvalStatus === "submit"
                           ? "success"
                           : blog.approvalStatus === "pending"
                             ? "warning"
@@ -393,7 +393,7 @@ const BlogDisplay = () => {
                           rel="noreferrer"
                           data-bs-toggle="modal"
                           data-bs-target="#publicOrPrivate"
-                          className={`btn btn-outline-${blog.public ? "warning" : "success"
+                          className={`btn btn-${blog.public ? "warning" : "success"
                             } btn-sm mx-1 ${blog.approvalStatus === "Rejected" ? "disabled" : ""
                             }`}
                         >
@@ -422,14 +422,14 @@ const BlogDisplay = () => {
                               <div className="modal-footer">
                                 <button
                                   type="button"
-                                  className="btn btn-outline-secondary"
+                                  className="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                 >
                                   No
                                 </button>
                                 <button
                                   type="button"
-                                  className="btn btn-outline-primary"
+                                  className="btn btn-primary"
                                   data-bs-dismiss="modal"
                                   onClick={() => {
                                     TogglePublic(true);

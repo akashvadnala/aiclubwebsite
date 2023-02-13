@@ -112,7 +112,7 @@ function TeamLogin(props) {
               {signin ? (
                 <button
                   type="submit"
-                  className="cust btn btn-outline-primary btn-outline-block mb-4"
+                  className="cust btn btn-primary btn-block mb-4"
                   disabled
                 >
                   Signing in<i className="fa fa-spinner fa-spin"></i>
@@ -120,7 +120,7 @@ function TeamLogin(props) {
               ) : (
                 <button
                   type="submit"
-                  className="cust btn btn-outline-primary btn-outline-block mb-4"
+                  className="cust btn btn-primary btn-block mb-4"
                   onClick={Login}
                 >
                   Sign in
@@ -129,7 +129,7 @@ function TeamLogin(props) {
             </form>
             <button
               type="reset"
-              className="cust btn btn-outline-danger btn-outline-block mb-4 mx-4"
+              className="cust btn btn-danger btn-block mb-4 mx-4"
               onClick={() => {
                 setReset(!reset);
                 setMsg("");
@@ -161,7 +161,7 @@ function TeamLogin(props) {
               </div>
               <button
                 type="submit"
-                className="cust btn btn-outline-primary btn-outline-block mb-4"
+                className="cust btn btn-primary btn-block mb-4"
               >
                 Reset Password{
                   showSpinner && <i className="fa fa-spinner fa-spin"></i>
@@ -170,7 +170,7 @@ function TeamLogin(props) {
             </form>
             <button
               type="reset"
-              className="cust btn btn-outline-danger btn-outline-block mb-4 mx-4"
+              className="cust btn btn-danger btn-block mb-4 mx-4"
               onClick={() => {
                 setReset(!reset);
                 setMsg("");

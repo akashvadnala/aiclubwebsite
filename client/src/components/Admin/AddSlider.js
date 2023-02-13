@@ -3,74 +3,65 @@ import React, { useState } from 'react'
 import { SERVER_URL } from '../../EditableStuff/Config';
 
 const AddSlider = () => {
-    const [ xSlider, setXSlider ] = useState({
-        photo:"",
-        title:"",
-        caption1:"",
-        caption2:"",
-        link:"",
-        textcolor:"",
-        index:""
+    const [xSlider, setXSlider] = useState({
+        photo: "",
+        title: "",
+        caption1: "",
+        caption2: "",
+        link: "",
+        textcolor: "",
+        index: ""
     });
-    const [photo,setPhoto] = useState("");
+    const [photo, setPhoto] = useState("");
     const handlePhoto = (e) => {
-        console.log('photo',e.target.files[0]);
+        console.log('photo', e.target.files[0]);
         setXSlider({ ...xSlider, ["photo"]: e.target.files[0] });
         setPhoto(URL.createObjectURL(e.target.files[0]));
     };
 
     const handleInput = (e) => {
-        setXSlider({...xSlider,[e.target.name]: e.target.value});
+        setXSlider({ ...xSlider, [e.target.name]: e.target.value });
     }
-    const [add,setAdd] = useState(0);
+    const [add, setAdd] = useState(0);
     const addSlider = async (e) => {
         e.preventDefault();
         // console.log('adding');
         setAdd(1);
         const photo = xSlider.photo;
         const data = new FormData();
-        const photoname = Date.now() + photo.name;
-        data.append("name",photoname);
-        data.append("photo",photo);
-        var imgurl;
+        data.append("photo", photo);
         // console.log('photoname',photoname);
-        try{
-            const img = await axios.post(`${SERVER_URL}/imgupload`,data);
+        try {
+            const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
             // console.log('img',img);
-            imgurl = img.data;
-            xSlider.photo=imgurl;
-        }catch(err){
-            console.log('photoerr',err);
+            xSlider.photo = img.data;
+        } catch (err) {
+            console.log('photoerr', err);
         }
-        console.log('imgurl',imgurl);
 
-        try{
+        try {
             const data = await axios.post(`${SERVER_URL}/addSlider`,
                 xSlider,
                 {
-                    headers:{"Content-Type" : "application/json"}
+                    headers: { "Content-Type": "application/json" }
                 }
             );
-            if(data.status===200){
-                // getSlides();
-                document.getElementById("modalClose"). click();
-                console.log(`${xSlider.title} is Added`);
-                setAdd(0);
-                setXSlider({...xSlider,
-                    photo:"",
-                    title:"",
-                    caption1:"",
-                    caption2:"",
-                    link:"",
-                    textcolor:"",
-                    index:""
-                });
-            }
-            else{
-                setAdd(0);
-            }
-        }catch(err){
-            console.log('err',err);
+            document.getElementById("modalClose").click();
+            console.log(`${xSlider.title} is Added`);
+            setAdd(0);
+            setXSlider({
+                ...xSlider,
+                photo: "",
+                title: "",
+                caption1: "",
+                caption2: "",
+                link: "",
+                textcolor: "",
+                index: ""
+            });
+        } catch (err) {
+            console.log('err', err);
+            setAdd(0);
         }
     }
     return (
@@ -115,7 +106,7 @@ const AddSlider = () => {
                     </div>
                 </div>
                 <div className="modal-footer">
-                    <button type="reset" id="modalClose" className="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal"
+                    <button type="reset" id="modalClose" className="btn btn-sm btn-secondary" data-bs-dismiss="modal"
                         onClick={() => {
                             setXSlider({
                                 photo: "",
@@ -129,11 +120,15 @@ const AddSlider = () => {
                             setPhoto("");
                         }}
                     >Cancel</button>
-                    <button type="submit" className="btn btn-sm btn-outline-primary">
-                        {
-                            add ? <span>Adding <i className="fa fa-spinner fa-spin"></i></span> : <span>Add</span>
-                        }
-                    </button>
+                    {
+                        add ?
+                            <button type="submit" className="btn btn-sm btn-primary" disabled>
+                                <span>Adding <i className="fa fa-spinner fa-spin"></i></span>
+                            </button>
+                            : <button type="submit" className="btn btn-sm btn-primary">
+                                <span>Add</span>
+                            </button>
+                    }
                 </div>
             </form>
 

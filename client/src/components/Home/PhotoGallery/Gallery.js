@@ -42,8 +42,8 @@ const PhotoGallery = ({photos}) => {
   // }, []);
 
   return (
-    <div className="gallery-container adjust">
-      <h3 className="py-3 text-center">Image Gallery</h3>
+    <div className="gallery-container py-5 adjust">
+      <h3 className="pb-3 text-center">Image Gallery</h3>
       <PhotoAlbum
         layout="rows"
         photos={photos}

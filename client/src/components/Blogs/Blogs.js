@@ -89,7 +89,7 @@ const Blogs = () => {
                       <NavLink
                         rel="noreferrer"
                         to="/blogapprovals"
-                        className="btn btn-sm btn-outline-secondary mx-1"
+                        className="btn btn-sm btn-secondary mx-1"
                       >
                         Approvals
                       </NavLink>
@@ -97,13 +97,13 @@ const Blogs = () => {
                     <NavLink
                       rel="noreferrer"
                       to="/myblogs"
-                      className="btn btn-sm btn-outline-primary mx-1"
+                      className="btn btn-sm btn-primary mx-1"
                     >
                       My Blogs
                     </NavLink>
                     <NavLink
                       type="button"
-                      className="btn btn-sm btn-outline-success"
+                      className="btn btn-sm btn-success"
                       to="/addblog"
                     >
                       <svg

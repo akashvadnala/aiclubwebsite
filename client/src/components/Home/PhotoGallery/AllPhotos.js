@@ -206,7 +206,7 @@ const AllPhotos = () => {
                     <button
                       type="button"
                       name="submit"
-                      className="btn btn-sm btn-outline-danger ms-2"
+                      className="btn btn-sm btn-danger ms-2"
                       onClick={handleDelete}
                     >
                       {del ? (
@@ -222,7 +222,7 @@ const AllPhotos = () => {
                 ) : (
                   <button
                     type="button"
-                    className="btn btn-sm btn-outline-warning"
+                    className="btn btn-sm btn-warning"
                     onClick={() => setCanDelete(true)}
                   >
                     Enable Delete
@@ -235,7 +235,7 @@ const AllPhotos = () => {
             {user && user.isadmin ? (
               <button
                 type="button"
-                className="btn btn-outline-success btn-outline-rounded btn-sm my-3"
+                className="btn btn-success btn-rounded btn-sm my-3"
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"
               >
@@ -273,7 +273,7 @@ const AllPhotos = () => {
               </h1>
               <button
                 type="button"
-                className="btn-outline-close"
+                className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -308,7 +308,7 @@ const AllPhotos = () => {
                   type="submit"
                   name="submit"
                   id="submit"
-                  className="btn btn-outline-primary"
+                  className="btn btn-primary"
                 >
                   {add ? (
                     <>
@@ -320,7 +320,7 @@ const AllPhotos = () => {
                   )}
                 </button>
                 {/* <div className="modal-footer">
-                      <button type="button" className="btn btn-outline-primary" data-bs-dismiss="modal">Upload</button>
+                      <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Upload</button>
                     </div> */}
               </form>
             </div>

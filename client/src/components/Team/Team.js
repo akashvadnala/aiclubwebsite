@@ -82,7 +82,7 @@ function Team() {
                               Archieved
                             </NavLink>
                         }
-                        <NavLink className='btn btn-outline-primary mx-2' to='/team/add'>
+                        <NavLink className='btn btn-primary mx-2' to='/team/add'>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"

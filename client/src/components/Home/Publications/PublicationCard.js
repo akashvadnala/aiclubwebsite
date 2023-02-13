@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 function PublicationCard(props) {
   return (
-    <div className="publication-card card">
+    <div className="publication-home-card card">
       <div className="card-body text-center">
         <h5 className="card-title">
           <strong>{props.publication.title}</strong>
@@ -14,11 +14,11 @@ function PublicationCard(props) {
         </h6>
         <NavLink
           to={"/projects/" + props.publication.url}
-          className="btn btn-outline-primary mt-2"
+          className="btn btn-sm btn-primary mt-2"
         >
           View Project
         </NavLink>
-        <button className="btn btn-outline-danger mx-2 mt-2">
+        <button className="btn btn-sm btn-danger mx-2 mt-2">
           <a
             href={props.publication.researchPaperLink}
             target="_blank"

@@ -56,7 +56,7 @@ const Events = () => {
                 <NavLink
                   rel="noreferrer"
                   to="/addevent"
-                  className="btn btn-sm btn-outline-success"
+                  className="btn btn-sm btn-success"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
