@@ -58,7 +58,7 @@ const ProjectApprovals = () => {
                     <NavLink
                       rel="noreferrer"
                       to="/projects"
-                      className="btn btn-sm btn-outline-primary mx-1"
+                      className="btn btn-sm btn-primary mx-1"
                     >
                       All Projects
                     </NavLink>
@@ -66,7 +66,7 @@ const ProjectApprovals = () => {
                     <NavLink
                       rel="noreferrer"
                       to="/addproject"
-                      className="btn btn-sm btn-outline-success"
+                      className="btn btn-sm btn-success"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

@@ -190,7 +190,7 @@ const Profile = () => {
                                             editMode &&
                                             <>
                                                 <label for="photo" style={{ height: "50px" }}>
-                                                    <button type="button" className="btn btn-sm btn-outline-primary mt-2">Change Profile Pic</button>
+                                                    <button type="button" className="btn btn-sm btn-primary mt-2">Change Profile Pic</button>
                                                     <input type='file' accept="image/*" name="photo" onChange={handlePhoto} style={{ opacity: 0, zIndex: 10, position: "relative", top: "-40px" }} className="form-control form-control-sm mt-2" id='photo' aria-describedby='photo' />
                                                 </label>
                                             </>
@@ -208,7 +208,7 @@ const Profile = () => {
                                             </>
                                         }
                                         <div className="d-flex justify-content-center mb-2">
-                                            {/* <button type="button" className="btn btn-outline-primary">Edit</button> */}
+                                            {/* <button type="button" className="btn btn-primary">Edit</button> */}
                                             {
                                                 editMode ?
                                                     <>
@@ -219,16 +219,16 @@ const Profile = () => {
                                                         }} className="btn btn-sm ms-1">Cancel</button>
                                                         {
                                                             pChange ?
-                                                                <button type="button" className="btn btn-sm btn-outline-success ms-1" disabled>Saving <i className="fa fa-spinner fa-spin"></i></button>
+                                                                <button type="button" className="btn btn-sm btn-success ms-1" disabled>Saving <i className="fa fa-spinner fa-spin"></i></button>
                                                                 :
-                                                                <button type="button" onClick={UpdateTeam} className="btn btn-sm btn-outline-success ms-1">Save Profile</button>
+                                                                <button type="button" onClick={UpdateTeam} className="btn btn-sm btn-success ms-1">Save Profile</button>
                                                         }
 
                                                     </>
                                                     :
                                                     <>
-                                                        <button type="button" onClick={() => setEditMode(true)} className="btn btn-sm btn-outline-primary ms-1"><i className="fas fa-edit"></i> Edit Profile</button>
-                                                        <button type="button" className="btn btn-sm btn-outline-danger ms-1" data-bs-toggle="modal" data-bs-target="#passwordModal" onClick={() => setMsg("")}>Change Password</button>
+                                                        <button type="button" onClick={() => setEditMode(true)} className="btn btn-sm btn-primary ms-1"><i className="fas fa-edit"></i> Edit Profile</button>
+                                                        <button type="button" className="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#passwordModal" onClick={() => setMsg("")}>Change Password</button>
                                                         <div className="modal fade" id="passwordModal" tabIndex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
                                                             <div className="modal-dialog">
                                                                 <div className="modal-content">
@@ -249,7 +249,7 @@ const Profile = () => {
                                                                             </div>
                                                                         </div>
                                                                         <div className="modal-footer">
-                                                                            <button type="reset" id="modalClose" className="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal"
+                                                                            <button type="reset" id="modalClose" className="btn btn-sm btn-secondary" data-bs-dismiss="modal"
                                                                                 onClick={() => {
                                                                                     setPassword("");
                                                                                     setNewPassword("");
@@ -259,10 +259,10 @@ const Profile = () => {
                                                                             >Cancel</button>
                                                                             {
                                                                                 change ?
-                                                                                    <button type="submit" onClick={changePassword} className="btn btn-sm btn-outline-primary" disabled>
+                                                                                    <button type="submit" onClick={changePassword} className="btn btn-sm btn-primary" disabled>
                                                                                         <span>Updating <i className="fa fa-spinner fa-spin"></i></span>
                                                                                     </button>
-                                                                                    : <button type="submit" onClick={changePassword} className="btn btn-sm btn-outline-primary">
+                                                                                    : <button type="submit" onClick={changePassword} className="btn btn-sm btn-primary">
                                                                                         Update
                                                                                     </button>
                                                                             }

@@ -44,23 +44,23 @@ const EventSpace = (props) => {
               <h5 className="card-title">
                 <strong>{props.event.title}</strong>
               </h5>
-              <p className="card-text">
+              {props.event.speakers.length>0 && <p className="card-text">
                 by <strong>{props.event.speakers.join(", ")}</strong>
-              </p>
+              </p>}
             </div>
           </div>
 
           <div className="col-md-4 align-self-center">
             <div className="card-body">
-              <p className="card-text mb-1">
+              <p className="card-text mb-1 text-success">
                 Start - {convertTime2String(props.event.eventStart)}
               </p>
-              <p className="card-text mb-1">
+              <p className="card-text mb-1 text-success">
                 End &nbsp;- {convertTime2String(props.event.eventEnd)}
               </p>
-              {props.event.eventLocation === "" ? (
+              {props.event.eventLink !== "" && (
                 <p
-                  className="card-text mb-1"
+                  className="card-text mb-1 text-primary"
                   id="link"
                   type="button"
                   data-bs-toggle="tooltip"
@@ -81,8 +81,9 @@ const EventSpace = (props) => {
                   </svg>
                   Event Link
                 </p>
-              ) : (
-                <p className="card-text">
+              )}
+              {props.event.eventLocation!=="" && (
+                <p className="card-text text-primary">
                   {" "}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +105,7 @@ const EventSpace = (props) => {
             <NavLink
             rel="noreferrer"
             to={`/events/${props.event.url}`}
-            className="btn btn-outline-secondary btn-sm m-1"
+            className="btn btn-primary btn-sm m-1"
           >
             VIEW MORE{" "}
               <svg

@@ -192,7 +192,7 @@ const AddProject = () => {
                           {user._id !== t.id && (
                             <input
                               type="reset"
-                              className="btn btn-outline-danger"
+                              className="btn btn-danger"
                               onClick={() => removeXAuthor(t.id)}
                               value="Remove"
                             />
@@ -219,7 +219,7 @@ const AddProject = () => {
                     <div className="col col-3">
                       <button
                         type="reset"
-                        className="btn btn-outline-success"
+                        className="btn btn-success"
                         onClick={AddXAuthor}
                       >
                         <svg
@@ -257,11 +257,11 @@ const AddProject = () => {
               </div>
               {
                 add ?
-                  <button type="submit" name="submit" className="btn btn-outline-primary" disabled>
+                  <button type="submit" name="submit" className="btn btn-primary" disabled>
                     Creating <i className="fa fa-spinner fa-spin"></i>
                   </button>
                   :
-                  <button type="submit" name="submit" className="btn btn-outline-primary">
+                  <button type="submit" name="submit" className="btn btn-primary">
                     Create
                   </button>
               }

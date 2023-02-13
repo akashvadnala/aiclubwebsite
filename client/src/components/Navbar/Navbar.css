@@ -128,7 +128,7 @@ ul{
     border-bottom: none;
 }
 
-.modal-dialog .modal-content .modal-header .btn-outline-close{
+.modal-dialog .modal-content .modal-header .btn-close{
     padding: 10px 10px 0 0;
 }
 .modal-dialog .modal-content .modal-body{

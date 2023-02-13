@@ -4,9 +4,9 @@ import ProjectsHome from './ProjectsHome/ProjectsHome';
 
 const Activities = ({events, projects}) => {
   return (
-      <div className='activities-container adjust'>
+      <div className='activities-container py-5 adjust'>
           <div className='row'>
-              <h3 className='text-center py-3'>Activities</h3>
+              <h3 className='text-center pb-3'>Activities</h3>
               <div className='col-md-6 col-xs-12'>
                 <EventsHome events={events} />
               </div>

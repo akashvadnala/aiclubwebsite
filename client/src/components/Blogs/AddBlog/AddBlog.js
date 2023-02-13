@@ -160,7 +160,7 @@ const AddBlog = () => {
                         <div className="col col-3">
                           <input
                             type="reset"
-                            className="btn btn-outline-danger"
+                            className="btn btn-danger"
                             onClick={() => removeXtag(a)}
                             value="Remove"
                           />
@@ -184,7 +184,7 @@ const AddBlog = () => {
                     <div className="col col-3">
                       <button
                         type="reset"
-                        className="btn btn-outline-success"
+                        className="btn btn-success"
                         onClick={AddXtag}
                       >
                         <svg
@@ -221,11 +221,11 @@ const AddBlog = () => {
               </div>
               {
                 add ?
-                  <button type="submit" name="submit" id="submit" className="btn btn-outline-primary" disabled>
+                  <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
                     Creating <i className="fa fa-spinner fa-spin"></i>
                   </button>
                   :
-                  <button type="submit" name="submit" id="submit" className="btn btn-outline-primary">
+                  <button type="submit" name="submit" id="submit" className="btn btn-primary">
                     Create
                   </button>
               }
