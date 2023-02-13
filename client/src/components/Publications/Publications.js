@@ -37,19 +37,19 @@ const Publications = () => {
       {load === 0 ? (
         <Loading />
       ) : load === 1 ? (
-        <div className="publications-container container">
+        <div className="publications-container adjust pt-4">
           <Helmet>
             <title>Publications - AI Club</title>
           </Helmet>
-          <div className="row py-4">
-            <div className="col-md-4 text-center text-md-start">
+          <div className="row">
+            <div className="col-md-4 text-center text-md-start pb-3">
               <h2>Publications</h2>
             </div>
             {publications.length ? (
               <div className="row">
                 {publications.map((publication, i) => {
                   return (
-                    <div className="col-12 pb-3 px-3" key={i}>
+                    <div className="col-12 pb-4 px-3" key={i}>
                       <PublicationSpace publication={publication} />
                     </div>
                   );
