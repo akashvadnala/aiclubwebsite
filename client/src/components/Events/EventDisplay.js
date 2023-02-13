@@ -152,7 +152,7 @@ const EventDisplay = () => {
                   {event.eventLink !== "" &&
                     <>
                       <a href={event.eventLink}>
-                        <button type="button" className="btn btn-sm btn-outline-success mt-2">
+                        <button type="button" className="btn btn-sm btn-success mt-2">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
