@@ -1,9 +1,5 @@
-.publications-container .carousel .carousel-inner .carousel-item {
-  /* height: 200px; */
-}
-
-.publications-container{
-  /* background-color: #85DCB8; */
+.publications-container .carousel-indicators{
+  display: none;
 }
 
 .publication-home-card .card-body .card-title{
