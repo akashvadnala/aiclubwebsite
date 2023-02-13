@@ -31,10 +31,6 @@ const storage = multer.diskStorage({
 })
 
 router.route('/imgupload').post(multer({ storage }).single('photo'), async (req, res) => {
-    // if(req.file === null){
-    //     return res.status(400).json({ msg: "No file uploaded" });
-    // }
-    // console.log('files', req.file);
     const file = req.file.path;
     const name = req.file.filename;
     const mimeType = req.file.mimetype;
@@ -120,12 +116,32 @@ router.route('/teamadd').post(authenticate, async (req, res) => {
 
 router.route('/getTeams').get(async (req, res) => {
     let teams = [];
-    const team = await Team.find({ ismember: true });
+    const team = await Team.find({ ismember: true,isalumni:false });
     await Promise.all(team.map(t => {
         teams.push({ id: t._id, name: `${t.firstname} ${t.lastname}` })
     }))
     return res.status(200).json(teams);
 });
+
+router.route('/getTeamIds').get(async (req,res)=>{
+    const ids = await Team.find({ismember:true,isalumni:false}).select("_id");
+    res.status(200).json(ids);
+});
+
+router.route('/sortTeams').put(async (req,res)=>{
+    const {ids} = req.body;
+    let count=1;
+    // let teams = await Team.find({ismember:true,isalumni:false});
+    await Promise.all(
+        ids.map(async id=>{
+            let team = await Team.findById(id);
+            team.orderIndex = count;
+            await team.save();
+            count++;
+        })
+    )
+    res.status(200).json();
+})
 
 router.route('/getTeam/:year').get(async (req, res) => {
     let teamData = [];
