@@ -30,6 +30,7 @@ import MyBlogs from './components/Blogs/myBlogs';
 import Profile from './components/Profile/profile';
 import ForgetPassword from './components/Navbar/ForgetPassword';
 import Publications from './components/Publications/Publications';
+import TeamHead from './components/Team/TeamHead';
 
 const Routing = () => {
 
@@ -39,7 +40,7 @@ const Routing = () => {
         <Route exact path='/' element={<Home />} />
         
         {/* Team */}
-        <Route exact path='/team' element={<Team />} />
+        <Route exact path='/team' element={<TeamHead />} />
         <Route exact path='/team/edit/:username' element={<TeamUpdate />} />
         <Route exact path='/team/add' element={<TeamAdd />} />
 

@@ -1,5 +1,6 @@
 .admin-container .slider-card:hover{
     background-color: rgba(240,240,240,.7);
+    cursor: pointer;
 }
 .admin-container .slider-card-in{
     border: 0 !important;
@@ -14,21 +15,6 @@
     text-align: center;
 }
 
-
-.admin-container .swap{
-    background-color: rgba(220,220,220,.7);
-    border-radius: 15px;
-    position:relative;
-    top:15px;
-    overflow:hidden;
-    width:50px;
-    height: 107px;
-}
-
-.admin-container .actual-card{
-    width: calc(100% - 45px);
-}
-
 .admin-container .actual-card img{
     height:100px;
     width: 150px;
@@ -36,12 +22,4 @@
 
 .admin-container .actual-card .card-body{
     width: calc(100% - 150px);
-}
-
-.admin-container .swap .arrow:first-child{
-    border-bottom: solid 1px rgb(200,200,200);
-}
-
-.admin-container .swap .arrow:hover{
-    background-color: rgba(220,220,220,.7);
 }

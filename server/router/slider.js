@@ -23,7 +23,7 @@ router.route('/addSlider').post(authenticate,async (req,res)=>{
         console.log(`${slide.title} added`);
         res.status(200).json();
     }catch(err){
-        console.log(err);
+        console.log('err',err);
         res.status(500).json({error:"Internal server error"});
     }
 });
@@ -47,7 +47,7 @@ router.route('/updateSlider/:id').put(authenticate,async (req,res)=>{
     }    
 });
 
-router.route('/deleteSlider/:id').post(authenticate,async (req,res)=>{
+router.route('/deleteSlider/:id').delete(authenticate,async (req,res)=>{
     try{
         await Slider.findByIdAndDelete(req.params.id);
         res.status(200).json();

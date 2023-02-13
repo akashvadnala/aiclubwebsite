@@ -54,8 +54,7 @@ router.route('/imgdelete').post(authenticate, async (req, res) => {
         await File.deleteOne({ imgurl: { url } });
         console.log('Old Image Deleted');
         res.status(200).json({ "msg": "Image deleted sucessfully" });
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
         res.status(422).json({ "msg": "Error while deleting Images" })
     }
 });
@@ -109,35 +108,33 @@ router.route('/teamadd').post(authenticate, async (req, res) => {
         res.status(200).json({ message: "user Login Successfully" });
 
     } catch (err) {
-        console.log('err', err);
         res.status(400).json({ error: "Internal server error" });
     }
 });
 
 router.route('/getTeams').get(async (req, res) => {
     let teams = [];
-    const team = await Team.find({ ismember: true,isalumni:false });
+    const team = await Team.find({ ismember: true,isalumni:false }).sort({orderIndex:1});
     await Promise.all(team.map(t => {
         teams.push({ id: t._id, name: `${t.firstname} ${t.lastname}` })
     }))
     return res.status(200).json(teams);
 });
 
-router.route('/getTeamIds').get(async (req,res)=>{
-    const ids = await Team.find({ismember:true,isalumni:false}).select("_id");
-    res.status(200).json(ids);
+router.route('/getTeamList').get(async (req,res)=>{
+    const teams = await Team.find({ismember:true,isalumni:false}).sort({orderIndex:1}).select("_id firstname lastname username position");
+    res.status(200).json(teams);
 });
 
 router.route('/sortTeams').put(async (req,res)=>{
-    const {ids} = req.body;
+    const {teams} = req.body;
     let count=1;
     // let teams = await Team.find({ismember:true,isalumni:false});
     await Promise.all(
-        ids.map(async id=>{
-            let team = await Team.findById(id);
-            team.orderIndex = count;
+        teams.map(async ({_id},index)=>{
+            let team = await Team.findById(_id);
+            team.orderIndex = index;
             await team.save();
-            count++;
         })
     )
     res.status(200).json();
@@ -149,16 +146,16 @@ router.route('/getTeam/:year').get(async (req, res) => {
     const d = new Date();
     var y = d.getFullYear();
     if (parseInt(year) === y + 1) {
-        teamData = await Team.find({ ismember: true, isalumni: false });
+        teamData = await Team.find({ ismember: true, isalumni: false }).sort({orderIndex:1});
     }
     else {
-        teamData = await Team.find({ ismember: true, isalumni: true, year: year });
+        teamData = await Team.find({ ismember: true, isalumni: true, year: year }).sort({orderIndex:1});
     }
     res.status(200).json(teamData);
 });
 
 router.route('/getArchTeam').get(async (req, res) => {
-    const teamData = await Team.find({ ismember: false });
+    const teamData = await Team.find({ ismember: false }).sort({orderIndex:1});
     res.status(200).json(teamData);
 });
 
@@ -176,7 +173,6 @@ router.route('/getUserDataForEdit/:username').get(async (req, res) => {
             return res.status(400).json({ error: "User not found" });
         }
     } catch (err) {
-        console.log(err);
         res.status(400).json({ error: "User not found" });
     }
 });
@@ -209,11 +205,9 @@ router.route('/changePassword/:id').put(authenticate, async (req, res) => {
 
         bcrypt.compare(password, team.password, async (err, isMatch) => {
             if (!isMatch) {
-                console.log('Invalid Credentials');
                 return res.status(201).json({ error: "Invalid Credentials" });
             }
             else {
-                console.log('Changing password..')
                 const saltRounds = 10;
                 team.password = await bcrypt.hash(newPassword, saltRounds);
                 team.tokens = [];
