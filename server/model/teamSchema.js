@@ -87,6 +87,9 @@ const teamSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    orderIndex:{
+        type: Number,
+    },
     tokens: [
         {
             token: {
