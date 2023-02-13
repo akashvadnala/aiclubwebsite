@@ -144,7 +144,7 @@ router.get("/reset-password/:id/:token", async (req, res) => {
     }
 });
 
-router.put("/reset-password/:id/:token",authenticate, async (req, res) => {
+router.put("/reset-password/:id/:token", async (req, res) => {
     const { id, token } = req.params;
     const { password } = req.body;
 
