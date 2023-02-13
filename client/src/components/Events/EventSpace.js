@@ -106,7 +106,7 @@ const EventSpace = (props) => {
             <NavLink
             rel="noreferrer"
             to={`/events/${props.event.url}`}
-            className="btn btn-primary btn-sm m-1"
+            className="btn btn-dark btn-sm m-1"
           >
             VIEW MORE{" "}
               <svg

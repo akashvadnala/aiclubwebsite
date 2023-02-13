@@ -63,10 +63,10 @@ function Team() {
         <div className='head-img'>
           <h1>Team Members</h1>
         </div>
-          <div className='container team'>
-              <div className='row align-items-center pt-3'>
-                <div className='col-12 col-md-4 text-center text-md-start'>
-                  <h3>{archTeam && <span>Archieved</span>} Team Members</h3>
+          <div className='container team py-4'>
+              <div className='row align-items-center pb-1'>
+                <div className='col-12 col-md-4 align-items-center h3 pt-3 text-center text-md-start'>
+                  {archTeam && <span>Archieved</span>} Team Members
                 </div>
                 <div className='col-12 col-md-5 text-center text-md-end align-items-center'>
                   {
