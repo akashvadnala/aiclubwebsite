@@ -8,9 +8,11 @@ require("../db/conn");
 router.route("/updateProject/:id").put(authenticate, async (req, res) => {
   try {
     const { id } = req.params;
+    const projectdata = req.body;
+    projectdata.url = projectdata.url.trim().replace(/\s+/g, '-').toLowerCase();
     const proj = await Project.findById(id);
     let removeAuthors = proj.authors;
-    const updatedProj = await Project.findByIdAndUpdate(id, req.body, {
+    const updatedProj = await Project.findByIdAndUpdate(id, projectdata, {
       new: true,
     });
     let insertAuthors = updatedProj.authors;
@@ -64,7 +66,9 @@ router.route("/updateprojApprovalStatus/:url").put(authenticate, async (req, res
 });
 
 router.route("/projectAdd").post(authenticate, async (req, res) => {
-  const proj = new Project(req.body);
+  const projectdata = req.body;
+  projectdata.url = projectdata.url.trim().replace(/\s+/g, '-').toLowerCase();
+  const proj = new Project(projectdata);
   proj.save().then(async (project) => {
     await Promise.all(
       project.authors.map(async (author) => {
@@ -75,7 +79,7 @@ router.route("/projectAdd").post(authenticate, async (req, res) => {
         }
       })
     );
-    res.status(200).json();
+    res.status(200).json({url:proj.url});
   }).catch((err) => {
     res.status(500).json({ error: "Cannot Add Project!" });
   })
