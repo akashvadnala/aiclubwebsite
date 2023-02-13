@@ -70,7 +70,7 @@ const AddBlog = () => {
         headers: { "Content-Type": "application/json" },
         withCredentials: true
       });
-      navigate(`/blogs/${post.url}/edit`);
+      navigate(`/blogs/${blogdata.data.url}/edit`);
       showAlert("Blog added sucessfully!", "success");
     } catch (error) {
       showAlert(`${error.response.data.error}`, "danger");

@@ -100,7 +100,7 @@ const AddProject = () => {
         headers: { "Content-Type": "application/json" },
       });
       showAlert("Project Created Successfully!", "success");
-      navigate(`/projects/${proj.url}/edit`);
+      navigate(`/projects/${projdata.data.url}/edit`);
     }
     catch (err) {
       console.log(err);

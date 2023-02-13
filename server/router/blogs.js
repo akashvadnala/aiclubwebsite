@@ -7,7 +7,9 @@ const authenticate = require("../middleware/authenticate");
 router.route("/updateBlog/:id").put(authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, {
+    const blogdata = req.body;
+    blogdata.url = blogdata.url.trim().replace(/\s+/g, '-').toLowerCase();
+    const updatedBlog = await Blog.findByIdAndUpdate(id, blogdata, {
       new: true,
     });
     console.log("Blog Updated");
@@ -56,11 +58,13 @@ router.route("/addBlog").post(authenticate, async (req, res) => {
   }
   try {
     // console.log('blog',req.body);
-    const blog = new Blog(req.body);
+    const blogdata = req.body;
+    blogdata.url = blogdata.url.trim().replace(/\s+/g, '-').toLowerCase();
+    const blog = new Blog(blogdata);
     await blog.save();
 
     console.log(`${blog.title} blog created successfully`);
-    res.status(201).json({ message: "Blog posting Successful" });
+    res.status(201).json({ message: "Blog posting Successful" , url:blog.url});
   } catch (err) {
     console.log("err", err);
     res.status(500).json({ error: "Problem at server" });

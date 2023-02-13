@@ -12,3 +12,11 @@
     color: rgb(214, 81, 29);
     cursor: pointer;
 }
+
+.card-title{
+    /* width: 325px;
+    font-size: 0.85em; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
