@@ -156,7 +156,7 @@ const AddEvent = () => {
                     className="form-control"
                     id="title"
                     aria-describedby="title"
-                    placeholder="Enter Blog Title"
+                    placeholder="Enter Event Title"
                     required
                   />
                 </div>
@@ -183,7 +183,7 @@ const AddEvent = () => {
                       className="form-control"
                       id="basic-url"
                       aria-describedby="basic-addon3"
-                      placeholder="Enter Blog Url"
+                      placeholder="Enter Event Url"
                       required
                     />
                   </div>
