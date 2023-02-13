@@ -3,7 +3,7 @@ import JoditEditor from "jodit-react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { SERVER_URL } from "../EditableStuff/Config";
 import { Context } from "../Context/Context";
-import {alertContext} from "../Context/Alert";
+import { alertContext } from "../Context/Alert";
 import Error from "./Error";
 import Loading from "./Loading";
 import "./About.css";
@@ -34,13 +34,13 @@ const About = () => {
   }, [user]);
 
   const handleValue = (value) => {
-    setAbout({...about,['about']:value});
+    setAbout({ ...about, ['about']: value });
   };
   const showPreview = () => {
-    if(desc!==about.about){
+    if (desc !== about.about) {
       setSave(true);
     }
-    else{
+    else {
       setSave(false);
     }
     setPreview(true);
@@ -49,16 +49,16 @@ const About = () => {
     setPreview(false);
   };
   const cancelIt = () => {
-    setAbout({...about,['about']:desc});
+    setAbout({ ...about, ['about']: desc });
     setSave(false);
     setPreview(true);
   };
   const saveIt = () => {
     axios.put(`${SERVER_URL}/updateAbout/${about._id}`,
-    about, 
-    {
-      headers: { "Content-Type": "application/json" },
-    });
+      about,
+      {
+        headers: { "Content-Type": "application/json" },
+      });
     showAlert("Saved", "success");
     setSave(false);
     setPreview(true);
@@ -77,35 +77,35 @@ const About = () => {
               </div>
               <div className="col-sm-4 text-end">
                 {user && user.isadmin ? (
-                   preview ? (
+                  preview ? (
                     <>
                       <button
-                        className="btn btn-outline-dark btn-sm mx-1"
+                        className="btn btn-primary btn-sm mx-1"
                         onClick={showEdit}
                       >
                         Edit
                       </button>
                       {save && <button
-                        className="btn btn-outline-dark btn-sm mx-1"
+                        className="btn btn-success btn-sm mx-1"
                         onClick={saveIt}
                       >Save</button>}
                     </>
                   ) : (
                     <>
                       <button
-                        className="btn btn-outline-dark btn-sm mx-1"
-                        onClick={showPreview}
-                      >
-                        Preview
-                      </button>
-                      <button
-                        className="btn btn-outline-dark btn-sm mx-1"
+                        className="btn btn-sm mx-1"
                         onClick={cancelIt}
                       >
                         Cancel
                       </button>
                       <button
-                        className="btn btn-outline-dark btn-sm mx-1"
+                        className="btn btn-primary btn-sm mx-1"
+                        onClick={showPreview}
+                      >
+                        Preview
+                      </button>
+                      <button
+                        className="btn btn-success btn-sm mx-1"
                         onClick={saveIt}
                       >
                         Save

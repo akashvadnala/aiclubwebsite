@@ -46,21 +46,21 @@ const Projects = () => {
                     {user.isadmin && <NavLink
                       rel="noreferrer"
                       to="/projectapprovals"
-                      className="btn btn-sm btn-outline-secondary mx-1"
+                      className="btn btn-sm btn-secondary mx-1"
                     >
                       Approvals
                     </NavLink>}
                     <NavLink
                       rel="noreferrer"
                       to="/myprojects"
-                      className="btn btn-sm btn-outline-primary mx-1"
+                      className="btn btn-sm btn-primary mx-1"
                     >
                       My Projects
                     </NavLink>
                     <NavLink
                       rel="noreferrer"
                       to="/addproject"
-                      className="btn btn-sm btn-outline-success mx-1"
+                      className="btn btn-sm btn-success mx-1"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

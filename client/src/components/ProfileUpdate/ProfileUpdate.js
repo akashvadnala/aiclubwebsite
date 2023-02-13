@@ -139,7 +139,7 @@ const ProfileUpdate = () => {
                         <input type="checkbox" name="member" onChange={handleInputs} className="form-check-input" id="member" />
                         <label className="form-check-label" for="member">Make Member</label>
                     </div>
-                    <button type="submit" name="submit" id="submit" onClick={PostTeam} className="btn btn-outline-primary">Submit</button>
+                    <button type="submit" name="submit" id="submit" onClick={PostTeam} className="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>

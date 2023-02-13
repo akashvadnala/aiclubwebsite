@@ -109,15 +109,14 @@ const EventDisplay = () => {
               <div className="text-center fs-6 pb-3">
                 <NavLink
                   to={`/events/${event.url}/edit`}
-                  className="btn btn-outline-primary btn-sm"
+                  className="btn btn-primary btn-sm mx-2"
                 >
                   Edit{" "}
                 </NavLink>
-                ·
                 <NavLink
                   rel="noreferrer"
                   onClick={deleteEvent}
-                  className="btn btn-outline-danger btn-sm"
+                  className="btn btn-danger btn-sm mx-2"
                 >
                   {" "}
                   Delete
@@ -140,18 +139,15 @@ const EventDisplay = () => {
                 </div>
                 <div className="row">
                   <h4 className="text-center pb-1">Event Details</h4>
-                  {event.speakers.length!==0 &&
-                    <>
-                      <p className="mb-1">Speaker - {event.speakers.join(", ")}</p>
-                    </>
-                  }
-                  
+                  {event.speakers.length>0 && <p className="mb-1">Speaker - {event.speakers.join(", ")}</p>}
+
                   <p className="mb-1">
                     Start - {convertTime2String(event.eventStart)}
                   </p>
                   <p className="mb-1">
                     End &nbsp;- {convertTime2String(event.eventEnd)}
                   </p>
+
 
                   {event.eventLink !== "" &&
                     <>

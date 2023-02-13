@@ -164,7 +164,7 @@ const CreateCompetition = () => {
                                   disabled />
                               </div>
                               <div className='col-4 paddl'>
-                                <input type="reset" className='btn btn-outline-danger' onClick={() => removeXAccess(a)} value="Remove" />
+                                <input type="reset" className='btn btn-danger' onClick={() => removeXAccess(a)} value="Remove" />
                               </div>
                             </>}
                         </div>
@@ -191,7 +191,7 @@ const CreateCompetition = () => {
                       <div className='small text-danger text-center p-1'>{msg}</div>
                     </div>
                     <div className='col-4 paddl'>
-                      <button type="reset" className='btn btn-outline-success' onClick={AddXAccess} >
+                      <button type="reset" className='btn btn-success' onClick={AddXAccess} >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="20"
@@ -217,7 +217,7 @@ const CreateCompetition = () => {
               <input type="radio" name="private" checked={!compete.public} onChange={(e) => { setCompete({ ...compete, public: !e.target.checked }) }} className="form-check-input" id="private" />
               <label className="form-check-label" for="private">Invite Only</label>
             </div>
-            <button type="submit" name="submit" id="submit" className="btn btn-outline-primary">{add}{add2}</button>
+            <button type="submit" name="submit" id="submit" className="btn btn-primary">{add}{add2}</button>
           </form>
         </div>
       </div>

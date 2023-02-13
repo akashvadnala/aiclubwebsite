@@ -178,7 +178,7 @@ const EditEvent = () => {
               {preview ? (
                 <NavLink
                   to={`/events/${event.url}`}
-                  className="btn btn-outline-success btn-sm"
+                  className="btn btn-success btn-sm"
                 >
                   Preview
                 </NavLink>
@@ -256,7 +256,7 @@ const EditEvent = () => {
                         <div className="col col-3">
                           <input
                             type="reset"
-                            className="btn btn-outline-danger"
+                            className="btn btn-danger"
                             onClick={() => removeXspeakers(a)}
                             value="Remove"
                           />
@@ -280,7 +280,7 @@ const EditEvent = () => {
                     <div className="col col-3">
                       <button
                         type="reset"
-                        className="btn btn-outline-success"
+                        className="btn btn-success"
                         onClick={AddXspeakers}
                       >
                         <svg
@@ -401,7 +401,7 @@ const EditEvent = () => {
                     type="submit"
                     name="submit"
                     id="submit"
-                    className="btn btn-outline-primary"
+                    className="btn btn-primary"
                     disabled
                   >
                     Updating <i className="fa fa-spinner fa-spin"></i>
@@ -411,7 +411,7 @@ const EditEvent = () => {
                     type="submit"
                     name="submit"
                     id="submit"
-                    className="btn btn-outline-primary"
+                    className="btn btn-primary"
                   >
                     Update
                   </button>

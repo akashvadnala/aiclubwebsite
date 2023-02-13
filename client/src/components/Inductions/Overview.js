@@ -62,12 +62,12 @@ const Overview = ({props}) => {
             </div>
             <div className='col-sm-4 text-end'>
               {props.access?preview?
-                  <button className='btn btn-outline-dark btn-sm mx-1' onClick={showEdit}>Edit</button>
+                  <button className='btn btn-dark btn-sm mx-1' onClick={showEdit}>Edit</button>
                 :
                   <>
-                    <button className='btn btn-outline-dark btn-sm mx-1' onClick={showPreview}>Preview</button>
-                    <button className='btn btn-outline-dark btn-sm mx-1' onClick={cancelIt}>Cancel</button>
-                    <button className='btn btn-outline-dark btn-sm mx-1' onClick={saveIt}>Save</button>
+                    <button className='btn btn-dark btn-sm mx-1' onClick={showPreview}>Preview</button>
+                    <button className='btn btn-dark btn-sm mx-1' onClick={cancelIt}>Cancel</button>
+                    <button className='btn btn-dark btn-sm mx-1' onClick={saveIt}>Save</button>
                   </>
               :null}
             </div>

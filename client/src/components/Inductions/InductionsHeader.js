@@ -80,9 +80,9 @@ const InductionsHeader = ({props}) => {
             <div>
               {
                 isJoined?
-                <button className="btn btn-sm btn-outline-success"><i className="fas fa-check-circle green"></i> Joined</button>
+                <button className="btn btn-sm btn-success"><i className="fas fa-check-circle green"></i> Joined</button>
                 :
-                <NavLink className="btn btn-sm btn-outline-black" onClick={joinCompete}>
+                <NavLink className="btn btn-sm btn-black" onClick={joinCompete}>
                   {
                     joining?
                       <>

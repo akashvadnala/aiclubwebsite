@@ -27,7 +27,7 @@ const ProjectSpace = ({project}) => {
           <p className="card-text text-muted">
             By {names} <br/> {ddmmyy}
           </p>
-          <NavLink rel="noreferrer" to={`/projects/${project.url}`} className="btn btn-sm btn-outline-dark">Read More</NavLink>
+          <NavLink rel="noreferrer" to={`/projects/${project.url}`} className="btn btn-sm btn-dark">Read More</NavLink>
         </div>
       </div>
   )
