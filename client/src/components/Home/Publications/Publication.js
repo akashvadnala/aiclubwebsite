@@ -5,9 +5,9 @@ import PublicationCard from "./PublicationCard";
 const Publications = ({ publications }) => {
   return (
     <>
-      <div className="publications-container adjust">
+      <div className="publications-container py-5 adjust">
         <div className="row">
-          <h3 className="text-center py-3">Publications</h3>
+          <h3 className="text-center pb-3">Publications</h3>
           <div
             id="carouselExampleControls"
             className="carousel"

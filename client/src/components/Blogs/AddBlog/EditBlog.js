@@ -142,7 +142,7 @@ const EditBlog = () => {
               <NavLink
                 to={`/blogs/${post.url}`}
                 rel="noreferrer"
-                className="btn btn-outline-success btn-sm"
+                className="btn btn-success btn-sm"
               >
                 Preview
               </NavLink>
@@ -226,7 +226,7 @@ const EditBlog = () => {
                           <div className="col-4 paddl">
                             <input
                               type="reset"
-                              className="btn btn-outline-danger"
+                              className="btn btn-danger"
                               onClick={() => removeXTag(a)}
                               value="Remove"
                             />
@@ -250,7 +250,7 @@ const EditBlog = () => {
                     <div className="col-4 paddl">
                       <button
                         type="reset"
-                        className="btn btn-outline-success"
+                        className="btn btn-success"
                         onClick={AddXTag}
                       >
                         <svg
@@ -306,7 +306,7 @@ const EditBlog = () => {
                         type="submit"
                         name="submit"
                         id="submit"
-                        className="btn btn-outline-primary my-3"
+                        className="btn btn-primary my-3"
                         disabled
                       >
                         Saving <i className="fa fa-spinner fa-spin"></i>
@@ -316,7 +316,7 @@ const EditBlog = () => {
                         type="submit"
                         name="submit"
                         id="submit"
-                        className="btn btn-outline-primary my-3"
+                        className="btn btn-primary my-3"
                         onClick={() => { setpost({ ...post, ["approvalStatus"]: "submit", ["public"]: false }); }}
                       >
                         Save as Draft

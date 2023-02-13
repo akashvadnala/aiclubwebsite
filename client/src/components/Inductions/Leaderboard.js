@@ -32,8 +32,8 @@ const Leaderboard = ({props}) => {
           <div className='col-sm-4 text-end'>
             {props.access?
               <>
-                <button className='btn btn-outline-dark btn-sm mx-1' >Public</button>
-                <button className='btn btn-outline-dark btn-sm mx-1' >Private</button>
+                <button className='btn btn-dark btn-sm mx-1' >Public</button>
+                <button className='btn btn-dark btn-sm mx-1' >Private</button>
               </>
             :
               null

@@ -6,8 +6,8 @@ import "./RecentBlogs.css";
 function RecentBlogs({blogs}) {
   return (
     <>
-        <div className="recentblogs-container adjust">
-          <h3 className="text-center py-3">Recent Blogs</h3>
+        <div className="recentblogs-container py-5 adjust">
+          <h3 className="text-center pb-3">Recent Blogs</h3>
           <BlogsList blogs={blogs} />
           <p>
             <NavLink to="/blogs">

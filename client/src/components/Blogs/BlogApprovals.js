@@ -87,25 +87,16 @@ const BlogApprovals = () => {
               <div className="col-8 text-end">
                 {user ? (
                   <>
-                    {user.isadmin && (
-                      <NavLink
-                        rel="noreferrer"
-                        to="/blogapprovals"
-                        className="btn btn-sm btn-outline-secondary mx-1"
-                      >
-                        Approvals
-                      </NavLink>
-                    )}
                     <NavLink
                       rel="noreferrer"
                       to="/blogs"
-                      className="btn btn-sm btn-outline-secondary mx-1"
+                      className="btn btn-sm btn-primary mx-1"
                     >
                       All Blogs
                     </NavLink>
                     <NavLink
                       type="button"
-                      className="btn btn-sm btn-outline-success"
+                      className="btn btn-sm btn-success"
                       to="/addblog"
                     >
                       <svg

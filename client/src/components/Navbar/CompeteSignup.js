@@ -140,7 +140,7 @@ const CompeteSignup = () => {
 
             <div className="row mb-4 align-middle">
               <div className="col-3">
-                <button type="reset" className="btn btn-outline-secondary">
+                <button type="reset" className="btn btn-secondary">
                   Send OTP
                 </button>
               </div>
@@ -172,7 +172,7 @@ const CompeteSignup = () => {
               </label>
             </div>
 
-            <button type="submit" className="btn btn-outline-primary">
+            <button type="submit" className="btn btn-primary">
               Sign up
             </button>
           </form>

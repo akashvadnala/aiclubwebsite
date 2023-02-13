@@ -101,24 +101,27 @@ const Admin = () => {
     const updateSlider = async (e) => {
         e.preventDefault();
         setEdit(1);
-        var imgurl;
         if (photoUpdated) {
+            await axios.post(`${SERVER_URL}/imgdelete`,
+                {
+                    'url': xSlider.photo
+                },
+                {
+                    withCredentials: true,
+                    headers: { "Content-Type": "application/json" },
+                });
             const photo = xSlider.photo;
             const data = new FormData();
-            const photoname = Date.now() + photo.name;
-            data.append("name", photoname);
             data.append("photo", photo);
 
             try {
-                const img = await axios.post(`${SERVER_URL}/imgupload`, data);
+                const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
                 console.log('img', img);
-                imgurl = img.data;
-                xSlider.photo = imgurl;
+                xSlider.photo = img.data;
             } catch (err) {
                 console.log('photoerr', err);
             }
         }
-        console.log('imgurl', imgurl);
         try {
             const data = await axios.put(`${SERVER_URL}/updateSlider/${xSlider._id}`,
                 xSlider,
@@ -198,7 +201,6 @@ const Admin = () => {
             }
         }
     }
-    // console.log('xSlider',xSlider)
     return (
         <>
             {load === 0 ? <Loading /> : load === 1 ?
@@ -213,7 +215,7 @@ const Admin = () => {
                         <div className='row'>
                             <div className='col-6'><h4 className='pb-2'>Slider Settings</h4></div>
                             <div className='col-6 text-end'>
-                                <NavLink type="button" className="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#sliderModal"
+                                <button className="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#sliderModal"
                                     onClick={() => {
                                         setAddOrEdit(0);
                                         setXSlider({
@@ -241,7 +243,7 @@ const Admin = () => {
                                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                                     </svg>{" "}
                                     Add Slider
-                                </NavLink>
+                                </button>
                                 <div className="modal fade" id="sliderModal" tabindex="-1" aria-labelledby="sliderModalLabel" aria-hidden="true">
                                     <div className="modal-dialog">
                                         <div className="modal-content">
@@ -285,7 +287,7 @@ const Admin = () => {
                                                     </div>
                                                 </div>
                                                 <div className="modal-footer">
-                                                    <button type="reset" id="modalClose" className="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal"
+                                                    <button type="reset" id="modalClose" className="btn btn-sm btn-secondary" data-bs-dismiss="modal"
                                                         onClick={() => {
                                                             setXSlider({
                                                                 photo: "",
@@ -301,13 +303,13 @@ const Admin = () => {
                                                     >Cancel</button>
                                                     {
                                                         addOrEdit ?
-                                                            <button type="submit" onClick={updateSlider} className="btn btn-sm btn-outline-primary">
+                                                            <button type="submit" onClick={updateSlider} className={`btn btn-sm btn${edit ? "-outline" : ""}-primary`} disabled={edit ? true : false}>
                                                                 {
                                                                     edit ? <span>Updating <i className="fa fa-spinner fa-spin"></i></span> : <span>Update</span>
                                                                 }
                                                             </button>
                                                             :
-                                                            <button type="submit" onClick={addSlider} className="btn btn-sm btn-outline-primary">
+                                                            <button type="submit" onClick={addSlider} className={`btn btn-sm btn${add ? "-outline" : ""}-primary`} disabled={add ? true : false}>
                                                                 {
                                                                     add ? <span>Adding <i className="fa fa-spinner fa-spin"></i></span> : <span>Add</span>
                                                                 }
@@ -349,7 +351,7 @@ const Admin = () => {
 
                                                 </div>
                                                 <div className='edit-delete text-center pt-2'>
-                                                    <NavLink type="button" className="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#sliderModal"
+                                                    <NavLink type="button" className="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#sliderModal"
                                                         onClick={() => {
                                                             setXSlider(slide);
                                                             setPhoto(slide.photo);
@@ -359,7 +361,7 @@ const Admin = () => {
                                                         Edit
                                                     </NavLink>
                                                     &nbsp;
-                                                    <NavLink type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteSlider(slide._id, slide.title)}>
+                                                    <NavLink type="button" className="btn btn-sm btn-danger" onClick={() => deleteSlider(slide._id, slide.title)}>
                                                         Delete
                                                     </NavLink>
                                                 </div>
