@@ -37,7 +37,7 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
                 {eventStart:{$lte:Date()}},
                 {eventEnd:{$gte:Date()}}
             ]
-        }).sort({createdAt:-1}).limit(5);
+        }).sort({eventStart:-1}).limit(5);
 
         lessEvents = ongoing.map((e)=>{
             return {
@@ -54,7 +54,7 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
                     {eventStart:{$gt:Date()}},
                     {eventEnd:{$gt:Date()}}
                 ]
-            }).sort({createdAt:-1}).limit(5-lessEvents.length);
+            }).sort({eventStart:-1}).limit(5-lessEvents.length);
             
             const ents = upcoming.map((e)=>{
                 return {
@@ -71,7 +71,7 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
                     {eventStart:{$lt:Date()}},
                     {eventEnd:{$lt:Date()}}
                 ]
-            }).sort({createdAt:-1}).limit(5-lessEvents.length);
+            }).sort({eventStart:-1}).limit(5-lessEvents.length);
             
             const ents = past.map((e)=>{
                 return {
