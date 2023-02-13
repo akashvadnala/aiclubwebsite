@@ -29,6 +29,7 @@ import BlogApprovals from './components/Blogs/BlogApprovals';
 import MyBlogs from './components/Blogs/myBlogs';
 import Profile from './components/Profile/profile';
 import ForgetPassword from './components/Navbar/ForgetPassword';
+import Publications from './components/Publications/Publications';
 
 const Routing = () => {
 
@@ -65,6 +66,9 @@ const Routing = () => {
         <Route exact path='/blogs/:url/edit' element={<EditBlog />} />
         <Route exact path='/blogapprovals' element={<BlogApprovals />} />
         
+        {/* Inductions */}
+        <Route exact path='/publications' element={<Publications />} />
+
         {/* Inductions */}
         {/* <Route exact path='/inductions-b21-b20' element={<Inductions />} /> */}
         {/* <Route exact path='/inductions-b21-b20/data' element={<Data />} /> */}

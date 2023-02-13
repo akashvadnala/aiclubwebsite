@@ -58,6 +58,11 @@ const Navbar = () => {
     },
     {
       show: true,
+      link: "/publications",
+      name: "Publications",
+    },
+    {
+      show: true,
       link: "/events",
       name: "Events",
     },
