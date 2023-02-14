@@ -6,3 +6,10 @@
 .speakers p span:last-child span{
     display: none;
 }
+
+
+.project-title{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
