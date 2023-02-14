@@ -1,0 +1,9 @@
+@media (min-width: 768px) {
+    .activities-container .pr-2 {
+        padding-right: 25px !important;
+    }
+
+    .activities-container .pl-2 {
+        padding-left: 25px !important;
+    }
+}

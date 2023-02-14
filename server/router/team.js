@@ -128,8 +128,6 @@ router.route('/getTeamList').get(async (req,res)=>{
 
 router.route('/sortTeams').put(async (req,res)=>{
     const {teams} = req.body;
-    let count=1;
-    // let teams = await Team.find({ismember:true,isalumni:false});
     await Promise.all(
         teams.map(async ({_id},index)=>{
             let team = await Team.findById(_id);
