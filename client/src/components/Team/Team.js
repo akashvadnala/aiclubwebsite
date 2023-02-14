@@ -120,7 +120,7 @@ function Team({ setSortMode }) {
             {
               teams.map(team => {
                 return (
-                  <TeamCard team={team} isadmin={user ? user.isadmin : false} isdelete={user ? user.username === team.username : false} />
+                    <TeamCard team={team} isadmin={user ? user.isadmin : false} isdelete={user ? user.username === team.username : false} />                  
                 )
               })
             }

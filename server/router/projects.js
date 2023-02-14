@@ -79,7 +79,7 @@ router.route("/projectAdd").post(authenticate, async (req, res) => {
         }
       })
     );
-    res.status(200).json({url:proj.url});
+    res.status(200).json({ url: proj.url });
   }).catch((err) => {
     res.status(500).json({ error: "Cannot Add Project!" });
   })
@@ -201,25 +201,61 @@ router.route("/isProjectUrlExist/:url").get(async (req, res) => {
 })
 
 router.route("/getMyProjects/:id").get(async (req, res) => {
-  const team = await Team.findById(req.params.id);
-  let projects = [];
-  if (team) {
-    await Promise.all(
-      team.projects.map(async (project) => {
-        try {
-          const proj = await Project.findById(project).select("title url cover authors createdAt");
-          if (proj) {
-            projects.push(proj);
+  try {
+    const team = await Team.findById(req.params.id);
+    let projects = [];
+    if (team) {
+      await Promise.all(
+        team.projects.map(async (project) => {
+          try {
+            const proj = await Project.findById(project).select("title url cover authors public createdAt");
+            if (proj) {
+              projects.push(proj);
+            }
+          } catch (err) {
+            console.log("Project Not Found");
+            res.status(404).json({error:"Project Not Found"})
           }
-        } catch (err) {
-          console.log("Project Not Found");
-        }
-      })
-    );
-    if (projects) {
-      projects.sort((a, b) => b.createdAt - a.createdAt);
+        })
+      );
+      if (projects) {
+        projects.sort((a, b) => b.createdAt - a.createdAt);
+      }
+      res.status(200).json(projects);
     }
-    res.status(200).json(projects);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error:"Problem at server"});
+  }
+});
+
+router.route("/getProfileProjects/:id").get(async (req, res) => {
+  try {
+    const team = await Team.findById(req.params.id);
+    let projects = [];
+    if (team) {
+      await Promise.all(
+        team.projects.map(async (project) => {
+          try {
+            const proj = await Project.findById(project).select("title url cover authors public createdAt");
+            if (proj) {
+              projects.push(proj);
+            }
+          } catch (err) {
+            console.log("Project Not Found");
+            res.status(404).json({error:"Project Not Found"})
+          }
+        })
+      );
+      if (projects) {
+        projects.sort((a, b) => b.createdAt - a.createdAt);
+      }
+      projects= projects.slice(0,5);
+      res.status(200).json(projects);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error:"Problem at server"});
   }
 });
 

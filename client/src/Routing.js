@@ -31,6 +31,7 @@ import Profile from './components/Profile/profile';
 import ForgetPassword from './components/Navbar/ForgetPassword';
 import Publications from './components/Publications/Publications';
 import TeamHead from './components/Team/TeamHead';
+import MemberProfile from './components/Profile/memberProfile';
 
 const Routing = () => {
 
@@ -94,6 +95,7 @@ const Routing = () => {
 
         {/* Profile */}
         <Route exact path='/profile' element={<Profile />} />
+        <Route exact path='/profile/:username' element={<MemberProfile />} />
 
         {/* Others */}
         <Route path='*' element={<Error />} />
