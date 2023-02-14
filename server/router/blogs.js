@@ -131,7 +131,7 @@ router.route("/getuserBlogs/:id").get(async (req, res) => {
     res.status(200).json(blogData);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Problem at server" });
+    res.status(500).json({ error: "Problem at server getuserBlogs" });
   }
 });
 
@@ -202,7 +202,7 @@ router.route("/deleteBlog/:id").delete(authenticate, async (req, res) => {
 router.route("/getprofileblogs/:id").get(async (req, res) => {
   try {
     const id = req.params.id;
-    const blogs = await Blog.find({ authorName: id }).sort({ createdAt: -1 }).select("title url -_id").limit(5);
+    const blogs = await Blog.find({ authorName: id }).sort({ createdAt: -1 }).select("title url public -_id").limit(5);
     res.status(200).json({ blogs: blogs });
   } catch (error) {
     console.log(error);
