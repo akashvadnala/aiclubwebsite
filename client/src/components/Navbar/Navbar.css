@@ -14,7 +14,8 @@
     backdrop-filter: saturate(180%) blur(10px) !important;
     z-index: 1000 !important;
     border-bottom: solid 1px rgba(220,220,220,.6);
-    padding: 2px 0 2px 0 !important;
+    padding: 3px 0 !important;
+    font-weight: 300;
 }
 
 .navbar-nav{

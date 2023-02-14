@@ -1,19 +1,23 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom';
 import { Context } from '../../../Context/Context';
 import { SERVER_URL } from '../../../EditableStuff/Config';
 import Error from '../../Error';
 import Loading from '../../Loading';
 import '.././Admin.css'
+import { NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { alertContext } from '../../../Context/Alert';
+import SortSliderList from './SortSliderList';
+import { arrayMoveImmutable } from 'array-move';
 
 const Admin = () => {
     const { user, logged_in } = useContext(Context);
     const { showAlert } = useContext(alertContext);
+    const [sortMode, setSortMode] = useState(false);
     const [load, setLoad] = useState(0);
     const [slides, setSlides] = useState([]);
+    const [slidesPhotos,setSlidesPhotos] = useState([]);
     const [slider, setSlider] = useState(null);
     const [xSlider, setXSlider] = useState({
         photo: "",
@@ -50,6 +54,13 @@ const Admin = () => {
         } catch (err) {
             showAlert(err.response.data.error, "danger");
         }
+    }
+
+    const getSlidesPhotos = async () => {
+        axios.get(`${SERVER_URL}/getSlidesPhotos`)
+        .then(data=>{
+            setSlidesPhotos(data.data);
+        })
     }
 
     useEffect(() => {
@@ -100,54 +111,48 @@ const Admin = () => {
 
     const updateSlider = async (e) => {
         e.preventDefault();
-        setEdit(1);
-        if (photoUpdated) {
-            await axios.post(`${SERVER_URL}/imgdelete`,
-                {
-                    'url': xSlider.photo
-                },
-                {
-                    withCredentials: true,
-                    headers: { "Content-Type": "application/json" },
-                });
-            const photo = xSlider.photo;
-            const data = new FormData();
-            data.append("photo", photo);
-
-            try {
-                const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
-                console.log('img', img);
-                xSlider.photo = img.data;
-            } catch (err) {
-                console.log('photoerr', err);
-            }
-        }
         try {
-            const data = await axios.put(`${SERVER_URL}/updateSlider/${xSlider._id}`,
+            setEdit(1);
+            if (photoUpdated) {
+                await axios.post(`${SERVER_URL}/imgdelete`,
+                    {
+                        'url': xSlider.photo
+                    },
+                    {
+                        withCredentials: true,
+                        headers: { "Content-Type": "application/json" },
+                    });
+
+                const data = new FormData();
+                data.append("photo", xSlider.photo);
+
+                const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
+                xSlider.photo = img.data;
+            }
+            await axios.put(`${SERVER_URL}/updateSlider/${xSlider._id}`,
                 xSlider,
                 {
+                    withCredentials: true,
                     headers: { "Content-Type": "application/json" }
                 }
             );
-            if (data.status === 200) {
-                getSlides();
-                document.getElementById("modalClose").click();
-                console.log(`${xSlider.title} is Edited`);
-                setEdit(0);
-                setXSlider({
-                    ...xSlider,
-                    photo: "",
-                    title: "",
-                    caption1: "",
-                    caption2: "",
-                    link: "",
-                    textcolor: "white",
-                    index: 0
-                });
-            }
+            getSlides();
+            document.getElementById("modalClose").click();
+            setEdit(0);
+            setXSlider({
+                ...xSlider,
+                photo: "",
+                title: "",
+                caption1: "",
+                caption2: "",
+                link: "",
+                textcolor: "white",
+                index: 0
+            });
         } catch (err) {
             console.log('err', err);
         }
+        setAdd(0);
     }
 
     const deleteSlider = async (id, photo, title) => {
@@ -169,42 +174,22 @@ const Admin = () => {
             }
         }
     }
+    const params = { setSlider, setXSlider, setPhoto, setAddOrEdit, deleteSlider };
 
-    const sliderMoveDown = (index) => {
-        if (index > 1) {
-            try {
-                axios.post(`${SERVER_URL}/sliderMoveDown`,
-                    {
-                        'index': index
-                    })
-                    .then(res => {
-                        if (res.status === 200) {
-                            getSlides();
-                        }
-                    })
-            } catch (err) {
-                console.log(err);
-            }
-        }
+    const onSortEnd = ({ oldIndex, newIndex }) => {
+        setSlides(prevItem => (arrayMoveImmutable(prevItem, oldIndex, newIndex)));
+    };
+
+    const sortSlides = async ()=>{
+        await axios.put(`${SERVER_URL}/sortSlides`,{slides:slides},
+        {
+            withCredentials:true,
+            headers: { "Content-Type": "application/json" },
+        });
+        setSortMode(false);
+        showAlert("Slides Sorted Successfully!", "success");
     }
 
-    const sliderMoveUp = (index) => {
-        if (index < slides.length) {
-            try {
-                axios.post(`${SERVER_URL}/sliderMoveUp`,
-                    {
-                        'index': index
-                    })
-                    .then(res => {
-                        if (res.status === 200) {
-                            getSlides();
-                        }
-                    })
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    }
     return (
         <>
             {load === 0 ? <Loading /> : load === 1 ?
@@ -219,35 +204,51 @@ const Admin = () => {
                         <div className='row'>
                             <div className='col-6'><h4 className='pb-2'>Slider Settings</h4></div>
                             <div className='col-6 text-end'>
-                                <button className="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#sliderModal"
-                                    onClick={() => {
-                                        setAddOrEdit(0);
-                                        setXSlider({
-                                            ...xSlider,
-                                            photo: "",
-                                            title: "",
-                                            caption1: "",
-                                            caption2: "",
-                                            link: "",
-                                            textcolor: "white",
-                                            index: 0
-                                        });
-                                        setPhoto("");
-                                    }}
-                                // onClick={AddSlider}
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="20"
-                                        height="20"
-                                        fill="currentColor"
-                                        className="bi bi-plus-circle-fill"
-                                        viewBox="0 0 16 18"
-                                    >
-                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                                    </svg>{" "}
-                                    Add Slider
-                                </button>
+                                {
+                                    sortMode ?
+                                        <>
+                                            <button className='btn btn-sm mx-2' onClick={() => setSortMode(false)}>
+                                                Cancel
+                                            </button>
+                                            <button className='btn btn-sm btn-success' onClick={sortSlides}>
+                                                Save Changes
+                                            </button>
+                                        </>
+                                        :
+                                        <>
+                                            <button className='btn btn-sm btn-primary mx-2' onClick={() => setSortMode(true)}>
+                                                Sort Slides
+                                            </button>
+                                            <button className="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#sliderModal"
+                                                onClick={() => {
+                                                    setAddOrEdit(0);
+                                                    setXSlider({
+                                                        ...xSlider,
+                                                        photo: "",
+                                                        title: "",
+                                                        caption1: "",
+                                                        caption2: "",
+                                                        link: "",
+                                                        textcolor: "white",
+                                                        index: 0
+                                                    });
+                                                    setPhoto("");
+                                                }}
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="20"
+                                                    height="20"
+                                                    fill="currentColor"
+                                                    className="bi bi-plus-circle-fill"
+                                                    viewBox="0 0 16 18"
+                                                >
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                                </svg>{" "}
+                                                Add Slider
+                                            </button>
+                                        </>
+                                }
                                 <div className="modal fade" id="sliderModal" tabindex="-1" aria-labelledby="sliderModalLabel" aria-hidden="true">
                                     <div className="modal-dialog">
                                         <div className="modal-content">
@@ -329,40 +330,52 @@ const Admin = () => {
                         </div>
                         <div className='row'>
                             <div className='col-5'>
-                                {slides.map((slide) => {
-                                    return (
+                                {
+                                    sortMode ?
+                                        <SortSliderList slides={slides} params={params} onSortEnd={onSortEnd} />
+                                        :
                                         <>
-                                            <div className='slider-card card p-3 mb-3' style={{ overflow: "hidden" }}>
-                                                <div className='card slider-card-in flex-row actual-card' onClick={() => setSlider(slide)}>
-                                                    <img className="card-img-left" src={slide.photo} alt={slide.title} />
-                                                    <div className="small px-3">
-                                                        <div>Title:<strong> {slide.title}</strong></div>
-                                                        <div>Caption1: <strong> {slide.caption1}</strong></div>
-                                                        <div>Caption2:<strong> {slide.caption2}</strong></div>
-                                                        <div>Link:<strong> {slide.link}</strong></div>
-                                                        <div>textcolor:<strong> {slide.textcolor}</strong></div>
-                                                    </div>
-                                                </div>
+                                            {
 
-                                                <div className='edit-delete text-center pt-2'>
-                                                    <NavLink type="button" className="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#sliderModal"
-                                                        onClick={() => {
-                                                            setXSlider(slide);
-                                                            setPhoto(slide.photo);
-                                                            setAddOrEdit(1);
-                                                        }}
-                                                    >
-                                                        Edit
-                                                    </NavLink>
-                                                    &nbsp;
-                                                    <NavLink type="button" className="btn btn-sm btn-danger" onClick={() => deleteSlider(slide._id, slide.photo, slide.title)}>
-                                                        Delete
-                                                    </NavLink>
-                                                </div>
-                                            </div>
+
+                                                slides.map((slide) => {
+                                                    return (
+                                                        <>
+                                                            <div className='slider-card card p-3 mb-3' style={{ overflow: "hidden" }}>
+                                                                <div className='card slider-card-in flex-row actual-card' onClick={() => setSlider(slide)}>
+                                                                    <img className="card-img-left" src={slide.photo} alt={slide.title} />
+                                                                    <div className="small px-3">
+                                                                        <div>Title:<strong> {slide.title}</strong></div>
+                                                                        <div>Caption1: <strong> {slide.caption1}</strong></div>
+                                                                        <div>Caption2:<strong> {slide.caption2}</strong></div>
+                                                                        <div>Link:<strong> {slide.link}</strong></div>
+                                                                        <div>textcolor:<strong> {slide.textcolor}</strong></div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className='edit-delete text-center pt-2'>
+                                                                    <NavLink type="button" className="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#sliderModal"
+                                                                        onClick={() => {
+                                                                            setXSlider(slide);
+                                                                            setPhoto(slide.photo);
+                                                                            setAddOrEdit(1);
+                                                                        }}
+                                                                    >
+                                                                        Edit
+                                                                    </NavLink>
+                                                                    &nbsp;
+                                                                    <NavLink type="button" className="btn btn-sm btn-danger" onClick={() => deleteSlider(slide._id, slide.photo, slide.title)}>
+                                                                        Delete
+                                                                    </NavLink>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )
+                                                })}
                                         </>
-                                    )
-                                })}
+                                }
+
+
                             </div>
                             <div className='col-7'>
                                 {

@@ -10,19 +10,19 @@ router.route('/getEvents').get(async (req,res)=> {
             {eventStart:{$gt:Date()}},
             {eventEnd:{$gt:Date()}}
         ]
-    }).sort({createdAt:-1});
+    }).sort({eventStart:-1});
     const ongoing = await Event.find({
         $and:[
             {eventStart:{$lte:Date()}},
             {eventEnd:{$gte:Date()}}
         ]
-    }).sort({createdAt:-1});
+    }).sort({eventStart:-1});
     const past = await Event.find({
         $and:[
             {eventStart:{$lt:Date()}},
             {eventEnd:{$lt:Date()}}
         ]
-    }).sort({createdAt:-1});
+    }).sort({eventStart:-1});
 
     const eventData = {"upcoming":upcoming,"ongoing":ongoing,"past":past};
     // console.log('eventData',eventData);

@@ -41,7 +41,7 @@ const Profile = () => {
 
     const getProjects = async () => {
         try {
-            const projectdata = await axios.get(`${SERVER_URL}/getMyProjects/${user._id}`);
+            const projectdata = await axios.get(`${SERVER_URL}/getProfileProjects/${user._id}`);
             setProjects(projectdata.data);
             setLoad(1);
         } catch (err) {

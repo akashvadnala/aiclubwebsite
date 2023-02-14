@@ -5,7 +5,7 @@ const authenticate = require("../middleware/authenticate");
 
 router.route('/getSlides').get(async (req,res)=>{
     try{
-        let slides = await Slider.find({}).sort({index:"desc"});
+        let slides = await Slider.find({}).sort({index:1});
         res.status(200).json(slides);
     }catch(err){
         console.log(err);
@@ -57,36 +57,16 @@ router.route('/deleteSlider/:id').delete(authenticate,async (req,res)=>{
     }
 })
 
-router.route('/sliderMoveDown').post(authenticate,async (req,res)=>{
-    const {index} = req.body;
-    try{
-        let slide = await Slider.findOne({index:index});
-        let slide2 = await Slider.findOne({index:index-1});
-        slide2.index+=1;
-        await slide2.save();
-        slide.index-=1;
-        await slide.save();
-        res.status(200).json();
-    }catch(err){
-        console.log(err);
-        res.status(500).json({error:"Internal server error"});
-    }
-});
-
-router.route('/sliderMoveUp').post(authenticate,async (req,res)=>{
-    let {index} = req.body;
-    try{
-        let slide = await Slider.findOne({index:index});
-        let slide2 = await Slider.findOne({index:index+1});
-        slide2.index-=1;
-        await slide2.save();
-        slide.index+=1;
-        await slide.save();
-        res.status(200).json();
-    }catch(err){
-        console.log(err);
-        res.status(500).json({error:"Internal server error"});
-    }
-});
+router.route('/sortSlides').put(authenticate,async (req,res)=>{
+    const {slides} = req.body;
+    await Promise.all(
+        slides.map(async ({_id},index)=>{
+            let slide = await Slider.findById(_id);
+            slide.index=index;
+            await slide.save();
+        })
+    )
+    res.status(200).json();
+})
 
 module.exports = router;

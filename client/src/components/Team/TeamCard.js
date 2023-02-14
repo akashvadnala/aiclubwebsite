@@ -23,11 +23,12 @@ function TeamCard({ team, isadmin, isdelete }) {
   };
   return (
     <div className="team-card-container col-lg-3 col-md-4 col-sm-6 col-6">
+      <NavLink rel="noreferrer" to={`/profile/${team.username}`}>
       <div className="card" style={{ 'border': "solid" }}>
         <div className="card-img">
           <img className="card-img-top" src={team.photo} alt={team.firstname} />
         </div>
-        <div className="card-body">
+        <div className="card-body text-dark">
           <h5>{team.firstname} {team.lastname}</h5>
           <h6>{team.position}</h6>
           <h6>{team.profession}</h6>
@@ -39,7 +40,7 @@ function TeamCard({ team, isadmin, isdelete }) {
             text={team.description}
             textTruncateChild="..."
           />
-          <div className="d-flex justify-content-evenly">
+          <div className="d-flex justify-content-evenly pt-3">
             <a
               href={`mailto:${team.email}`}
             >
@@ -92,6 +93,7 @@ function TeamCard({ team, isadmin, isdelete }) {
           )}
         </div>
       </div>
+      </NavLink>
     </div>
   );
 }
