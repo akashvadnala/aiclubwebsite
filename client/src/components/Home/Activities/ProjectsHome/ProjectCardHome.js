@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import TextTruncate from 'react-text-truncate';
+import '../EventsHome/EventHome.css';
 import 'html-to-text'
 import { SERVER_URL } from '../../../../EditableStuff/Config';
 import axios from 'axios';
@@ -21,7 +21,7 @@ const ProjectCardHome = ({project}) => {
 
   return (
         <div className='project-card-home-container mt-3'>
-          <div id='title'>
+          <div class='title-box'>
             <h5>{project.title}</h5>
           </div>
           <div className='speakers'>

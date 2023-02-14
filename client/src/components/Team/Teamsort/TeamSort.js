@@ -22,16 +22,14 @@ const TeamSort = ({ setSortMode }) => {
     };
 
     const sortTeams = async () => {
-        try {
-            await axios.put(`${SERVER_URL}/sortTeams`, {teams:teams},
-                {
-                    headers: { "Content-Type": "application/json" },
-                });
-            setSortMode(false);
-            showAlert("Team Sorted Successfully!","success");
-        } catch (err) {
-            showAlert(err.response.data.error, "danger");
-        }
+        await axios.put(`${SERVER_URL}/sortTeams`, { teams: teams },
+            {
+                withCredentials:true,
+                headers: { "Content-Type": "application/json" },
+            });
+        setSortMode(false);
+        showAlert("Team Sorted Successfully!", "success");
+
     }
 
     useEffect(() => {

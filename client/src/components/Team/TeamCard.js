@@ -39,7 +39,7 @@ function TeamCard({ team, isadmin, isdelete }) {
             text={team.description}
             textTruncateChild="..."
           />
-          <div className="d-flex justify-content-evenly">
+          <div className="d-flex justify-content-evenly pt-3">
             <a
               href={`mailto:${team.email}`}
             >
