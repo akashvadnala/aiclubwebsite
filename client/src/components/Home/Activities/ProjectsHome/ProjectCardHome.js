@@ -22,7 +22,7 @@ const ProjectCardHome = ({project}) => {
   return (
         <div className='project-card-home-container mt-3'>
           <div class='title-box'>
-            <h5>{project.title}</h5>
+            <h5 className='project-title'>{project.title}</h5>
           </div>
           <div className='speakers'>
             <p>by {names} </p>
