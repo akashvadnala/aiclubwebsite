@@ -14,8 +14,7 @@ const ProjectsHome = ({projects}) => {
               )
             })
           }
-          <br></br>
-        <p className='h6'><NavLink to='/projects'>Know More About Projects<span className='small'> ❯</span></NavLink></p>
+        <p className='h6 pt-3'><NavLink to='/projects'>Know More About Projects<span className='small'> ❯</span></NavLink></p>
       </div>
   )
 }
