@@ -6,40 +6,47 @@ import TextTruncate from "react-text-truncate";
 import { alertContext } from "../../Context/Alert";
 
 function TeamCard({ team, isadmin, isdelete }) {
-  const {showAlert} = useContext(alertContext);
+  const { showAlert } = useContext(alertContext);
   const PostDelete = async (username, id) => {
     try {
       const confirmed = window.confirm(
         `Are you sure to delete the user ${username}?`
       );
       if (confirmed) {
-        await axios.delete(`${SERVER_URL}/team/delete/${id}`,{withCredentials:true});
+        await axios.delete(`${SERVER_URL}/team/delete/${id}`, { withCredentials: true });
         window.location.reload(true);
-        showAlert("User deleted successfully!","success");
+        showAlert("User deleted successfully!", "success");
       }
     } catch (err) {
-      showAlert(err.response.data.error,"danger");
+      showAlert(err.response.data.error, "danger");
     }
   };
   return (
     <div className="team-card-container col-lg-3 col-md-4 col-sm-6 col-6">
-      <NavLink rel="noreferrer" to={`/profile/${team.username}`}>
+
       <div className="card" style={{ 'border': "solid" }}>
         <div className="card-img">
-          <img className="card-img-top" src={team.photo} alt={team.firstname} />
+          <img src={team.photo} alt={team.firstname} />
         </div>
-        <div className="card-body text-dark">
-          <h5>{team.firstname} {team.lastname}</h5>
+        <div className="card-body">
+          <NavLink rel="noreferrer" to={`/profile/${team.username}`}>
+            <h5 className="text-dark">
+              {team.firstname} {team.lastname} &nbsp;
+              
+              <i class="fa-xs fas fa-external-link-alt"></i>
+            </h5>
+          </NavLink>
           <h6>{team.position}</h6>
           <h6>{team.profession}</h6>
-          <TextTruncate
+          {/* <TextTruncate
             title={team.description}
             line={2}
             element="p"
             truncateText=""
             text={team.description}
             textTruncateChild="..."
-          />
+          /> */}
+
           <div className="d-flex justify-content-evenly pt-3">
             <a
               href={`mailto:${team.email}`}
@@ -93,7 +100,6 @@ function TeamCard({ team, isadmin, isdelete }) {
           )}
         </div>
       </div>
-      </NavLink>
     </div>
   );
 }
