@@ -11,13 +11,13 @@ import { alertContext } from '../../../Context/Alert';
 import SortSliderList from './SortSliderList';
 import { arrayMoveImmutable } from 'array-move';
 
-const Admin = () => {
+const SliderSettings = () => {
     const { user, logged_in } = useContext(Context);
     const { showAlert } = useContext(alertContext);
     const [sortMode, setSortMode] = useState(false);
     const [load, setLoad] = useState(0);
     const [slides, setSlides] = useState([]);
-    const [slidesPhotos,setSlidesPhotos] = useState([]);
+    const [slidesCopy, setSlidesCopy] = useState([]);
     const [slider, setSlider] = useState(null);
     const [xSlider, setXSlider] = useState({
         photo: "",
@@ -48,6 +48,7 @@ const Admin = () => {
             axios.get(`${SERVER_URL}/getSlides`)
                 .then(data => {
                     setSlides(data.data);
+                    setSlidesCopy(data.data);
                     setSlider(data.data[0]);
                     setLoad(1);
                 })
@@ -56,16 +57,14 @@ const Admin = () => {
         }
     }
 
-    const getSlidesPhotos = async () => {
-        axios.get(`${SERVER_URL}/getSlidesPhotos`)
-        .then(data=>{
-            setSlidesPhotos(data.data);
-        })
-    }
-
     useEffect(() => {
         if (logged_in === 1) {
-            getSlides();
+            if(user.isadmin){
+                getSlides();
+            }
+            else{
+                setLoad(-1);
+            }
         }
         else if (logged_in === -1) {
             setLoad(-1);
@@ -180,13 +179,14 @@ const Admin = () => {
         setSlides(prevItem => (arrayMoveImmutable(prevItem, oldIndex, newIndex)));
     };
 
-    const sortSlides = async ()=>{
-        await axios.put(`${SERVER_URL}/sortSlides`,{slides:slides},
-        {
-            withCredentials:true,
-            headers: { "Content-Type": "application/json" },
-        });
+    const sortSlides = async () => {
+        await axios.put(`${SERVER_URL}/sortSlides`, { slides: slides },
+            {
+                withCredentials: true,
+                headers: { "Content-Type": "application/json" },
+            });
         setSortMode(false);
+        setSlider(slides[0]);
         showAlert("Slides Sorted Successfully!", "success");
     }
 
@@ -207,7 +207,12 @@ const Admin = () => {
                                 {
                                     sortMode ?
                                         <>
-                                            <button className='btn btn-sm mx-2' onClick={() => setSortMode(false)}>
+                                            <button className='btn btn-sm mx-2' onClick={
+                                                () => {
+                                                    setSortMode(false)
+                                                    setSlides(slidesCopy)
+                                                }
+                                            }>
                                                 Cancel
                                             </button>
                                             <button className='btn btn-sm btn-success' onClick={sortSlides}>
@@ -394,11 +399,10 @@ const Admin = () => {
                             </div>
                         </div>
                     </div>
-
                 </div>
                 : <Error />}
         </>
     )
 }
 
-export default Admin
+export default SliderSettings;

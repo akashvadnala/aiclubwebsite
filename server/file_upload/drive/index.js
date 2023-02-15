@@ -8,7 +8,7 @@ class GDriveFileUpload extends FileUpload {
   constructor() {
     super();
     const auth = new google.auth.GoogleAuth({
-      keyFile: 'googlekey.json',
+      credentials: JSON.parse(process.env.GOOGLE_KEY),
       scopes: ["https://www.googleapis.com/auth/drive"],
     });
 
@@ -23,7 +23,7 @@ class GDriveFileUpload extends FileUpload {
 
     const resource = {
       name,
-      'parents': ["1K5UVYYZS6PrDEJRX6QfVj8d7Ng-tBtY0"],
+      'parents': ["1ts7i4H312mc57Z-zwdfbDaAcv_8mb8Le"],
     };
 
     try {
