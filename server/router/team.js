@@ -49,13 +49,10 @@ router.route('/imgdelete').post(authenticate, async (req, res) => {
         const url = req.body.url;
         const key = url.split('=')[2];
 
-        // await fileUpload.deleteFile(key);
-
-        // await File.deleteOne({ imgurl: { url } });
-        console.log('Old Image Deleted');
-        res.status(200).json({ "msg": "Image deleted sucessfully" });
+        await fileUpload.deleteFile(key);
+        res.status(200).json({ msg: "Image deleted sucessfully" });
     } catch (err) {
-        res.status(422).json({ "msg": "Error while deleting Images" })
+        res.status(422).json({ error: "Error while deleting Images" })
     }
 });
 
