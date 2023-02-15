@@ -29,7 +29,6 @@ const TeamSort = ({ setSortMode }) => {
             });
         setSortMode(false);
         showAlert("Team Sorted Successfully!", "success");
-
     }
 
     useEffect(() => {
@@ -69,4 +68,4 @@ const TeamSort = ({ setSortMode }) => {
     )
 }
 
-export default TeamSort
+export default TeamSort;

@@ -31,9 +31,9 @@ html {
   padding: 1.2rem 10px 1.2rem 0.75rem;
 }
 
-
 p{
-  font-size: 13px;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem !important;
 }
 
 .paddl{

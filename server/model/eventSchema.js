@@ -12,7 +12,6 @@ const eventSchema = new Schema({
     },
     speakers:[{
         type: String,
-        required:true
     }],
     poster:{
         type: String,
@@ -20,7 +19,6 @@ const eventSchema = new Schema({
     },
     abstract:{
         type: String,
-        required:true
     },
     eventStart:{
         type:Date,

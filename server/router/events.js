@@ -104,6 +104,7 @@ router.route('/addEvent').post(authenticate, async (req,res)=>{
         res.status(200).json({msg:"Event created sucessfully",url:newEvent.url});
     }
     catch(err){
+        console.log(err);
         res.status(400).json({error:"Problem with adding event"});
     }
 })
