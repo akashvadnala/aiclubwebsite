@@ -1,0 +1,58 @@
+version: '3'
+
+services:  
+  client:
+    build: ./client
+    container_name: aiclubClient
+    depends_on:
+      - server
+    volumes:
+      - react_build:/app/build
+    networks:
+      - mern-network
+
+  server:
+    build: ./server
+    container_name: aiclubServer
+    env_file: ./server/config.env
+    restart: unless-stopped
+    expose:
+      - "3000"
+    depends_on:
+      - mongo
+    networks:
+      - mern-network
+
+  nginx:
+    container_name: aiclubNginx
+    image: nginx:mainline-alpine
+    ports:
+      - "1337:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - react_build:/var/www/html
+    depends_on:
+      - server
+      - client
+    networks:
+      - mern-network
+
+  mongo:
+    image: mongo:5.0
+    container_name: aiclubMongo
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - mern-network
+
+networks:
+  mern-network:
+    driver: bridge
+
+volumes:
+  react_build:
+  mongo_data:
