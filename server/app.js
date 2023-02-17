@@ -22,32 +22,32 @@ app.use(cors({
     exposedHeaders: ['set-cookie'] 
 }));
 // app.use(cors({ credentials: true, origin: "*" }));
-app.use('/uploads',express.static(path.resolve('uploads')));
+app.use('/api/v1/uploads',express.static(path.resolve('uploads')));
 // console.log('dir',path.resolve('uploads'));
 
 //routes
-app.use(require('./router/auth'));
-app.use(require('./router/team'));
-app.use(require('./router/inductions'));
-app.use(require('./router/overview'));
-app.use(require('./router/data'));
-app.use(require('./router/rules'));
-app.use('/blogs',require('./router/blogs'));
-app.use(require('./router/leaderboard'));
-app.use(require('./router/projects'));
-app.use(require('./router/about'));
-app.use('/events',require('./router/events'));
-app.use('/gallery',require('./router/gallery'));
-app.use(require('./router/subscribe'));
-app.use(require('./router/slider'));
+app.use("/api/v1/",require('./router/auth'));
+app.use("/api/v1/",require('./router/team'));
+app.use("/api/v1/",require('./router/inductions'));
+app.use("/api/v1/",require('./router/overview'));
+app.use("/api/v1/",require('./router/data'));
+app.use("/api/v1/",require('./router/rules'));
+app.use('/api/v1/blogs',require('./router/blogs'));
+app.use("/api/v1/",require('./router/leaderboard'));
+app.use("/api/v1/",require('./router/projects'));
+app.use("/api/v1/",require('./router/about'));
+app.use('/api/v1/events',require('./router/events'));
+app.use('/api/v1/gallery',require('./router/gallery'));
+app.use("/api/v1/",require('./router/subscribe'));
+app.use("/api/v1/",require('./router/slider'));
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = Config.PORT;
 
 const url = Config.DATABASE;
 
 //dummy api for testing
-app.get('/test',(req,res)=>{
+app.get('/api/v1/test',(req,res)=>{
     res.status(500).send('testing')
 })
 
