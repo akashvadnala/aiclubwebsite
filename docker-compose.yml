@@ -2,50 +2,68 @@ version: '3'
 
 services:  
   client:
-    build: ./client
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     container_name: aiclubClient
+    volumes:
+      - ./client:/app
     depends_on:
       - server
-    volumes:
-      - react_build:/app/build
     networks:
       - mern-network
 
   server:
-    build: ./server
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
     container_name: aiclubServer
     env_file: ./server/config.env
-    restart: unless-stopped
-    expose:
-      - "3000"
+    volumes:
+      - ./server:/app
     depends_on:
-      - mongo
+      - mongodb
     networks:
       - mern-network
 
   nginx:
-    container_name: aiclubNginx
-    image: nginx:mainline-alpine
-    ports:
-      - "1337:80"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - react_build:/var/www/html
+    restart: always
     depends_on:
       - server
       - client
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: aiclubNginx
+    ports:
+      - 8080:80
     networks:
       - mern-network
 
-  mongo:
+  mongodb:
     image: mongo:5.0
-    container_name: aiclubMongo
+    restart: always
     ports:
-      - "27017:27017"
-    expose:
-      - "27017"
+      - 27017:27017
+    env_file: ./server/config.env
     volumes:
-      - mongo_data:/data/db
+      - mongodb-data:/data/db
+    networks:
+      - mern-network
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    container_name: aiclubMongoExpress
+    depends_on:
+      - mongodb
+    ports:
+      - 8081:8081
+    env_file: ./server/config.env
+    volumes:
+      - mongodb-data:/data/db
     networks:
       - mern-network
 
@@ -54,5 +72,5 @@ networks:
     driver: bridge
 
 volumes:
-  react_build:
-  mongo_data:
+  mongodb-data:
+    driver: local
