@@ -95,9 +95,6 @@ const AddEvent = () => {
     setAdd(true);
     console.log("start-end", startDate, endDate);
     const data = new FormData();
-    console.log(data);
-    const photoname = Date.now() + event.poster.name;
-    data.append("name", photoname);
     data.append("photo", event.poster);
 
     try {
@@ -114,7 +111,6 @@ const AddEvent = () => {
       navigate(`/events/${eventdata.data.url}`);
     } catch (err) {
       showAlert(err.response.data.error,"danger");
-      console.log("photoerr", err);
       navigate('/events')
     }
   };

@@ -50,9 +50,7 @@ const EventDisplay = () => {
   const getEvent = async () => {
     try {
       const res = await axios.get(`${SERVER_URL}/events/getEvent/${url}`);
-      console.log("blog", res.status);
       if (res.status === 200) {
-        console.log("blog", res.data);
         setEvent(res.data);
         setLoad(1);
         if (user.isadmin) {
@@ -89,7 +87,6 @@ const EventDisplay = () => {
         navigate("/events");
       } else {
         showAlert("Failed to delete the event, try again", "danger");
-        console.log("Blog Cannot be deleted");
       }
     }
   };

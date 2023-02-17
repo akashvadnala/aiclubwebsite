@@ -47,7 +47,6 @@ const EditEvent = () => {
         setLoad(1);
       }
     } catch (err) {
-      console.log(err);
       setLoad(-1);
     }
   };
@@ -129,7 +128,6 @@ const EditEvent = () => {
           },
           );
       } catch (err) {
-        console.log("photoerr", err);
         showAlert(err.response.error,"danger")
       }
 
@@ -150,7 +148,7 @@ const EditEvent = () => {
           withCredentials: true
         },
         );
-      console.log("blogdata", eventdata);
+        
       if (eventdata.status === 500 || !eventdata) {
         showAlert("Failed to save", "danger");
       } else {

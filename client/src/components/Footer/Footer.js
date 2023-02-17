@@ -20,8 +20,7 @@ const Footer = () => {
     }
 
     try {
-      let status = await axios.post(`${SERVER_URL}/subscribe`, data);
-      console.log(status);
+      await axios.post(`${SERVER_URL}/subscribe`, data);
     } catch (error) {
       console.log(error);
     }

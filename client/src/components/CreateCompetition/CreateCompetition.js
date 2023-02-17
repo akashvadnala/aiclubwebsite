@@ -23,7 +23,6 @@ const CreateCompetition = () => {
   const [xaccess, setXAccess] = useState('');
   const [msg, setMsg] = useState(null);
   const getUser = async () => {
-    console.log('Hello');
     if (logged_in === 1) {
       if (user.canCreateCompetitions || user.isadmin) {
         setCompete({ ...compete, ['access']: [user.username], ['creator']: user.username });
@@ -80,7 +79,6 @@ const CreateCompetition = () => {
     value = e.target.value;
     setCompete({ ...compete, [name]: value });
   }
-  console.log('compete', compete);
   const [add, setAdd] = useState('Create');
   const [add2, setAdd2] = useState();
 
