@@ -1,5 +1,4 @@
 import Home from './components/Home/Home';
-import Team from './components/Team/Team';
 import Projects from './components/Projects/Projects';
 import { Route, Routes } from 'react-router-dom';
 import TeamUpdate from './components/Team/TeamUpdate';
@@ -14,7 +13,6 @@ import CreateCompetition from './components/CreateCompetition/CreateCompetition'
 import ProjectDisplay from './components/Projects/ProjectDisplay';
 import EditProject from './components/AddProject/EditProject';
 import MyProjects from './components/Projects/myProjects';
-import PreviewProject from './components/AddProject/PreviewProject';
 import About from './components/About';
 import AddBlog from './components/Blogs/AddBlog/AddBlog';
 import CompeteSignup from './components/Navbar/CompeteSignup';
@@ -52,7 +50,6 @@ const Routing = () => {
         <Route exact path='/projectapprovals' element={<ProjectApprovals />} />
         <Route exact path='/projects/:url' element={<ProjectDisplay />} />
         <Route exact path='/projects/:url/edit' element={<EditProject />} />
-        <Route exact path='/projects/:url/preview' element={<PreviewProject />} />
 
         {/* Events */}
         <Route exact path='/events' element={<Events />} />

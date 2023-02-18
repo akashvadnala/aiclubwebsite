@@ -1,6 +1,4 @@
 module.exports = {
-    // SERVER_URL: "https://aiclubnitcserver.adaptable.app",
-    SERVER_URL: "http://localhost:1337/api",
-    // CLIENT_URL: "https://aiclubnitc.netlify.app",
-    CLIENT_URL: "http://localhost:1337",
+    CLIENT_URL: process.env.REACT_APP_CLIENT_URL || "http://localhost:3000",
+    SERVER_URL: process.env.REACT_APP_SERVER_URL || "http://localhost:5000/api/v1",
 } 

@@ -1,19 +1,19 @@
-import React, { useRef, useState, useMemo, useContext, useEffect } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import "./AddProject.css";
 import JoditEditor from "jodit-react";
 import { Context } from "../../Context/Context";
 import { alertContext } from "../../Context/Alert";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import Error from "../Error";
 import axios from "axios";
 import { CLIENT_URL, SERVER_URL } from "../../EditableStuff/Config";
 import Loading from "../Loading";
 import { Helmet } from "react-helmet";
+import { editorConfig } from "../Params/editorConfig";
 
 const EditProject = () => {
   const { url } = useParams();
   const editor = useRef(null);
-  const navigate = useNavigate();
   const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
   const [add, setAdd] = useState(false);
@@ -40,25 +40,27 @@ const EditProject = () => {
         teamArray = data.data;
         team = teamArray;
       });
-      await axios.get(`${SERVER_URL}/getProjectEdit/${url}`).then(async (data) => {
-        project = data.data;
-        if (user && project.authors.indexOf(user._id) > -1) {
-          await Promise.all(
-            project.authors.map((author) => {
-              team = team.filter((t) => t.id !== author);
-              projTeam.push(teamArray.filter((t) => t.id == author)[0]);
-            })
-          );
-          setTeams(team);
-          setProjTeams(projTeam);
-          setProj(project);
-          setLoad(1);
-        } else {
-          setLoad(-1);
-        }
-      });
+      await axios
+        .get(`${SERVER_URL}/getProjectEdit/${url}`)
+        .then(async (data) => {
+          project = data.data;
+          if (user && project.authors.indexOf(user._id) > -1) {
+            await Promise.all(
+              project.authors.map((author) => {
+                team = team.filter((t) => t.id !== author);
+                projTeam.push(teamArray.filter((t) => t.id == author)[0]);
+              })
+            );
+            setTeams(team);
+            setProjTeams(projTeam);
+            setProj(project);
+            setLoad(1);
+          } else {
+            setLoad(-1);
+          }
+        });
     } catch (err) {
-      setLoad(-1)
+      setLoad(-1);
     }
   };
 
@@ -66,8 +68,7 @@ const EditProject = () => {
     if (logged_in === 1) {
       if (url) {
         getProject();
-      }
-      else {
+      } else {
         setLoad(-1);
       }
     } else if (logged_in === -1) {
@@ -78,7 +79,7 @@ const EditProject = () => {
   const handlePhoto = (e) => {
     setImg(e.target.files[0]);
     setPhoto(URL.createObjectURL(e.target.files[0]));
-  }
+  };
 
   const handleValue = (e) => {
     setProj({ ...proj, ["content"]: e });
@@ -95,13 +96,13 @@ const EditProject = () => {
     setPreview(false);
   };
   const removeXAuthor = (author) => {
-    let current = projTeams.filter(t => t.id === author);
-    projTeam = projTeams.filter(t => t.id !== author);
+    let current = projTeams.filter((t) => t.id === author);
+    projTeam = projTeams.filter((t) => t.id !== author);
     team = teams;
     team.push(current[0]);
     setTeams(team);
     setProjTeams(projTeam);
-    let authors = proj.authors.filter(a => a !== author);
+    let authors = proj.authors.filter((a) => a !== author);
     setProj({ ...proj, ["authors"]: authors });
     setXAuthor("");
     setPreview(false);
@@ -165,21 +166,23 @@ const EditProject = () => {
       setAdd(true);
 
       if (Img) {
-
-        await axios.post(`${SERVER_URL}/imgdelete`,
+        await axios.post(
+          `${SERVER_URL}/imgdelete`,
           {
-            'url': proj.cover
+            url: proj.cover,
           },
           {
             withCredentials: true,
             headers: { "Content-Type": "application/json" },
-          });
+          }
+        );
 
         const data = new FormData();
         data.append("photo", Img);
-        const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data, {
+          withCredentials: true,
+        });
         proj.cover = img.data;
-
       }
 
       const projdata = await axios.put(
@@ -197,7 +200,6 @@ const EditProject = () => {
       console.log(err);
       showAlert(err.response.data.error, "danger");
     }
-
   };
   return (
     <>
@@ -345,18 +347,13 @@ const EditProject = () => {
                   <label htmlFor="content">Project Content :</label>
                 </div>
                 <div className="form-group mb-4">
-                  {/* {
-                            useMemo( () => ( 
-                              <JoditEditor name="content" ref={editor} value={proj.content} config={editorConfig} onChange={handleInputs} /> 
-                            ),[proj.content])
-                          } */}
                   <JoditEditor
                     name="content"
                     ref={editor}
                     value={proj ? proj.content : ""}
+                    config={editorConfig}
                     onChange={handleValue}
                   />
-                  {/* <Jodit name="content" ref={editor} value={proj.content} config={editorConfig} onChange={handleInputs} /> */}
                 </div>
               </div>
               <div className="col-12 col-md-3">
@@ -415,9 +412,7 @@ const EditProject = () => {
                   </div>
                 </div>
                 <div className="form-group my-3">
-                  <label for="photo">
-                    Project Cover Photo :
-                  </label>
+                  <label for="photo">Project Cover Photo :</label>
                   <div className="">
                     <input
                       type="file"
@@ -431,7 +426,11 @@ const EditProject = () => {
                   </div>
                 </div>
                 <div className="form-group mt-2 mb-4">
-                  <img src={photo ? photo : proj.cover} alt={proj.title} style={{ width: "100%", objectFit: "contain" }} />
+                  <img
+                    src={photo ? photo : proj.cover}
+                    alt={proj.title}
+                    style={{ width: "100%", objectFit: "contain" }}
+                  />
                 </div>
                 <div className="form-group my-2">
                   <div className="form-check">
@@ -556,33 +555,38 @@ const EditProject = () => {
                   </div>
                 </div>
                 <div>
-                  {
-                    add ?
-                      <button
-                        type="submit"
-                        name="submit"
-                        id="submit"
-                        className="btn btn-primary my-3"
-                        disabled
-                      >
-                        Saving <i className="fa fa-spinner fa-spin"></i>
-                      </button>
-                      :
-                      <button
-                        type="submit"
-                        name="submit"
-                        id="submit"
-                        className="btn btn-primary my-3"
-                        onClick={() => { setProj({ ...proj, ["approvalStatus"]: "submit", ["public"]: false }); }}
-                      >
-                        Save as Draft
-                      </button>
-                  }
+                  {add ? (
+                    <button
+                      type="submit"
+                      name="submit"
+                      id="submit"
+                      className="btn btn-primary my-3"
+                      disabled
+                    >
+                      Saving <i className="fa fa-spinner fa-spin"></i>
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      name="submit"
+                      id="submit"
+                      className="btn btn-primary my-3"
+                      onClick={() => {
+                        setProj({
+                          ...proj,
+                          ["approvalStatus"]: "submit",
+                          ["public"]: false,
+                        });
+                      }}
+                    >
+                      Save as Draft
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
-          </form >
-        </div >
+          </form>
+        </div>
       ) : (
         <Error />
       )}

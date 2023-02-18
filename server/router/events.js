@@ -25,7 +25,6 @@ router.route('/getEvents').get(async (req,res)=> {
     }).sort({eventStart:-1});
 
     const eventData = {"upcoming":upcoming,"ongoing":ongoing,"past":past};
-    // console.log('eventData',eventData);
     res.status(200).json(eventData);
 });
 
@@ -83,7 +82,6 @@ router.route('/gethomepageEvents').get(async (req,res)=>{
 
             lessEvents = lessEvents.concat(ents);
         }
-        // console.log(lessEvents);
         res.status(200).json(lessEvents);
     }
     catch(err){
@@ -97,7 +95,6 @@ router.route('/addEvent').post(authenticate, async (req,res)=>{
     try{
         const event = req.body;
         event.url = event.url.trim().replace(/\s+/g, '-').toLowerCase();
-        console.log("Event : ",event);
         const newEvent = new Event(event);
         await newEvent.save();
         console.log(`${event.title} created sucessfull`);
@@ -130,7 +127,6 @@ router.route('/updateEvent/:url').put(authenticate, async (req,res)=>{
         const updatedEvent = await Event.findOneAndUpdate({url:url},req.body,{
             new:true
         });
-        console.log('Event Updated',updatedEvent);
         res.status(200).json();
     }catch (err) {
         res.status(400).json({error:"Counld not update event!"});

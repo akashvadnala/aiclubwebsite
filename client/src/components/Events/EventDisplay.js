@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { useParams } from "react-router";
 import EmptyList from "../Blogs/search/EmptyList";
 import { useNavigate } from "react-router-dom";
@@ -10,10 +10,12 @@ import { Context } from "../../Context/Context";
 import { alertContext } from "../../Context/Alert";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import JoditEditor from "jodit-react";
+import {editorPreviewConfig} from "../Params/editorConfig";
 
 const EventDisplay = () => {
   const params = new useParams();
-
+  const editor = useRef(null);
   const url = params.url;
   const { user } = useContext(Context);
   const { showAlert } = useContext(alertContext);
@@ -133,6 +135,12 @@ const EventDisplay = () => {
                 <div className="row">
                   <h3 className="text-center pt-4 pt-lg-1 pb-1">Abstract</h3>
                   <p dangerouslySetInnerHTML={{ __html: event.abstract }}></p>
+                  <JoditEditor
+                    name="content"
+                    ref={editor}
+                    value={event ? event.abstract : ""}
+                    config={editorPreviewConfig}
+                  />
                 </div>
                 <div className="row">
                   <h4 className="text-center pb-1">Event Details</h4>
