@@ -35,7 +35,6 @@ class GDriveFileUpload extends FileUpload {
       // console.log('dataid',res.data);
       return res.data.id;
     } catch (err) {
-      console.log('Slow Internet');
       throw new Error(`error uploading file to drive: ${err}`);
     }
   }

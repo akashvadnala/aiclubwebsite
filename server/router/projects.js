@@ -122,6 +122,7 @@ router.route("/getResearchPapers").get(async (req, res) => {
       "-__v -_id -creator -authors -isPublished -tags -content -cover -public -approvalStatus -createdAt"
     )
     .sort({ createdAt: -1 });
+    console.log('data',projectData);
   res.status(200).json(projectData);
 });
 

@@ -8,7 +8,7 @@ import axios from "axios";
 import { CLIENT_URL, SERVER_URL } from "../../../EditableStuff/Config";
 import Loading from "../../Loading";
 import { alertContext } from "../../../Context/Alert";
-import {editorConfig} from "../../Params/editorConfig";
+import {editorConfig,editorPreviewConfig} from "../../Params/editorConfig";
 
 const EditBlog = () => {
   const { url } = useParams();
@@ -93,7 +93,6 @@ const EditBlog = () => {
         const blogExist = await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`);
       }
       setAdd(true);
-      var imgurl;
       if (Img) {
         const data = new FormData();
         const photoname = Date.now() + Img.name;
@@ -106,12 +105,10 @@ const EditBlog = () => {
             withCredentials: true,
           });
         const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
-        console.log('img', img);
-        imgurl = img.data;
-        post.cover = imgurl;
+        post.cover = img.data;
 
       }
-      console.log('imgurl', imgurl);
+      
       const postdata = await axios.put(
         `${SERVER_URL}/blogs/updateBlog/${post._id}`,
         post,
@@ -125,7 +122,6 @@ const EditBlog = () => {
       setPreview(true);
 
     } catch (err) {
-      console.log(err);
       showAlert(`${err.response.data.error}`, "danger");
       // navigate('/myblogs');
     }
@@ -275,6 +271,7 @@ const EditBlog = () => {
                 </div>
                 <div className="form-group mb-4">
                   <JoditEditor
+                    className="jodit-editor-border"
                     name="content"
                     ref={editor}
                     value={post ? post.content : ""}

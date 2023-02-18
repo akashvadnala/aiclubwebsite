@@ -45,7 +45,7 @@ const Publications = () => {
             <div className="col-md-4 text-center text-md-start pb-3">
               <h2>Publications</h2>
             </div>
-            {publications.length ? (
+            {publications && (
               <div className="row">
                 {publications.map((publication, i) => {
                   return (
@@ -55,7 +55,7 @@ const Publications = () => {
                   );
                 })}
               </div>
-            ) : null}
+            ) }
           </div>
         </div>
       ) : (

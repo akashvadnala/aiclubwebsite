@@ -4,7 +4,6 @@ export const editorPreviewConfig = {
     showCharsCounter: false,
     showWordsCounter: false,
     showXPathInStatusbar: false,
-    preset: "inline",
 };
 
 export const editorConfig = {

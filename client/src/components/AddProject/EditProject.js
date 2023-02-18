@@ -349,6 +349,7 @@ const EditProject = () => {
                 <div className="form-group mb-4">
                   <JoditEditor
                     name="content"
+                    className="jodit-editor-border"
                     ref={editor}
                     value={proj ? proj.content : ""}
                     config={editorConfig}
