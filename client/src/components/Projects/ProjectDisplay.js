@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useRef, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../Context/Context";
 import { alertContext } from "../../Context/Alert";
@@ -10,9 +10,12 @@ import AuthorCard from "./AuthorCard";
 import { NavLink } from "react-router-dom";
 import Tag from "../Blogs/tags/Tag";
 import { Helmet } from "react-helmet";
+import JoditEditor from "jodit-react";
+import {editorPreviewConfig} from "../Params/editorConfig";
 
 const ProjectDisplay = () => {
   const { url } = useParams();
+  const editor = useRef(null);
   const { user } = useContext(Context);
   const { showAlert } = useContext(alertContext);
   var project = null;
@@ -435,7 +438,12 @@ const ProjectDisplay = () => {
                   </div>
                 )}
               </div>
-              <p dangerouslySetInnerHTML={{ __html: proj.content }}></p>
+              <JoditEditor
+                    name="content"
+                    ref={editor}
+                    value={proj ? proj.content : ""}
+                    config={editorPreviewConfig}
+                  />
             </div>
             <div className="col-lg-4">
               {authors.map((a, i) => {

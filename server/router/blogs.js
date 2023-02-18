@@ -156,7 +156,7 @@ router.route("/getBlog/:url").get(async (req, res) => {
       res.status(404).json({error:"Blog does not exist"});
     } else {
       const userdetails = await Team.findById(blog.authorName).select(
-        "firstname lastname email position description photo"
+        "firstname lastname email position profession photo github linkedin"
       );
       // console.log("blog", blog);
       res.status(200).json({ blog: blog, author: userdetails });

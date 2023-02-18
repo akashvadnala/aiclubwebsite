@@ -7,6 +7,8 @@ import { alertContext } from "../Context/Alert";
 import Error from "./Error";
 import Loading from "./Loading";
 import "./About.css";
+import {editorConfig} from "./Params/editorConfig";
+import {editorPreviewConfig} from "./Params/editorConfig";
 
 const About = () => {
   const editor = useRef(null);
@@ -117,13 +119,19 @@ const About = () => {
             </div>
             {preview ? (
               <div className="p-3">
-                <p dangerouslySetInnerHTML={{ __html: about.about }}></p>
+                <JoditEditor
+                name="content"
+                ref={editor}
+                value={about.about}
+                config={editorPreviewConfig}
+              />
               </div>
             ) : (
               <JoditEditor
                 name="content"
                 ref={editor}
                 value={about.about}
+                config={editorConfig}
                 onChange={handleValue}
               />
             )}
