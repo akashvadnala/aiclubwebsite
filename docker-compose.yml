@@ -1,0 +1,76 @@
+version: '3'
+
+services:  
+  client:
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: aiclubClient
+    volumes:
+      - ./client:/app
+    depends_on:
+      - server
+    networks:
+      - mern-network
+
+  server:
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: aiclubServer
+    env_file: ./server/config.env
+    volumes:
+      - ./server:/app
+    depends_on:
+      - mongodb
+    networks:
+      - mern-network
+
+  nginx:
+    restart: always
+    depends_on:
+      - server
+      - client
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: aiclubNginx
+    ports:
+      - 8080:80
+    networks:
+      - mern-network
+
+  mongodb:
+    image: mongo:5.0
+    restart: always
+    ports:
+      - 27017:27017
+    env_file: ./server/config.env
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - mern-network
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    container_name: aiclubMongoExpress
+    depends_on:
+      - mongodb
+    ports:
+      - 8081:8081
+    env_file: ./server/config.env
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - mern-network
+
+networks:
+  mern-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+    driver: local

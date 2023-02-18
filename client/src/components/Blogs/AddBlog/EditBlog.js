@@ -8,6 +8,7 @@ import axios from "axios";
 import { CLIENT_URL, SERVER_URL } from "../../../EditableStuff/Config";
 import Loading from "../../Loading";
 import { alertContext } from "../../../Context/Alert";
+import {editorConfig} from "../../Params/editorConfig";
 
 const EditBlog = () => {
   const { url } = useParams();
@@ -277,6 +278,7 @@ const EditBlog = () => {
                     name="content"
                     ref={editor}
                     value={post ? post.content : ""}
+                    config={editorConfig}
                     onChange={handleValue}
                   />
                 </div>

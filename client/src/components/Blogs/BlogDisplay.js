@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { useParams } from "react-router";
 import EmptyList from "./search/EmptyList";
 import { useNavigate } from "react-router-dom";
 import "./BlogDisplay.css";
+import JoditEditor from "jodit-react";
 import ProfileCard from "./profile/ProfileCard";
 import Tag from "./tags/Tag";
 import axios from "axios";
@@ -12,9 +13,11 @@ import { Context } from "../../Context/Context";
 import { alertContext } from "../../Context/Alert";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import {editorPreviewConfig} from "../Params/editorConfig";
 
 const BlogDisplay = () => {
   const params = new useParams();
+  const editor = useRef(null);
   const url = params.url;
   const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
@@ -458,7 +461,12 @@ const BlogDisplay = () => {
                   </div>
                 ))}
               </div>
-              <p dangerouslySetInnerHTML={{ __html: blog.content }}></p>
+              <JoditEditor
+                    name="content"
+                    ref={editor}
+                    value={blog ? blog.content : ""}
+                    config={editorPreviewConfig}
+                  />
             </div>
             <div className="col-lg-4">
               <ProfileCard a={authordetails} />

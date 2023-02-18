@@ -13,11 +13,12 @@ import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import Loading from "../Loading";
 import Error from "../Error";
+import { editorConfig } from "../Params/editorConfig";
 
 const EditEvent = () => {
   const params = new useParams();
   const url = params.url;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const editor = useRef(null);
   const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
@@ -67,12 +68,10 @@ const EditEvent = () => {
     if (logged_in === 1) {
       if (url && user && user.isadmin) {
         getEvent();
-      }
-      else {
+      } else {
         setLoad(-1);
       }
-    }
-    else if (logged_in === -1) {
+    } else if (logged_in === -1) {
       setLoad(-1);
     }
   }, [logged_in, url]);
@@ -125,16 +124,18 @@ const EditEvent = () => {
           { url: event.poster },
           {
             headers: { "Content-Type": "application/json" },
-            withCredentials: true
-          },
-          );
+            withCredentials: true,
+          }
+        );
       } catch (err) {
         console.log("photoerr", err);
-        showAlert(err.response.error,"danger")
+        showAlert(err.response.error, "danger");
       }
 
       try {
-        const img = await axios.post(`${SERVER_URL}/imgupload`, data,{ withCredentials: true });
+        const img = await axios.post(`${SERVER_URL}/imgupload`, data, {
+          withCredentials: true,
+        });
         imgurl = img.data;
         event.poster = imgurl;
       } catch (err) {
@@ -147,10 +148,9 @@ const EditEvent = () => {
         event,
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true
-        },
-        );
-      console.log("blogdata", eventdata);
+          withCredentials: true,
+        }
+      );
       if (eventdata.status === 500 || !eventdata) {
         showAlert("Failed to save", "danger");
       } else {
@@ -160,14 +160,16 @@ const EditEvent = () => {
       }
     } catch (err) {
       console.log("err", err);
-      navigate('/blogs');
-      showAlert(err.response.error,'danger');
+      navigate("/events");
+      showAlert(err.response.error, "danger");
     }
   };
 
   return (
     <>
-      {load === 0 ? <Loading /> : load === 1 ? (
+      {load === 0 ? (
+        <Loading />
+      ) : load === 1 ? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <Helmet>
@@ -284,16 +286,16 @@ const EditEvent = () => {
                         onClick={AddXspeakers}
                       >
                         <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="currentColor"
-                        className="bi bi-plus-circle-fill"
-                        viewBox="0 0 16 18"
-                      >
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                      </svg>{" "}
-                      Add
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          className="bi bi-plus-circle-fill"
+                          viewBox="0 0 16 18"
+                        >
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                        </svg>{" "}
+                        Add
                       </button>
                     </div>
                   </div>
@@ -356,6 +358,7 @@ const EditEvent = () => {
                     name="content"
                     ref={editor}
                     value={event ? event.abstract : ""}
+                    config={editorConfig}
                     onChange={handleValue}
                   />
                 </div>
@@ -395,27 +398,26 @@ const EditEvent = () => {
                 </div>
               </div>
 
-              {
-                add ?
-                  <button
-                    type="submit"
-                    name="submit"
-                    id="submit"
-                    className="btn btn-primary"
-                    disabled
-                  >
-                    Updating <i className="fa fa-spinner fa-spin"></i>
-                  </button>
-                  :
-                  <button
-                    type="submit"
-                    name="submit"
-                    id="submit"
-                    className="btn btn-primary"
-                  >
-                    Update
-                  </button>
-              }
+              {add ? (
+                <button
+                  type="submit"
+                  name="submit"
+                  id="submit"
+                  className="btn btn-primary"
+                  disabled
+                >
+                  Updating <i className="fa fa-spinner fa-spin"></i>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  name="submit"
+                  id="submit"
+                  className="btn btn-primary"
+                >
+                  Update
+                </button>
+              )}
             </form>
           </div>
         </div>

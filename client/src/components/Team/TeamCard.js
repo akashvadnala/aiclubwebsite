@@ -58,6 +58,7 @@ function TeamCard({ team, isadmin, isdelete }) {
             </a>
             <a
               href={team.linkedin}
+              target="_blank"
             >
               <i
                 className="fab fa-linkedin-in fa-lg mx-2"
@@ -66,6 +67,7 @@ function TeamCard({ team, isadmin, isdelete }) {
             </a>
             <a
               href={team.github}
+              target="_blank"
             >
               <i
                 className="fab fa-github fa-lg mx-2"
