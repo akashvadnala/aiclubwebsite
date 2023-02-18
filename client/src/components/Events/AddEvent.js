@@ -11,6 +11,7 @@ import JoditEditor from "jodit-react";
 import { Helmet } from "react-helmet";
 import Loading from "../Loading";
 import Error from "../Error";
+import { editorConfig } from "../Params/editorConfig";
 
 const AddEvent = () => {
   const navigate = useNavigate();
@@ -294,8 +295,10 @@ const AddEvent = () => {
                 </label>
                 <div className="col-sm-10">
                   <JoditEditor
+                    className="jodit-editor-border"
                     name="content"
                     ref={editor}
+                    config={editorConfig}
                     value={event ? event.abstract : ""}
                     onChange={handleValue}
                   />

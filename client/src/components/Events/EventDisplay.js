@@ -136,6 +136,7 @@ const EventDisplay = () => {
                   <h3 className="text-center pt-4 pt-lg-1 pb-1">Abstract</h3>
                   <p dangerouslySetInnerHTML={{ __html: event.abstract }}></p>
                   <JoditEditor
+                    className="border"
                     name="content"
                     ref={editor}
                     value={event ? event.abstract : ""}

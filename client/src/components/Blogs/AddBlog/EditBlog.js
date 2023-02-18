@@ -271,18 +271,12 @@ const EditBlog = () => {
                 </div>
                 <div className="form-group mb-4">
                   <JoditEditor
+                    className="jodit-editor-border"
                     name="content"
                     ref={editor}
                     value={post ? post.content : ""}
                     config={editorConfig}
                     onChange={handleValue}
-                  />
-                  <h5>Preview</h5>
-                  <JoditEditor
-                    name="content"
-                    ref={editor}
-                    value={post ? post.content : ""}
-                    config={editorPreviewConfig}
                   />
                 </div>
               </div>

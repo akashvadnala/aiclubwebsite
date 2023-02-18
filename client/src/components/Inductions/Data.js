@@ -77,7 +77,7 @@ const Data = ({props}) => {
               <p dangerouslySetInnerHTML={{ __html: cdata.description }}></p>
             </div>
           :
-            <JoditEditor name="content" ref={editor} value={cdata.description} onChange={handleValue} /> 
+            <JoditEditor className="border" name="content" ref={editor} value={cdata.description} onChange={handleValue} /> 
           }
             </div>
       </div>

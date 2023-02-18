@@ -355,6 +355,7 @@ const EditEvent = () => {
                 </label>
                 <div className="col-sm-10">
                   <JoditEditor
+                    className="jodit-editor-border"
                     name="content"
                     ref={editor}
                     value={event ? event.abstract : ""}

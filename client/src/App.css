@@ -84,10 +84,15 @@ hr{
   padding: 0.3rem 0.65rem !important;
 }
 
-.jodit-container:not(.jodit_inline){
-  /* border: 0 !important; */
+
+.jodit-container{
+  border: 0 !important;
+  background-color: transparent !important;
 }
 
+.jodit-editor-border{
+  border: 2px rgb(240,240,240) solid !important;
+}
 
 .adjust{
   margin: 0 !important;

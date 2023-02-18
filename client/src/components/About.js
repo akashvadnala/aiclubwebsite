@@ -73,7 +73,7 @@ const About = () => {
       ) : load === 1 ? (
         <div className="about-container">
           <div className="adjust" style={{ overflow: "hidden" }}>
-            <div className="row p-3 pb-1">
+            <div className="row pb-1">
               <div className="col-sm-8">
                 <h2>About</h2>
               </div>
@@ -118,7 +118,7 @@ const About = () => {
               </div>
             </div>
             {preview ? (
-              <div className="p-3">
+              <div>
                 <JoditEditor
                 name="content"
                 ref={editor}
@@ -128,6 +128,7 @@ const About = () => {
               </div>
             ) : (
               <JoditEditor
+                className="jodit-editor-border"
                 name="content"
                 ref={editor}
                 value={about.about}
@@ -135,7 +136,7 @@ const About = () => {
                 onChange={handleValue}
               />
             )}
-            <div className="p-3">
+            <div className="py-3">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.179525211182!2d75.93149181532856!3d11.321585291953028!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba642e2bb691caf%3A0xe14dc0a5771fd2ce!2sCentral%20Computer%20Center!5e0!3m2!1sen!2sin!4v1674127152405!5m2!1sen!2sin"
                 width="100%"
