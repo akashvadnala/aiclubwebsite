@@ -48,7 +48,6 @@ const EditEvent = () => {
         setLoad(1);
       }
     } catch (err) {
-      console.log(err);
       setLoad(-1);
     }
   };
@@ -128,8 +127,8 @@ const EditEvent = () => {
           }
         );
       } catch (err) {
-        console.log("photoerr", err);
-        showAlert(err.response.error, "danger");
+        
+        showAlert(err.response.error,"danger")
       }
 
       try {
@@ -148,9 +147,10 @@ const EditEvent = () => {
         event,
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+          withCredentials: true
+        },
+        );
+      console.log("blogdata", eventdata);
       if (eventdata.status === 500 || !eventdata) {
         showAlert("Failed to save", "danger");
       } else {
@@ -355,6 +355,7 @@ const EditEvent = () => {
                 </label>
                 <div className="col-sm-10">
                   <JoditEditor
+                    className="jodit-editor-border"
                     name="content"
                     ref={editor}
                     value={event ? event.abstract : ""}

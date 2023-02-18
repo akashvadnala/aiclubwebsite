@@ -24,7 +24,7 @@ const AddBlog = () => {
     authorName: user ? user._id : "",
     cover: "",
   };
-  console.log('load', load);
+  
   useEffect(() => {
     if (logged_in === 1) {
         setPost(pt);

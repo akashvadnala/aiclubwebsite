@@ -11,6 +11,7 @@ import JoditEditor from "jodit-react";
 import { Helmet } from "react-helmet";
 import Loading from "../Loading";
 import Error from "../Error";
+import { editorConfig } from "../Params/editorConfig";
 
 const AddEvent = () => {
   const navigate = useNavigate();
@@ -95,9 +96,6 @@ const AddEvent = () => {
     setAdd(true);
     console.log("start-end", startDate, endDate);
     const data = new FormData();
-    console.log(data);
-    const photoname = Date.now() + event.poster.name;
-    data.append("name", photoname);
     data.append("photo", event.poster);
 
     try {
@@ -114,7 +112,6 @@ const AddEvent = () => {
       navigate(`/events/${eventdata.data.url}`);
     } catch (err) {
       showAlert(err.response.data.error,"danger");
-      console.log("photoerr", err);
       navigate('/events')
     }
   };
@@ -298,8 +295,10 @@ const AddEvent = () => {
                 </label>
                 <div className="col-sm-10">
                   <JoditEditor
+                    className="jodit-editor-border"
                     name="content"
                     ref={editor}
+                    config={editorConfig}
                     value={event ? event.abstract : ""}
                     onChange={handleValue}
                   />

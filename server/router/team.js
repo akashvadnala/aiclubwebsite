@@ -38,7 +38,7 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
     try {
         const key = await fileUpload.uploadFile({ name, file, mimeType });
         const url = fileUpload.getUrl(key);
-        res.send(url);
+        res.status(200).json(url);
     } catch (err) {
         res.status(400).json({ error: "Something went wrong!" });
     }
@@ -47,9 +47,9 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
 router.route('/imgdelete').post(authenticate, async (req, res) => {
     try {
         const url = req.body.url;
-        const key = url.split('=')[2];
+        // const key = url.split('=')[2];
 
-        await fileUpload.deleteFile(key);
+        // await fileUpload.deleteFile(key);
         res.status(200).json({ msg: "Image deleted sucessfully" });
     } catch (err) {
         res.status(422).json({ error: "Error while deleting Images" })

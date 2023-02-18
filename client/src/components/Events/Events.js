@@ -20,7 +20,6 @@ const Events = () => {
     try {
       axios.get(`${SERVER_URL}/events/getEvents`).then((data) => {
         if (data.status === 200) {
-          console.log("data", data.data);
           setongoingEvents(data.data.ongoing);
           setpastEvents(data.data.past);
           setupcomingEvents(data.data.upcoming);

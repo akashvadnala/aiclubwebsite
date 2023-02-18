@@ -73,17 +73,17 @@ function TeamLogin(props) {
         {!reset ? (
           <div className="login-container">
             <form method="POST">
-              <div className="form-group my-3 row">
-                <label for="username" className="col-4 text-end">
+              <div className="form-group mb-4 text-start">
+                {/* <label for="username" className="pb-1">
                   Username/Email :
-                </label>
-                <div className="col-8">
+                </label> */}
+                <div>
                   <input
                     type="text"
                     name="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="form-control"
+                    className="form-control form-control-lg"
                     id="username"
                     aria-describedby="username"
                     placeholder="Enter Username or EMail ID"
@@ -91,17 +91,17 @@ function TeamLogin(props) {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
-                <label for="password" className="col-4 text-end">
+              <div className="form-group mb-4 text-start">
+                {/* <label for="password" className="pb-1">
                   Password :
-                </label>
-                <div className="col-8">
+                </label> */}
+                <div>
                   <input
                     type="password"
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="form-control"
+                    className="form-control form-control-lg"
                     id="password"
                     aria-describedby="password"
                     placeholder="Enter Password"
@@ -129,7 +129,7 @@ function TeamLogin(props) {
             </form>
             <button
               type="reset"
-              className="cust btn btn-danger btn-block mb-4 mx-4"
+              className="cust btn btn-block mb-4 mx-4"
               onClick={() => {
                 setReset(!reset);
                 setMsg("");

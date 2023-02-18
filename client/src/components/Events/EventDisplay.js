@@ -52,9 +52,7 @@ const EventDisplay = () => {
   const getEvent = async () => {
     try {
       const res = await axios.get(`${SERVER_URL}/events/getEvent/${url}`);
-      console.log("blog", res.status);
       if (res.status === 200) {
-        console.log("blog", res.data);
         setEvent(res.data);
         setLoad(1);
         if (user.isadmin) {
@@ -91,7 +89,6 @@ const EventDisplay = () => {
         navigate("/events");
       } else {
         showAlert("Failed to delete the event, try again", "danger");
-        console.log("Blog Cannot be deleted");
       }
     }
   };
@@ -139,6 +136,7 @@ const EventDisplay = () => {
                   <h3 className="text-center pt-4 pt-lg-1 pb-1">Abstract</h3>
                   <p dangerouslySetInnerHTML={{ __html: event.abstract }}></p>
                   <JoditEditor
+                    className="border"
                     name="content"
                     ref={editor}
                     value={event ? event.abstract : ""}

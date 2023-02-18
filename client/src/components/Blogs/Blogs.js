@@ -22,7 +22,6 @@ const Blogs = () => {
     try {
       axios.get(`${SERVER_URL}/blogs/getBlogs`).then((data) => {
         if (data.status === 200) {
-          console.log("data", data.data);
           setBlogs(data.data);
           setblogList(data.data);
           setLoad(1);

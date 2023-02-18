@@ -77,7 +77,7 @@ const Overview = ({props}) => {
               <p dangerouslySetInnerHTML={{ __html: overview.description }}></p>
             </div>
           :
-            <JoditEditor name="content" ref={editor} value={overview.description} onChange={handleValue} /> 
+            <JoditEditor className="border" name="content" ref={editor} value={overview.description} onChange={handleValue} /> 
           }
             </div>
       </div>

@@ -20,7 +20,6 @@ router.route('/addSlider').post(authenticate,async (req,res)=>{
         const slide = new Slider(req.body);
         slide.index = index;
         await slide.save();
-        console.log(`${slide.title} added`);
         res.status(200).json();
     }catch(err){
         console.log('err',err);
