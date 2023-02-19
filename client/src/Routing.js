@@ -53,6 +53,7 @@ const Routing = () => {
 
         {/* Events */}
         <Route exact path='/events' element={<Events />} />
+        <Route exact path='/events/page/:page' element={<Events />} />
         <Route exact path='/addevent' element={<AddEvent />} />
         <Route exact path='/events/:url' element={<EventDisplay />} />
         <Route exact path='/events/:url/edit' element={<EditEvent />} />

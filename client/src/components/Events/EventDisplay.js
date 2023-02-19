@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { useParams } from "react-router";
-import EmptyList from "../Blogs/search/EmptyList";
 import { useNavigate } from "react-router-dom";
 import "./EventDisplay.css";
 import axios from "axios";
@@ -12,12 +11,13 @@ import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import JoditEditor from "jodit-react";
 import {editorPreviewConfig} from "../Params/editorConfig";
+import Error from "../Error";
 
 const EventDisplay = () => {
   const params = new useParams();
   const editor = useRef(null);
   const url = params.url;
-  const { user } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const { showAlert } = useContext(alertContext);
   const [event, setEvent] = useState(null);
   const [edit, setedit] = useState(null);
@@ -52,7 +52,6 @@ const EventDisplay = () => {
   const getEvent = async () => {
     try {
       const res = await axios.get(`${SERVER_URL}/events/getEvent/${url}`);
-      if (res.status === 200) {
         setEvent(res.data);
         setLoad(1);
         if (user.isadmin) {
@@ -60,19 +59,15 @@ const EventDisplay = () => {
         } else {
           setedit(false);
         }
-      } else {
-        setLoad(-1);
-        setedit(false);
-        console.log("No Blog Found");
-      }
     } catch (err) {
-      console.log(err);
+      showAlert(err.response.data.error,"danger");
+      setLoad(-1);
     }
   };
 
   useEffect(() => {
     getEvent();
-  }, [user]);
+  }, [logged_in]);
 
   const deleteEvent = async (e) => {
     e.preventDefault();
@@ -134,7 +129,7 @@ const EventDisplay = () => {
               <div className="col-lg-7">
                 <div className="row">
                   <h3 className="text-center pt-4 pt-lg-1 pb-1">Abstract</h3>
-                  <p dangerouslySetInnerHTML={{ __html: event.abstract }}></p>
+                  {/* <p dangerouslySetInnerHTML={{ __html: event.abstract }}></p> */}
                   <JoditEditor
                     className="border"
                     name="content"
@@ -199,7 +194,7 @@ const EventDisplay = () => {
           </div>
         </div>
       ) : (
-        <EmptyList />
+        <Error />
       )}
     </>
   );
