@@ -70,9 +70,20 @@ router.route('/getCompeteNames').get(async (req,res)=>{
     res.status(201).json(data);
 });
 
-router.route('/getDraftCompeteNames').get(async (req,res)=>{
+router.route('/getDraftCompeteNames/:id').get(async (req,res)=>{
+    const { id } = req.params;
     const data = await Competitions.find({public:false});
-    res.status(201).json(data);
+    let competitions = [];
+    if (data) {
+      await Promise.all(
+        data.map(async (competition) => {
+            if (competition.access.includes(id)) {
+                competitions.push(competition);
+            }
+        })
+      );
+    res.status(201).json(competitions);
+    }
 });
 // Is User JOined the Competition
 
