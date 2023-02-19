@@ -42,6 +42,7 @@ const Events = () => {
   };
 
   useEffect(() => {
+    setLoad(0);
     getEventData();
   }, [page]);
 
