@@ -32,7 +32,7 @@ const AddEvent = () => {
     eventStart: new Date(),
     eventEnd: new Date(),
     eventLink: "",
-    eventLocation: ""
+    eventLocation: "",
   });
 
   const filterPassedTime = (time) => {
@@ -49,12 +49,10 @@ const AddEvent = () => {
     if (logged_in === 1) {
       if (user && user.isadmin) {
         setLoad(1);
-      }
-      else {
+      } else {
         setLoad(-1);
       }
-    }
-    else if (logged_in === -1) {
+    } else if (logged_in === -1) {
       setLoad(-1);
     }
   }, [logged_in]);
@@ -93,38 +91,43 @@ const AddEvent = () => {
 
   const PostEvent = async (e) => {
     e.preventDefault();
-    setAdd(true);
-    console.log("start-end", startDate, endDate);
-    const data = new FormData();
-    data.append("photo", event.poster);
-
     try {
-      const img = await axios.post(`${SERVER_URL}/imgupload`, data,{ withCredentials: true });
-      event.poster = img.data;
-      // console.log("final post", event);
-      const eventdata = await axios.post(`${SERVER_URL}/events/addEvent`, event, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true
+      await axios.get(`${SERVER_URL}/events/isEventUrlExist/${event.url}`);
+      setAdd(true);
+      const data = new FormData();
+      data.append("photo", event.poster);
+      const img = await axios.post(`${SERVER_URL}/imgupload`, data, {
+        withCredentials: true,
       });
+      event.poster = img.data;
+      const eventdata = await axios.post(
+        `${SERVER_URL}/events/addEvent`,
+        event,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
       if (eventdata && eventdata.status === 201) {
         showAlert("Event Created Successfull", "success");
       }
       navigate(`/events/${eventdata.data.url}`);
     } catch (err) {
-      showAlert(err.response.data.error,"danger");
-      navigate('/events')
+      showAlert(err.response.data.error, "danger");
+      navigate("/events");
     }
+    setAdd(false);
   };
 
   return (
     <>
-      {load === 0 ? <Loading /> : load === 1 ? (
+      {load === 0 ? (
+        <Loading />
+      ) : load === 1 ? (
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <Helmet>
-              <title>
-                Events - NIT Calicut
-              </title>
+              <title>Events - NIT Calicut</title>
             </Helmet>
             <h3>Add Event</h3>
             <form
@@ -225,16 +228,16 @@ const AddEvent = () => {
                         onClick={AddXspeakers}
                       >
                         <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="currentColor"
-                        className="bi bi-plus-circle-fill"
-                        viewBox="0 0 16 18"
-                      >
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                      </svg>{" "}
-                      Add
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          className="bi bi-plus-circle-fill"
+                          viewBox="0 0 16 18"
+                        >
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                        </svg>{" "}
+                        Add
                       </button>
                     </div>
                   </div>
@@ -339,26 +342,26 @@ const AddEvent = () => {
                 </div>
               </div>
 
-              {
-                add ?
-                  <button
-                    type="submit"
-                    name="submit"
-                    id="submit"
-                    className="btn btn-primary"
-                    disabled
-                  >
-                    Creating <i className="fa fa-spinner fa-spin"></i>
-                  </button>
-                  : <button
-                    type="submit"
-                    name="submit"
-                    id="submit"
-                    className="btn btn-primary"
-                  >
-                    Create
-                  </button>
-              }
+              {add ? (
+                <button
+                  type="submit"
+                  name="submit"
+                  id="submit"
+                  className="btn btn-primary"
+                  disabled
+                >
+                  Creating <i className="fa fa-spinner fa-spin"></i>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  name="submit"
+                  id="submit"
+                  className="btn btn-primary"
+                >
+                  Create
+                </button>
+              )}
             </form>
           </div>
         </div>

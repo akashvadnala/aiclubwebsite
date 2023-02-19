@@ -7,6 +7,7 @@ const Data = require('../model/dataSchema');
 const Rules = require('../model/rulesSchema');
 const Leaderboard = require('../model/leaderboardSchema');
 const Team = require('../model/teamSchema');
+const authenticate = require("../middleware/authenticate");
 
 router.route('/getCompete/:url').get(async (req,res) => {
     const {url} = req.params;
@@ -19,17 +20,19 @@ router.route('/getCompete/:url').get(async (req,res) => {
     }
 });
 
-router.route('/competitions').post(async (req,res) => {
+router.route("/isCompUrlExist/:url").get(async (req, res) => {
+    const { url } = req.params;
+    Competitions.findOne({ url: url }).then(data => {
+      return data ? res.status(404).send({ error: "Url Already Exist!" }) : res.status(200).json();
+    })
+  })
+
+router.route('/addcompetitions').post(authenticate, async (req,res) => {
     const title = req.body.title;
     const description = req.body.description;
     const url = req.body.url;
     const public = req.body.public;
     const navs=[];
-    const competeExist = await Competitions.findOne({url:url});
-    console.log('exist',competeExist);
-    if(competeExist){
-        return res.status(422).json({error:"Competition Already Exist"});
-    }
     try{
         const compete = new Competitions(req.body);
         await compete.save();
@@ -67,6 +70,10 @@ router.route('/getCompeteNames').get(async (req,res)=>{
     res.status(201).json(data);
 });
 
+router.route('/getDraftCompeteNames').get(async (req,res)=>{
+    const data = await Competitions.find({public:false});
+    res.status(201).json(data);
+});
 // Is User JOined the Competition
 
 router.route('/isJoined/:url/:username').get(async (req,res)=>{

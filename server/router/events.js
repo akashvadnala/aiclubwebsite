@@ -160,8 +160,15 @@ router.route('/gethomepageEvents').get(async (req, res) => {
 
 });
 
-router.route('/addEvent').post(authenticate, async (req, res) => {
-    try {
+router.route("/isEventUrlExist/:url").get(async (req, res) => {
+    const { url } = req.params;
+    Event.findOne({ url: url }).then(data => {
+      return data ? res.status(404).send({ error: "Url Already Exist!" }) : res.status(200).json();
+    })
+  })
+
+router.route('/addEvent').post(authenticate, async (req,res)=>{
+    try{
         const event = req.body;
         event.url = event.url.trim().replace(/\s+/g, '-').toLowerCase();
         const newEvent = new Event(event);
