@@ -1,6 +1,11 @@
 import React from "react";
 import "./EventSpace.css";
 import { NavLink } from "react-router-dom";
+import Img from '../../EditableStuff/header.jpeg';
+
+const addDefaultSrc = (ev) => {
+  ev.target.src = Img;
+};
 
 const EventSpace = (props) => {
   const convertTime2String = (date) => {
@@ -33,9 +38,14 @@ const EventSpace = (props) => {
         <div className="row g-0">
           <div className="col-md-2">
             <img
-              src={props.event.poster}
+            onError={addDefaultSrc}
+              src={
+                props.event.poster?
+                props.event.poster:
+                Img
+              }
               className="rounded-circle mx-3 my-3"
-              alt="..."
+              alt="poster"
               style={{ 'width': "6.5rem", 'height': "6.5rem" }}
             />
           </div>
