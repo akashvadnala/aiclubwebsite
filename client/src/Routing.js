@@ -1,35 +1,43 @@
-import Home from './components/Home/Home';
-import Projects from './components/Projects/Projects';
 import { Route, Routes } from 'react-router-dom';
-import TeamUpdate from './components/Team/TeamUpdate';
-import TeamAdd from './components/Team/TeamAdd';
+
 import Error from './components/Error';
-import AddProject from './components/AddProject/AddProject';
-import Events from './components/Events/Events';
-import Blogs from './components/Blogs/Blogs';
-import BlogDisplay from './components/Blogs/BlogDisplay';
-import Compete from './components/Inductions/Compete';
-import CreateCompetition from './components/CreateCompetition/CreateCompetition';
-import ProjectDisplay from './components/Projects/ProjectDisplay';
-import EditProject from './components/AddProject/EditProject';
-import MyProjects from './components/Projects/myProjects';
-import About from './components/About';
-import AddBlog from './components/Blogs/AddBlog/AddBlog';
-import CompeteSignup from './components/Navbar/CompeteSignup';
-import EditBlog from './components/Blogs/AddBlog/EditBlog';
-import AddEvent from './components/Events/AddEvent';
-import EventDisplay from './components/Events/EventDisplay';
-import EditEvent from './components/Events/EditEvent';
 import Admin from './components/Admin/Admin';
 import AllPhotos from './components/Home/PhotoGallery/AllPhotos';
-import ProjectApprovals from './components/Projects/ProjectApprovals';
-import BlogApprovals from './components/Blogs/BlogApprovals';
-import MyBlogs from './components/Blogs/myBlogs';
 import Profile from './components/Profile/profile';
 import ForgetPassword from './components/Navbar/ForgetPassword';
 import Publications from './components/Publications/Publications';
-import TeamHead from './components/Team/TeamHead';
 import MemberProfile from './components/Profile/memberProfile';
+
+import Home from './components/Home/Home';
+import Projects from './components/Projects/Projects';
+import AddProject from './components/AddProject/AddProject';
+import ProjectDisplay from './components/Projects/ProjectDisplay';
+import EditProject from './components/AddProject/EditProject';
+import MyProjects from './components/Projects/myProjects';
+import ProjectApprovals from './components/Projects/ProjectApprovals';
+
+import TeamUpdate from './components/Team/TeamUpdate';
+import TeamAdd from './components/Team/TeamAdd';
+import TeamHead from './components/Team/TeamHead';
+
+import Events from './components/Events/Events';
+import About from './components/About';
+import AddEvent from './components/Events/AddEvent';
+import EventDisplay from './components/Events/EventDisplay';
+import EditEvent from './components/Events/EditEvent';
+
+import Blogs from './components/Blogs/Blogs';
+import BlogDisplay from './components/Blogs/BlogDisplay';
+import AddBlog from './components/Blogs/AddBlog/AddBlog';
+import EditBlog from './components/Blogs/AddBlog/EditBlog';
+import BlogApprovals from './components/Blogs/BlogApprovals';
+import MyBlogs from './components/Blogs/myBlogs';
+
+import Competitions from './components/Competitions/Competitions';
+import DraftCompetitions from './components/Competitions/DraftCompetitions';
+import CompeteSignup from './components/Navbar/CompeteSignup';
+import Compete from './components/Competitions/Compete';
+import CreateCompetition from './components/Competitions/CreateCompetition/CreateCompetition';
 
 const Routing = () => {
 
@@ -73,6 +81,8 @@ const Routing = () => {
         {/* <Route exact path='/inductions-b21-b20/data' element={<Data />} /> */}
         {/* <Route exact path='/inductions-b21-b20/leaderboard' element={<Leaderboard />} /> */}
         {/* <Route exact path='/inductions-b21-b20/register' element={<Register />} /> */}
+        <Route exact path='/competitions' element={<Competitions />} />
+        <Route exact path='/draftcompetitions' element={<DraftCompetitions />} />
         <Route exact path='/create-competition' element={<CreateCompetition />} />
         <Route exact path='/competitions/:spath/:path' element={<Compete />} />
         <Route exact path='/competitions/:spath' element={<Compete />} />

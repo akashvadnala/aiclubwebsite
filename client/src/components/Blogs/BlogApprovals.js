@@ -13,7 +13,7 @@ import Error from "../Error";
 
 const BlogApprovals = () => {
   const [blogList, setblogList] = useState([]);
-  const { user } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const [filtermode, setfiltermode] = useState("My Blogs");
   const [blogs, setBlogs] = useState([]);
   const [searchKey, setSearchKey] = useState("");
@@ -23,10 +23,8 @@ const BlogApprovals = () => {
     try {
       axios.get(`${SERVER_URL}/blogs/getpendingBlogApprovals`).then((data) => {
         if (data.status === 200) {
-          console.log("data", data.data);
           setBlogs(data.data);
           setblogList(data.data);
-          setLoad(1);
         } else {
           setLoad(-1);
         }
@@ -37,7 +35,16 @@ const BlogApprovals = () => {
   };
 
   useEffect(() => {
-    getBlogApprovals();
+    if (logged_in === 1) {
+      if (user.isadmin) {
+        getBlogApprovals();
+        setLoad(1);
+      } else {
+        setLoad(-1);
+      }
+    } else if (logged_in === -1) {
+      setLoad(-1);
+    }
   }, [user]);
 
   // Search submit

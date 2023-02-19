@@ -60,7 +60,7 @@ const AddBlog = () => {
   const PostBlog = async (e) => {
     e.preventDefault();
     try {
-      await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`);
+      await axios.get(`${SERVER_URL}/blogs/isBlogUrlExist/${post.url}`);
       setAdd(true);
       const data = new FormData();
       data.append("photo", post.cover);
@@ -76,7 +76,8 @@ const AddBlog = () => {
       showAlert(`${error.response.data.error}`, "danger");
     }
     setAdd(false);
-  }
+  };
+
   return (
     <>
       {load === 0 ? (

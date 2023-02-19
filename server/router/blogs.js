@@ -135,17 +135,11 @@ router.route("/getuserBlogs/:id").get(async (req, res) => {
   }
 });
 
-router.route("/canAddBlog/:url").get(async (req, res) => {
+router.route("/isBlogUrlExist/:url").get(async (req, res) => {
   const { url } = req.params;
   Blog.findOne({ url: url }).then(data => {
-    if (data) {
-      res.status(403).json({ error: "Url Aready Exits" });
-    } else {
-      res.status(200).json({ msg: "yes" });
-    }
-  }).catch(error => {
-    res.status(500).json({ error: "Problem at server" });
-  });
+    return data ? res.status(404).send({ error: "Url Already Exist!" }) : res.status(200).json();
+  })
 })
 
 router.route("/getBlog/:url").get(async (req, res) => {
