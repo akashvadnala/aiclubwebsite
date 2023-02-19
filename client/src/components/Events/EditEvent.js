@@ -155,7 +155,7 @@ const EditEvent = () => {
         showAlert("Failed to save", "danger");
       } else {
         setAdd(false);
-        showAlert("Saved as Draft", "success");
+        showAlert("Event Updated!", "success");
         setPreview(true);
       }
     } catch (err) {
