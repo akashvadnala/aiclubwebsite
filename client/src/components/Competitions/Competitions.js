@@ -19,7 +19,6 @@ const Competitions = () => {
       axios.get(`${SERVER_URL}/getCompeteNames`).then((data) => {
         if (data.status === 201) {
           setCompetitions(data.data);
-          console.log(competitions);
           setLoad(1);
         } else {
           setLoad(-1);
@@ -49,33 +48,33 @@ const Competitions = () => {
                 <h2>Competitions</h2>
               </div>
               <div className="col-md-8 text-center text-md-end">
+                {user ? (
+                  <NavLink
+                    rel="noreferrer"
+                    to="/draftcompetitions"
+                    className="btn btn-sm btn-primary mx-1"
+                  >
+                    Draft Competitions
+                  </NavLink>
+                ) : null}
                 {user && user.isadmin ? (
-                  <>
-                    <NavLink
-                      rel="noreferrer"
-                      to="/draftcompetitions"
-                      className="btn btn-sm btn-primary mx-1"
+                  <NavLink
+                    type="button"
+                    className="btn btn-sm btn-success"
+                    to="/create-competition"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      className="bi bi-plus-circle-fill"
+                      viewBox="0 0 16 18"
                     >
-                      Draft Competitions
-                    </NavLink>
-                    <NavLink
-                      type="button"
-                      className="btn btn-sm btn-success"
-                      to="/create-competition"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="currentColor"
-                        className="bi bi-plus-circle-fill"
-                        viewBox="0 0 16 18"
-                      >
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                      </svg>{" "}
-                      Create Competition
-                    </NavLink>
-                  </>
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                    </svg>{" "}
+                    Create Competition
+                  </NavLink>
                 ) : null}
               </div>
             </div>

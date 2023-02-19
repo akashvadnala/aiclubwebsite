@@ -63,6 +63,7 @@ const Compete = () => {
         setHostAccess(false);
         getCompete();
     },[logged_in,spath]);
+
     const parameters = {
         c:comp,
         access:hostAccess,
@@ -106,11 +107,6 @@ const Compete = () => {
     useEffect(() => {
         getPage(path);
     },[comp,path,isJoined]);
-
-    const keys = {
-        'overview':'Overview',
-        'data':'Data',
-    }
 
   return (
     <>

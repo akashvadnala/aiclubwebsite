@@ -5,7 +5,7 @@ const CompetitionSpace = ({ competition }) => {
   const [status, setStaus] = useState("");
   const [timeStatus, setTimeStaus] = useState("");
 
-  useEffect(() => {
+  const getStatus = () => {
     let present = new Date();
     let start = new Date(competition.CompetitionStart);
     let end = new Date(competition.CompetitionEnd);
@@ -54,6 +54,10 @@ const CompetitionSpace = ({ competition }) => {
     } else {
       setStaus("Completed");
     }
+  };
+
+  useEffect(() => {
+    getStatus();
   }, [competition]);
 
   return (
