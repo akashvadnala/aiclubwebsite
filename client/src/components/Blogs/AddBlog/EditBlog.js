@@ -69,6 +69,21 @@ const EditBlog = () => {
   const handleInputs = (e) => {
     setpost({ ...post, [e.target.name]: e.target.value });
   };
+  
+  const handleUrl = (e) => {
+    let value = e.target.value;
+    let url="";
+    for(let i=0;i<value.length;i++){
+      const c = value[i];
+      if(("a"<=c && c<="z") || ("A"<=c && c<="Z") || ("0"<=c && c<="9") || c==="-" || c==='_'){
+        url+=c;
+      }
+      else{
+        showAlert("Special Characters are not allowed except '-' and '_'","danger");
+      }
+    }
+    setpost({...post,url:url});
+  }
 
   const removeXTag = (tag) => {
     let current = post.tags;
@@ -189,7 +204,7 @@ const EditBlog = () => {
                       type="text"
                       name="url"
                       value={post.url}
-                      onChange={handleInputs}
+                      onChange={handleUrl}
                       className="form-control"
                       id="basic-url"
                       aria-describedby="basic-addon3"

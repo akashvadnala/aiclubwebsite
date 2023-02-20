@@ -64,6 +64,21 @@ const AddEvent = () => {
   const handleInputs = (e) => {
     setEvent({ ...event, [e.target.name]: e.target.value });
   };
+  
+  const handleUrl = (e) => {
+    let value = e.target.value;
+    let url="";
+    for(let i=0;i<value.length;i++){
+      const c = value[i];
+      if(("a"<=c && c<="z") || ("A"<=c && c<="Z") || ("0"<=c && c<="9") || c==="-" || c==='_'){
+        url+=c;
+      }
+      else{
+        showAlert("Special Characters are not allowed except '-' and '_'","danger");
+      }
+    }
+    setEvent({...event,url:url});
+  }
 
   const removeXspeakers = (speaker) => {
     let current = event.speakers;
@@ -171,7 +186,7 @@ const AddEvent = () => {
                       type="text"
                       name="url"
                       value={event.url}
-                      onChange={handleInputs}
+                      onChange={handleUrl}
                       className="form-control"
                       id="basic-url"
                       aria-describedby="basic-addon3"

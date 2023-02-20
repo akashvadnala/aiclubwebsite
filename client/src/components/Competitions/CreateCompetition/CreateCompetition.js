@@ -116,6 +116,21 @@ const CreateCompetition = () => {
     value = e.target.value;
     setCompete({ ...compete, [name]: value });
   };
+  
+  const handleUrl = (e) => {
+    let value = e.target.value;
+    let url="";
+    for(let i=0;i<value.length;i++){
+      const c = value[i];
+      if(("a"<=c && c<="z") || ("A"<=c && c<="Z") || ("0"<=c && c<="9") || c==="-" || c==='_'){
+        url+=c;
+      }
+      else{
+        showAlert("Special Characters are not allowed except '-' and '_'","danger");
+      }
+    }
+    setCompete({...compete,url:url});
+  }
 
   const createCompete = async (e) => {
     e.preventDefault();
@@ -211,7 +226,7 @@ const CreateCompetition = () => {
                       type="text"
                       name="url"
                       value={compete.url}
-                      onChange={handleInputs}
+                      onChange={handleUrl}
                       className="form-control"
                       id="url"
                       aria-describedby="url"
