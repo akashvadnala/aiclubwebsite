@@ -17,7 +17,7 @@ const CreateCompetition = () => {
     subtitle: "",
     headerPhoto: "",
     creator: user ? user._id : null,
-    access: [user ? user._id : null],
+    access: [],
     public: false,
     CompetitionStart: new Date(),
     CompetitionEnd: new Date()
@@ -42,7 +42,7 @@ const CreateCompetition = () => {
         projTeam = teamArray.filter((t) => t.id === user._id);
         setTeams(team);
         setProjTeams(projTeam);
-        setCompete(compete);
+        setCompete({ ...compete, ["creator"]: user._id, ["access"]:[user._id] });
         setLoad(1);
       });
     } catch (err) {
