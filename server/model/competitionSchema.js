@@ -14,6 +14,21 @@ const competitionSchema = new mongoose.Schema(
       type: String,
       requied: true,
     },
+    description:{
+      type: String,
+      default: "Enter competition description here"
+    },
+    dataset:{
+      type: String,
+      default: "Enter Dataset related information here Eg. Dataset Name, Kaggle Dataset Links, Google Drive Links etc.."
+    },
+    rules:{
+      type: String,
+      default: "Enter competition rules here"
+    },
+    evaluation:{
+      type: String,
+    },
     headerPhoto: {
       type: String,
       required: true,

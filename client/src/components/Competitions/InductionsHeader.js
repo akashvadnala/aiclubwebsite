@@ -6,42 +6,18 @@ import CompeteLogin from "../Navbar/CompeteLogin";
 import "./Competitions.css";
 
 const InductionsHeader = ({ props }) => {
-  console.log("props", props);
   const location = useLocation();
-  const [isJoined, setIsJoined] = useState(false);
-
-  let keys = {
-    "": "Overview",
-    data: "Data",
-    leaderboard: "Leaderboard",
-    rules: "Rules",
-  };
+  let keys;
   if (props.access) {
     keys = {
+      overview: "Overview",
+      leaderboard: "Leaderboard",
       host: "Host",
-      "": "Overview",
-      data: "Data",
-      leaderboard: "Leaderboard",
-      rules: "Rules",
     };
-  }
-  if (isJoined) {
+  } else {
     keys = {
-      "": "Overview",
-      data: "Data",
+      overview: "Overview",
       leaderboard: "Leaderboard",
-      rules: "Rules",
-      submissions: "Submissions",
-    };
-  }
-  if (props.access && isJoined) {
-    keys = {
-      host: "Host",
-      "": "Overview",
-      data: "Data",
-      leaderboard: "Leaderboard",
-      rules: "Rules",
-      submissions: "Submissions",
     };
   }
   const [modalShow2, setModalShow2] = useState(false);
@@ -68,9 +44,7 @@ const InductionsHeader = ({ props }) => {
       console.log(err);
     }
   };
-  useEffect(() => {
-    setIsJoined(props.isJoined);
-  }, [props]);
+  useEffect(() => {}, []);
   return (
     <>
       <div className="card">
@@ -89,18 +63,19 @@ const InductionsHeader = ({ props }) => {
         </div>
 
         <div className="card-body p-1">
-          <div className="row">
-            <div className="col-lg-8 px-5">
-              <nav className="inductions-navbar align-items-center">
-                <div className="nav nav-tabs" id="nav-tab" role="tablist">
+          <div className="row align-items-center">
+            <div className="col-lg-8 px-4">
+              <nav className="inductions-navbar">
+                <div className="nav nav-pills" id="nav-tab" role="tablist">
                   {Object.entries(keys).map(([key, value]) => {
                     return (
                       <NavLink
                         type="button"
                         role="tab"
-                        className="nav-link"
+                        className={`nav-link ${key === props.path && "active"}`}
                         to={`/competitions/${props.c.url}/${key}`}
                         aria-current="page"
+                        key={key}
                       >
                         {value}
                       </NavLink>
@@ -109,12 +84,8 @@ const InductionsHeader = ({ props }) => {
                 </div>
               </nav>
             </div>
-            <div className="col-lg-4 px-5 py-3 text-end">
-              {isJoined ? (
-                <button className="btn btn-sm btn-success">
-                  <i className="fas fa-check-circle green"></i> Joined
-                </button>
-              ) : (
+            <div className="col-lg-4 text-end py-1">
+              {
                 <NavLink className="btn btn-sm btn-black" onClick={joinCompete}>
                   {joining ? (
                     <>
@@ -125,7 +96,7 @@ const InductionsHeader = ({ props }) => {
                     <>Join Competition</>
                   )}
                 </NavLink>
-              )}
+              }
             </div>
           </div>
         </div>

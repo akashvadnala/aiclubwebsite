@@ -10,7 +10,7 @@ import Error from "../Error";
 import CompetitionSpace from "./CompetitionSpace";
 
 const DraftCompetitions = () => {
-  const { user } = useContext(Context);
+  const { user,logged_in } = useContext(Context);
   const [competitions, setCompetitions] = useState([]);
   const [load, setLoad] = useState(0);
 
@@ -32,8 +32,13 @@ const DraftCompetitions = () => {
   };
 
   useEffect(() => {
-    getCompetitionsData();
-  }, [user]);
+    if(logged_in===1){
+      getCompetitionsData();
+    }
+    else if(logged_in===-1){
+      setLoad(-1);
+    }
+  }, [logged_in]);
 
   return (
     <>

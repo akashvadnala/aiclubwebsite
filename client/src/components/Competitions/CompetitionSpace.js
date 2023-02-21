@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
-const CompetitionSpace = ({ competition }) => {
+const CompetitionSpace = ({competition}) => {
   const [status, setStaus] = useState("");
   const [timeStatus, setTimeStaus] = useState("");
 
-  const getStatus = () => {
+
+  useEffect(() => {
     let present = new Date();
     let start = new Date(competition.CompetitionStart);
     let end = new Date(competition.CompetitionEnd);
@@ -54,10 +55,6 @@ const CompetitionSpace = ({ competition }) => {
     } else {
       setStaus("Completed");
     }
-  };
-
-  useEffect(() => {
-    getStatus();
   }, [competition]);
 
   return (
