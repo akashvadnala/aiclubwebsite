@@ -21,7 +21,6 @@ const Compete = () => {
   }
   const { user, logged_in } = useContext(Context);
   const [page, setPage] = useState(null);
-  const [parameters, setParameters] = useState(null);
   const [comp, setComp] = useState([]);
   const [load, setLoad] = useState(0);
   const [hostAccess, setHostAccess] = useState(false);
@@ -35,12 +34,6 @@ const Compete = () => {
             }
           }
           setComp(data.data);
-          setParameters({
-            path: path,
-            c: comp,
-            access: hostAccess,
-            username: user ? user.username : null,
-          })
           setLoad(1);
         } else {
           console.log("Competition not found");
@@ -53,7 +46,15 @@ const Compete = () => {
     }
   };
 
-  const getPage = async (path) => {
+  let parameters = {
+    path: path,
+    c: comp,
+    access: hostAccess,
+    username: user ? user.username : null,
+  };
+
+  const getPage = async () => {
+    
     switch (path) {
       case undefined:
         setPage(<Overview props={parameters} />);
@@ -77,13 +78,17 @@ const Compete = () => {
         break;
     }
   };
+
   useEffect(() => {
-    setHostAccess(false);
     if (logged_in === 1) {
       getCompete();
-      getPage(path);
     }
   }, [logged_in, spath, path]);
+
+  useEffect(()=>{
+    getPage();
+  },[comp]);
+  
   return (
     <>
       {load === 0 ? (
