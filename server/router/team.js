@@ -194,20 +194,20 @@ router.route('/changePassword/:id').put(authenticate, async (req, res) => {
         const { id } = req.params;
         const { password, newPassword, cPassword } = req.body;
         if (newPassword !== cPassword) {
-            return res.status(201).json({ error: "Password Not Matched" });
+            return res.status(400).json({ error: "Password Not Matched" });
         }
         let team = await Team.findById(id);
 
         bcrypt.compare(password, team.password, async (err, isMatch) => {
             if (!isMatch) {
-                return res.status(201).json({ error: "Invalid Credentials" });
+                return res.status(400).json({ error: "Invalid Credentials" });
             }
             else {
                 const saltRounds = 10;
                 team.password = await bcrypt.hash(newPassword, saltRounds);
                 team.tokens = [];
                 await team.save();
-                token = await team.generateAuthToken();
+                const token = await team.generateAuthToken();
                 res.cookie('jwtoken', token, {
                     expires: new Date(Date.now() + 258920000000), //30 days
                     httpOnly: true,

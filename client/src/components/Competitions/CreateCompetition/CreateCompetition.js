@@ -42,7 +42,7 @@ const CreateCompetition = () => {
         projTeam = teamArray.filter((t) => t.id === user._id);
         setTeams(team);
         setProjTeams(projTeam);
-        setCompete({ ...compete, ["creator"]: user._id, ["access"]:[user._id] });
+        setCompete({ ...compete, creator: user._id, access:[user._id] });
         setLoad(1);
       });
     } catch (err) {
@@ -71,7 +71,7 @@ const CreateCompetition = () => {
     setTeams(team);
     setProjTeams(projTeam);
     let authors = compete.access.filter(a => a !== author);
-    setCompete({ ...compete, ["access"]: authors });
+    setCompete({ ...compete, access: authors });
     setXAccess("");
   };
 
@@ -85,23 +85,23 @@ const CreateCompetition = () => {
       setProjTeams(projTeam);
       let authors = compete.access;
       authors.push(xaccess);
-      setCompete({ ...compete, ["access"]: authors });
+      setCompete({ ...compete, access: authors });
       setXAccess("");
     }
   };
 
   const handleHeaderPhoto = (e) => {
-    setCompete({ ...compete, ["headerPhoto"]: e.target.files[0] });
+    setCompete({ ...compete, headerPhoto: e.target.files[0] });
   };
 
   const seteventStartDate = (date) => {
     setStartDate(date);
-    setCompete({ ...compete, ["CompetitionStart"]: date });
+    setCompete({ ...compete, CompetitionStart: date });
   };
 
   const seteventEndDate = (date) => {
     setEndDate(date);
-    setCompete({ ...compete, ["CompetitionEnd"]: date });
+    setCompete({ ...compete, CompetitionEnd: date });
   };
 
   const filterPassedTime = (time) => {
