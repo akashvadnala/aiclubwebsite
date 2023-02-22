@@ -19,7 +19,6 @@ const Leaderboard = ({props}) => {
   useEffect(()=>{
     getLeaderboard();
   },[props]);
-  console.log('lb',lb);
   return(
   <>
   {

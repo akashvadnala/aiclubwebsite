@@ -20,7 +20,7 @@ const Host = ({props}) => {
   }
   return (
     <>
-        <button className='btn btn-sm btn-danger' onClick={deleteCompete}>Delete Competition</button>
+        {/* <button className='btn btn-sm btn-danger' onClick={deleteCompete}>Delete Competition</button> */}
     </>
   )
 }

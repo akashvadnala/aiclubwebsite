@@ -6,7 +6,6 @@ import { Context } from "../Context/Context";
 import { alertContext } from "../Context/Alert";
 import Error from "./Error";
 import Loading from "./Loading";
-import "./About.css";
 import {editorConfig} from "./Params/editorConfig";
 import {editorPreviewConfig} from "./Params/editorConfig";
 

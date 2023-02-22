@@ -141,17 +141,17 @@ function TeamLogin(props) {
         ) : (
           <div className="login-container">
             <form method="POST" onSubmit={ResetPassword}>
-              <div className="form-group my-3 row">
-                <label for="username" className="col-4 text-end">
+              <div className="form-group mb-4 text-start">
+                {/* <label for="username" className="col-4 text-end">
                   Username/Email :
-                </label>
-                <div className="col-8">
+                </label> */}
+                <div>
                   <input
                     type="text"
                     name="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="form-control"
+                    className="form-control  form-control-lg"
                     id="username"
                     aria-describedby="username"
                     placeholder="Enter Username or EMail ID"
