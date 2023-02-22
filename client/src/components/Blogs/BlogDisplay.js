@@ -127,7 +127,7 @@ const BlogDisplay = () => {
             }
           );
           showAlert("Submitted for Admin approval", "success");
-          setBlog({ ...blog, ["approvalStatus"]: "pending" });
+          setBlog({ ...blog, approvalStatus: "pending" });
           setApproval2();
           navigate(`/blogs/${blog.url}`);
         }
@@ -159,7 +159,7 @@ const BlogDisplay = () => {
         }
       );
       showAlert(`${response === "Approved" ? "Approved & Published." : response}.`, "success");
-      setBlog({ ...blog, ["approvalStatus"]: response, ["public"]: status });
+      setBlog({ ...blog, approvalStatus: response, public: status });
       setApproval2();
       navigate(`/blogs/${blog.url}`);
     } catch (error) {

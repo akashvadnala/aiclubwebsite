@@ -63,7 +63,7 @@ const EditBlog = () => {
   }
 
   const handleValue = (e) => {
-    setpost({ ...post, ["content"]: e });
+    setpost({ ...post, content: e });
   };
 
   const handleInputs = (e) => {
@@ -88,7 +88,7 @@ const EditBlog = () => {
   const removeXTag = (tag) => {
     let current = post.tags;
     current = current.filter((x) => x !== tag);
-    setpost({ ...post, ["tags"]: current });
+    setpost({ ...post, tags: current });
     setXTag("");
   };
   const AddXTag = () => {
@@ -96,7 +96,7 @@ const EditBlog = () => {
     if(s!=""){
       let current = post.tags;
       current.push(s);
-      setpost({ ...post, ["tags"]: current });
+      setpost({ ...post, tags: current });
       setXTag("");
     }
     
@@ -331,7 +331,7 @@ const EditBlog = () => {
                         name="submit"
                         id="submit"
                         className="btn btn-primary my-3"
-                        onClick={() => { setpost({ ...post, ["approvalStatus"]: "submit", ["public"]: false }); }}
+                        onClick={() => { setpost({ ...post, approvalStatus: "submit", public: false }); }}
                       >
                         Save as Draft
                       </button>

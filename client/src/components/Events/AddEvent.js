@@ -42,7 +42,7 @@ const AddEvent = () => {
   };
 
   const handleValue = (e) => {
-    setEvent({ ...event, ["abstract"]: e });
+    setEvent({ ...event, abstract: e });
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const AddEvent = () => {
   }, [logged_in]);
 
   const handleposterPhoto = (e) => {
-    setEvent({ ...event, ["poster"]: e.target.files[0] });
+    setEvent({ ...event, poster: e.target.files[0] });
   };
 
   const handleInputs = (e) => {
@@ -83,25 +83,25 @@ const AddEvent = () => {
   const removeXspeakers = (speaker) => {
     let current = event.speakers;
     current = current.filter((x) => x !== speaker);
-    setEvent({ ...event, ["speakers"]: current });
+    setEvent({ ...event, speakers: current });
     setXspeakers("");
   };
 
   const AddXspeakers = () => {
     let current = event.speakers;
     current.push(xspeakers);
-    setEvent({ ...event, ["tags"]: current });
+    setEvent({ ...event, tags: current });
     setXspeakers("");
   };
 
   const seteventStartDate = (date) => {
     setStartDate(date);
-    setEvent({ ...event, ["eventStart"]: date });
+    setEvent({ ...event, eventStart: date });
   };
 
   const seteventEndDate = (date) => {
     setEndDate(date);
-    setEvent({ ...event, ["eventEnd"]: date });
+    setEvent({ ...event, eventEnd: date });
   };
 
   const PostEvent = async (e) => {

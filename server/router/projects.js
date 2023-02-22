@@ -122,7 +122,7 @@ router.route("/getResearchPapers").get(async (req, res) => {
       "-__v -_id -creator -authors -isPublished -tags -content -cover -public -approvalStatus -createdAt"
     )
     .sort({ createdAt: -1 });
-    console.log('data',projectData);
+    
   res.status(200).json(projectData);
 });
 
@@ -175,7 +175,6 @@ router.route("/getProjectEdit/:url").get(async (req, res) => {
 router.route("/deleteProject/:id").delete(authenticate, async (req, res) => {
   const { id } = req.params;
   const proj = await Project.findById(id);
-  console.log('proj', proj)
   if (proj) {
     const authors = proj.authors;
     await Promise.all(
@@ -225,7 +224,6 @@ router.route("/getMyProjects/:id").get(async (req, res) => {
       res.status(200).json(projects);
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({error:"Problem at server"});
   }
 });
@@ -255,7 +253,6 @@ router.route("/getProfileProjects/:id").get(async (req, res) => {
       res.status(200).json(projects);
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({error:"Problem at server"});
   }
 });

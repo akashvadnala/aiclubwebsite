@@ -82,12 +82,12 @@ const EditProject = () => {
   };
 
   const handleValue = (e) => {
-    setProj({ ...proj, ["content"]: e });
+    setProj({ ...proj, content: e });
     setPreview(false);
   };
 
   const handlePublished = () => {
-    setProj({ ...proj, ["isPublished"]: !proj.isPublished });
+    setProj({ ...proj, isPublished: !proj.isPublished });
     setPreview(false);
   };
 
@@ -119,7 +119,7 @@ const EditProject = () => {
     setTeams(team);
     setProjTeams(projTeam);
     let authors = proj.authors.filter((a) => a !== author);
-    setProj({ ...proj, ["authors"]: authors });
+    setProj({ ...proj, authors: authors });
     setXAuthor("");
     setPreview(false);
   };
@@ -134,7 +134,7 @@ const EditProject = () => {
       setProjTeams(projTeam);
       let authors = proj.authors;
       authors.push(xauthor);
-      setProj({ ...proj, ["authors"]: authors });
+      setProj({ ...proj, authors: authors });
       setXAuthor("");
       setPreview(false);
     }
@@ -142,7 +142,7 @@ const EditProject = () => {
   const removeXTag = (tag) => {
     let current = proj.tags;
     current = current.filter((x) => x !== tag);
-    setProj({ ...proj, ["tags"]: current });
+    setProj({ ...proj, tags: current });
     setXTag("");
     setPreview(false);
   };
@@ -151,7 +151,7 @@ const EditProject = () => {
     if (s != "") {
       let current = proj.tags;
       current.push(s);
-      setProj({ ...proj, ["tags"]: current });
+      setProj({ ...proj, tags: current });
       setXTag("");
       setPreview(false);
     }
@@ -160,14 +160,14 @@ const EditProject = () => {
   const removeXCoAuthor = (coAuthor) => {
     let current = proj.coAuthors;
     current = current.filter((x) => x !== coAuthor);
-    setProj({ ...proj, ["coAuthors"]: current });
+    setProj({ ...proj, coAuthors: current });
     setXCoAuthor("");
     setPreview(false);
   };
   const AddXCoAuthor = () => {
     let current = proj.coAuthors;
     current.push(xCoAuthor);
-    setProj({ ...proj, ["coAuthors"]: current });
+    setProj({ ...proj, coAuthors: current });
     setXCoAuthor("");
     setPreview(false);
   };
@@ -591,8 +591,8 @@ const EditProject = () => {
                       onClick={() => {
                         setProj({
                           ...proj,
-                          ["approvalStatus"]: "submit",
-                          ["public"]: false,
+                          approvalStatus: "submit",
+                          public: false,
                         });
                       }}
                     >

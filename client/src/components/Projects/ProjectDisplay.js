@@ -105,7 +105,7 @@ const ProjectDisplay = () => {
             }
           );
           showAlert("Submitted for Admin approval", "success");
-          setProj({ ...proj, ["approvalStatus"]: "pending" });
+          setProj({ ...proj, approvalStatus: "pending" });
           setApproval2("");
           navigate(`/projects/${proj.url}`);
         }
@@ -135,7 +135,7 @@ const ProjectDisplay = () => {
         }
       );
       showAlert(`${response === "Approved" ? "Approved & Published." : response}.`, "success");
-      setProj({ ...proj, ["approvalStatus"]: response, ["public"]: status });
+      setProj({ ...proj, approvalStatus: response, public: status });
       setApproval2();
       navigate(`/projects/${proj.url}`);
     } catch (err) {
