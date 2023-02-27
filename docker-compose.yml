@@ -9,6 +9,7 @@ services:
     container_name: aiclubClient
     volumes:
       - ./client:/app
+      - /app/node_modules/
     depends_on:
       - server
     networks:
@@ -23,6 +24,7 @@ services:
     env_file: ./server/config.env
     volumes:
       - ./server:/app
+      - /app/node_modules/
     depends_on:
       - mongodb
     networks:
