@@ -1,33 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SERVER_URL } from "../../EditableStuff/Config";
+import { alertContext } from "../../Context/Alert";
 
 function ForgetPassword() {
   const params = new useParams();
   const navigate = useNavigate();
   const id = params.id;
   const token = params.token;
+  const { showAlert } = useContext(alertContext);
   const [password, setPassword] = useState();
   const [cpassword, setCPassword] = useState();
   const [verified, setVerified] = useState(false);
-  const [reset, setReset] = useState("Reset Password");
-  const [reset2, setReset2] = useState();
-  const [msg, setMsg] = useState();
+  const [reset, setReset] = useState(false);
 
   const Authenticate = async () => {
     try {
-      const res = await axios.get(
+      await axios.get(
         `${SERVER_URL}/reset-password/${id}/${token}`
       );
-      if (res.status === 200) {
-        setVerified(true);
-      } else {
-        setVerified(false);
-      }
+      setVerified(true);
     } catch (err) {
       console.log(err);
+      setVerified(false);
     }
   };
 
@@ -38,33 +35,24 @@ function ForgetPassword() {
   const changePassword = async (e) => {
     e.preventDefault();
     if (password !== cpassword) {
-      setMsg("Confirm Password not matching Password");
-      return;
+      showAlert("Confirm Password not matching Password", "danger");
     } else {
-      setMsg("");
-      setReset("Changing Password ");
-      setReset2(<i className="fa fa-spinner fa-spin"></i>);
+      setReset(true);
       try {
-        const res = await axios.put(
+        await axios.put(
           `${SERVER_URL}/reset-password/${id}/${token}`,
           { password: password },
           {
             headers: { "Content-Type": "application/json" },
-            withCredentials: true 
+            withCredentials: true
           }
         );
-        if (res.status === 200) {
-          setReset2("");
-          setReset("Reset Password");
-          navigate("/");
-          window.location.reload(true);
-        } else {
-          setMsg("Something went wrong! Please try after sometime");
-          navigate("/");
-          window.location.reload(true);
-        }
+        navigate("/");
+        window.location.reload(true);
       } catch (err) {
-        console.log("err", err);
+        showAlert("Something went wrong! Please try after sometime","danger");
+        navigate("/");
+        window.location.reload(true);
       }
     }
   };
@@ -75,8 +63,6 @@ function ForgetPassword() {
         <div className="container addBlog-container text-center">
           <div className="adjust">
             <h3>Reset Password</h3>
-
-            {msg ? <div className="alert alert-danger">{msg}</div> : null}
             <form
               method="POST"
               onSubmit={changePassword}
@@ -123,9 +109,11 @@ function ForgetPassword() {
                 name="submit"
                 id="submit"
                 className="btn btn-primary"
+                disabled={reset}
               >
-                {reset}
-                {reset2}
+                {
+                  reset ? <>Changing Password <i className="fa fa-spinner fa-spin"></i></> : <>Reset Password</>
+                }
               </button>
             </form>
           </div>

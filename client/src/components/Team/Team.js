@@ -16,8 +16,12 @@ function Team({ setSortMode }) {
   const [archTeam, setArchTeam] = useState(false);
 
   const d = new Date();
-  var y = d.getFullYear();
-  const ly = 2019;
+  var y = d.getFullYear(); //y=2023
+  var m = d.getMonth();
+  if(m<4){ //4 represents may
+    y--; //y=2022
+  }
+  const ly = 2021;
   const years = Array.from(
     { length: y - ly + 1 },
     (value, index) => {
@@ -31,6 +35,8 @@ function Team({ setSortMode }) {
     axios.get(`${SERVER_URL}/getTeam/${year}`)
       .then(data => {
         setTeams(data.data);
+        console.log('data',data.data);
+        console.log('y',year);
         setArchTeam(false);
       });
   }

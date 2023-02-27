@@ -36,7 +36,7 @@ const AddBlog = () => {
   }, [logged_in]);
 
   const handlePhoto = (e) => {
-    setPost({ ...post, ["cover"]: e.target.files[0] });
+    setPost({ ...post, cover: e.target.files[0] });
   };
 
   const handleInputs = (e) => {
@@ -61,15 +61,18 @@ const AddBlog = () => {
   const removeXtag = (tag) => {
     let current = post.tags;
     current = current.filter((x) => x !== tag);
-    setPost({ ...post, ["tags"]: current });
+    setPost({ ...post, tags: current });
     setXtag("");
   };
 
   const AddXtag = () => {
-    let current = post.tags;
-    current.push(xtag);
-    setPost({ ...post, ["tags"]: current });
-    setXtag("");
+    let s = xtag.trim();
+    if(s!=""){
+      let current = post.tags;
+      current.push(xtag);
+      setPost({ ...post, tags: current });
+      setXtag("");
+    }
   };
 
   const PostBlog = async (e) => {

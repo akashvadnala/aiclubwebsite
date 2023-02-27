@@ -55,7 +55,7 @@ const AddProject = () => {
   }, [logged_in]);
 
   const handlePhoto = (e) => {
-    setProj({ ...proj, ["cover"]: e.target.files[0] });
+    setProj({ ...proj, cover: e.target.files[0] });
   };
 
   const handleInputs = (e) => {
@@ -83,7 +83,7 @@ const AddProject = () => {
     setTeams(team);
     setProjTeams(projTeam);
     let authors = proj.authors.filter(a => a !== author);
-    setProj({ ...proj, ["authors"]: authors });
+    setProj({ ...proj, authors: authors });
     setXAuthor("");
   };
   const AddXAuthor = () => {
@@ -96,7 +96,7 @@ const AddProject = () => {
       setProjTeams(projTeam);
       let authors = proj.authors;
       authors.push(xauthor);
-      setProj({ ...proj, ["authors"]: authors });
+      setProj({ ...proj, authors: authors });
       setXAuthor("");
     }
   };

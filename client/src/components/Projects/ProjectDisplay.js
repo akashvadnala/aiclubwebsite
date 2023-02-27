@@ -41,7 +41,17 @@ const ProjectDisplay = () => {
       setAuthors(data.data.authors);
       setApproval(data.data.project.approvalStatus);
       setPub(`${!data.data.project.public ? "Make Public" : "Make Private"}`);
-      setLoad(1);
+      if(!project.public){
+        if(project.authors.indexOf(user._id)>-1 || user.isadmin){
+          setLoad(1);
+        }
+        else{
+          setLoad(-1);
+        }
+      }
+      else{
+        setLoad(1);
+      }
     } catch (err) {
       setLoad(-1);
     }
@@ -105,7 +115,7 @@ const ProjectDisplay = () => {
             }
           );
           showAlert("Submitted for Admin approval", "success");
-          setProj({ ...proj, ["approvalStatus"]: "pending" });
+          setProj({ ...proj, approvalStatus: "pending" });
           setApproval2("");
           navigate(`/projects/${proj.url}`);
         }
@@ -135,7 +145,7 @@ const ProjectDisplay = () => {
         }
       );
       showAlert(`${response === "Approved" ? "Approved & Published." : response}.`, "success");
-      setProj({ ...proj, ["approvalStatus"]: response, ["public"]: status });
+      setProj({ ...proj, approvalStatus: response, public: status });
       setApproval2();
       navigate(`/projects/${proj.url}`);
     } catch (err) {

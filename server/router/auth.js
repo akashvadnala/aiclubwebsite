@@ -162,12 +162,12 @@ router.put("/reset-password/:id/:token", async (req, res) => {
         res.cookie("jwtoken", token, {
             expires: new Date(Date.now() + 258920000000), //30 days
             httpOnly: true,
-            secure: !(process.env.NODE_ENV === "development"),
+            secure: true,
             sameSite: false
         });
         return res.status(200).json({ status: "Password Changed Successfully" });
     } catch (error) {
-        res.status(201).json({ status: "Something Went Wrong" });
+        res.status(400).json({ status: "Something Went Wrong" });
     }
 });
 

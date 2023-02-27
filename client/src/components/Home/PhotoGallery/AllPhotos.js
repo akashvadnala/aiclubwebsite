@@ -48,7 +48,7 @@ const AllPhotos = () => {
     } catch (err) {
       console.log(err);
       navigate('/gallery');
-      showAlert("Problem at fetching photos","danger");
+      showAlert("Problem at fetching photos", "danger");
     }
   };
 
@@ -74,12 +74,12 @@ const AllPhotos = () => {
       const response = await axios.delete(
         `${SERVER_URL}/gallery/deleteImages`,
         {
-          data:{
+          data: {
             urls: selectedImages
           },
           headers: { "Content-Type": "application/json" },
           withCredentials: true
-          
+
         });
 
 
@@ -109,8 +109,6 @@ const AllPhotos = () => {
     e.preventDefault();
     setAdd(true);
     const data = new FormData();
-    const photoname = Date.now() + image.name;
-    data.append("name", photoname);
     data.append("photo", image);
     let imageurl;
 
@@ -125,28 +123,21 @@ const AllPhotos = () => {
         width: width,
         height: height,
       };
-      console.log("ImageDetails ", imageDetails);
-      try {
-        const imagedata = await axios.post(
-          `${SERVER_URL}/gallery/addPhoto`,
-          imageDetails,
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
-        );
+      // console.log("ImageDetails ", imageDetails);
 
-        console.log("data");
-        console.log(imagedata);
-        console.log("Posting Successfull");
-        showAlert("Image Uploaded Successfully", "success");
-      } catch (err) {
-        console.log("posting err", err);
-        showAlert("Image upload failed","danger");
-      }
+      await axios.post(
+        `${SERVER_URL}/gallery/addPhoto`,
+        imageDetails,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      showAlert("Image Uploaded Successfully", "success");
     } catch (err) {
       console.log("photoerr", err);
-      showAlert("Image Upload failed","danger");
+      showAlert("Image Upload failed", "danger");
     }
 
     window.location.reload(true);

@@ -48,7 +48,7 @@ const Competitions = () => {
                 <h2>Competitions</h2>
               </div>
               <div className="col-md-8 text-center text-md-end">
-                {user.competitionsAccess.length ? (
+                {user && user.competitionsAccess.length ? (
                   <NavLink
                     rel="noreferrer"
                     to="/draftcompetitions"
