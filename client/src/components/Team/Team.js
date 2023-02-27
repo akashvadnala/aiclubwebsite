@@ -35,6 +35,8 @@ function Team({ setSortMode }) {
     axios.get(`${SERVER_URL}/getTeam/${year}`)
       .then(data => {
         setTeams(data.data);
+        console.log('data',data.data);
+        console.log('y',year);
         setArchTeam(false);
       });
   }

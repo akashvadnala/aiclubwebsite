@@ -49,10 +49,10 @@ router.route('/imgdelete').post(authenticate, async (req, res) => {
         const url = req.body.url;
         // const key = url.split('=')[2];
 
-        // await fileUpload.deleteFile(key);
+        await fileUpload.deleteFile(key);
         res.status(200).json({ msg: "Image deleted sucessfully" });
     } catch (err) {
-        res.status(422).json({ error: "Error while deleting Images" })
+        res.status(400).json({ error: "Error while deleting Images" })
     }
 });
 
@@ -98,6 +98,7 @@ router.route('/teamadd').post(authenticate, async (req, res) => {
 
         const saltRounds = 10;
         team.password = await bcrypt.hash(req.body.password, saltRounds);
+        team.cpassword = await bcrypt.hash(req.body.cpassword, saltRounds);
         await team.save();
         
         newuserMail(team.email,{username:team.username,password:team.username});
@@ -140,8 +141,27 @@ router.route('/getTeam/:year').get(async (req, res) => {
     const { year } = req.params;
     const d = new Date();
     var y = d.getFullYear();
+    var m = d.getMonth();
+    if(m<4){ //4 represents may
+      y--; //y=2022
+    }
     if (parseInt(year) === y + 1) {
         teamData = await Team.find({ ismember: true, isalumni: false }).sort({orderIndex:1});
+        if(!teamData){
+            const teamData = new Team({
+                firstname: "Admin",
+                username: "admin",
+                email: "admin@gmail.com",
+                isadmin: true,
+                ismember: false,
+                password: "admin",
+                cpassword: "admin",
+            });
+            const saltRounds = 10;
+            teamData.password = await bcrypt.hash(req.body.password, saltRounds);
+            teamData.cpassword = await bcrypt.hash(req.body.cpassword, saltRounds);
+            await teamData.save();
+        }
     }
     else {
         teamData = await Team.find({ ismember: true, isalumni: true, year: year }).sort({orderIndex:1});
