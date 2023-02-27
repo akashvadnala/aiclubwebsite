@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { useParams } from "react-router";
-import EmptyList from "./search/EmptyList";
+import Error from "../Error";
 import { useNavigate } from "react-router-dom";
 import "./BlogDisplay.css";
 import JoditEditor from "jodit-react";
@@ -13,7 +13,7 @@ import { Context } from "../../Context/Context";
 import { alertContext } from "../../Context/Alert";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import {editorPreviewConfig} from "../Params/editorConfig";
+import { editorPreviewConfig } from "../Params/editorConfig";
 
 const BlogDisplay = () => {
   const params = new useParams();
@@ -34,18 +34,26 @@ const BlogDisplay = () => {
   const getBlog = async () => {
     try {
       const res = await axios.get(`${SERVER_URL}/blogs/getBlog/${url}`);
-      if (res.status === 200) {
-        const post_ = res.data.blog;
-        setBlog(res.data.blog);
-        setauthordetails(res.data.author);
-        setApproval(res.data.blog.approvalStatus);
-        setPub(`${!res.data.blog.public ? "Make Public" : "Make Private"}`);
-        setLoad(1);
-        if (user && post_.authorName === user._id) {
-          setedit(true);
-        } else {
-          setedit(false);
+      const post_ = res.data.blog;
+      setBlog(res.data.blog);
+      setauthordetails(res.data.author);
+      setApproval(res.data.blog.approvalStatus);
+      setPub(`${!res.data.blog.public ? "Make Public" : "Make Private"}`);
+      if (!post_.public) {
+        if(user._id===post_.authorName || user.isadmin){
+          setLoad(1);
         }
+        else{
+          setLoad(-1);
+        }
+      }
+      else{
+        setLoad(1);
+      }
+      if (user && post_.authorName === user._id) {
+        setedit(true);
+      } else {
+        setedit(false);
       }
     } catch (err) {
       console.log(err);
@@ -462,11 +470,11 @@ const BlogDisplay = () => {
                 ))}
               </div>
               <JoditEditor
-                    name="content"
-                    ref={editor}
-                    value={blog ? blog.content : ""}
-                    config={editorPreviewConfig}
-                  />
+                name="content"
+                ref={editor}
+                value={blog ? blog.content : ""}
+                config={editorPreviewConfig}
+              />
             </div>
             <div className="col-lg-4">
               <ProfileCard a={authordetails} />
@@ -474,7 +482,7 @@ const BlogDisplay = () => {
           </div>
         </div>
       ) : (
-        <EmptyList />
+        <Error />
       )}
     </>
   );

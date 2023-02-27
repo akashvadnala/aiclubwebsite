@@ -41,7 +41,17 @@ const ProjectDisplay = () => {
       setAuthors(data.data.authors);
       setApproval(data.data.project.approvalStatus);
       setPub(`${!data.data.project.public ? "Make Public" : "Make Private"}`);
-      setLoad(1);
+      if(!project.public){
+        if(project.authors.indexOf(user._id)>-1 || user.isadmin){
+          setLoad(1);
+        }
+        else{
+          setLoad(-1);
+        }
+      }
+      else{
+        setLoad(1);
+      }
     } catch (err) {
       setLoad(-1);
     }

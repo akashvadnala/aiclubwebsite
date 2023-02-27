@@ -30,7 +30,7 @@ const Profile = () => {
     const getBlogs = async () => {
         try {
             const blogsdata = await axios.get(`${SERVER_URL}/blogs/getprofileblogs/${user._id}`);
-            console.log('blogs',blogsdata.data.blogs);
+            console.log('blogs', blogsdata.data.blogs);
             setBlogs(blogsdata.data.blogs);
             setLoad(1);
         } catch (err) {
@@ -198,8 +198,8 @@ const Profile = () => {
                                         <h5 className="my-3">{team.firstname + " " + team.lastname}</h5>
                                         {editMode ?
                                             <>
-                                                <div className="required d-flex"><input type="text" name="position" value={team.position} onChange={handleInputs} className="form-control form-control-sm mb-1 text-center" id="position" aria-describedby="position" placeholder="Enter Position" required /></div>
-                                                <input type="text" name="profession" value={team.profession} onChange={handleInputs} className="form-control form-control-sm mb-3 text-center" id="profession" aria-describedby="profession" placeholder="Enter Profession/Branch" required />
+                                                <div className="required d-flex"><input type="text" name="position" value={team.position} onChange={handleInputs} className="form-control form-control-sm mb-1 text-center" id="position" aria-describedby="position" placeholder="Enter Position" required={true} /></div>
+                                                <input type="text" name="profession" value={team.profession} onChange={handleInputs} className="form-control form-control-sm mb-3 text-center" id="profession" aria-describedby="profession" placeholder="Enter Profession/Branch" />
                                             </>
                                             :
                                             <>
@@ -229,8 +229,13 @@ const Profile = () => {
                                                     <>
                                                         <button type="button" onClick={() => setEditMode(true)} className="btn btn-sm btn-primary ms-1"><i className="fas fa-edit"></i> Edit Profile</button>
                                                         <button type="button" className="btn btn-sm btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#passwordModal" onClick={() => setMsg("")}>Change Password</button>
-                                                        <div className="modal fade" id="passwordModal" tabIndex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
-                                                            <div className="modal-dialog">
+
+                                                        {/* password modal */}
+                                                        <div className="modal fade" id="passwordModal"
+                                                            data-bs-backdrop="static"
+                                                            data-bs-keyboard="false"
+                                                            tabIndex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+                                                            <div className="modal-dialog" >
                                                                 <div className="modal-content">
                                                                     <div className="modal-header">
                                                                         <h1 className="modal-title fs-5" id="passwordModalLabel">Change Password</h1>
@@ -249,7 +254,7 @@ const Profile = () => {
                                                                             </div>
                                                                         </div>
                                                                         <div className="modal-footer">
-                                                                            <button type="reset" id="modalClose" className="btn btn-sm btn-secondary" data-bs-dismiss="modal"
+                                                                            <button type="reset" id="modalClose" className="btn btn-sm" data-bs-dismiss="modal"
                                                                                 onClick={() => {
                                                                                     setPassword("");
                                                                                     setNewPassword("");
@@ -363,7 +368,7 @@ const Profile = () => {
                                                     My Blogs
                                                 </h6>
                                                 {blogs && (
-                                                    blogs.map((blog,index) => {
+                                                    blogs.map((blog, index) => {
                                                         return (
                                                             <>
                                                                 <div key={index} className="mt-1 blog-link">
@@ -386,7 +391,7 @@ const Profile = () => {
                                                     My Projects
                                                 </h6>
                                                 {projects && (
-                                                    projects.map((project,index) => {
+                                                    projects.map((project, index) => {
                                                         return (
                                                             <>
                                                                 <div key={index} className="mt-1 blog-link">
@@ -405,6 +410,7 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>) : null}
+
                 </div>
                 : <Error />}
         </>
