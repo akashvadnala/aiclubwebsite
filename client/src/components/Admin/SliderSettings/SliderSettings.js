@@ -25,6 +25,7 @@ const SliderSettings = () => {
         caption1: "",
         caption2: "",
         link: "",
+        linkhypertext:"",
         textcolor: "white",
         index: 0
     });
@@ -59,10 +60,10 @@ const SliderSettings = () => {
 
     useEffect(() => {
         if (logged_in === 1) {
-            if(user.isadmin){
+            if (user.isadmin) {
                 getSlides();
             }
-            else{
+            else {
                 setLoad(-1);
             }
         }
@@ -98,6 +99,7 @@ const SliderSettings = () => {
                 caption1: "",
                 caption2: "",
                 link: "",
+                linkhypertext:"",
                 textcolor: "white",
                 index: 0
             });
@@ -145,6 +147,7 @@ const SliderSettings = () => {
                 caption1: "",
                 caption2: "",
                 link: "",
+                linkhypertext:"",
                 textcolor: "white",
                 index: 0
             });
@@ -234,6 +237,7 @@ const SliderSettings = () => {
                                                         caption1: "",
                                                         caption2: "",
                                                         link: "",
+                                                        linkhypertext:"",
                                                         textcolor: "white",
                                                         index: 0
                                                     });
@@ -293,6 +297,9 @@ const SliderSettings = () => {
                                                         <input type="text" name="link" value={xSlider.link} onChange={handleInput} className="form-control form-control-lg" id="link" aria-describedby="link" placeholder="Link" />
                                                     </div>
                                                     <div className="form-group my-3">
+                                                        <input type="text" name="linkhypertext" value={xSlider.linkhypertext} onChange={handleInput} className="form-control form-control-lg" id="linkhypertext" aria-describedby="linkhypertext" placeholder="Link Hypertext" />
+                                                    </div>
+                                                    <div className="form-group my-3">
                                                         <input type="text" name="textcolor" value={xSlider.textcolor} onChange={handleInput} className="form-control form-control-lg" id="textcolor" aria-describedby="textcolor" placeholder="Text Color" />
                                                     </div>
                                                 </div>
@@ -305,6 +312,7 @@ const SliderSettings = () => {
                                                                 caption1: "",
                                                                 caption2: "",
                                                                 link: "",
+                                                                linkhypertext:"",
                                                                 textcolor: "white",
                                                                 index: 0
                                                             });
@@ -354,6 +362,7 @@ const SliderSettings = () => {
                                                                         <div>Caption1: <strong> {slide.caption1}</strong></div>
                                                                         <div>Caption2:<strong> {slide.caption2}</strong></div>
                                                                         <div>Link:<strong> {slide.link}</strong></div>
+                                                                        <div>Link Hypertext:<strong> {slide.linkhypertext}</strong></div>
                                                                         <div>textcolor:<strong> {slide.textcolor}</strong></div>
                                                                     </div>
                                                                 </div>
@@ -389,10 +398,10 @@ const SliderSettings = () => {
                                         <h3 className='text-center'>Preview</h3>
                                         <img src={slider.photo} alt={slider.title} style={{ width: "100%", height: "28vw" }} />
                                         <div className='caption-edit text-center' style={{ color: `${slider.textcolor}`, position: "relative", top: "-48vh" }}>
-                                            <h2>{slider.title}</h2>
-                                            <p>{slider.caption1}</p>
-                                            <h6>{slider.caption2}</h6>
-                                            {slider.link && <p><a className="mt-3 btn align-items-center" style={{ color: `${slider.textcolor}` }} href={slider.link}>Learn More <span>❯</span></a></p>}
+                                            <h1 className='mb-0'>{slider.title}</h1>
+                                            <h6>{slider.caption1}</h6>
+                                            <h5 className='mt-3'>{slider.caption2}</h5>
+                                            {slider.link && <a className="align-items-center" style={{ color: `${slider.textcolor}` }} href={slider.link}>{slider.linkhypertext?slider.linkhypertext:"Learn More"} <span>❯</span></a>}
                                         </div>
                                     </>
                                 }

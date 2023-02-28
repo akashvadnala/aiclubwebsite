@@ -19,6 +19,9 @@ const sliderSchema = new mongoose.Schema({
         type: String,
         requied: true
     },
+    linkhypertext: {
+        type: String
+    },
     textcolor: {
         type: String,
         default: "white"
