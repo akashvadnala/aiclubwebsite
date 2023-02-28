@@ -30,12 +30,16 @@ const SliderSettings = () => {
         index: 0
     });
     const [photo, setPhoto] = useState("");
-    const [photoUpdated, setPhotoUpdated] = useState(0);
+    const [OldImg, setOldImg] = useState(null);
     const handlePhoto = (e) => {
-        console.log('photo', e.target.files[0]);
+        // setOldImg(xSlider.photo);
         setXSlider({ ...xSlider, [e.target.name]: e.target.files[0] });
         setPhoto(URL.createObjectURL(e.target.files[0]));
-        setPhotoUpdated(1);
+    };
+    const handleUpdatePhoto = (e) => {
+        setOldImg(xSlider.photo);
+        setXSlider({ ...xSlider, [e.target.name]: e.target.files[0] });
+        setPhoto(URL.createObjectURL(e.target.files[0]));
     };
 
     const handleInput = (e) => {
@@ -114,10 +118,10 @@ const SliderSettings = () => {
         e.preventDefault();
         try {
             setEdit(1);
-            if (photoUpdated) {
+            if (OldImg) {
                 await axios.post(`${SERVER_URL}/imgdelete`,
                     {
-                        'url': xSlider.photo
+                        'url': OldImg
                     },
                     {
                         withCredentials: true,
@@ -129,6 +133,7 @@ const SliderSettings = () => {
 
                 const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
                 xSlider.photo = img.data;
+                setOldImg(null);
             }
             await axios.put(`${SERVER_URL}/updateSlider/${xSlider._id}`,
                 xSlider,
@@ -271,7 +276,7 @@ const SliderSettings = () => {
                                                         {
                                                             xSlider.photo ?
                                                                 <>
-                                                                    <input type="file" accept="image/*" name="photo" onChange={handlePhoto} className="form-control form-control-lg" id="photo" aria-describedby="photo" />
+                                                                    <input type="file" accept="image/*" name="photo" onChange={handleUpdatePhoto} className="form-control form-control-lg" id="photo" aria-describedby="photo" />
                                                                 </>
                                                                 :
                                                                 <>

@@ -54,10 +54,11 @@ const About = () => {
     setSave(false);
     setPreview(true);
   };
-  const saveIt = () => {
-    axios.put(`${SERVER_URL}/updateAbout/${about._id}`,
+  const saveIt = async () => {
+    await axios.put(`${SERVER_URL}/updateAbout/${about._id}`,
       about,
       {
+        withCredentials:true,
         headers: { "Content-Type": "application/json" },
       });
     showAlert("Saved", "success");
