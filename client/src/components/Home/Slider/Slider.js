@@ -18,10 +18,10 @@ function Slider({slides}) {
                   alt="First slide"
                 />
                 <Carousel.Caption className='w-100 text-shadow' style={{color:slide.textcolor}}>
-                  <h1>{slide.title}</h1>
+                  <h1 className='mb-0'>{slide.title}</h1>
                   <h6>{slide.caption1}</h6>
-                  <h5>{slide.caption2}</h5>
-                  {slide.link && <a className="mt-3 btn align-items-center" href={slide.link}>Learn More <span>❯</span></a>}
+                  <h5 className='mt-3'>{slide.caption2}</h5>
+                  {slide.link && <a className="align-items-center" style={{ color: `${slide.textcolor}` }} href={slide.link}>{slide.linkhypertext?slide.linkhypertext:"Learn More"} <span>❯</span></a>}
                 </Carousel.Caption>
               </Carousel.Item>
               
