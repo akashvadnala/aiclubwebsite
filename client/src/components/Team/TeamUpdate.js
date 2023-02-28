@@ -109,6 +109,7 @@ const TeamUpdate = () => {
             showAlert("Team Updated Successfully!", "success");
             navigate('/team');
         } catch (err) {
+            setSubmit(false);
             showAlert(err.response.data.error, "danger");
         }
     }
