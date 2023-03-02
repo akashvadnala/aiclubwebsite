@@ -25,6 +25,8 @@ const welcomeMail = async (toaddress) => {
 
     const transport = nodemailer.createTransport({
       service: 'gmail',
+      port: 465,
+      secure: true,
       auth: {
         type: 'OAuth2',
         user: 'aiclub.messenger@gmail.com',
@@ -56,6 +58,8 @@ const broadcastMail = async (subject, body) => {
 
     const transport = nodemailer.createTransport({
       service: 'gmail',
+      port: 465,
+      secure: true,
       auth: {
         type: 'OAuth2',
         user: 'aiclub.messenger@gmail.com',
@@ -89,6 +93,8 @@ const passwordResetMail = async (toAddress, content) => {
 
     const transport = nodemailer.createTransport({
       service: 'gmail',
+      port: 465,
+      secure: true,
       auth: {
         type: 'OAuth2',
         user: 'aiclub.messenger@gmail.com',
@@ -122,6 +128,8 @@ const newuserMail = async (toAddress, creds)=>{
 
     const transport = nodemailer.createTransport({
       service: 'gmail',
+      port: 465,
+      secure: true,
       auth: {
         type: 'OAuth2',
         user: 'aiclub.messenger@gmail.com',
@@ -158,6 +166,8 @@ const generalMail = async (toAddress, subject, body) => {
 
     const transport = nodemailer.createTransport({
       service: 'gmail',
+      port: 465,
+      secure: true,
       auth: {
         type: 'OAuth2',
         user: 'aiclub.messenger@gmail.com',
