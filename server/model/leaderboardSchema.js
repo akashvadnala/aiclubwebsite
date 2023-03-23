@@ -14,7 +14,8 @@ const leaderboardSchema = new mongoose.Schema({
         required:true
     },
     team:[{
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Team"
     }],
     score:{
         type: mongoose.Schema.Types.Decimal128

@@ -77,9 +77,9 @@ const Blogs = () => {
             <title>Blogs - AI Club</title>
           </Helmet>
           <div>
-            <div className="row py-4">
-              <div className="col-md-4 text-center text-md-start">
-                <h2>Blogs</h2>
+            <div className="row align-items-center py-4">
+              <div className="col-md-4 text-center text-md-start text-header">
+                Blogs
               </div>
               <div className="col-md-8 text-center text-md-end">
                 {user ? (

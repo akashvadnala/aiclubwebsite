@@ -9,15 +9,15 @@ import { NavLink } from "react-router-dom";
 import { Context } from "../../Context/Context";
 
 const ProjectApprovals = () => {
-  const { user,logged_in } = useContext(Context);
+  const { user, logged_in } = useContext(Context);
   const [projects, setProjects] = useState([]);
   const [load, setLoad] = useState(0);
 
   const getProjectApprovals = () => {
     try {
       axios.get(`${SERVER_URL}/getpendingProjApprovals`).then((data) => {
-          setProjects(data.data);
-      }).catch(err=>{
+        setProjects(data.data);
+      }).catch(err => {
         setLoad(-1)
       });
     } catch (err) {
@@ -27,16 +27,16 @@ const ProjectApprovals = () => {
   };
 
   useEffect(() => {
-    if(logged_in===1){
-      if(user.isadmin){
+    if (logged_in === 1) {
+      if (user.isadmin) {
         getProjectApprovals();
         setLoad(1)
       }
-      else{
+      else {
         setLoad(-1)
       }
     }
-    else if(logged_in===-1){
+    else if (logged_in === -1) {
       setLoad(-1);
     }
   }, [logged_in]);
@@ -48,11 +48,11 @@ const ProjectApprovals = () => {
       ) : load === 1 ? (
         <div className="project-container container">
           <div>
-            <div className="row py-4">
-              <div className="col-4">
-                <h2>Requires Approval</h2>
+            <div className="row py-4 align-items-center">
+              <div className="col-4 text-header text-center text-md-start">
+                Requires Approval
               </div>
-              <div className="col-8 text-end">
+              <div className="col-8  text-center text-md-end">
                 {user ? (
                   <>
                     <NavLink
@@ -85,7 +85,7 @@ const ProjectApprovals = () => {
               </div>
             </div>
             <div className="row">
-              {projects.map((project,i) => {
+              {projects.map((project, i) => {
                 return (
                   <div className="col-12 col-sm-6 col-lg-4 pb-5 px-3" key={i}>
                     <ProjectSpace project={project} />

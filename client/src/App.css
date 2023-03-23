@@ -74,14 +74,22 @@ hr{
 }
 
 .btn{
-  border-radius: 1.5rem !important;
-  padding-left: 0.8rem !important;
-  padding-right: 0.8rem !important;
+  border-radius: 980px !important;
+  /* padding: 4px 12px !important; */
+  align-items: center !important;
 }
 
 .btn-sm{
-   border-radius: 0.95rem !important;
-  padding: 0.3rem 0.65rem !important;
+   border-radius: 30px !important;
+  /* padding: 3px 10px !important; */
+  font-size: 0.9rem !important;
+  /* background-color: transparent !important;
+  color: black !important; */
+}
+
+.btn-sm svg{
+  width: 16px;
+  height: 16px;
 }
 
 
@@ -94,15 +102,48 @@ hr{
   border: 2px rgb(240,240,240) solid !important;
 }
 
+.jodit-wysiwyg{
+  padding: 0 !important;
+}
+
+.jodit-editor-border .jodit-wysiwyg{
+  padding: 10px !important;
+}
+
+.ml-2{
+  margin-left: 10px !important;
+}
+
+.text-header{
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.stick-top{
+  position: sticky;
+  top: 0px;
+  z-index: 100000;
+  background-color: white;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  /* border-bottom: solid 1px grey; */
+}
+
+.input-group .input-group-prepend .input-group-text{
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .adjust{
   margin: 0 !important;
 }
+
 
 @media (min-width: 576px){
   .adjust{
     /* margin-left: 2.5% !important;
     width: 95% !important; */
-    padding: 1.2rem 2.5% 1.2rem 2.5%;
+    padding: 0rem 2.5%;
   }
   
   .right-panel{
@@ -115,7 +156,7 @@ hr{
   .adjust{
     /* margin-left: 10% !important;
     width: 80% !important; */
-    padding: 1.2rem 10% 1.2rem 10%;
+    padding: 0rem 10%;
   }
 }
 
@@ -123,7 +164,7 @@ hr{
   .adjust{
     /* margin-left: 12.5% !important;
     width: 75% !important; */
-    padding: 1.2rem 12.5% 1.2rem 12.5%;
+    padding: 0rem 12.5%;
   }
 }
 
@@ -131,7 +172,7 @@ hr{
   .adjust{
     /* margin-left: 15% !important;
     width: 70% !important; */
-    padding: 1.2rem 15% 1.2rem 15%;
+    padding: 0rem 15%;
   }
 }
 
@@ -139,12 +180,7 @@ hr{
   .adjust{
     /* margin-left: 17.5% !important;
     width: 65% !important; */
-    padding: 1.2rem 17.5% 1.2rem 17.5%;
+    padding: 0rem 17.5%;
   }
 }
 
-
-
-.navbar-nav{
-  margin-left: 0 !important;
-}

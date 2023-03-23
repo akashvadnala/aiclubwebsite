@@ -12,11 +12,10 @@ const competitionSchema = new mongoose.Schema(
     },
     subtitle: {
       type: String,
-      requied: true,
     },
-    description:{
+    overview:{
       type: String,
-      default: "Enter competition description here"
+      default: "Enter competition overview here"
     },
     dataset:{
       type: String,

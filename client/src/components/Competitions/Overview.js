@@ -5,12 +5,14 @@ import { SERVER_URL } from "../../EditableStuff/Config";
 import Error from "../Error";
 import Loading from "../Loading";
 import "./Inductions.css";
+import { editorPreviewConfig } from "../Params/editorConfig";
+import { editorConfig } from "../Params/editorConfig";
 
 const Overview = ({ props }) => {
   const editor = useRef(null);
   const [preview, setPreview] = useState(true);
-  const [description, setDescription] = useState("");
-  const [description2, setDescription2] = useState("");
+  const [overview, setOverview] = useState("");
+  const [overview2, setOverview2] = useState("");
   const [dataset, setDataset] = useState("");
   const [dataset2, setDataset2] = useState("");
   const [rules, setRules] = useState("");
@@ -22,7 +24,8 @@ const Overview = ({ props }) => {
 
   useEffect(() => {
     const comp = props.c;
-    setDescription(comp.description);
+    setOverview(comp.overview);
+    setOverview2(comp.overview);
     setDataset(comp.dataset);
     setRules(comp.rules);
     setEvaluation(comp.evaluation);
@@ -35,32 +38,36 @@ const Overview = ({ props }) => {
 
   const showEdit = () => {
     setPreview(false);
-    setDescription2(description);
   };
 
-  // const saveIt = () => {
-  //   axios.put(`${SERVER_URL}/editOverview/${overview._id}`, overview, {
-  //     headers: { "Content-Type": "application/json" },
-  //   });
-  //   setPreview(true);
-  // };
+  const cancelIt = () => {
+    setOverview(overview2);
+    setPreview(true);
+  };
+
+  const saveIt = async () => {
+    await axios.put(`${SERVER_URL}/editOverview/${props.c._id}`,
+      { overview: overview },
+      { withCredentials: true });
+    setPreview(true);
+  };
 
   return (
     <>
       {load === 0 ? (
         <Loading />
       ) : load === 1 ? (
-        <div className="overview-container py-2">
+        <div className="overview-container pt-2">
           <div className="card">
-            <div className="row py-3">
+            <div className="row p-3">
               <div className="col-sm-8">
-                <h5 className="px-3">Overview</h5>
+                <h4 className="m-0">Overview</h4>
               </div>
               <div className="col-sm-4 text-end">
                 {props.access ? (
                   preview ? (
                     <button
-                      className="btn btn-dark btn-sm mx-1"
+                      className="btn btn-primary btn-sm mx-1"
                       onClick={showEdit}
                     >
                       Edit
@@ -68,23 +75,20 @@ const Overview = ({ props }) => {
                   ) : (
                     <>
                       <button
-                        className="btn btn-dark btn-sm mx-1"
+                        className="btn btn-sm mx-1"
+                        onClick={cancelIt}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="btn btn-primary btn-sm mx-1"
                         onClick={showPreview}
                       >
                         Preview
                       </button>
                       <button
-                        className="btn btn-dark btn-sm mx-1"
-                        onClick={() => {
-                          setDescription(description2);
-                          setPreview(true);
-                        }}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        className="btn btn-dark btn-sm mx-1"
-                        // onClick={saveIt}
+                        className="btn btn-success btn-sm mx-1"
+                        onClick={saveIt}
                       >
                         Save
                       </button>
@@ -96,16 +100,23 @@ const Overview = ({ props }) => {
             <div className="card-body border-top">
               {preview ? (
                 <div className="">
-                  <p dangerouslySetInnerHTML={{ __html: description }}></p>
+                  {/* <p dangerouslySetInnerHTML={{ __html: description }}></p> */}
+                  <JoditEditor
+                    name="content"
+                    ref={editor}
+                    value={overview}
+                    config={editorPreviewConfig}
+                  />
                 </div>
               ) : (
                 <JoditEditor
-                  className=""
+                  className="jodit-editor-border"
                   name="content"
                   ref={editor}
-                  value={description}
+                  value={overview}
+                  config={editorConfig}
                   onChange={(value) => {
-                    setDescription(value);
+                    setOverview(value);
                   }}
                 />
               )}

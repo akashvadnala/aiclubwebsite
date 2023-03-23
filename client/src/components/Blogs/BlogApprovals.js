@@ -84,14 +84,14 @@ const BlogApprovals = () => {
       ) : load === 1 ? (
         <div className="blog-container container">
           <div>
-            <div className="row py-4">
-              <div className="col-4">
-                <Helmet>
-                  <title>Blogs - AI Club</title>
-                </Helmet>
-                <h2>Requires Approval</h2>
+            <Helmet>
+              <title>Blogs - AI Club</title>
+            </Helmet>
+            <div className="row align-items-center py-4">
+              <div className="text-header text-center text-md-start col-4">
+                Requires Approval
               </div>
-              <div className="col-8 text-end">
+              <div className="col-8 text-center text-md-end">
                 {user ? (
                   <>
                     <NavLink

@@ -28,8 +28,8 @@ const CreateCompetition = () => {
   const [msg, setMsg] = useState(null);
   const [add, setAdd] = useState(false);
   const [teams, setTeams] = useState([]);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  // const [startDate, setStartDate] = useState(new Date());
+  // const [endDate, setEndDate] = useState(new Date());
   const [projTeams, setProjTeams] = useState([]);
   let team = [];
   let projTeam = [];
@@ -42,7 +42,7 @@ const CreateCompetition = () => {
         projTeam = teamArray.filter((t) => t.id === user._id);
         setTeams(team);
         setProjTeams(projTeam);
-        setCompete({ ...compete, creator: user._id, access:[user._id] });
+        setCompete({ ...compete, creator: user._id, access: [user._id] });
         setLoad(1);
       });
     } catch (err) {
@@ -94,21 +94,21 @@ const CreateCompetition = () => {
     setCompete({ ...compete, headerPhoto: e.target.files[0] });
   };
 
-  const seteventStartDate = (date) => {
-    setStartDate(date);
+  const setCompeteStartDate = (date) => {
+    // setStartDate(date);
     setCompete({ ...compete, CompetitionStart: date });
   };
 
-  const seteventEndDate = (date) => {
-    setEndDate(date);
+  const setCompeteEndDate = (date) => {
+    // setEndDate(date);
     setCompete({ ...compete, CompetitionEnd: date });
   };
 
-  const filterPassedTime = (time) => {
-    const currentDate = new Date();
-    const selectedDate = new Date(time);
-    return currentDate.getTime() < selectedDate.getTime();
-  };
+  // const filterPassedTime = (time) => {
+  //   const currentDate = new Date();
+  //   const selectedDate = new Date(time);
+  //   return currentDate.getTime() < selectedDate.getTime();
+  // };
 
   let name, value;
   const handleInputs = (e) => {
@@ -116,20 +116,20 @@ const CreateCompetition = () => {
     value = e.target.value;
     setCompete({ ...compete, [name]: value });
   };
-  
+
   const handleUrl = (e) => {
     let value = e.target.value;
-    let url="";
-    for(let i=0;i<value.length;i++){
+    let url = "";
+    for (let i = 0; i < value.length; i++) {
       const c = value[i];
-      if(("a"<=c && c<="z") || ("A"<=c && c<="Z") || ("0"<=c && c<="9") || c==="-" || c==='_'){
-        url+=c;
+      if (("a" <= c && c <= "z") || ("A" <= c && c <= "Z") || ("0" <= c && c <= "9") || c === "-" || c === '_') {
+        url += c;
       }
-      else{
-        showAlert("Special Characters are not allowed except '-' and '_'","danger");
+      else {
+        showAlert("Special Characters are not allowed except '-' and '_'", "danger");
       }
     }
-    setCompete({...compete,url:url});
+    setCompete({ ...compete, url: url });
   }
 
   const createCompete = async (e) => {
@@ -143,7 +143,7 @@ const CreateCompetition = () => {
         withCredentials: true,
       });
       compete.headerPhoto = img.data;
-      console.log("Competition",compete);
+
       const competedata = await axios.post(
         `${SERVER_URL}/addcompetitions`,
         compete,
@@ -167,13 +167,13 @@ const CreateCompetition = () => {
       ) : load === 1 ? (
         <div className="createCompetition-container">
           <div className="adjust">
-            <h3>Create Competition</h3>
+            <div className="text-header text-center py-4">Create Competition</div>
             <form
               method="POST"
               onSubmit={createCompete}
               encType="multipart/form-data"
             >
-              <div className="form-group my-3 row align-items-center">
+              <div className="form-group row align-items-center">
                 <label htmlFor="title" className="col-sm-2 text-end">
                   Title :
                 </label>
@@ -191,7 +191,7 @@ const CreateCompetition = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row align-items-center">
+              <div className="form-group mt-3 row align-items-center">
                 <label htmlFor="subtitle" className="col-sm-2 text-end">
                   Subtitle :
                 </label>
@@ -204,11 +204,10 @@ const CreateCompetition = () => {
                     aria-describedby="subtitle"
                     value={compete.subtitle}
                     placeholder={`Enter Competition subtitle`}
-                    required
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row align-items-center">
+              <div className="form-group mt-3 row align-items-center">
                 <label htmlFor="url" className="col-sm-2 text-end">
                   Url :
                 </label>
@@ -236,46 +235,46 @@ const CreateCompetition = () => {
                   </div>
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group mt-3 row align-items-center">
                 <label htmlFor="photo" className="col-sm-2 text-end">
                   Start Time :
                 </label>
                 <div className="col-sm-10">
                   <DatePicker
                     className="form-control"
-                    selected={startDate}
-                    onChange={(date) => seteventStartDate(date)}
+                    selected={new Date(compete.CompetitionStart)}
+                    onChange={(date) => setCompeteStartDate(date)}
                     showTimeSelect
                     minDate={new Date()}
-                    filterTime={filterPassedTime}
+                    // filterTime={filterPassedTime}
                     dateFormat="MMMM d, yyyy h:mm aa"
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group mt-3 row align-items-center">
                 <label htmlFor="photo" className="col-sm-2 text-end">
                   End Time :
                 </label>
                 <div className="col-sm-10">
                   <DatePicker
                     className="form-control"
-                    selected={endDate}
-                    onChange={(date) => seteventEndDate(date)}
+                    selected={new Date(compete.CompetitionEnd)}
+                    onChange={(date) => setCompeteEndDate(date)}
                     showTimeSelect
                     minDate={new Date()}
-                    filterTime={filterPassedTime}
+                    // filterTime={filterPassedTime}
                     dateFormat="MMMM d, yyyy h:mm aa"
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
-                <label htmlFor="url" className="col-sm-2 text-end">
+              <div className="form-group mt-3 row">
+                <label htmlFor="url" className="col-sm-2 mt-2 text-end">
                   Host Access :
                 </label>
                 <div className="col-sm-10">
                   {projTeams.map((t, i) => {
                     return (
-                      <div className="form-group my-2 row" key={i}>
+                      <div className="form-group mb-2 row" key={i}>
                         <div className="col col-9">
                           <input
                             type="text"
@@ -299,7 +298,7 @@ const CreateCompetition = () => {
                       </div>
                     );
                   })}
-                  <div className="form-group my-2 row">
+                  <div className="form-group row align-items-center">
                     <div className="col col-9">
                       <select
                         name="xauthor"
@@ -309,7 +308,7 @@ const CreateCompetition = () => {
                         aria-label="authors"
                       >
                         <option value="">Select Author</option>
-                        {teams.map((t,i) => {
+                        {teams.map((t, i) => {
                           return <option value={t.id} key={i}>{t.name}</option>;
                         })}
                       </select>
@@ -321,22 +320,60 @@ const CreateCompetition = () => {
                         onClick={AddXAccess}
                       >
                         <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="currentColor"
-                        className="bi bi-plus-circle-fill"
-                        viewBox="0 0 16 18"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          className="bi bi-plus-circle-fill"
+                          viewBox="0 0 16 18"
+                        >
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                        </svg>{" "}
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                  <div className="form-group mt-3 row align-items-center">
+                    <div className="col col-2">
+                      Add Non-club Member?
+                    </div>
+                    <div className="col col-7">
+                      <select
+                        name="xauthor"
+                        value={xaccess}
+                        onChange={(e) => setXAccess(e.target.value)}
+                        className="form-select"
+                        aria-label="authors"
                       >
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                      </svg>{" "}
-                      Add
+                        <option value="">Select Author</option>
+                        {teams.map((t, i) => {
+                          return <option value={t.id} key={i}>{t.name}</option>;
+                        })}
+                      </select>
+                    </div>
+                    <div className="col col-3">
+                      <button
+                        type="reset"
+                        className="btn btn-success"
+                        onClick={AddXAccess}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          className="bi bi-plus-circle-fill"
+                          viewBox="0 0 16 18"
+                        >
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                        </svg>{" "}
+                        Add
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group mt-3 row align-items-center">
                 <label htmlFor="photo" className="col-sm-2 text-end">
                   Header Image :
                 </label>
@@ -353,7 +390,7 @@ const CreateCompetition = () => {
                   />
                 </div>
               </div>
-              <div className="form-group form-check my-3">
+              <div className="form-group form-check mt-3 align-items-center">
                 <input
                   type="checkbox"
                   name="public"
@@ -368,16 +405,12 @@ const CreateCompetition = () => {
                   Public
                 </label>
               </div>
-              {
-                add ?
-                  <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
-                    Creating <i className="fa fa-spinner fa-spin"></i>
-                  </button>
-                  :
-                  <button type="submit" name="submit" id="submit" className="btn btn-primary">
-                    Create
-                  </button>
-              }
+              <div className=" text-center">
+                <button type="submit" name="submit" id="submit" className="btn btn-primary my-4" disabled={add}>
+                  {add ? <>Creating <i className="fa fa-spinner fa-spin"></i></> : <>Create</>}
+                </button>
+              </div>
+
             </form>
           </div>
         </div>

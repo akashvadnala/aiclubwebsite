@@ -51,13 +51,13 @@ const Events = () => {
       {load === 0 ? (
         <Loading />
       ) : load === 1 ? (
-        <div className="event-container container">
+        <div className="event-container container pb-4">
           <Helmet>
             <title>Events - AI Club</title>
           </Helmet>
-          <div className="row py-4">
-            <div className="col-md-4 text-center text-md-start">
-              <h2>Events</h2>
+          <div className="row align-items-center py-4">
+            <div className="col-md-4 text-header text-center text-md-start">
+              Events
             </div>
             <div className="col-md-8 text-center text-md-end">
               {user && user.isadmin ? (
@@ -80,7 +80,8 @@ const Events = () => {
                 </NavLink>
               ) : null}
             </div>
-
+          </div>
+          <div>
             {ongoingEvents.length ? (
               <div className="row">
                 <h4>Ongoing Events</h4>

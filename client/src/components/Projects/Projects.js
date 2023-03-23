@@ -10,7 +10,7 @@ import { Context } from "../../Context/Context";
 import { Helmet } from "react-helmet";
 
 const Projects = () => {
-  
+
   const { user } = useContext(Context);
   const [projects, setProjects] = useState([]);
   const [load, setLoad] = useState(0);
@@ -36,9 +36,9 @@ const Projects = () => {
             <title>Projects - AI Club</title>
           </Helmet>
           <div>
-            <div className="row py-4">
-              <div className="col-md-4 text-center text-md-start">
-                <h2>Projects</h2>
+          <div className="row align-items-center py-4">
+              <div className="col-md-4 text-center text-md-start text-header">
+                Projects
               </div>
               <div className="col-md-8 text-center text-md-end">
                 {user ? (

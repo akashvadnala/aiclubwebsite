@@ -6,8 +6,8 @@ import { Context } from "../Context/Context";
 import { alertContext } from "../Context/Alert";
 import Error from "./Error";
 import Loading from "./Loading";
-import {editorConfig} from "./Params/editorConfig";
-import {editorPreviewConfig} from "./Params/editorConfig";
+import { editorConfig } from "./Params/editorConfig";
+import { editorPreviewConfig } from "./Params/editorConfig";
 
 const About = () => {
   const editor = useRef(null);
@@ -72,12 +72,12 @@ const About = () => {
         <Loading />
       ) : load === 1 ? (
         <div className="about-container">
-          <div className="adjust" style={{ overflow: "hidden" }}>
-            <div className="row pb-1">
-              <div className="col-sm-8">
-                <h2>About</h2>
+          <div className="adjust pb-4">
+            <div className="d-flex justify-content-between align-items-center py-4">
+              <div className=" text-center text-md-start text-header">
+                About
               </div>
-              <div className="col-sm-4 text-end">
+              <div className="text-center text-md-end ">
                 {user && user.isadmin ? (
                   preview ? (
                     <>
@@ -120,11 +120,11 @@ const About = () => {
             {preview ? (
               <div>
                 <JoditEditor
-                name="content"
-                ref={editor}
-                value={about.about}
-                config={editorPreviewConfig}
-              />
+                  name="content"
+                  ref={editor}
+                  value={about.about}
+                  config={editorPreviewConfig}
+                />
               </div>
             ) : (
               <JoditEditor
