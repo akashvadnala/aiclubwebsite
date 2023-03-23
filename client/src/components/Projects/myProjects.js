@@ -37,14 +37,14 @@ const Projects = () => {
       ) : load === 1 ? (
         <div className="project-container container">
           <div>
-            <div className="row py-4">
-              <div className="col-4">
-                <Helmet>
-                  <title>Projects - AI Club</title>
-                </Helmet>
-                <h2>My Projects</h2>
+            <Helmet>
+              <title>Projects - AI Club</title>
+            </Helmet>
+            <div className="row align-items-center py-4">
+              <div className="col-4 text-header text-center text-md-start">
+                My Projects
               </div>
-              <div className="col-8 text-end">
+              <div className="col-8 text-center text-md-end">
                 {user ? (
                   <>
                     {user.isadmin && (

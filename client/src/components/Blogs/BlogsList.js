@@ -9,7 +9,7 @@ const BlogsList = (props) => {
       <div className="row">
         {props.blogs.map((blog) => {
           return (
-            <div className="col-md-4" key={blog.url}>
+            <div className="col-md-4 mb-4" key={blog.url}>
               <BlogItem
                 blog = {blog}
               />

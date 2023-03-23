@@ -65,7 +65,7 @@ const CompetitionSpace = ({competition}) => {
         className="card-img-top"
         style={{ height: "100px" }}
       />
-      <div className="card-body border-bottom pt-3 pb-1">
+      <div className="card-body border-bottom p-2">
         <h5
           style={{
             overflow: "hidden",
@@ -78,13 +78,13 @@ const CompetitionSpace = ({competition}) => {
         >
           {competition.title}
         </h5>
-        <p className="card-title  text-muted">{competition.subtitle}</p>
-        <p className="card-title  text-muted">{status}</p>
-        <p className="card-text text-muted">
+        {competition.subtitle && <p className="text-secondary">{competition.subtitle}</p>}
+        <p className="text-secondary">{status}</p>
+        <p className="card-text text-secondary">
           {competition.participantCount} Teams
         </p>
       </div>
-      <div className="d-flex justify-content-evenly align-items-center mt-2 mb-2">
+      <div className="d-flex justify-content-between align-items-center p-2">
         <NavLink
           rel="noreferrer"
           to={`/competitions/${competition.url}`}
@@ -92,7 +92,7 @@ const CompetitionSpace = ({competition}) => {
         >
           View More
         </NavLink>
-        <p className="card-text text-muted pt-2">{timeStatus}</p>
+        <div className="card-text text-secondary">{timeStatus}</div>
       </div>
     </div>
   );

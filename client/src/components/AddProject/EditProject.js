@@ -222,12 +222,12 @@ const EditProject = () => {
       {load === 0 ? (
         <Loading />
       ) : load === 1 ? (
-        <div className="container addproject-container py-3">
+        <div className="container addproject-container pb-4">
           <Helmet>
             <title>Project - AI Club</title>
           </Helmet>
-          <h3 className="text-center">Edit Project</h3>
-          <div className="text-center fs-6 pb-1">
+          <div className="text-center text-header pt-4 pb-1">Edit Project</div>
+          <div className="text-center fs-6 pb-4">
             {preview ? (
               <NavLink
                 rel="noreferrer"

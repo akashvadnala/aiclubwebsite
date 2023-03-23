@@ -1,6 +1,8 @@
 /* @import '~mdb-ui-kit/css/mdb.min.css'; */
 .navbar-collapse .navbar-brand{
     display: none;
+    font-weight: 400;
+    align-items: center;
 }
 
 .title{
@@ -9,8 +11,8 @@
 
 .navbar{
     background-color: rgba(240,240,240,.6);
-    position: sticky !important;
-    top: 0 !important;
+    /* position: sticky !important;
+    top: 0 !important; */
     backdrop-filter: saturate(180%) blur(10px) !important;
     z-index: 1000 !important;
     border-bottom: solid 1px rgba(220,220,220,.6);
@@ -18,12 +20,7 @@
     font-weight: 300;
 }
 
-.navbar-nav{
-    padding: 0;
-}
-
 .navbar-collapse{
-    
     transition: top 1s;
 }
 
@@ -83,7 +80,14 @@ ul{
   .close-navbar-toggler.collapsed{
     z-index:-1;
   }
-
+  .navbar-nav .nav-link{
+    font-size: 0.9rem !important;
+    align-items: center !important;
+  }
+  .navbar-nav .user-name{
+    font-size: 1rem !important;
+    font-weight: 400;
+  }
 
 @media (min-width: 100px){
     .modal-dialog{
@@ -141,7 +145,7 @@ ul{
 @media (min-width: 992px){
     .container-fluid{
         padding: 0 !important;
-        height: 40px;
+        /* height: 40px; */
     }
     .navbar-collapse .navbar-brand{
         display: flex;

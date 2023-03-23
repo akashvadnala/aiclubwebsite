@@ -64,20 +64,20 @@ const AddEvent = () => {
   const handleInputs = (e) => {
     setEvent({ ...event, [e.target.name]: e.target.value });
   };
-  
+
   const handleUrl = (e) => {
     let value = e.target.value;
-    let url="";
-    for(let i=0;i<value.length;i++){
+    let url = "";
+    for (let i = 0; i < value.length; i++) {
       const c = value[i];
-      if(("a"<=c && c<="z") || ("A"<=c && c<="Z") || ("0"<=c && c<="9") || c==="-" || c==='_'){
-        url+=c;
+      if (("a" <= c && c <= "z") || ("A" <= c && c <= "Z") || ("0" <= c && c <= "9") || c === "-" || c === '_') {
+        url += c;
       }
-      else{
-        showAlert("Special Characters are not allowed except '-' and '_'","danger");
+      else {
+        showAlert("Special Characters are not allowed except '-' and '_'", "danger");
       }
     }
-    setEvent({...event,url:url});
+    setEvent({ ...event, url: url });
   }
 
   const removeXspeakers = (speaker) => {
@@ -140,17 +140,17 @@ const AddEvent = () => {
         <Loading />
       ) : load === 1 ? (
         <div className="container addBlog-container text-center">
-          <div className="adjust">
-            <Helmet>
-              <title>Events - NIT Calicut</title>
-            </Helmet>
-            <h3>Add Event</h3>
+          <Helmet>
+            <title>Events - NIT Calicut</title>
+          </Helmet>
+          <div className="adjust pb-4">
+            <div className="text-center text-header py-4">Add Event</div>
             <form
               method="POST"
               onSubmit={PostEvent}
               encType="multipart/form-data"
             >
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center row">
                 <label htmlFor="title" className="col-sm-2 text-end">
                   Event Title :
                 </label>
@@ -168,12 +168,12 @@ const AddEvent = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group mt-3 align-items-center row">
                 <label htmlFor="url" className="col-sm-2 text-end">
                   Event Url :
                 </label>
                 <div className="col-sm-10">
-                  <div className="input-group mb-3">
+                  <div className="input-group">
                     <div className="input-group-prepend">
                       <span
                         className="input-group-text text-end"
@@ -196,17 +196,17 @@ const AddEvent = () => {
                   </div>
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label className="col-sm-2 text-end">Speakers :</label>
                 <div className="col-sm-10">
                   {event.speakers.map((a) => {
                     return (
-                      <div className="form-group my-2 row">
+                      <div className="form-group row">
                         <div className="col col-9">
                           <input
                             type="text"
                             value={a}
-                            className="form-control"
+                            className="form-control mb-2"
                             id="tag"
                             aria-describedby="title"
                             disabled
@@ -223,7 +223,7 @@ const AddEvent = () => {
                       </div>
                     );
                   })}
-                  <div className="form-group my-2 row">
+                  <div className="form-group row">
                     <div className="col col-9">
                       <input
                         type="text"
@@ -258,7 +258,7 @@ const AddEvent = () => {
                   </div>
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label for="photo" className="col-sm-2 text-end">
                   Event Poster :
                 </label>
@@ -275,7 +275,7 @@ const AddEvent = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label for="photo" className="col-sm-2 text-end">
                   Start Time :
                 </label>
@@ -291,7 +291,7 @@ const AddEvent = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label for="photo" className="col-sm-2 text-end">
                   End Time :
                 </label>
@@ -308,7 +308,7 @@ const AddEvent = () => {
                 </div>
               </div>
               <div className="form-group my-3 row">
-                <label for="photo" className="col-sm-2 text-end">
+                <label for="photo" className="col-sm-2 mt-2 text-end">
                   Abstract :
                 </label>
                 <div className="col-sm-10">

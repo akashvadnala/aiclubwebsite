@@ -131,14 +131,14 @@ const AddProject = () => {
           <Helmet>
             <title>Project - AI Club</title>
           </Helmet>
-          <div className="adjust">
-            <h3>Add Project</h3>
+          <div className="adjust pb-4">
+            <div className="text-header py-4">Add Project</div>
             <form
               method="POST"
               onSubmit={PostProject}
               encType="multipart/form-data"
             >
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center row">
                 <label for="title" className="col-sm-2 text-end">
                   Project Title :
                 </label>
@@ -156,12 +156,12 @@ const AddProject = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label for="url" className="col-sm-2 text-end">
                   Project Url :
                 </label>
                 <div className="col-sm-10">
-                  <div className="input-group mb-3">
+                  <div className="input-group">
                     <div className="input-group-prepend">
                       <span
                         className="input-group-text text-end"
@@ -184,8 +184,8 @@ const AddProject = () => {
                   </div>
                 </div>
               </div>
-              <div className="form-group my-3 row">
-                <label for="url" className="col-sm-2 text-end">
+              <div className="form-group mt-3 row">
+                <label for="url" className="col-sm-2 mt-3 text-end">
                   Authors :
                 </label>
                 <div className="col-sm-10">
@@ -215,7 +215,7 @@ const AddProject = () => {
                       </div>
                     );
                   })}
-                  <div className="form-group my-2 row">
+                  <div className="form-group align-items-center mt-3 row">
                     <div className="col col-9">
                       <select
                         name="xauthor"

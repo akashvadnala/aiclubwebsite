@@ -66,11 +66,11 @@ const Navbar = () => {
       link: "/events",
       name: "Events",
     },
-    // {
-    //   show: true,
-    //   link: "/competitions",
-    //   name: "Competitions",
-    // },
+    {
+      show: true,
+      link: "/competitions",
+      name: "Competitions",
+    },
     {
       show: true,
       link: '/about',
@@ -92,7 +92,7 @@ const Navbar = () => {
       {/* <a className="close-navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       </a> */}
       <NavLink className={navOpen?"close-navbar-toggler":"close-navbar-toggler collapsed"} onClick={closeNavFunc}></NavLink>
-      <nav variant="primary" className="navbar navbar-expand-lg">
+      <nav variant="primary" className="navbar navbar-expand-lg align-items-center">
         <div className="container-fluid">
           <NavLink className="navbar-brand title" to='/' onClick={closeNavFunc} aria-current="page"><span><img src={Logo} arc="Logo" style={{ width: "30px", borderRadius: "5px" }} /></span><span>&nbsp;Club</span></NavLink>
 
@@ -115,7 +115,7 @@ const Navbar = () => {
                 ? "collapse navbar-collapse show"
                 : "collapse navbar-collapse"
             } id="navbarSupportedContent">
-            <ul className="adjust navbar-nav">
+            <ul className="navbar-nav py-0 align-items-center adjust">
               <li>
                 <NavLink className="navbar-brand" to='/'><span><img src={Logo} arc="Logo" style={{ width: "30px", borderRadius: "5px" }} /></span><span>&nbsp;Club</span></NavLink>
               </li>
@@ -136,7 +136,7 @@ const Navbar = () => {
                 <li className="nav-item">
                   <div className="dropdown show">
                     <NavLink
-                      className="nav-link dropdown-toggle"
+                      className="nav-link dropdown-toggle user-name"
                       role="button"
                       id="dropdownMenuLink"
                       data-toggle="dropdown"

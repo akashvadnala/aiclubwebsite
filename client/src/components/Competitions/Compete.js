@@ -11,6 +11,7 @@ import axios from "axios";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import Host from "./Host";
 import { Context } from "../../Context/Context";
+import { Helmet } from "react-helmet";
 
 const Compete = () => {
   const params = new useParams();
@@ -80,9 +81,7 @@ const Compete = () => {
   };
 
   useEffect(() => {
-    if (logged_in === 1) {
       getCompete();
-    }
   }, [logged_in, spath, path]);
 
   useEffect(()=>{
@@ -95,7 +94,12 @@ const Compete = () => {
         <Loading />
       ) : load === 1 ? (
         page ? (
-          <div className="compete-container">
+          <div className="compete-container py-3">
+          <Helmet>
+            <title>
+              {comp.title}
+            </title>
+          </Helmet>
             <div className="adjust">
               <InductionsHeader props={parameters} />
               {page}

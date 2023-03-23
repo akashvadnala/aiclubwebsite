@@ -117,32 +117,28 @@ router.route("/getDraftCompeteNames/:id").get(async (req, res) => {
 // });
 
 
-router.route("/updateCompeteOverview/:id").put(async (req, res) => {
-  try {
+router.route("/editOverview/:id").put(authenticate ,async (req, res) => {
     const { id } = req.params;
-    const updateData = await Competitions.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    console.log("Updated Compete", updatedData);
-  } catch (err) {
-    console.log(err);
-  }
+    const {overview} = req.body;
+    console.log(req.body);
+    let compete = await Competitions.findById(id);
+    compete.overview = overview;
+    await compete.save();
+    console.log(compete);
+    res.status(200).json();
 });
 
 router.route("/deleteCompete/:id").post(async (req, res) => {
   const { id } = req.params;
   const compete = await Competitions.findById(id);
   if (compete) {
-    const url = compete.url;
-    await Overview.findOneAndDelete({ compete: url });
-    await Data.findOneAndDelete({ compete: url });
-    await Rules.findOneAndDelete({ compete: url });
-    await Competitions.findByIdAndDelete(url);
-    const leaderboard = await Leaderboard.find({ compete: url });
+    const competeid = compete._id;
+    await Competitions.findByIdAndDelete(id);
+    const leaderboard = await Leaderboard.find({ compete: competeid });
     await Promise.all(
       leaderboard.map(async (l) => {
-        const team = await Team.findOne({ username: l.name });
-        team.competitions.filter((t) => t !== url);
+        const team = await Team.findById(l);
+        team.competitions.filter((t) => t !== competeid);
         await team.save();
       })
     );

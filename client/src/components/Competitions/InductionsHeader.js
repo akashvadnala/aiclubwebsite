@@ -62,9 +62,9 @@ const InductionsHeader = ({ props }) => {
           </div>
         </div>
 
-        <div className="card-body p-1">
+        <div className="card-body px-3 py-2">
           <div className="row align-items-center">
-            <div className="col-lg-8 px-4">
+            <div className="col-lg-8">
               <nav className="inductions-navbar">
                 <div className="nav nav-pills" id="nav-tab" role="tablist">
                   {Object.entries(keys).map(([key, value]) => {
@@ -84,7 +84,7 @@ const InductionsHeader = ({ props }) => {
                 </div>
               </nav>
             </div>
-            <div className="col-lg-4 text-end py-1">
+            <div className="col-lg-4 text-end">
               {
                 <NavLink className="btn btn-sm btn-black" onClick={joinCompete}>
                   {joining ? (

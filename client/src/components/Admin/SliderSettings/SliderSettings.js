@@ -201,7 +201,7 @@ const SliderSettings = () => {
                         <title>Admin - AI Club</title>
                     </Helmet>
                     <div className='adjust'>
-                        <h2 className='text-center'>Admin Panel</h2>
+                        <div className='text-center text-header py-4'>Admin Panel</div>
                     </div>
                     <div className='px-5'>
                         <div className='row'>

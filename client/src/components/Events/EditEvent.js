@@ -82,20 +82,20 @@ const EditEvent = () => {
   const handleInputs = (e) => {
     setEvent({ ...event, [e.target.name]: e.target.value });
   };
-  
+
   const handleUrl = (e) => {
     let value = e.target.value;
-    let url="";
-    for(let i=0;i<value.length;i++){
+    let url = "";
+    for (let i = 0; i < value.length; i++) {
       const c = value[i];
-      if(("a"<=c && c<="z") || ("A"<=c && c<="Z") || ("0"<=c && c<="9") || c==="-" || c==='_'){
-        url+=c;
+      if (("a" <= c && c <= "z") || ("A" <= c && c <= "Z") || ("0" <= c && c <= "9") || c === "-" || c === '_') {
+        url += c;
       }
-      else{
-        showAlert("Special Characters are not allowed except '-' and '_'","danger");
+      else {
+        showAlert("Special Characters are not allowed except '-' and '_'", "danger");
       }
     }
-    setEvent({...event,url:url});
+    setEvent({ ...event, url: url });
   }
 
   const removeXspeakers = (speaker) => {
@@ -116,7 +116,6 @@ const EditEvent = () => {
     setStartDate(date);
     setEvent({ ...event, eventStart: date });
   };
-
   const seteventEndDate = (date) => {
     setEndDate(date);
     setEvent({ ...event, eventEnd: date });
@@ -142,8 +141,8 @@ const EditEvent = () => {
           }
         );
       } catch (err) {
-        
-        showAlert(err.response.error,"danger")
+
+        showAlert(err.response.error, "danger")
       }
 
       try {
@@ -164,7 +163,7 @@ const EditEvent = () => {
           headers: { "Content-Type": "application/json" },
           withCredentials: true
         },
-        );
+      );
       console.log("blogdata", eventdata);
       if (eventdata.status === 500 || !eventdata) {
         showAlert("Failed to save", "danger");
@@ -186,12 +185,12 @@ const EditEvent = () => {
         <Loading />
       ) : load === 1 ? (
         <div className="container addBlog-container text-center">
-          <div className="adjust">
-            <Helmet>
-              <title>Events - AI Club</title>
-            </Helmet>
-            <h3>Edit Event</h3>
-            <div className="text-center fs-6 pb-1">
+          <Helmet>
+            <title>Events - AI Club</title>
+          </Helmet>
+          <div className="adjust pb-4">
+            <div className="text-header pt-4 pb-1">Edit Event</div>
+            <div className="text-center fs-6 pb-4">
               {preview ? (
                 <NavLink
                   to={`/events/${event.url}`}
@@ -208,7 +207,7 @@ const EditEvent = () => {
               onSubmit={EditEvent}
               encType="multipart/form-data"
             >
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center row">
                 <label htmlFor="title" className="col-sm-2 text-end">
                   Event Title :
                 </label>
@@ -226,12 +225,12 @@ const EditEvent = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label htmlFor="url" className="col-sm-2 text-end">
                   Event Url :
                 </label>
                 <div className="col-sm-10">
-                  <div className="input-group mb-3">
+                  <div className="input-group">
                     <div className="input-group-prepend">
                       <span
                         className="input-group-text text-end"
@@ -254,12 +253,12 @@ const EditEvent = () => {
                   </div>
                 </div>
               </div>
-              <div className="form-group my-3 row">
-                <label className="col-sm-2 text-end">Speakers :</label>
+              <div className="form-group mt-3 row">
+                <label className="col-sm-2 mt-2 text-end">Speakers :</label>
                 <div className="col-sm-10">
                   {event.speakers.map((a) => {
                     return (
-                      <div className="form-group my-2 row">
+                      <div className="form-group mb-2 row">
                         <div className="col col-9">
                           <input
                             type="text"
@@ -281,7 +280,7 @@ const EditEvent = () => {
                       </div>
                     );
                   })}
-                  <div className="form-group my-2 row">
+                  <div className="form-group row">
                     <div className="col col-9">
                       <input
                         type="text"
@@ -316,7 +315,7 @@ const EditEvent = () => {
                   </div>
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label for="photo" className="col-sm-2 text-end">
                   Event Poster :
                 </label>
@@ -332,39 +331,39 @@ const EditEvent = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label for="photo" className="col-sm-2 text-end">
                   Start Time :
                 </label>
                 <div className="col-sm-10">
                   <DatePicker
                     className="form-control"
-                    selected={startDate}
+                    selected={new Date(event.eventStart)}
                     onChange={(date) => seteventStartDate(date)}
                     showTimeSelect
-                    minDate={new Date()}
+                    // minDate={new Date()}
                     filterTime={filterPassedTime}
                     dateFormat="MMMM d, yyyy h:mm aa"
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label for="photo" className="col-sm-2 text-end">
                   End Time :
                 </label>
                 <div className="col-sm-10">
                   <DatePicker
                     className="form-control"
-                    selected={endDate}
+                    selected={new Date(event.eventEnd)}
                     onChange={(date) => seteventEndDate(date)}
                     showTimeSelect
-                    minDate={new Date()}
-                    filterTime={filterPassedTime}
+                    // minDate={new Date()}
+                    // filterTime={filterPassedTime}
                     dateFormat="MMMM d, yyyy h:mm aa"
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label for="photo" className="col-sm-2 text-end">
                   Abstract :
                 </label>
@@ -379,7 +378,7 @@ const EditEvent = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label htmlFor="title" className="col-sm-2 text-end">
                   Event Link :
                 </label>
@@ -396,7 +395,7 @@ const EditEvent = () => {
                   />
                 </div>
               </div>
-              <div className="form-group my-3 row">
+              <div className="form-group align-items-center mt-3 row">
                 <label htmlFor="title" className="col-sm-2 text-end">
                   Event Location :
                 </label>
@@ -413,27 +412,15 @@ const EditEvent = () => {
                   />
                 </div>
               </div>
-
-              {add ? (
-                <button
-                  type="submit"
-                  name="submit"
-                  id="submit"
-                  className="btn btn-primary"
-                  disabled
-                >
-                  Updating <i className="fa fa-spinner fa-spin"></i>
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  name="submit"
-                  id="submit"
-                  className="btn btn-primary"
-                >
-                  Update
-                </button>
-              )}
+              <button
+                type="submit"
+                name="submit"
+                id="submit"
+                className="btn btn-primary mt-4"
+                disabled={add}
+              >
+                {add ? <>Updating <i className="fa fa-spinner fa-spin"></i></> : <>Update</>}
+              </button>
             </form>
           </div>
         </div>

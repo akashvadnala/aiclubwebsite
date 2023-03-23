@@ -178,7 +178,7 @@ const Profile = () => {
     return (
         <>
             {load === 0 ? <Loading /> : load === 1 ?
-                <div className="profile-container adjust">
+                <div className="profile-container adjust py-3">
                     {team ? (
                         <div className="row">
                             <div className="col-lg-4">
