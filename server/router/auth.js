@@ -4,8 +4,10 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 let path = require("path");
 const authenticate = require("../middleware/authenticate");
+const competeAuthenticate = require("../middleware/competeAuthenticate");
 const Leaderboard = require("../model/leaderboardSchema");
 const Team = require("../model/teamSchema");
+const CompeteTeam = require("../model/competeTeamSchema");
 const { passwordResetMail } = require("../controllers/mail");
 const Config = require("../Config");
 const CLIENT_URL = Config.CLIENT_URL;
@@ -42,27 +44,105 @@ router.post("/login", async (req, res, next) => {
                         secure: true,
                         sameSite: "none"
                     });
-                    if (compete) {
-                        if (team.competitions.indexOf(compete) === -1) {
-                            const leaderboard = new Leaderboard({
-                                compete: compete,
-                                name: team.username,
-                            });
-                            await leaderboard.save();
-                            team.competitions.push(compete);
-                            await team.save();
-                        }
-                    }
                 }
-                return res.status(200).json({ message: "User Signin Successfully"});
+                return res.status(200).json({ message: "User Signin Successfully" });
             }
         });
     } catch (err) {
-        res.status(400).json({error:"Internal server Error"});
+        res.status(400).json({ error: "Internal server Error" });
+    }
+});
+
+router.post("/competeLogin", async (req, res, next) => {
+    try {
+        let token;
+        const { username, password, compete } = req.body;
+        if (!username || !password) {
+            return res.status(401).json({ error: "Plz fill the field properly" });
+        }
+        var team = await CompeteTeam.findOne({ username: username });
+        if (!team) {
+            team = await CompeteTeam.findOne({ email: username });
+            if (!team) {
+                return res.status(401).json({ error: "Invalid Credentials" });
+            }
+        }
+
+        bcrypt.compare(password, team.password, async (err, isMatch) => {
+            if (!isMatch) {
+                return res.status(401).json({ error: "Invalid Credentials" });
+            } else {
+                if (team) {
+                    token = await team.generateAuthToken();
+                    res.cookie("competejwtoken", token, {
+                        // jwtoken->name
+                        expires: new Date(Date.now() + 258920000000), //30 days
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none"
+                    });
+                    if (team.competitions.indexOf(compete) === -1) {
+                        const leaderboard = new Leaderboard({
+                            compete: compete,
+                            name: team.username,
+                        });
+                        await leaderboard.save();
+                        team.competitions.push(compete);
+                        await team.save();
+                    }
+                }
+                return res.status(200).json({ message: "User Signin Successfully" });
+            }
+        });
+    } catch (err) {
+        res.status(400).json({ error: "Internal server Error" });
+    }
+});
+
+router.route('/competeUseradd').post(async (req, res) => {
+    try {
+        if (req.body.password != req.body.cpassword) {
+            return res.status(401).json({ error: "Passwords not matched!" });
+        }
+
+        const mailExist = await Team.findOne({ email: req.body.email });
+
+        if (mailExist) {
+            return res.status(401).json({ error: "Email already exist!" });
+        }
+
+        const userExist = await Team.findOne({ username: req.body.username });
+
+        if (userExist) {
+            return res.status(401).json({ error: "Username already exist!" });
+        }
+
+        const team = new Team(req.body);
+
+        const saltRounds = 10;
+        team.password = await bcrypt.hash(req.body.password, saltRounds);
+        team.cpassword = await bcrypt.hash(req.body.cpassword, saltRounds);
+        await team.save();
+        
+        newuserMail(team.email,{username:team.username,password:team.username});
+        console.log(`${team.username} user registered successfully`);
+        res.status(200).json({ message: "user Login Successfully" });
+
+    } catch (err) {
+        res.status(400).json({ error: "Internal server error" });
     }
 });
 
 router.get('/getUserData', authenticate, (req, res) => {
+    if (req.rootUser) {
+        res.status(200).json(req.rootUser);
+    }
+    else {
+        res.status(400).json(null);
+    }
+});
+
+router.get('/getCompeteUserData', competeAuthenticate, (req, res) => {
     if (req.rootUser) {
         res.status(200).json(req.rootUser);
     }
@@ -105,7 +185,7 @@ router.post("/forgot-password", async (req, res) => {
         passwordResetMail(email, content);
         res.status(200).send({ msg: "Mail sent successfully" });
     } catch (error) {
-        res.status(400).send({error:"There is a problem in the server"});
+        res.status(400).send({ error: "There is a problem in the server" });
     }
 });
 
@@ -116,7 +196,7 @@ router.get('/logout', authenticate, async (req, res) => {
         user.tokens = user.tokens.filter(to => to === user.tokens.find(t => t.token === req.token));
         await user.save();
     }
-    res.cookie('jwtoken', "", { 
+    res.cookie('jwtoken', "", {
         expires: new Date(Date.now() + 258920000000), //30 days
         httpOnly: true,
         secure: true,

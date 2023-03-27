@@ -16,7 +16,7 @@ const Competitions = () => {
 
   const getCompetitionsData = async () => {
     try {
-      axios.get(`${SERVER_URL}/getCompeteNames`).then((data) => {
+      await axios.get(`${SERVER_URL}/getCompeteNames`).then((data) => {
         if (data.status === 201) {
           setCompetitions(data.data);
           setLoad(1);
@@ -33,6 +33,41 @@ const Competitions = () => {
     getCompetitionsData();
   }, [user]);
 
+  // const getCompeteUserData = async () => {
+  //   await axios.get(`${SERVER_URL}/getCompeteUserData`)
+  //     .then((data) => {
+  //       setCompeteUser(data.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log('No compete User..')
+  //     })
+  // }
+
+  // useEffect(() => {
+  //   getCompeteUserData();
+  // }, []);
+
+  // const Login = async (e) => {
+  //   e.preventDefault();
+  //   setMsg("");
+  //   setsignin(true);
+  //   await axios
+  //     .post(
+  //       `${SERVER_URL}/competeLogin`,
+  //       {
+  //         username: username,
+  //         password: password,
+  //       },
+  //       { withCredentials: true }
+  //     ).then((res) => {
+  //       window.location.reload(true);
+  //     }).catch((err) => {
+  //       console.log(err);
+  //       setMsg(err.response.data.error);
+  //       setsignin(false);
+  //     });
+  // };
+
   return (
     <>
       {load === 0 ? (
@@ -48,11 +83,27 @@ const Competitions = () => {
                 Competitions
               </div>
               <div className="col-md-8 text-center text-md-end">
+                {/* {competeUser ?
+                  <>
+                    Logged in as {competeUser.username}
+                  </>
+                  :
+                  <button
+                    rel="noreferrer"
+                    data-bs-toggle="modal" data-bs-target="#CompeteLoginModal"
+                    className="btn btn-sm hover-underline text-primary rounded-pill"
+                  >
+                    Login/Register Here for Competitions
+                  </button>
+                } */}
+                {/* <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Disabled tooltip">
+                  <button class="btn btn-primary" style={{pointerEvents: "none"}} type="button" disabled>Disabled button</button>
+                </span> */}
                 {user && user.competitionsAccess.length ? (
                   <NavLink
                     rel="noreferrer"
                     to="/draftcompetitions"
-                    className="btn btn-sm btn-primary"
+                    className="btn btn-sm btn-primary ml-2"
                   >
                     Draft
                   </NavLink>

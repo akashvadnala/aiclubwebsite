@@ -335,7 +335,7 @@ const Profile = () => {
                                                             </div>
                                                             {
                                                                 editMode ?
-                                                                    <div className="col-sm-9 p-0">
+                                                                    <div className="col-sm-9" style={{paddingLeft:"0px"}}>
                                                                         <input
                                                                             type="text"
                                                                             name={form.link}

@@ -62,18 +62,14 @@ function TeamLogin(props) {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      <Modal.Header closeButton></Modal.Header>
-      <Modal.Body>
-        {!reset ? (
-          <h4 className="pb-3">Login</h4>
-        ) : (
-          <h4 className="pb-3">Reset Password</h4>
-        )}
+      {/* <Modal.Header closeButton></Modal.Header> */}
+      <Modal.Body className="text-center p-5">
+        <h3 className="pb-4">{reset ? <>Reset Password</> : <>Login</>}</h3>
         {msg ? <div className="alert alert-danger">{msg}</div> : null}
         {!reset ? (
           <div className="login-container">
             <form method="POST">
-              <div className="form-group mb-4 text-start">
+              <div className="form-group mb-3 text-start">
                 {/* <label for="username" className="pb-1">
                   Username/Email :
                 </label> */}
@@ -83,7 +79,7 @@ function TeamLogin(props) {
                     name="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="form-control form-control-lg"
+                    className="form-control py-2 px-4 rounded-pill"
                     id="username"
                     aria-describedby="username"
                     placeholder="Enter Username or EMail ID"
@@ -91,7 +87,7 @@ function TeamLogin(props) {
                   />
                 </div>
               </div>
-              <div className="form-group mb-4 text-start">
+              <div className="form-group mb-3 text-start">
                 {/* <label for="password" className="pb-1">
                   Password :
                 </label> */}
@@ -101,7 +97,7 @@ function TeamLogin(props) {
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="form-control form-control-lg"
+                    className="form-control rounded-pill py-2 px-4 mb-4"
                     id="password"
                     aria-describedby="password"
                     placeholder="Enter Password"
@@ -109,33 +105,24 @@ function TeamLogin(props) {
                   />
                 </div>
               </div>
-              {signin ? (
-                <button
-                  type="submit"
-                  className="cust btn btn-primary btn-block mb-4"
-                  disabled
-                >
-                  Signing in<i className="fa fa-spinner fa-spin"></i>
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="cust btn btn-primary btn-block mb-4"
-                  onClick={Login}
-                >
-                  Sign in
-                </button>
-              )}
+              <button
+                type="submit"
+                className="btn btn-primary w-100 mb-4 py-2 px-4"
+                onClick={Login}
+                disabled={signin}
+              >
+                {signin?<>Signing in<i className="fa fa-spinner fa-spin"></i></>:<>Sign in</>}
+              </button>
             </form>
             <button
               type="reset"
-              className="cust btn btn-block mb-4 mx-4"
+              className="cust btn text-primary"
               onClick={() => {
                 setReset(!reset);
                 setMsg("");
               }}
             >
-              Forget Password
+              Forget Password?
             </button>
           </div>
         ) : (
@@ -151,7 +138,7 @@ function TeamLogin(props) {
                     name="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="form-control  form-control-lg"
+                    className="form-control rounded-pill py-2 px-4"
                     id="username"
                     aria-describedby="username"
                     placeholder="Enter Username or EMail ID"
@@ -161,7 +148,7 @@ function TeamLogin(props) {
               </div>
               <button
                 type="submit"
-                className="cust btn btn-primary btn-block mb-4"
+                className="cust btn btn-primary w-100 mb-4 py-2 px-4"
               >
                 Reset Password{
                   showSpinner && <i className="fa fa-spinner fa-spin"></i>
@@ -170,7 +157,7 @@ function TeamLogin(props) {
             </form>
             <button
               type="reset"
-              className="cust btn btn-danger btn-block mb-4 mx-4"
+              className="cust btn mb-4"
               onClick={() => {
                 setReset(!reset);
                 setMsg("");

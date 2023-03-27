@@ -24,11 +24,11 @@ function TeamCard({ team, isadmin, isdelete }) {
   return (
     <div className="team-card-container col-lg-3 col-md-4 col-sm-6 col-6">
 
-      <div className="card" style={{ 'border': "solid" }}>
+      <div className="card mt-0 mb-4 mx-2">
         <div className="card-img">
           <img src={team.photo} alt={team.firstname} />
         </div>
-        <div className="card-body">
+        <div className="card-body px-3 pb-3">
           <NavLink rel="noreferrer" to={`/profile/${team.username}`}>
             <h5 className="text-dark">
               {team.firstname} {team.lastname} &nbsp;
@@ -36,8 +36,8 @@ function TeamCard({ team, isadmin, isdelete }) {
               <i class="fa-xs fas fa-external-link-alt"></i>
             </h5>
           </NavLink>
-          <h6>{team.position}</h6>
-          <h6>{team.profession}</h6>
+          <h6 className="text-secondary">{team.position}</h6>
+          <h6 className="text-secondary">{team.profession}</h6>
           {/* <TextTruncate
             title={team.description}
             line={2}

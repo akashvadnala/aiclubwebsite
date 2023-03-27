@@ -22,40 +22,36 @@ const Compete = () => {
   }
   const { user, logged_in } = useContext(Context);
   const [page, setPage] = useState(null);
-  const [comp, setComp] = useState([]);
+  const [title, setTitle] = useState("");
   const [load, setLoad] = useState(0);
-  const [hostAccess, setHostAccess] = useState(false);
-  const getCompete = async () => {
-    try {
-      axios.get(`${SERVER_URL}/getCompete/${spath}`).then((data) => {
-        if (data.status === 200) {
-          if (user) {
-            if (data.data.access.includes(user._id)) {
-              setHostAccess(true);
-            }
-          }
-          setComp(data.data);
-          setLoad(1);
-        } else {
-          console.log("Competition not found");
-          setLoad(-1);
-        }
-      });
-    } catch (err) {
-      console.log("Connot get Compete data");
-      setLoad(-1);
-    }
-  };
 
-  let parameters = {
+  const [parameters, setParameters] = useState({
     path: path,
-    c: comp,
-    access: hostAccess,
-    username: user ? user.username : null,
+    c: null,
+    access: false,
+    username: null,
+  });
+
+  const getCompete = async () => {
+    axios.get(`${SERVER_URL}/getCompete/${spath}`).then((data) => {
+      let access = false;
+      let username = null;
+      if (user) {
+        username = user.username
+        if (data.data.access.includes(user._id)) {
+          access = true;
+        }
+      }
+      setParameters({ ...parameters, access: access, c: data.data, username: username });
+      setTitle(data.data.title);
+      setLoad(1);
+    }).catch(err => {
+      setLoad(-1);
+    });
   };
 
   const getPage = async () => {
-    
+
     switch (path) {
       case undefined:
         setPage(<Overview props={parameters} />);
@@ -73,21 +69,24 @@ const Compete = () => {
         setPage(<Submissions props={parameters} />);
         break;
       case "register":
-        setPage(<Register c={comp} />);
+        setPage(<Register c={parameters.c} />);
         break;
       default:
+        setPage(<Error />)
         break;
     }
   };
 
   useEffect(() => {
-      getCompete();
+    getCompete();
   }, [logged_in, spath, path]);
 
-  useEffect(()=>{
-    getPage();
-  },[comp]);
-  
+  useEffect(() => {
+    if (parameters.c) {
+      getPage();
+    }
+  }, [parameters]);
+
   return (
     <>
       {load === 0 ? (
@@ -95,11 +94,11 @@ const Compete = () => {
       ) : load === 1 ? (
         page ? (
           <div className="compete-container py-3">
-          <Helmet>
-            <title>
-              {comp.title}
-            </title>
-          </Helmet>
+            <Helmet>
+              <title>
+                {title}
+              </title>
+            </Helmet>
             <div className="adjust">
               <InductionsHeader props={parameters} />
               {page}

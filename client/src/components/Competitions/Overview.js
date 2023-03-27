@@ -59,7 +59,7 @@ const Overview = ({ props }) => {
       ) : load === 1 ? (
         <div className="overview-container pt-2">
           <div className="card">
-            <div className="row p-3">
+            <div className="row align-items-center p-3">
               <div className="col-sm-8">
                 <h4 className="m-0">Overview</h4>
               </div>

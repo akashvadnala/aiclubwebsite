@@ -70,9 +70,9 @@ function Team({ setSortMode }) {
         <div className='head-img'>
           <h1>Team Members</h1>
         </div>
-        <div className='container team py-4'>
-          <div className='row align-items-center pb-1'>
-            <div className='col-12 col-md-4 align-items-center h3 pt-3 text-center text-md-start'>
+        <div className='container team'>
+          <div className='row align-items-center py-4'>
+            <div className='col-12 col-md-4 text-header text-center text-md-start'>
               {archTeam && <span>Archieved</span>} Team Members
             </div>
             <div className='col-12 col-md-5 text-center text-md-end align-items-center'>
@@ -80,7 +80,7 @@ function Team({ setSortMode }) {
                 <div className='right-panel'>
                   {
                     archTeam ?
-                      <button rel="noreferrer" className='btn btn-dark mx-2' onClick={getTeamData}>
+                      <button rel="noreferrer" className='btn btn-dark mx-2 rounded-pill' onClick={getTeamData}>
                         Team
                       </button>
                       :
