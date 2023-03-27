@@ -202,7 +202,7 @@ router.route('/teamupdate/:id').put(authenticate, async (req, res) => {
         });
 
         console.log('Team Updated!');
-        res.status(200).json(updateduser);
+        res.status(200).json();
 
     } catch (error) {
         res.status(400).json({error:"Somthing went wrong!"});

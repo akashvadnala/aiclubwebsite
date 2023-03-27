@@ -3,16 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const teamSchema = new mongoose.Schema({
-  projects: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-    },
-  ],
-  blogs: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-    },
-  ],
   competitions: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,19 +15,6 @@ const teamSchema = new mongoose.Schema({
   lastname: {
     type: String,
   },
-  profession: {
-    type: String,
-  },
-  position: {
-    type: String,
-    default: "Member at AI Club NITC",
-  },
-  branch: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
   username: {
     type: String,
     required: true,
@@ -47,31 +24,6 @@ const teamSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
-  },
-  github: {
-    type: String,
-  },
-  linkedin: {
-    type: String,
-  },
-  isalumni: {
-    type: Boolean,
-    default: false,
-  },
-  year: {
-    type: Number,
-  },
-  photo: {
-    type: String,
-    required: true,
-  },
-  isadmin: {
-    type: Boolean,
-    required: true,
-  },
-  ismember: {
-    type: Boolean,
     required: true,
   },
   competitionsAccess: [
@@ -90,9 +42,6 @@ const teamSchema = new mongoose.Schema({
   canChangePassword: {
     type: Boolean,
     default: false,
-  },
-  orderIndex: {
-    type: Number,
   },
   tokens: [
     {
@@ -141,6 +90,6 @@ teamSchema.methods.generateForgetPasswordToken = async function () {
   }
 };
 
-const Team = mongoose.model("Team", teamSchema);
+const CompeteTeam = mongoose.model("CompeteTeam", teamSchema);
 
-module.exports = Team;
+module.exports = CompeteTeam;

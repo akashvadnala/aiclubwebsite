@@ -65,7 +65,7 @@ const CompetitionSpace = ({competition}) => {
         className="card-img-top"
         style={{ height: "100px" }}
       />
-      <div className="card-body border-bottom p-2">
+      <div className="card-body border-bottom p-3">
         <h5
           style={{
             overflow: "hidden",
@@ -84,11 +84,11 @@ const CompetitionSpace = ({competition}) => {
           {competition.participantCount} Teams
         </p>
       </div>
-      <div className="d-flex justify-content-between align-items-center p-2">
+      <div className="d-flex justify-content-between align-items-center p-3">
         <NavLink
           rel="noreferrer"
           to={`/competitions/${competition.url}`}
-          className="btn btn-sm btn-dark"
+          className="btn btn-sm btn-dark rounded"
         >
           View More
         </NavLink>

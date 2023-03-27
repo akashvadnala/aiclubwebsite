@@ -43,7 +43,7 @@ const MemberProfile = () => {
     return (
         <>
             {load === 0 ? <Loading /> : load === 1 ?
-                <div className="profile-container adjust">
+                <div className="profile-container adjust py-3">
                     <div className="row">
                         <div className="col-lg-4">
                             <div className="card mb-4">

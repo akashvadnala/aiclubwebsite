@@ -149,13 +149,13 @@ const TeamAdd = () => {
         <>
             {load === 0 ? <Loading /> : load === 1 ?
                 <div className='profile-update-container'>
-                    <div className='profile-update adjust'>
-                        <h3>Add Team Member</h3>
+                    <div className='profile-update adjust pb-4'>
+                        <div className='text-header py-4'>Add Team Member</div>
                         <form method="POST" onSubmit={PostTeam} encType="multipart/form-data">
                             {
                                 forms.map((f) => {
                                     return (
-                                        <div className="form-group my-3 row">
+                                        <div className="form-group mb-3 align-items-center row">
                                             <label for={f.id} className='col-sm-2 text-end'>{f.des} :</label>
                                             <div className='col-sm-10'>
                                                 <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} className="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} required={f.req} />
@@ -164,26 +164,26 @@ const TeamAdd = () => {
                                     )
                                 })
                             }
-                            <div className="form-group my-3 row">
+                            <div className="form-group align-items-center row">
                                 <label for='photo' className='col-sm-2 text-end'>Upload Photo :</label>
                                 <div className='col-sm-10'>
                                     <input type='file' accept="image/*" name="photo" onChange={handlePhoto} className="form-control" id='photo' aria-describedby='photo' required />
                                 </div>
                             </div>
-                            {(photo || team.photo) && <div className="form-group my-3 row">
+                            {(photo || team.photo) && <div className="form-group mt-3 align-items-center row">
                                 <div className=" col-8 col-md-3">
                                     <img src={photo ? photo : team.photo} alt={team.firstname} style={{ width: "100%", objectFit: "contain" }} />
                                 </div>
                             </div>}
-                            <div className="form-group form-check my-3">
+                            <div className="form-group form-check mt-3  align-items-center">
                                 <input type="checkbox" checked={team.isadmin} name="isadmin" onChange={handleCheck} className="form-check-input" id="admin" />
                                 <label className="form-check-label" for="admin">Make Admin</label>
                             </div>
-                            <div className="form-group form-check my-3">
+                            <div className="form-group form-check mt-3 align-items-center">
                                 <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
                                 <label className="form-check-label" for="member">Make Member</label>
                             </div>
-                            <div className="form-group form-check my-3">
+                            <div className="form-group form-check mt-3 align-items-center">
                                 <input type="checkbox" checked={team.isalumni} name="isalumni" onChange={handleCheck} className="form-check-input" id="isalumni" />
                                 <label className="form-check-label" for="isalumni">Make Alumni</label>
                             </div>
@@ -201,17 +201,9 @@ const TeamAdd = () => {
                         <label className="form-check-label" for="canCreateCompetitions">Can Create Competitions</label>
                     </div> */}
 
-                            {
-                                add ?
-                                    <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
-                                        <span>Submitting </span>
-                                        <i className="fa fa-spinner fa-spin"></i>
-                                    </button>
-                                    :
-                                    <button type="submit" name="submit" id="submit" className="btn btn-primary">
-                                        Submit
-                                    </button>
-                            }
+                            <button type="submit" name="submit" id="submit" className="btn btn-primary mt-3" disabled={add}>
+                                {add ? <>Submitting <i className="fa fa-spinner fa-spin"></i></> : <>Submit</>}
+                            </button>
                         </form>
                     </div>
                 </div>

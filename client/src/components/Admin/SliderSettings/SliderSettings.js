@@ -309,7 +309,7 @@ const SliderSettings = () => {
                                                     </div>
                                                 </div>
                                                 <div className="modal-footer">
-                                                    <button type="reset" id="modalClose" className="btn btn-sm btn-secondary" data-bs-dismiss="modal"
+                                                    <button type="reset" id="modalClose" className="btn btn-sm" data-bs-dismiss="modal"
                                                         onClick={() => {
                                                             setXSlider({
                                                                 photo: "",

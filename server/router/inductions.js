@@ -12,7 +12,7 @@ router.route("/getCompete/:url").get(async (req, res) => {
   if (data) {
     res.status(200).json(data);
   } else {
-    res.status(201).json(null);
+    res.status(400).json();
   }
 });
 
@@ -41,11 +41,26 @@ router.route("/addcompetitions").post(authenticate, async (req, res) => {
       );
     })
     .catch((err) => {
-        console.log(err);
+      console.log(err);
       res.status(500).json({ error: err });
     });
   res.status(201).json({ message: "Competition Created Successfully" });
 });
+
+router.route('/updateCompetetion/:id').put(authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updateddata = await Competitions.findByIdAndUpdate(id, req.body, {
+      new: true
+    });
+
+    console.log('Competition Updated!');
+    res.status(200).json();
+  } catch (err) {
+    res.status(400).json({ error: "Somthing went wrong!" });
+  }
+})
 
 router.route("/getCompeteNames").get(async (req, res) => {
   const data = await Competitions.find({ public: true });
@@ -117,15 +132,15 @@ router.route("/getDraftCompeteNames/:id").get(async (req, res) => {
 // });
 
 
-router.route("/editOverview/:id").put(authenticate ,async (req, res) => {
-    const { id } = req.params;
-    const {overview} = req.body;
-    console.log(req.body);
-    let compete = await Competitions.findById(id);
-    compete.overview = overview;
-    await compete.save();
-    console.log(compete);
-    res.status(200).json();
+router.route("/editOverview/:id").put(authenticate, async (req, res) => {
+  const { id } = req.params;
+  const { overview } = req.body;
+  console.log(req.body);
+  let compete = await Competitions.findById(id);
+  compete.overview = overview;
+  await compete.save();
+  console.log(compete);
+  res.status(200).json();
 });
 
 router.route("/deleteCompete/:id").post(async (req, res) => {
