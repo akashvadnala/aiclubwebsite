@@ -42,7 +42,7 @@ const Compete = () => {
           access = true;
         }
       }
-      setParameters({ ...parameters, access: access, c: data.data, username: username });
+      setParameters({ ...parameters, path:path, access: access, c: data.data, username: username });
       setTitle(data.data.title);
       setLoad(1);
     }).catch(err => {
@@ -82,7 +82,7 @@ const Compete = () => {
   }, [logged_in, spath, path]);
 
   useEffect(() => {
-    if (parameters.c) {
+    if(parameters.c){
       getPage();
     }
   }, [parameters]);

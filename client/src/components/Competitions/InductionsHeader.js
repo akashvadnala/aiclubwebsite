@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import CompeteLogin from "../Navbar/CompeteLogin";
 import "./Competitions.css";
 
 const InductionsHeader = ({ props }) => {
-  const location = useLocation();
   let keys;
   if (props.access) {
     keys = {
@@ -75,7 +74,6 @@ const InductionsHeader = ({ props }) => {
               <nav className="inductions-navbar">
                 <div className="nav nav-pills" id="nav-tab" role="tablist">
                   {Object.entries(keys).map(([key, value]) => {
-                    console.log(value,props.path)
                     return (
                       <NavLink
                         type="button"
