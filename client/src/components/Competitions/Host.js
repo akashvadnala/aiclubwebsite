@@ -30,54 +30,53 @@ const Host = ({ props }) => {
   const [msg, setMsg] = useState(null);
   const [add, setAdd] = useState(false);
   const [teams, setTeams] = useState([]);
+  const [accessTeams, setAccessTeams] = useState([]);
   const [Img, setImg] = useState();
   const [photo, setPhoto] = useState(null);
-  // const [startDate, setStartDate] = useState(new Date());
-  // const [endDate, setEndDate] = useState(new Date());
-  const [projTeams, setProjTeams] = useState([]);
   let team = [];
-  let projTeam = [];
+  let accessTeam = [];
   let teamArray = [];
   const getTeams = () => {
     try {
       axios.get(`${SERVER_URL}/getTeams`).then(async (data) => {
         teamArray = data.data;
+        accessTeam = []
         await Promise.all(
           props && props.c && props.c.access.map((a) => {
-            team.push(teamArray.filter((t) => t.id !== a)[0]);
-            projTeam.push(teamArray.filter((t) => t.id === a)[0]);
+            accessTeam.push(teamArray.filter((t) => t.id === a)[0]);
+            teamArray = teamArray.filter((t) => t.id !== a);
           })
         )
-        setTeams(team);
-        setProjTeams(projTeam);
+        setTeams(teamArray);
+        setAccessTeams(accessTeam);
         setLoad(1);
       });
     } catch (err) {
       console.log(err);
+      setLoad(-1);
     }
   };
-
+  console.log('props', props)
   useEffect(() => {
-    if (logged_in === 1) {
-      if (user.isadmin) {
+    if (props.access !== null) {
+      if (props.access === true) {
         setCompete(props.c);
         getTeams();
         setLoad(1);
-      } else {
+      }
+      else {
         setLoad(-1);
       }
-    } else if (logged_in === -1) {
-      setLoad(-1);
     }
   }, [logged_in, props]);
-  console.log('compete', compete)
+
   const removeXAccess = (author) => {
-    let current = projTeams.filter(t => t.id === author);
-    projTeam = projTeams.filter(t => t.id !== author);
+    let current = accessTeams.filter(t => t.id === author);
+    accessTeam = accessTeams.filter(t => t.id !== author);
     team = teams;
     team.push(current[0]);
     setTeams(team);
-    setProjTeams(projTeam);
+    setAccessTeams(accessTeam);
     let authors = compete.access.filter(a => a !== author);
     setCompete({ ...compete, access: authors });
     setXAccess("");
@@ -87,10 +86,10 @@ const Host = ({ props }) => {
     if (xaccess !== "") {
       let current = teams.filter((t) => t.id === xaccess);
       team = teams.filter((t) => t.id !== xaccess);
-      projTeam = projTeams;
-      projTeam.push(current[0]);
+      accessTeam = accessTeams;
+      accessTeam.push(current[0]);
       setTeams(team);
-      setProjTeams(projTeam);
+      setAccessTeams(accessTeam);
       let authors = compete.access;
       authors.push(xaccess);
       setCompete({ ...compete, access: authors });
@@ -302,7 +301,7 @@ const Host = ({ props }) => {
                       Host Access :
                     </label>
                     <div className="col-sm-10">
-                      {projTeams.map((t, i) => {
+                      {accessTeams.map((t, i) => {
                         return (
                           <div className="form-group mb-2 row" key={i}>
                             <div className="col col-9">
@@ -316,7 +315,7 @@ const Host = ({ props }) => {
                               />
                             </div>
                             <div className="col col-3">
-                              {user._id !== t.id && (
+                              {user._id !== t.id && t.id !== props.c.creator && (
                                 <input
                                   type="reset"
                                   className="btn btn-danger"
