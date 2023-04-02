@@ -85,6 +85,7 @@ const Routing = () => {
         <Route exact path='/competitions' element={<Competitions />} />
         <Route exact path='/draftcompetitions' element={<DraftCompetitions />} />
         <Route exact path='/create-competition' element={<CreateCompetition />} />
+        <Route exact path='/competitions/:spath/:path/:hpath' element={<Compete />} />
         <Route exact path='/competitions/:spath/:path' element={<Compete />} />
         <Route exact path='/competitions/:spath' element={<Compete />} />
 
