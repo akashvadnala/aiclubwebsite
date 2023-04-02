@@ -50,6 +50,10 @@ const competitionSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    submissionLimit: {
+      type: Number,
+      default: 1,
+    },
     CompetitionStart: {
       type: Date,
     },

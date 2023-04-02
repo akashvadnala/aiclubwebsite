@@ -12,17 +12,6 @@ const Host = ({ props }) => {
 
   const navigate = useNavigate();
   const { user, logged_in } = useContext(Context);
-  // const [compete, setCompete] = useState({
-  //   url: "",
-  //   title: "",
-  //   subtitle: "",
-  //   headerPhoto: "",
-  //   creator: user ? user._id : null,
-  //   access: [],
-  //   public: false,
-  //   CompetitionStart: new Date(),
-  //   CompetitionEnd: new Date()
-  // });
   const [compete, setCompete] = useState(null);
   const { showAlert } = useContext(alertContext);
   const [load, setLoad] = useState(0);
@@ -196,7 +185,7 @@ const Host = ({ props }) => {
                 <h4 className='m-0'>Host</h4>
               </div>
               <div className='card-body border-top pt-0 pb-4'>
-                <div className="text-header  py-4">Update Competition</div>
+                <div className="text-header  py-4">Settings</div>
                 {compete && <form
                   method="POST"
                   onSubmit={updateCompetetion}
@@ -424,20 +413,23 @@ const Host = ({ props }) => {
                       <img src={photo ? photo : compete.headerPhoto} alt={compete.title} style={{ width: "250px", height: "120px", borderRadius: "5px" }} />
                     </div>
                   </div>
-                  <div className="form-group form-check mt-3 align-items-center">
-                    <input
-                      type="checkbox"
-                      name="public"
-                      checked={compete.public}
-                      onChange={(e) => {
-                        setCompete({ ...compete, public: e.target.checked });
-                      }}
-                      className="form-check-input"
-                      id="public"
-                    />
-                    <label className="form-check-label" htmlFor="public">
-                      Public
-                    </label>
+                  <div className="form-group row mt-3 align-items-center">
+                    <div className="col-sm-2">.</div>
+                    <div className="col-sm-10 form-check">
+                      <input
+                        type="checkbox"
+                        name="public"
+                        checked={compete.public}
+                        onChange={(e) => {
+                          setCompete({ ...compete, public: e.target.checked });
+                        }}
+                        className="form-check-input"
+                        id="public"
+                      />
+                      <label className="form-check-label" htmlFor="public">
+                        Public
+                      </label>
+                    </div>
                   </div>
                   <div className=" ">
                     <button type="submit" name="submit" id="submit" className="btn btn-primary mt-4" disabled={add}>

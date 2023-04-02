@@ -4,6 +4,7 @@ const router = express.Router();
 const Competitions = require("../model/competitionSchema");
 const Leaderboard = require("../model/leaderboardSchema");
 const Team = require("../model/teamSchema");
+const CompeteUser = require("../model/competeTeamSchema");
 const authenticate = require("../middleware/authenticate");
 
 router.route("/getCompete/:url").get(async (req, res) => {
@@ -108,34 +109,26 @@ router.route("/getDraftCompeteNames/:id").get(async (req, res) => {
 
 // Join Competition
 
-// router.route("/joinCompete").post(async (req, res) => {
-//   console.log("body", req.body);
-//   const { url, username } = req.body;
-//   try {
-//     const team = await Team.findOne({ username: username });
-//     if (team.competitions.indexOf(url) === -1) {
-//       team.competitions.push(url);
-//       await team.save();
-//       const leaderboard = new Leaderboard({
-//         compete: url,
-//         name: username,
-//       });
-//       await leaderboard.save();
-//     }
-//     return res
-//       .status(200)
-//       .json({ message: "Competition Joined Successfully!" });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(201).json({ message: "Cannot Join Competition!" });
-//   }
-// });
+router.route("/joinCompete").post(async (req, res) => {
+  try {
+    if (req.body.password != req.body.cpassword) {
+      return res.status(401).json({ error: "Passwords not matched!" });
+    }
+    const competeuser = new CompeteUser(req.body);
+    await competeuser.save();
+    const competition = await Competitions.findById(req.body.competition);
+    competition.participantCount = competition.participantCount + 1;
+    await competition.save()
+    res.status(200).json({ message: "user registered Successfully" });
+  } catch (err) {
+    res.status(400).json({ error: "Internal server error" });
+  }
+});
 
 
 router.route("/editOverview/:id").put(authenticate, async (req, res) => {
   const { id } = req.params;
   const { overview } = req.body;
-  console.log(req.body);
   let compete = await Competitions.findById(id);
   compete.overview = overview;
   await compete.save();
