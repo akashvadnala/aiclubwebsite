@@ -39,7 +39,7 @@ const Leaderboard = ({ props }) => {
                 }
               </div>
             </div>
-            <div className="px-3">
+            <div className="border-top px-3">
               <table className="table table-striped">
                 <thead className="">
                   <tr>

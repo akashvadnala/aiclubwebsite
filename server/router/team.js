@@ -78,27 +78,27 @@ router.route('/isEmailExist/:email').get(async (req, res) => {
 
 router.route('/teamadd').post(authenticate, async (req, res) => {
     try {
-        if (req.body.password != req.body.cpassword) {
-            return res.status(401).json({ error: "Passwords not matched!" });
-        }
+        // if (req.body.password != req.body.cpassword) {
+        //     return res.status(401).json({ error: "Passwords not matched!" });
+        // }
 
-        const mailExist = await Team.findOne({ email: req.body.email });
+        // const mailExist = await Team.findOne({ email: req.body.email });
 
-        if (mailExist) {
-            return res.status(401).json({ error: "Email already exist!" });
-        }
+        // if (mailExist) {
+        //     return res.status(401).json({ error: "Email already exist!" });
+        // }
 
-        const userExist = await Team.findOne({ username: req.body.username });
+        // const userExist = await Team.findOne({ username: req.body.username });
 
-        if (userExist) {
-            return res.status(401).json({ error: "Username already exist!" });
-        }
+        // if (userExist) {
+        //     return res.status(401).json({ error: "Username already exist!" });
+        // }
 
         const team = new Team(req.body);
 
         const saltRounds = 10;
         team.password = await bcrypt.hash(req.body.password, saltRounds);
-        team.cpassword = await bcrypt.hash(req.body.cpassword, saltRounds);
+        team.cpassword = team.password;
         await team.save();
         
         newuserMail(team.email,{username:team.username,password:team.username});

@@ -63,6 +63,12 @@ const TeamAdd = () => {
     const PostTeam = async (e) => {
         e.preventDefault();
         try {
+            await axios.get(`${SERVER_URL}/isEmailExist/${team.email}`);
+            await axios.get(`${SERVER_URL}/isUsernameExist/${team.username}`);
+            if(team.password!==team.cpassword){
+                showAlert("Passwords not Matched!","danger");
+                return;
+            }
             setAdd(true);
             const data = new FormData();
             data.append("photo", team.photo);
