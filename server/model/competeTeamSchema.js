@@ -3,17 +3,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const teamSchema = new mongoose.Schema({
-  competitions: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-    },
-  ],
-  firstname: {
+  competition: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
+  name: {
     type: String,
     required: true,
-  },
-  lastname: {
-    type: String,
   },
   username: {
     type: String,
@@ -26,11 +21,6 @@ const teamSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  competitionsAccess: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-    },
-  ],
   password: {
     type: String,
     required: true,

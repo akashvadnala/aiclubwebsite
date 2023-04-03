@@ -390,21 +390,6 @@ const CreateCompetition = () => {
                   />
                 </div>
               </div>
-              <div className="form-group form-check mt-3 align-items-center">
-                <input
-                  type="checkbox"
-                  name="public"
-                  checked={compete.public}
-                  onChange={(e) => {
-                    setCompete({ ...compete, public: e.target.checked });
-                  }}
-                  className="form-check-input"
-                  id="public"
-                />
-                <label className="form-check-label" htmlFor="public">
-                  Public
-                </label>
-              </div>
               <div className=" text-center">
                 <button type="submit" name="submit" id="submit" className="btn btn-primary my-4" disabled={add}>
                   {add ? <>Creating <i className="fa fa-spinner fa-spin"></i></> : <>Create</>}
