@@ -171,7 +171,7 @@ const Settings = ({ props }) => {
     <>
       {load === 0 ? <Loading /> : load === 1 ?
         <>
-          <div className='host-container py-2'>
+          <div className='settings-container py-2'>
             <div className='card'>
               <div className='card-body pt-0 pb-4'>
                 <div className="text-header  py-4">Settings</div>
@@ -340,44 +340,6 @@ const Settings = ({ props }) => {
                           </button>
                         </div>
                       </div>
-                      {/* <div className="form-group mt-3 row align-items-center">
-                        <div className="col col-2">
-                          Add Non-club Member?
-                        </div>
-                        <div className="col col-7">
-                          <select
-                            name="xauthor"
-                            value={xaccess}
-                            onChange={(e) => setXAccess(e.target.value)}
-                            className="form-select"
-                            aria-label="authors"
-                          >
-                            <option value="">Select Author</option>
-                            {teams.map((t, i) => {
-                              return <option value={t.id} key={i}>{t.name}</option>;
-                            })}
-                          </select>
-                        </div>
-                        <div className="col col-3">
-                          <button
-                            type="reset"
-                            className="btn btn-success"
-                            onClick={AddXAccess}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="20"
-                              height="20"
-                              fill="currentColor"
-                              className="bi bi-plus-circle-fill"
-                              viewBox="0 0 16 18"
-                            >
-                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                            </svg>{" "}
-                            Add
-                          </button>
-                        </div>
-                      </div> */}
                     </div>
                   </div>
                   <div className="form-group mt-3 row align-items-center">
@@ -404,10 +366,9 @@ const Settings = ({ props }) => {
                   </div>
                   <div className="form-group row mt-3 align-items-center">
                     <div className="col-sm-2">Maximum Daily Submissions :</div>
-                    <div type="button" className="btn btn-secondary rounded col-sm-1" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
-                    <input className="form-control col-sm-2" type="number" id="number" value={`${compete.submissionLimit}`} style={{ width: "75px", height: "40px", borderRadius: "5px" }} />
-                    <div type="button" className="btn btn-secondary rounded col-sm-1" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
-                    <div className="col-sm-6">.</div>
+                    <div className="col-sm-10">
+                      <input className="form-control" type="text" id="number" value={`${compete.submissionLimit}`} style={{ width: "75px" }} onChange={(e) => setCompete({ ...compete, submissionLimit: e.target.value })}/>
+                    </div>
                   </div>
                   <div className="form-group row mt-3 align-items-center">
                     <div className="col-sm-2">.</div>
