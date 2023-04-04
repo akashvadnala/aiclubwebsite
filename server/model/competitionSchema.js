@@ -26,7 +26,9 @@ const competitionSchema = new mongoose.Schema(
       default: "Enter competition rules here"
     },
     evaluation:{
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Evaluations",
+      default: null
     },
     headerPhoto: {
       type: String,

@@ -33,6 +33,7 @@ app.use('/api/v1/blogs',require('./router/blogs'));
 app.use("/api/v1/",require('./router/leaderboard'));
 app.use("/api/v1/",require('./router/projects'));
 app.use("/api/v1/",require('./router/about'));
+app.use("/api/v1/",require('./router/evaluations'));
 app.use('/api/v1/events',require('./router/events'));
 app.use('/api/v1/gallery',require('./router/gallery'));
 app.use("/api/v1/",require('./router/subscribe'));

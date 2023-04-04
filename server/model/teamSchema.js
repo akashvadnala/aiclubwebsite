@@ -8,16 +8,6 @@ const teamSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
     },
   ],
-  blogs: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-    },
-  ],
-  competitions: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-    },
-  ],
   firstname: {
     type: String,
     required: true,

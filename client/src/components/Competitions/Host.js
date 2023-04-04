@@ -71,8 +71,8 @@ const Host = ({ props }) => {
                             </div>
                             <div className='card-body pt-0 pb-0'>
                                 <div className="row">
-                                    <div className="col-lg-3"><HostHeader props={props} hpath={hpath} /></div>
-                                    <div className="col-lg-9">{page}</div>
+                                    <div className="col-lg-2"><HostHeader props={props} hpath={hpath} /></div>
+                                    <div className="col-lg-10">{page}</div>
                                 </div>
                             </div>
                         </div>

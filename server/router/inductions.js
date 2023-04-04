@@ -51,7 +51,7 @@ router.route("/addcompetitions").post(authenticate, async (req, res) => {
 router.route('/updateCompetetion/:id').put(authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-
+    console.log("serverSide Id",id, req.body);
     const updateddata = await Competitions.findByIdAndUpdate(id, req.body, {
       new: true
     });
@@ -59,6 +59,7 @@ router.route('/updateCompetetion/:id').put(authenticate, async (req, res) => {
     console.log('Competition Updated!');
     res.status(200).json();
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: "Somthing went wrong!" });
   }
 })
@@ -142,14 +143,7 @@ router.route("/deleteCompete/:id").post(async (req, res) => {
   if (compete) {
     const competeid = compete._id;
     await Competitions.findByIdAndDelete(id);
-    const leaderboard = await Leaderboard.find({ compete: competeid });
-    await Promise.all(
-      leaderboard.map(async (l) => {
-        const team = await Team.findById(l);
-        team.competitions.filter((t) => t !== competeid);
-        await team.save();
-      })
-    );
+    await Leaderboard.findOneAndDelete({ compete: competeid });
     return res
       .status(200)
       .json({ message: "Competition Deleted Successfully!" });
