@@ -98,17 +98,17 @@ const EditProject = () => {
 
   const handleUrl = (e) => {
     let value = e.target.value;
-    let url="";
-    for(let i=0;i<value.length;i++){
+    let url = "";
+    for (let i = 0; i < value.length; i++) {
       const c = value[i];
-      if(("a"<=c && c<="z") || ("A"<=c && c<="Z") || ("0"<=c && c<="9") || c==="-" || c==='_'){
-        url+=c;
+      if (("a" <= c && c <= "z") || ("A" <= c && c <= "Z") || ("0" <= c && c <= "9") || c === "-" || c === '_') {
+        url += c;
       }
-      else{
-        showAlert("Special Characters are not allowed except '-' and '_'","danger");
+      else {
+        showAlert("Special Characters are not allowed except '-' and '_'", "danger");
       }
     }
-    setProj({...proj,url:url});
+    setProj({ ...proj, url: url });
   }
 
   const removeXAuthor = (author) => {
@@ -182,11 +182,8 @@ const EditProject = () => {
       setAdd(true);
 
       if (Img) {
-        await axios.post(
-          `${SERVER_URL}/imgdelete`,
-          {
-            url: proj.cover,
-          },
+        await axios.delete(`${SERVER_URL}/imgdelete`,
+          { url: proj.cover },
           {
             withCredentials: true,
             headers: { "Content-Type": "application/json" },

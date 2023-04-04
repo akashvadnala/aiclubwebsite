@@ -71,10 +71,10 @@ const TeamUpdate = () => {
     const UpdateTeam = async (e) => {
         e.preventDefault();
         try {
-            if(teamCopy.username!==team.username){
+            if (teamCopy.username !== team.username) {
                 await axios.get(`${SERVER_URL}/isUsernameExist/${team.username}`);
             }
-            if(teamCopy.email!==team.email){
+            if (teamCopy.email !== team.email) {
                 await axios.get(`${SERVER_URL}/isEmailExist/${team.email}`);
             }
             setSubmit(true);
@@ -83,14 +83,14 @@ const TeamUpdate = () => {
                 const data = new FormData();
                 data.append("photo", Img);
 
-                await axios.post(`${SERVER_URL}/imgdelete`,
+                await axios.delete(`${SERVER_URL}/imgdelete`,
                     { 'url': team.photo },
                     {
-                        withCredentials:true,
+                        withCredentials: true,
                         headers: { "Content-Type": "application/json" },
                     });
 
-                const img = await axios.post(`${SERVER_URL}/imgupload`, data,{withCredentials:true});
+                const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
                 team.photo = img.data;
             }
             if (team.year > y) {
@@ -176,9 +176,9 @@ const TeamUpdate = () => {
     return (
         <>
             {load === 0 ? <Loading /> : load === 1 ?
-                <div className='profile-update-container'>
+                <div className='profile-update-container pb-4'>
                     <div className='profile-update adjust'>
-                        <h3>You are editing '{username}' profile</h3>
+                        <div className='text-header py-4'>You are editing '{username}' profile</div>
                         <form method='POST' encType='multipart/form-data'>
                             {
                                 forms.map((f) => {
@@ -237,16 +237,9 @@ const TeamUpdate = () => {
                                     :
                                     null
                             }
-                            {
-                                submit ?
-                                    <button type="submit" name="submit" id="submit" className="btn btn-primary" disabled>
-                                        Updating <i className="fa fa-spinner fa-spin"></i>
-                                    </button>
-                                    :
-                                    <button type="submit" name="submit" id="submit" onClick={UpdateTeam} className="btn btn-primary">
-                                        Update
-                                    </button>
-                            }
+                            <button type="submit" name="submit" id="submit" onClick={UpdateTeam} className="btn btn-primary mt-4" disabled={submit}>
+                                {submit ? <>Updating <i className="fa fa-spinner fa-spin"></i></> : <>Update</>}
+                            </button>
                         </form>
                     </div>
                 </div>

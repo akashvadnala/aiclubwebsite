@@ -28,8 +28,9 @@ const teamSchema = new mongoose.Schema({
   cpassword: {
     type: String,
     required: true,
-  },
+  }
 });
+
 
 const CompeteTeam = mongoose.model("CompeteTeam", teamSchema);
 

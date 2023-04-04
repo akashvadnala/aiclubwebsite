@@ -1,11 +1,13 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { alertContext } from "../../Context/Alert";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import CompeteLogin from "../Navbar/CompeteLogin";
 import "./Competitions.css";
 
 const InductionsHeader = ({ props }) => {
+  const { showAlert } = useContext(alertContext);
   let keys;
   if (props.access) {
     keys = {
@@ -20,9 +22,11 @@ const InductionsHeader = ({ props }) => {
     };
   }
 
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUsername] = useState(localStorage.getItem("CompeteUsername"));
+  const [password, setPassword] = useState(localStorage.getItem("CompetePassword"));
+  const [competeFile, setCompeteFile] = useState(null);
   const [signin, setsignin] = useState(false);
+  const [submitLoading,setSubmitLoading] = useState(false);
   const [msg, setMsg] = useState();
   const [competeUser, setCompeteUser] = useState({
     competition: props.c._id,
@@ -37,7 +41,7 @@ const InductionsHeader = ({ props }) => {
   const joinCompete = async (e) => {
     e.preventDefault()
     try {
-      axios
+      await axios
         .post(`${SERVER_URL}/joinCompete`, competeUser)
         .then((res) => {
           if (res.status === 200) {
@@ -47,9 +51,24 @@ const InductionsHeader = ({ props }) => {
           }
         });
     } catch (err) {
+      showAlert(err.response.data.error, "danger");
       console.log(err);
     }
   };
+console.log('competeFile',competeFile)
+  const submitCompete = async (e) => {
+    e.preventDefault();
+    try {
+      setSubmitLoading(true);
+      localStorage.setItem("CompeteUsername", username);
+      localStorage.setItem("CompetePassword", password);
+      // await axios.post(`${SERVER_URL}/submitCompeteFile`)
+    } catch (err) {
+      showAlert("Something went wrong!", "danger");
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <div className="card">
@@ -102,8 +121,8 @@ const InductionsHeader = ({ props }) => {
                   )}
                 </NavLink>
               } */}
-              <button className="btn btn-sm btn-outline-dark m-1" data-bs-toggle="modal" data-bs-target="#FilesSubmitModal">Submit</button>
-              <button className="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#RegisterModal">Join Competition</button>
+              <button className="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#FilesSubmitModal">Submit</button>
+              <button className="btn btn-sm btn-outline-dark ml-2" data-bs-toggle="modal" data-bs-target="#RegisterModal">Join Competition</button>
             </div>
           </div>
         </div>
@@ -147,30 +166,26 @@ const InductionsHeader = ({ props }) => {
                     </div>
                   </div>
                   <div className="form-group mb-3 text-start">
-                    {/* <label htmlFor="file-input">
-                        <span className='input_label'>Product Images</span>
-                        <div>Choose File</div>
-                      </label> */}
                     <div>
                       <input type='file'
                         accept="image/*"
                         name="photo"
-                        onChange={(e) => { }}
+                        onChange={(e) => setCompeteFile(e.target.files[0])}
                         className="form-control rounded-pill py-2 px-4"
                         id='file-input'
                         aria-describedby='photo'
                         required
                         hidden />
-                      <label htmlFor="file-input" className="form-control rounded-pill py-2 px-4 mb-4 text-muted">Choose File</label>
+                      <label htmlFor="file-input" className={`form-control rounded-pill py-2 px-4 mb-4 ${!competeFile?"text-muted":"text-dark"}`}>{competeFile?competeFile.name:<>Choose File</>}</label>
                     </div>
                   </div>
                   <button
                     type="submit"
                     className="btn btn-primary w-100 py-2 px-4"
-                    // onClick={Login}
-                    disabled={signin}
+                    onClick={submitCompete}
+                    disabled={submitLoading}
                   >
-                    {signin ? <>Submitting<i className="fa fa-spinner fa-spin"></i></> : <>Submit</>}
+                    {submitLoading ? <>Submitting <i className="fa fa-spinner fa-spin"></i></> : <>Submit</>}
                   </button>
                 </form>
               </div>

@@ -129,7 +129,7 @@ const Settings = ({ props }) => {
         const data = new FormData();
         data.append("photo", Img);
 
-        await axios.post(`${SERVER_URL}/imgdelete`,
+        await axios.delete(`${SERVER_URL}/imgdelete`,
           { 'url': compete.headerPhoto },
           {
             withCredentials: true,
