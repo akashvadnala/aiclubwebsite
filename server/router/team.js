@@ -44,7 +44,7 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
     }
 });
 
-router.route('/imgdelete').post(authenticate, async (req, res) => {
+router.route('/imgdelete').delete(authenticate, async (req, res) => {
     try {
         const url = req.body.url;
         const key = url.split('=')[2];

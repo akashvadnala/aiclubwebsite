@@ -178,7 +178,6 @@ router.route("/getBlogEdit/:url").get(async (req, res) => {
 
 router.route("/deleteBlog/:id").delete(authenticate, async (req, res) => {
   const { id } = req.params;
-
   try {
     const blog = await Blog.findById(id);
     if (blog) {
