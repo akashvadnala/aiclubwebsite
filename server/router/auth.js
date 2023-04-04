@@ -161,30 +161,33 @@ router.route("/userExist/:username").get(async (req, res) => {
 });
 
 router.post("/forgot-password", async (req, res) => {
-    const { username } = req.body;
-    var oldUser = await Team.findOne({ username: username });
-    var email;
-    if (!oldUser) {
-        oldUser = await Team.findOne({ email: username });
-        email = username;
-        if (!oldUser) {
-            return res.status(401).json({ error: "User Not Exists!!" });
-        }
-    } else {
-        email = oldUser.email;
-    }
-    oldUser.canChangePassword = true;
-    await oldUser.save();
+    console.log("forgot password called!")
+    
     try {
+        const { username } = req.body;
+        var oldUser = await Team.findOne({ username: username });
+        var email;
+        if (!oldUser) {
+            oldUser = await Team.findOne({ email: username });
+            email = username;
+            if (!oldUser) {
+                return res.status(401).json({ error: "User Not Exists!!" });
+            }
+        } else {
+            email = oldUser.email;
+        }
+        oldUser.canChangePassword = true;
+        await oldUser.save();
         const token = await oldUser.generateForgetPasswordToken();
         const link = `${CLIENT_URL}/reset-password/${oldUser._id}/${token}`;
         const content = {
             link: link,
             contact: "aiclubnitc",
         }
-        passwordResetMail(email, content);
+        passwordResetMail(content);
         res.status(200).send({ msg: "Mail sent successfully" });
     } catch (error) {
+        console.log(error)
         res.status(400).send({ error: "There is a problem in the server" });
     }
 });

@@ -20,11 +20,12 @@ const Footer = () => {
     }
 
     try {
-      await axios.post(`${SERVER_URL}/subscribe`, data);
+      const res = await axios.post(`${SERVER_URL}/subscribe`, data);
+      showAlert(`${res.data.msg}`, "success");
     } catch (error) {
       console.log(error);
+      showAlert(`${error.response.data.error}`, "danger");
     }
-    showAlert("Subscribed Successfully", "success");
     setName('');
     setEmail('');
     return;

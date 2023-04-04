@@ -25,7 +25,7 @@ router.route('/subscribe').post(async (req,res)=> {
                 res.status(200).json({'msg':`${name} subscribed sucessfully`});
             }
             else{
-                res.status(400).json({'msg':"Not a valid mail Id"});
+                res.status(400).json({'error':"Not a valid mail Id"});
             }
         }else{
             console.log("Already a subscriber")
@@ -34,7 +34,7 @@ router.route('/subscribe').post(async (req,res)=> {
         
     } catch (error) {
         console.log(`subscription error - ${error}`);
-        res.status(400).json({'msg':'Problem at the server. Try again after some time'});
+        res.status(400).json({'error':'Problem at the server. Try again after some time'});
     }   
 });
 
