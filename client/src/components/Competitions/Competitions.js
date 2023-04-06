@@ -8,13 +8,16 @@ import { Helmet } from "react-helmet";
 import Loading from "../Loading";
 import Error from "../Error";
 import CompetitionSpace from "./CompetitionSpace";
+import { alertContext } from "../../Context/Alert";
 
 const Competitions = () => {
   const { user } = useContext(Context);
+  const { showAlert } = useContext(alertContext);
   const [competitions, setCompetitions] = useState([]);
   const [load, setLoad] = useState(0);
   const [competeUser, setCompeteUser] = useState();
   const [signin, setsignin] = useState(false);
+  const [signInOrSignUp, setSignInOrSignUp] = useState(true);  //true->sign,false->signup for join competition modal
   const [msg, setMsg] = useState();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -53,9 +56,11 @@ const Competitions = () => {
         setCompeteUser(data.data);
       })
   }
+
   useEffect(() => {
     getCompeteUserData();
   }, [])
+
   const Login = async (e) => {
     e.preventDefault();
     setMsg("");
@@ -69,7 +74,10 @@ const Competitions = () => {
         },
         { withCredentials: true }
       ).then((res) => {
-        window.location.reload(true);
+        // window.location.reload(true);
+        document.getElementById("modalClose").click();
+        setCompeteUser(res.data);
+        showAlert("Logged in Successfully!", "success");
       }).catch((err) => {
         console.log(err);
         setMsg(err.response.data.error);
@@ -82,32 +90,29 @@ const Competitions = () => {
       const res = await axios.get(`${SERVER_URL}/competeLogout`, {
         withCredentials: true,
       });
+      setCompeteUser(null);
     } catch (err) {
       console.log("Unable to logout..");
     }
-    window.location.reload(true);
+    // window.location.reload(true);
   };
 
-  // const Login = async (e) => {
-  //   e.preventDefault();
-  //   setMsg("");
-  //   setsignin(true);
-  //   await axios
-  //     .post(
-  //       `${SERVER_URL}/competeLogin`,
-  //       {
-  //         username: username,
-  //         password: password,
-  //       },
-  //       { withCredentials: true }
-  //     ).then((res) => {
-  //       window.location.reload(true);
-  //     }).catch((err) => {
-  //       console.log(err);
-  //       setMsg(err.response.data.error);
-  //       setsignin(false);
-  //     });
-  // };
+
+  const joinCompete = async (e) => {
+    e.preventDefault()
+    try {
+      await axios.post(`${SERVER_URL}/competeUseradd`, competeUserForSignup,
+        { withCredentials: true })
+        .then((res) => {
+          showAlert("Logged in Successfully!", "success");
+          setCompeteUser(res.data);
+        });
+      document.getElementById("modalClose").click();
+    } catch (err) {
+      showAlert(err.response.data.error, "danger");
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -141,9 +146,9 @@ const Competitions = () => {
                   <button
                     rel="noreferrer"
                     data-bs-toggle="modal" data-bs-target="#CompeteLoginModal"
-                    className="btn btn-sm hover-underline text-primary rounded-pill"
+                    className="btn btn-sm rounded-pill"
                   >
-                    Login/Register Here for Competitions
+                    Login/Register
                   </button>
                 }
                 {user && user.competitionsAccess.length ? (
@@ -196,108 +201,164 @@ const Competitions = () => {
             <h4 className="text-center">Join Competition</h4>
             <div className="modal-body">
               {msg ? <div className="alert alert-danger">{msg}</div> : null}
-              <div className="login-container">
+              <div className="login-container text-center">
 
-                <form method="POST" encType="multipart/form-data">
-                  <div className="form-group mb-3 text-start">
-                    <div>
-                      <input
-                        type="text"
-                        name="name"
-                        value={competeUserForSignup.name}
-                        onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "name": e.target.value })}
-                        className="form-control py-2 px-4 rounded-pill"
-                        id="name"
-                        aria-describedby="name"
-                        placeholder="Enter Full Name"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group mb-3 text-start">
-                    <div>
-                      <input
-                        type="text"
-                        name="username"
-                        value={competeUserForSignup.username}
-                        onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "username": e.target.value })}
-                        className="form-control py-2 px-4 rounded-pill"
-                        id="username2"
-                        aria-describedby="username"
-                        placeholder="Enter Username"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group mb-3 text-start">
-                    <div>
-                      <input
-                        type="text"
-                        name="phone"
-                        value={competeUserForSignup.phone}
-                        onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "phone": e.target.value })}
-                        className="form-control py-2 px-4 rounded-pill"
-                        id="phone"
-                        aria-describedby="phone"
-                        placeholder="Enter Phone Number"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group mb-3 text-start">
-                    <div>
-                      <input
-                        type="text"
-                        name="email"
-                        value={competeUserForSignup.email}
-                        onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "email": e.target.value })}
-                        className="form-control py-2 px-4 rounded-pill"
-                        id="email"
-                        aria-describedby="username"
-                        placeholder="Enter EMail ID"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group mb-3 text-start">
-                    <div>
-                      <input
-                        type="password"
-                        name="password"
-                        value={competeUserForSignup.password}
-                        onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "password": e.target.value })}
-                        className="form-control rounded-pill py-2 px-4"
-                        id="password2"
-                        aria-describedby="password"
-                        placeholder="Enter Passcode"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group mb-3 text-start">
-                    <div>
-                      <input
-                        type="password"
-                        name="cpassword"
-                        value={competeUserForSignup.cpassword}
-                        onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "cpassword": e.target.value })}
-                        className="form-control rounded-pill py-2 px-4"
-                        id="cpassword"
-                        aria-describedby="cpassword"
-                        placeholder="Confirm Passcode"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="submit"
-                    className="btn btn-primary w-100 py-2 px-4"
-                    disabled={signin}
-                    // onClick={joinCompete}
-                  >
-                    {signin ? <>Submitting<i className="fa fa-spinner fa-spin"></i></> : <>Submit</>}
-                  </button>
-                </form>
+                {
+                  signInOrSignUp ?
+                    <>
+                      <form method="POST">
+                        <div className="form-group mb-3 text-start">
+                          {/* <label for="username" className="pb-1">
+                  Username/Email :
+                </label> */}
+                          <div>
+                            <input
+                              type="text"
+                              name="username"
+                              value={username}
+                              onChange={(e) => setUsername(e.target.value)}
+                              className="form-control py-2 px-4 rounded-pill"
+                              id="username"
+                              aria-describedby="username"
+                              placeholder="Enter Username or EMail ID"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group mb-3 text-start">
+                          {/* <label for="password" className="pb-1">
+                  Password :
+                </label> */}
+                          <div>
+                            <input
+                              type="password"
+                              name="password"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                              className="form-control rounded-pill py-2 px-4 mb-4"
+                              id="password"
+                              aria-describedby="password"
+                              placeholder="Enter Password"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="submit"
+                          className="btn btn-primary w-100 mb-4 py-2 px-4"
+                          onClick={Login}
+                          disabled={signin}
+                        >
+                          {signin ? <>Signing in <i className="fa fa-spinner fa-spin"></i></> : <>Sign in</>}
+                        </button>
+                      </form>
+                      Not Yet Register?<button className="btn btn-sm text-primary" onClick={() => setSignInOrSignUp(false)}>Register Now</button>
+                    </>
+                    :
+                    <>
+                      <form method="POST" encType="multipart/form-data">
+                        <div className="form-group mb-3 text-start">
+                          <div>
+                            <input
+                              type="text"
+                              name="name"
+                              value={competeUserForSignup.name}
+                              onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "name": e.target.value })}
+                              className="form-control py-2 px-4 rounded-pill"
+                              id="name"
+                              aria-describedby="name"
+                              placeholder="Enter Full Name"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group mb-3 text-start">
+                          <div>
+                            <input
+                              type="text"
+                              name="username"
+                              value={competeUserForSignup.username}
+                              onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "username": e.target.value })}
+                              className="form-control py-2 px-4 rounded-pill"
+                              id="username2"
+                              aria-describedby="username"
+                              placeholder="Enter Username"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group mb-3 text-start">
+                          <div>
+                            <input
+                              type="text"
+                              name="phone"
+                              value={competeUserForSignup.phone}
+                              onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "phone": e.target.value })}
+                              className="form-control py-2 px-4 rounded-pill"
+                              id="phone"
+                              aria-describedby="phone"
+                              placeholder="Enter Phone Number"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group mb-3 text-start">
+                          <div>
+                            <input
+                              type="text"
+                              name="email"
+                              value={competeUserForSignup.email}
+                              onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "email": e.target.value })}
+                              className="form-control py-2 px-4 rounded-pill"
+                              id="email"
+                              aria-describedby="username"
+                              placeholder="Enter EMail ID"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group mb-3 text-start">
+                          <div>
+                            <input
+                              type="password"
+                              name="password"
+                              value={competeUserForSignup.password}
+                              onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "password": e.target.value })}
+                              className="form-control rounded-pill py-2 px-4"
+                              id="password2"
+                              aria-describedby="password"
+                              placeholder="Enter Passcode"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group mb-3 text-start">
+                          <div>
+                            <input
+                              type="password"
+                              name="cpassword"
+                              value={competeUserForSignup.cpassword}
+                              onChange={(e) => setCompeteUserForSignup({ ...competeUserForSignup, "cpassword": e.target.value })}
+                              className="form-control rounded-pill py-2 px-4"
+                              id="cpassword"
+                              aria-describedby="cpassword"
+                              placeholder="Confirm Passcode"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="submit"
+                          className="btn btn-primary w-100 mb-4 py-2 px-4"
+                          disabled={signin}
+                        onClick={joinCompete}
+                        >
+                          {signin ? <>Submitting<i className="fa fa-spinner fa-spin"></i></> : <>Submit</>}
+                        </button>
+                      </form>
+                      Already Registered?<button className="btn btn-sm text-primary" onClick={() => setSignInOrSignUp(true)}>Login</button>
+                    </>
+                }
                 <button type="reset" id="modalClose" className="btn btn-sm" data-bs-dismiss="modal" hidden>Close</button>
 
               </div>

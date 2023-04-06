@@ -82,7 +82,7 @@ router.post("/competeLogin", async (req, res, next) => {
                         sameSite: "none"
                     });
                 }
-                return res.status(200).json({ message: "User Signin Successfully" });
+                return res.status(200).json(team);
             }
         });
     } catch (err) {

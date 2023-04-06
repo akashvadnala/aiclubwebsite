@@ -122,6 +122,9 @@ router.route("/joinCompeteAsUser/:competeid/:userid").put(async (req, res) => {
       team: userid
     })
     await leaderboard.save();
+    let compete = await Competitions.findById(competeid);
+    compete.participantCount +=1;
+    await compete.save();
   }
   res.status(200).json();
 })
