@@ -2,3 +2,5 @@
 **/config.env
 **/uploads
 **/volume
+**/__pycache__/
+**/venv/
