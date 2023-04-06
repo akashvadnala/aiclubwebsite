@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "../../EditableStuff/Config";
+import { json } from "react-router-dom";
 const Leaderboard = ({ props }) => {
   const [lb, setLB] = useState([]);
   const [count, setCount] = useState(1);
@@ -8,9 +9,7 @@ const Leaderboard = ({ props }) => {
     try {
       axios.get(`${SERVER_URL}/getLeaderboard/${props.c._id}`)
         .then(data => {
-          if (data.status === 200) {
             setLB(data.data);
-          }
         });
     } catch (err) {
       console.log(err);
@@ -56,10 +55,10 @@ const Leaderboard = ({ props }) => {
                       return (
                         <tr>
                           <th scope="row">{index + 1}</th>
-                          <th>{l.name}</th>
-                          <th>{l.score}</th>
-                          <th>{l.submissions}</th>
-                          <th>{l.last}</th>
+                          <th>{l.team}</th>
+                          <th>{l.maxPublicScore['$numberDecimal'].toLocaleString()}</th>
+                          <th>{l.numSubmissions}</th>
+                          <th>{l.updatedAt}</th>
                         </tr>
                       )
                     })

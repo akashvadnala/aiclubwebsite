@@ -1,31 +1,27 @@
 const mongoose = require('mongoose');
 
-const leaderboardSchema = new mongoose.Schema({
-    compete:{
+const leaderBoardSchema = new mongoose.Schema({
+    compete: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Competitions",
     },
-    description: {
-        type: String
-    },
-    name:{
-        type: String,
-        required:true
-    },
-    team:[{
+    team: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Team"
-    }],
-    score:{
-        type: mongoose.Schema.Types.Decimal128
+        ref: "CompeteTeam"
     },
-    submissions:{
-        type: Number
+    maxPublicScore: {
+        type: mongoose.Schema.Types.Decimal128,
+        default:0
     },
-    last:{
-        type: Date
+    maxPrivateScore: {
+        type: mongoose.Schema.Types.Decimal128,
+        default:0
     },
-});
+    numSubmissions: {
+        type: Number,
+        default:0
+    }
+}, { timestamps: true });
 
-module.exports = mongoose.model('Leaderboard',leaderboardSchema);
+module.exports = mongoose.model('LeaderBoard', leaderBoardSchema);

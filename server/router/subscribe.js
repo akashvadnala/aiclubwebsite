@@ -17,12 +17,11 @@ router.route('/subscribe').post(async (req,res)=> {
         if(checkSubscription.length === 0){
             if(validateEmail(data.email)){
                 const subscriber = new Subscribe(data);
-                const name = subscriber.name;
                 await subscriber.save();
                 let text = `Hello ${data.name}, Thanks for subscribing for Latest Updates from AI CLUB NITC`;
                 welcomeMail(data.email);
                 console.log("mailcalled");
-                res.status(200).json({'msg':`${name} subscribed sucessfully`});
+                res.status(200).json({'msg':`subscribed sucessfully`});
             }
             else{
                 res.status(400).json({'error':"Not a valid mail Id"});

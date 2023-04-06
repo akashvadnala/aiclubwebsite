@@ -111,7 +111,7 @@ function TeamLogin(props) {
                 onClick={Login}
                 disabled={signin}
               >
-                {signin?<>Signing in<i className="fa fa-spinner fa-spin"></i></>:<>Sign in</>}
+                {signin?<>Signing in <i className="fa fa-spinner fa-spin"></i></>:<>Sign in</>}
               </button>
             </form>
             <button
@@ -150,7 +150,7 @@ function TeamLogin(props) {
                 type="submit"
                 className="cust btn btn-primary w-100 mb-4 py-2 px-4"
               >
-                Reset Password{
+                Reset Password {
                   showSpinner && <i className="fa fa-spinner fa-spin"></i>
                 }
               </button>
