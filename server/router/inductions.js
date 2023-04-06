@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Competitions = require("../model/competitionSchema");
-const Leaderboard = require("../model/leaderboardSchema");
+const Leaderboard = require("../model/leaderBoardSchema");
 const Team = require("../model/teamSchema");
 const CompeteUser = require("../model/competeTeamSchema");
 const authenticate = require("../middleware/authenticate");
@@ -51,7 +51,7 @@ router.route("/addcompetitions").post(authenticate, async (req, res) => {
 router.route('/updateCompetetion/:id').put(authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("serverSide Id",id, req.body);
+    console.log("serverSide Id", id, req.body);
     const updateddata = await Competitions.findByIdAndUpdate(id, req.body, {
       new: true
     });
@@ -91,24 +91,11 @@ router.route("/getDraftCompeteNames/:id").get(async (req, res) => {
   }
 });
 
-
-// router.route("/isJoined/:url/:username").get(async (req, res) => {
-//   const { url, username } = req.params;
-//   let joined = false;
-//   try {
-//     const team = await Team.findOne({ username: username });
-//     if (team) {
-//       if (team.competitions.indexOf(url) > -1) {
-//         joined = true;
-//       }
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-//   return res.status(200).json(joined);
-// });
-
-// Join Competition
+router.route("/isJoined/:competeid/:userid").get(async (req, res) => {
+  const { competeid, userid } = req.params;
+  let leaderboard = await Leaderboard.findOne({ compete: competeid, team: userid });
+  return res.status(200).json(leaderboard?true:false);
+});
 
 router.route("/joinCompete").post(async (req, res) => {
   try {
@@ -126,6 +113,18 @@ router.route("/joinCompete").post(async (req, res) => {
   }
 });
 
+router.route("/joinCompeteAsUser/:competeid/:userid").put(async (req, res) => {
+  const { competeid, userid } = req.params;
+  let leaderboard = await Leaderboard.findOne({ compete: competeid, team: userid });
+  if (!leaderboard) {
+    leaderboard = new Leaderboard({
+      compete: competeid,
+      team: userid
+    })
+    await leaderboard.save();
+  }
+  res.status(200).json();
+})
 
 router.route("/editOverview/:id").put(authenticate, async (req, res) => {
   const { id } = req.params;

@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 let path = require("path");
 const authenticate = require("../middleware/authenticate");
 const competeAuthenticate = require("../middleware/competeAuthenticate");
-const Leaderboard = require("../model/leaderboardSchema");
+const Leaderboard = require("../model/userSubmissionSchema");
 const Team = require("../model/teamSchema");
 const CompeteTeam = require("../model/competeTeamSchema");
 const { passwordResetMail } = require("../controllers/mail");
@@ -81,15 +81,6 @@ router.post("/competeLogin", async (req, res, next) => {
                         secure: true,
                         sameSite: "none"
                     });
-                    if (team.competitions.indexOf(compete) === -1) {
-                        const leaderboard = new Leaderboard({
-                            compete: compete,
-                            name: team.username,
-                        });
-                        await leaderboard.save();
-                        team.competitions.push(compete);
-                        await team.save();
-                    }
                 }
                 return res.status(200).json({ message: "User Signin Successfully" });
             }
@@ -101,32 +92,41 @@ router.post("/competeLogin", async (req, res, next) => {
 
 router.route('/competeUseradd').post(async (req, res) => {
     try {
+        console.log(req.body)
         if (req.body.password != req.body.cpassword) {
             return res.status(401).json({ error: "Passwords not matched!" });
         }
 
-        const mailExist = await Team.findOne({ email: req.body.email });
+        const mailExist = await CompeteTeam.findOne({ email: req.body.email });
 
         if (mailExist) {
             return res.status(401).json({ error: "Email already exist!" });
         }
 
-        const userExist = await Team.findOne({ username: req.body.username });
+        const userExist = await CompeteTeam.findOne({ username: req.body.username });
 
         if (userExist) {
             return res.status(401).json({ error: "Username already exist!" });
         }
 
-        const team = new Team(req.body);
+        const team = new CompeteTeam(req.body);
 
         const saltRounds = 10;
         team.password = await bcrypt.hash(req.body.password, saltRounds);
-        team.cpassword = await bcrypt.hash(req.body.cpassword, saltRounds);
+        team.cpassword = team.password;
         await team.save();
+        console.log('team',team);
+        token = await team.generateAuthToken();
+        res.cookie("competejwtoken", token, {
+            // jwtoken->name
+            expires: new Date(Date.now() + 258920000000), //30 days
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        });
         
-        newuserMail(team.email,{username:team.username,password:team.username});
         console.log(`${team.username} user registered successfully`);
-        res.status(200).json({ message: "user Login Successfully" });
+        res.status(200).json(team);
 
     } catch (err) {
         res.status(400).json({ error: "Internal server error" });
@@ -162,7 +162,7 @@ router.route("/userExist/:username").get(async (req, res) => {
 
 router.post("/forgot-password", async (req, res) => {
     console.log("forgot password called!")
-    
+
     try {
         const { username } = req.body;
         var oldUser = await Team.findOne({ username: username });
@@ -200,6 +200,21 @@ router.get('/logout', authenticate, async (req, res) => {
         await user.save();
     }
     res.cookie('jwtoken', "", {
+        expires: new Date(Date.now() + 258920000000), //30 days
+        httpOnly: true,
+        secure: true,
+        sameSite: "none"
+    });
+    res.status(200).send({ msg: 'Logged Out Succesfully' });
+});
+
+router.get('/competeLogout', competeAuthenticate, async (req, res) => {
+    const user = req.rootUser;
+    if (user) {
+        user.tokens = user.tokens.filter(to => to === user.tokens.find(t => t.token === req.token));
+        await user.save();
+    }
+    res.cookie('competejwtoken', "", {
         expires: new Date(Date.now() + 258920000000), //30 days
         httpOnly: true,
         secure: true,
