@@ -15,6 +15,14 @@ app = Celery(
 def add(task):
     print('ok')
         
-@app.task(name="tasks.run_preprocess")
+@app.task(bind=True,autoretry_for=(Exception,),retry_kwargs={"max_retries":7,"countdown":5}, name="tasks.run_preprocess")
 def run_preprocess(application_id):
-    print(application_id)
+    print("application_id",application_id)
+    
+@app.task(name="tasks.privateDataSet")
+def privateDataSet(competeid):
+    print('compete',competeid)
+    
+@app.task(name="tasks.publicDataSet")
+def publicDataSet(competeid):
+    print('compete',competeid)

@@ -123,7 +123,7 @@ const InductionsHeader = ({ props }) => {
 
   const joinCompeteAsUser = async () => {
     // console.log('props',props.c._id)
-    await axios.put(`${SERVER_URL}/joinCompeteAsUser/${props.c._id}/${competeUser._id}`);
+    await axios.put(`${SERVER_URL}/joinCompeteAsUser/${props.c._id}/${competeUser._id}`,{withCredentials:true});
     setIsUserJoined(true);
     setParticipantCount(participantCount + 1);
     showAlert("Joined Competition Successfully!", "success");
@@ -139,9 +139,9 @@ const InductionsHeader = ({ props }) => {
     data.append("team", competeUser._id);
     console.log('data', competeFile);
     try {
-      await axios.post(`${SERVER_URL}/submitCompeteFile`, data)
+      await axios.post(`${SERVER_URL}/submitCompeteFile`, data,{withCredentials:true})
         .then(res => {
-          document.getElementById("modalClose").click();
+          document.getElementById("submitModalClose").click();
           setCompeteFile("");
           showAlert('File submitted successfully. Evaluation may take sometime..', "success");
         })
@@ -247,7 +247,7 @@ const InductionsHeader = ({ props }) => {
                     {submitLoading ? <>Submitting <i className="fa fa-spinner fa-spin"></i></> : <>Submit</>}
                   </button>
                 </form>
-                <button type="reset" id="modalClose" className="btn btn-sm" data-bs-dismiss="modal" hidden>Close</button>
+                <button type="reset" id="submitModalClose" className="btn btn-sm" data-bs-dismiss="modal" hidden>Close</button>
               </div>
             </div>
 
@@ -266,7 +266,6 @@ const InductionsHeader = ({ props }) => {
                     <div className="text-center">
                       <h6 className="mb-4">Join as "{competeUser.username}"</h6>
                       <button type="button" className="btn btn-success" onClick={joinCompeteAsUser}>Join</button>
-                      <button type="reset" id="modalClose" className="btn btn-sm" data-bs-dismiss="modal" hidden>Close</button>
                     </div>
                     :
                     signInOrSignUp ?
@@ -416,10 +415,9 @@ const InductionsHeader = ({ props }) => {
                           </button>
                         </form>
                         Already Registered?<button className="btn btn-sm text-primary" onClick={() => setSignInOrSignUp(true)}>Login</button>
-
-                        <button type="reset" id="modalClose" className="btn btn-sm" data-bs-dismiss="modal" hidden>Close</button>
                       </>
                 }
+                <button type="reset" id="modalClose" className="btn btn-sm" data-bs-dismiss="modal" hidden>Close</button>
               </div>
             </div >
           </div >
