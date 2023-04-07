@@ -23,6 +23,7 @@ app.use(cors({
 }));
 // app.use(cors({ credentials: true, origin: "*" }));
 app.use('/api/v1/uploads',express.static(path.resolve('uploads')));
+app.use('/api/v1/EvaluationFiles',express.static(path.resolve('EvaluationFiles')));
 // console.log('dir',path.resolve('uploads'));
 
 //routes

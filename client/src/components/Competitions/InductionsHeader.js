@@ -39,7 +39,7 @@ const InductionsHeader = ({ props }) => {
     password: "",
     cpassword: "",
   });
-  const [participantCount,setParticipantCount] = useState();
+  const [participantCount, setParticipantCount] = useState();
   const [isUserJoined, setIsUserJoined] = useState(false);
 
 
@@ -72,15 +72,15 @@ const InductionsHeader = ({ props }) => {
           password: password,
         },
         { withCredentials: true }
-      ).then(async (res) => {
+      ).then(async (data) => {
         // window.location.reload(true);
         // document.getElementById("modalClose").click();
-        setCompeteUser(res.data);
-        await axios.get(`${SERVER_URL}/isJoined/${props.c._id}/${res.data._id}`, { withCredentials: true })
+        setCompeteUser(data.data);
+        await axios.get(`${SERVER_URL}/isJoined/${props.c._id}/${data.data._id}`, { withCredentials: true })
           .then(res => {
             setIsUserJoined(res.data);
             if (res.data) {
-              showAlert("Already Joined Competition", "success");
+              showAlert("Already Joined Competition!", "success");
               document.getElementById("modalClose").click();
             }
             else {
@@ -125,22 +125,31 @@ const InductionsHeader = ({ props }) => {
     // console.log('props',props.c._id)
     await axios.put(`${SERVER_URL}/joinCompeteAsUser/${props.c._id}/${competeUser._id}`);
     setIsUserJoined(true);
-    setParticipantCount(participantCount+1);
+    setParticipantCount(participantCount + 1);
     showAlert("Joined Competition Successfully!", "success");
     document.getElementById("modalClose").click();
   }
 
   const submitCompete = async (e) => {
     e.preventDefault();
+    setSubmitLoading(true);
+    const data = new FormData();
+    data.append("competeFile", competeFile, `${Date.now()}-${competeUser.username}-${competeFile.name}`);
+    data.append("compete", props.c._id);
+    data.append("team", competeUser._id);
+    console.log('data', competeFile);
     try {
-      setSubmitLoading(true);
-      localStorage.setItem("CompeteUsername", username);
-      localStorage.setItem("CompetePassword", password);
-      // await axios.post(`${SERVER_URL}/submitCompeteFile`)
+      await axios.post(`${SERVER_URL}/submitCompeteFile`, data)
+        .then(res => {
+          document.getElementById("modalClose").click();
+          setCompeteFile("");
+          showAlert('File submitted successfully. Evaluation may take sometime..', "success");
+        })
     } catch (err) {
       showAlert("Something went wrong!", "danger");
       console.log(err);
     }
+    setSubmitLoading(false);
   }
 
   return (
@@ -215,30 +224,30 @@ const InductionsHeader = ({ props }) => {
             <div className="modal-body">
               {msg ? <div className="alert alert-danger">{msg}</div> : null}
               <div className="login-container">
-                <form method="POST" encType="multipart/form-data">
+                <form method="POST" onSubmit={submitCompete} encType="multipart/form-data">
                   <div className="form-group mb-3 text-start">
                     <div>
                       <input type='file'
-                        accept="image/*"
-                        name="photo"
+                        // accept="image/*"
+                        name="competeFile"
                         onChange={(e) => setCompeteFile(e.target.files[0])}
                         className="form-control rounded-pill py-2 px-4"
-                        id='file-input'
-                        aria-describedby='photo'
+                        id='competeFile'
+                        aria-describedby='competeFile'
                         required
                         hidden />
-                      <label htmlFor="file-input" className={`form-control rounded-pill py-2 px-4 mb-4 ${!competeFile ? "text-muted" : "text-dark"}`}>{competeFile ? competeFile.name : <>Choose File</>}</label>
+                      <label htmlFor="competeFile" className={`form-control rounded-pill py-2 px-4 mb-4 ${!competeFile ? "text-muted" : "text-dark"}`}>{competeFile ? competeFile.name : <>Choose File</>}</label>
                     </div>
                   </div>
                   <button
                     type="submit"
                     className="btn btn-primary w-100 py-2 px-4"
-                    onClick={submitCompete}
                     disabled={submitLoading}
                   >
                     {submitLoading ? <>Submitting <i className="fa fa-spinner fa-spin"></i></> : <>Submit</>}
                   </button>
                 </form>
+                <button type="reset" id="modalClose" className="btn btn-sm" data-bs-dismiss="modal" hidden>Close</button>
               </div>
             </div>
 

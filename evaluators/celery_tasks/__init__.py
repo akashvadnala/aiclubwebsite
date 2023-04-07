@@ -5,6 +5,7 @@ print("starting celery worker")
 
 BROKER_URL = os.environ.get("BROKER_URL", "amqp://localhost")
 
+
 app = Celery(
     "tasks",
     broker=BROKER_URL,
@@ -12,6 +13,8 @@ app = Celery(
 
 @app.task
 def add(task):
-    for i in range(10):
-        sleep(10)
-        print(i, f" :Task-{task}")
+    print('ok')
+        
+@app.task(name="tasks.run_preprocess")
+def run_preprocess(application_id):
+    print(application_id)
