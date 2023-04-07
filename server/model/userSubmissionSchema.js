@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const leaderBoardSchema = new mongoose.Schema({
+const userSubmissionSchema = new mongoose.Schema({
     compete: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -10,18 +10,18 @@ const leaderBoardSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "CompeteTeam"
     },
-    maxPublicScore: {
+    publicScore: {
         type: mongoose.Schema.Types.Decimal128,
-        default:0
     },
-    maxPrivateScore: {
-        type: mongoose.Schema.Types.Decimal128,
-        default:0
+    privateScore: {
+        type: mongoose.Schema.Types.Decimal128
     },
-    numSubmissions: {
-        type: Number,
-        default:0
+    localFilePath: {
+        type: String
+    },
+    googleDrivePath: {
+        type: String
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('LeaderBoard', leaderBoardSchema);
+module.exports = mongoose.model('UserSubmission', userSubmissionSchema);

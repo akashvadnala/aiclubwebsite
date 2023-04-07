@@ -14,7 +14,7 @@
     position: sticky !important;
     top: 0 !important;
     backdrop-filter: saturate(180%) blur(10px) !important;
-    z-index: 1000 !important;
+    z-index: 10000 !important;
     border-bottom: solid 1px #fafafa;
     padding: 3px 0 !important;
     font-weight: 300;

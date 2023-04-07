@@ -13,6 +13,13 @@ function TeamCard({ team, isadmin, isdelete }) {
         `Are you sure to delete the user ${username}?`
       );
       if (confirmed) {
+        await axios.delete(`${SERVER_URL}/imgdelete`,
+          { url: team.photo },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         await axios.delete(`${SERVER_URL}/team/delete/${id}`, { withCredentials: true });
         window.location.reload(true);
         showAlert("User deleted successfully!", "success");
@@ -32,7 +39,7 @@ function TeamCard({ team, isadmin, isdelete }) {
           <NavLink rel="noreferrer" to={`/profile/${team.username}`}>
             <h5 className="text-dark">
               {team.firstname} {team.lastname} &nbsp;
-              
+
               <i class="fa-xs fas fa-external-link-alt"></i>
             </h5>
           </NavLink>

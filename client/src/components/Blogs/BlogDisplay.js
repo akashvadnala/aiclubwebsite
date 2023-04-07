@@ -40,14 +40,14 @@ const BlogDisplay = () => {
       setApproval(res.data.blog.approvalStatus);
       setPub(`${!res.data.blog.public ? "Make Public" : "Make Private"}`);
       if (!post_.public) {
-        if(user._id===post_.authorName || user.isadmin){
+        if (user._id === post_.authorName || user.isadmin) {
           setLoad(1);
         }
-        else{
+        else {
           setLoad(-1);
         }
       }
-      else{
+      else {
         setLoad(1);
       }
       if (user && post_.authorName === user._id) {
@@ -109,8 +109,18 @@ const BlogDisplay = () => {
   const deleteBlog = async (status) => {
     if (status) {
       try {
-        const res = await axios.delete(`${SERVER_URL}/blogs/deleteBlog/${blog._id}`, { withCredentials: true });
-        if (res.status === 200) {
+        const confirmed = window.confirm(
+          `Are you sure to delete the blog ${blog.title}?`
+        );
+        if (confirmed) {
+          await axios.delete(`${SERVER_URL}/imgdelete`,
+            { url: blog.cover },
+            {
+              withCredentials: true,
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          const res = await axios.delete(`${SERVER_URL}/blogs/deleteBlog/${blog._id}`, { withCredentials: true });
           showAlert("Blog deleted successfully", "success");
           navigate("/myblogs");
         }

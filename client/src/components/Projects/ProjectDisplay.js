@@ -11,7 +11,7 @@ import { NavLink } from "react-router-dom";
 import Tag from "../Blogs/tags/Tag";
 import { Helmet } from "react-helmet";
 import JoditEditor from "jodit-react";
-import {editorPreviewConfig} from "../Params/editorConfig";
+import { editorPreviewConfig } from "../Params/editorConfig";
 
 const ProjectDisplay = () => {
   const { url } = useParams();
@@ -41,15 +41,15 @@ const ProjectDisplay = () => {
       setAuthors(data.data.authors);
       setApproval(data.data.project.approvalStatus);
       setPub(`${!data.data.project.public ? "Make Public" : "Make Private"}`);
-      if(!project.public){
-        if(project.authors.indexOf(user._id)>-1 || user.isadmin){
+      if (!project.public) {
+        if (project.authors.indexOf(user._id) > -1 || user.isadmin) {
           setLoad(1);
         }
-        else{
+        else {
           setLoad(-1);
         }
       }
-      else{
+      else {
         setLoad(1);
       }
     } catch (err) {
@@ -64,9 +64,21 @@ const ProjectDisplay = () => {
   const deleteProject = async (status) => {
     try {
       if (status) {
-        const res = await axios.delete(`${SERVER_URL}/deleteProject/${proj._id}`, { withCredentials: true });
-        showAlert("Project deleted successfully", "success");
-        navigate("/projects");
+        const confirmed = window.confirm(
+          `Are you sure to delete the project ${project.title}?`
+        );
+        if (confirmed) {
+          await axios.delete(`${SERVER_URL}/imgdelete`,
+            { url: project.cover },
+            {
+              withCredentials: true,
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          const res = await axios.delete(`${SERVER_URL}/deleteProject/${proj._id}`, { withCredentials: true });
+          showAlert("Project deleted successfully", "success");
+          navigate("/projects");
+        }
       }
     } catch (err) {
       showAlert(err.response.data.error, "danger");
@@ -449,11 +461,11 @@ const ProjectDisplay = () => {
                 )}
               </div>
               <JoditEditor
-                    name="content"
-                    ref={editor}
-                    value={proj ? proj.content : ""}
-                    config={editorPreviewConfig}
-                  />
+                name="content"
+                ref={editor}
+                value={proj ? proj.content : ""}
+                config={editorPreviewConfig}
+              />
             </div>
             <div className="col-lg-4">
               {authors.map((a, i) => {

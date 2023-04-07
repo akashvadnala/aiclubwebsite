@@ -132,7 +132,7 @@ const EditEvent = () => {
       data.append("photo", event.poster);
 
       try {
-        axios.post(
+        axios.delete(
           `${SERVER_URL}/imgdelete`,
           { url: event.poster },
           {
