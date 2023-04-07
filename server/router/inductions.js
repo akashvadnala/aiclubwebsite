@@ -194,7 +194,8 @@ router.route("/deleteCompete/:id").post(async (req, res) => {
   const compete = await Competitions.findById(id);
   if (compete) {
     const competeid = compete._id;
-    await Leaderboard.findOneAndDelete({ compete: competeid });
+    await Leaderboard.deleteMany({ compete: competeid });
+    await UserSubmission.deleteMany({ compete: competeid });
     await Competitions.findByIdAndDelete(id);
     return res
       .status(200)

@@ -65,7 +65,13 @@ const competitionSchema = new mongoose.Schema(
     publicDataSetPath: {
       type: String
     },
+    publicDataSetUrl: {
+      type: String
+    },
     privateDataSetPath: {
+      type: String
+    },
+    privateDataSetUrl: {
       type: String
     }
   },

@@ -23,6 +23,38 @@ const Evaluation = ({ props }) => {
   const [evaluations, setEvaluations] = useState(null);
   const [load, setLoad] = useState(0);
   const { logged_in } = useContext(Context);
+  const [privateDataSet, setPrivateDataSet] = useState(null);
+  const [publicDataSet, setPublicDataSet] = useState(null);
+
+  const uploadDataSet = async () => {
+    try {
+      if (privateDataSet) {
+        let data = new FormData();
+        data.append("privateDataSet", privateDataSet, `${props.c._id}-privateDataSet`);
+        await axios.put(`${SERVER_URL}/uploadPrivateDataset/${props.c._id}`,
+          data,
+          { withCredentials: true })
+          .then(res => {
+            setPrivateDataSet(null);
+            showAlert("Private Dataset Uploaded!", "success");
+          })
+      }
+      if (publicDataSet) {
+        let data = new FormData();
+        data.append("publicDataSet", publicDataSet, `${props.c._id}-publicDataSet`);
+        await axios.put(`${SERVER_URL}/uploadPublicDataSet/${props.c._id}`,
+          data,
+          { withCredentials: true })
+          .then(res => {
+            setPublicDataSet(null);
+            showAlert("Public Dataset Uploaded!", "success");
+          })
+      }
+    } catch (err) {
+      console.log('dataseterr', err);
+      showAlert("Something went wrong!", "danger");
+    }
+  }
 
   const getEvaluationMetrics = () => {
     try {
@@ -117,7 +149,6 @@ const Evaluation = ({ props }) => {
     getEvaluationMetrics();
   }, [logged_in, props]);
 
-  console.log("evaluation", evaluation, compete);
   return (
     <>
       {load === 0 ? <Loading /> : load === 1 ?
@@ -125,8 +156,32 @@ const Evaluation = ({ props }) => {
           <div className='settings-container py-2'>
             <div className='card'>
               <div className='card-body pt-0 pb-4'>
-                <div className="text-header  py-4">Evaluation Metric</div>
-                <div className="text-secondary  py-4">
+                <div className="text-header py-4">Evaluation</div>
+                <div className="datasets mb-5">
+                  <h4>Datasets</h4>
+                  <div className='private-dataset row mt-3'>
+                    <div className="form-group align-items-center row">
+                      <label for='publicDataSet' className='col-sm-4 text-end'>Public Dataset :</label>
+                      <div className='col-sm-6'>
+                        <input type='file' name="publicDataSet" onChange={(e) => { setPublicDataSet(e.target.files[0]) }} className="form-control" id='publicDataSet' aria-describedby='publicDataSet' />
+                      </div>
+                    </div>
+                  </div>
+                  <div className='public-dataset row mt-3'>
+                    <div className="form-group align-items-center row">
+                      <label for='privateDataSet' className='col-sm-4 text-end'>Private Dataset :</label>
+                      <div className='col-sm-6'>
+                        <input type='file' name="privateDataSet" onChange={(e) => { setPrivateDataSet(e.target.files[0]) }} className="form-control" id='privateDataSet' aria-describedby='privateDataSet' />
+                      </div>
+                    </div>
+                  </div>
+                  <div className='mt-3'>
+                    <button className='btn btn-primary' onClick={uploadDataSet}>Upload Datasets</button>
+                  </div>
+                </div>
+
+                <h4>Evaluation Metric</h4>
+                <div className="text-secondary mt-3">
                   <ul>
                     <li>User submissions are evaluated by comparing their Submission file to the ground truth Solution file with respect to a chosen Scoring Metric.Each Scoring Metric will expect the Solution and Submission file to be in certain format.</li>
                     <li>To ensure that competitors cannot game the system, the solution file should be sampled into Public and Private. Public scores are shown on the public leaderboard, while only the private scores are used to determine the competition winner. The sampling should be done manually and upload two different files for both public and private data. </li>
