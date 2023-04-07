@@ -8,29 +8,43 @@ const validateEmail = (email) => {
     return re.test(String(email).toLowerCase());
 }
 
+const isNITCmail = (email) => {
+    const nitcEmailRegex = /@nitc\.ac\.in$/;
+
+    if (nitcEmailRegex.test(email)) {
+        return true;
+    }
+    return false;
+}
+
 router.route('/subscribe').post(async (req,res)=> {
-    console.log("new subscription call");
     try {
         const data = req.body;
-        let checkSubscription = await Subscribe.find({ 'email' : data.email });
-        console.log("checked",checkSubscription);
-        if(checkSubscription.length === 0){
-            if(validateEmail(data.email)){
-                const subscriber = new Subscribe(data);
-                const name = subscriber.name;
-                await subscriber.save();
-                let text = `Hello ${data.name}, Thanks for subscribing for Latest Updates from AI CLUB NITC`;
-                welcomeMail(data.email);
-                console.log("mailcalled");
-                res.status(200).json({'msg':`${name} subscribed sucessfully`});
+        if(validateEmail(data.email)){
+            if(isNITCmail(data.email)){
+                res.status(400).json({'error':"Please use your personal mail ID"});
+                return;
             }
             else{
-                res.status(400).json({'error':"Not a valid mail Id"});
+                let checkSubscription = await Subscribe.find({ 'email' : data.email });
+                // console.log("checked",checkSubscription);
+                if(checkSubscription.length === 0){
+                    const subscriber = new Subscribe(data);
+                    await subscriber.save();
+                    welcomeMail(data.email);
+                    console.log("mailcalled");
+                    res.status(200).json({'msg':`subscribed sucessfully`});
+                }
+                else{
+                    console.log("Already a subscriber")
+                    res.status(200).json({'msg':"Already a subscriber"});
+                } 
             }
-        }else{
-            console.log("Already a subscriber")
-            res.status(200).json({'msg':"Already a subscriber"});
-        }     
+        }
+        else{
+            res.status(400).json({'error':"Not a valid mail Id"});
+        }
+            
         
     } catch (error) {
         console.log(`subscription error - ${error}`);

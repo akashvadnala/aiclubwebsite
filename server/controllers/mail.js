@@ -3,10 +3,11 @@ const dotenv = require('dotenv');
 const fs = require("fs")
 const path = require("path")
 dotenv.config({ path: './config.env' });
-const Subscribers = require('../model/subscribeSchema');
+const Subscribe = require('../model/subscribeSchema');
 let ejs = require('ejs');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
+const config = require("../Config");
 
 const oauth2Client = new OAuth2(
   process.env.CLIENT_ID,
@@ -37,23 +38,26 @@ const welcomeMail = async (toaddress) => {
       }
     });
 
+    const emailTemplateSource = fs.readFileSync(path.join(__dirname, '..', 'views/emails', '/welcome.ejs'), "utf8");
+    const htmlToSend = ejs.render(emailTemplateSource);
+
     const mailOptions = {
-      from: 'AI Club NITC <aiclub.messenger@gmail.com>', // Sender address
-      to: toaddress,
-      subject: "Thanks for signing up for Latest updates", // Subject line
-      text: "Greeting from AI Club NITC,\nThanks for subscribing for the latest updated from AI Club.\nStay updated with every event that happens at AI Club. ", // Plain text body
-    };
-    const result = await transport.sendMail(mailOptions);
-    console.log(result);
-  } catch (error) {
-    console.log(error);
-  }
+        from: 'AI Club NITC <aiclub.messenger@gmail.com>', 
+        to: toaddress, 
+        subject: "Thanks for signing up for Latest updates",
+        html: htmlToSend,
+      };
+      const result = await transport.sendMail(mailOptions);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
 }
 
-const broadcastMail = async (subject, body) => {
+const broadcastMail = async (type, content) => {
   
   try {
-    const subsmails = await Subscribers.find({}, { "_id": false, "__v": false });
+    const subsmails = await Subscribe.find({}, { "_id": false, "__v": false });
     const accessToken = await oauth2Client.getAccessToken();
 
     const transport = nodemailer.createTransport({
@@ -69,20 +73,34 @@ const broadcastMail = async (subject, body) => {
         accessToken: accessToken
       }
     });
-
-    const mailOptions = {
-      from: 'AI Club NITC <aiclub.messenger@gmail.com>', // Sender address
-      to: subsmails, // List of recipients
-      subject: subject, // Subject line
-      text: body
-    };
-
-    const result = await transport.sendMail(mailOptions);
-    console.log(result);
-  } catch (error) {
-    console.log(error);
-  }
-
+    let emailTemplateSource=""
+    if(type === "blog"){
+      emailTemplateSource = fs.readFileSync(path.join(__dirname, '..', 'views/emails', '/newblog.ejs'), "utf8");
+    }
+    else if(type === "project"){
+      emailTemplateSource = fs.readFileSync(path.join(__dirname, '..', 'views/emails', '/newproject.ejs'), "utf8");
+    }
+    else if(type === "event"){
+      emailTemplateSource = fs.readFileSync(path.join(__dirname, '..', 'views/emails', '/events.ejs'), "utf8");
+    }
+    
+    subsmails.map((mailid)=>{
+      content.link = config.SERVER_URL+"/events/"+content.link;
+      content.unsub = config.SERVER_URL+"/unsubscribe/"+mailid;
+      const htmlToSend = ejs.render(emailTemplateSource,content);
+      const mailOptions = {
+        from: 'AI Club NITC <aiclub.messenger@gmail.com>', // Sender address
+        to: mailid, // List of recipients
+        subject: content.subject, // Subject line
+        html: htmlToSend,
+      };
+      const result = transport.sendMail(mailOptions);
+      console.log(result);
+    })
+    
+    } catch (error) {
+      console.log(error);
+    }
 }
 
 

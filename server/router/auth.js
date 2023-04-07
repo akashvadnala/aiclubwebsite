@@ -181,8 +181,7 @@ router.post("/forgot-password", async (req, res) => {
         const token = await oldUser.generateForgetPasswordToken();
         const link = `${CLIENT_URL}/reset-password/${oldUser._id}/${token}`;
         const content = {
-            link: link,
-            contact: "aiclubnitc",
+            link: link
         }
         passwordResetMail(content);
         res.status(200).send({ msg: "Mail sent successfully" });
