@@ -5,7 +5,9 @@ const multer = require('multer');
 const authenticate = require('../middleware/authenticate');
 const Team = require('../model/teamSchema');
 const File = require('../model/fileSchema');
-const {newuserMail} = require('../controllers/mail');
+const { newuserMail } = require('../controllers/mail');
+const Config = require('../Config');
+const fs = require('fs');
 
 router.route('/').get((req, res) => {
     res.send(`Hello world from the server router js`);
@@ -27,19 +29,27 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname)
-    }  
+    }
 })
 
 router.route('/imgupload').post(multer({ storage }).single('photo'), async (req, res) => {
     const file = req.file.path;
     const name = req.file.filename;
     const mimeType = req.file.mimetype;
-
+    const folder_id = Config.DRIVE_FILE_ID;
     try {
-        const key = await fileUpload.uploadFile({ name, file, mimeType });
+        const key = await fileUpload.uploadFile({ name, file, mimeType, folder_id });
         const url = fileUpload.getUrl(key);
+        // console.log('url',url);
+        fs.unlink(file, (err) => {
+            if (err) {
+                console.error(err)
+                return
+            }
+        });
         res.status(200).json(url);
     } catch (err) {
+        console.log(err)
         res.status(400).json({ error: "Something went wrong!" });
     }
 });
@@ -100,8 +110,8 @@ router.route('/teamadd').post(authenticate, async (req, res) => {
         team.password = await bcrypt.hash(req.body.password, saltRounds);
         team.cpassword = team.password;
         await team.save();
-        
-        newuserMail(team.email,{username:team.username,password:team.username});
+
+        newuserMail(team.email, { username: team.username, password: team.username });
         console.log(`${team.username} user registered successfully`);
         res.status(200).json({ message: "user Login Successfully" });
 
@@ -112,22 +122,22 @@ router.route('/teamadd').post(authenticate, async (req, res) => {
 
 router.route('/getTeams').get(async (req, res) => {
     let teams = [];
-    const team = await Team.find({ ismember: true,isalumni:false }).sort({orderIndex:1});
+    const team = await Team.find({ ismember: true, isalumni: false }).sort({ orderIndex: 1 });
     await Promise.all(team.map(t => {
         teams.push({ id: t._id, name: `${t.firstname} ${t.lastname}` })
     }))
     return res.status(200).json(teams);
 });
 
-router.route('/getTeamList').get(async (req,res)=>{
-    const teams = await Team.find({ismember:true,isalumni:false}).sort({orderIndex:1}).select("_id firstname lastname username position");
+router.route('/getTeamList').get(async (req, res) => {
+    const teams = await Team.find({ ismember: true, isalumni: false }).sort({ orderIndex: 1 }).select("_id firstname lastname username position");
     res.status(200).json(teams);
 });
 
-router.route('/sortTeams').put(async (req,res)=>{
-    const {teams} = req.body;
+router.route('/sortTeams').put(async (req, res) => {
+    const { teams } = req.body;
     await Promise.all(
-        teams.map(async ({_id},index)=>{
+        teams.map(async ({ _id }, index) => {
             let team = await Team.findById(_id);
             team.orderIndex = index;
             await team.save();
@@ -142,12 +152,12 @@ router.route('/getTeam/:year').get(async (req, res) => {
     const d = new Date();
     var y = d.getFullYear();
     var m = d.getMonth();
-    if(m<4){ //4 represents may
-      y--; //y=2022
+    if (m < 4) { //4 represents may
+        y--; //y=2022
     }
     if (parseInt(year) === y + 1) {
-        teamData = await Team.find({ ismember: true, isalumni: false }).sort({orderIndex:1});
-        if(!teamData){
+        teamData = await Team.find({ ismember: true, isalumni: false }).sort({ orderIndex: 1 });
+        if (!teamData) {
             const teamData = new Team({
                 firstname: "Admin",
                 username: "admin",
@@ -164,13 +174,13 @@ router.route('/getTeam/:year').get(async (req, res) => {
         }
     }
     else {
-        teamData = await Team.find({ ismember: true, isalumni: true, year: year }).sort({orderIndex:1});
+        teamData = await Team.find({ ismember: true, isalumni: true, year: year }).sort({ orderIndex: 1 });
     }
     res.status(200).json(teamData);
 });
 
 router.route('/getArchTeam').get(async (req, res) => {
-    const teamData = await Team.find({ ismember: false }).sort({orderIndex:1});
+    const teamData = await Team.find({ ismember: false }).sort({ orderIndex: 1 });
     res.status(200).json(teamData);
 });
 
@@ -205,7 +215,7 @@ router.route('/teamupdate/:id').put(authenticate, async (req, res) => {
         res.status(200).json();
 
     } catch (error) {
-        res.status(400).json({error:"Somthing went wrong!"});
+        res.status(400).json({ error: "Somthing went wrong!" });
     }
 });
 
@@ -240,7 +250,7 @@ router.route('/changePassword/:id').put(authenticate, async (req, res) => {
         });
 
     } catch (error) {
-        res.status(400).json({error:"Somthing went wrong!"});
+        res.status(400).json({ error: "Somthing went wrong!" });
     }
 });
 

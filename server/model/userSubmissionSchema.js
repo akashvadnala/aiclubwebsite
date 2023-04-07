@@ -11,7 +11,7 @@ const userSubmissionSchema = new mongoose.Schema({
         ref: "CompeteTeam"
     },
     publicScore: {
-        type: mongoose.Schema.Types.Decimal128
+        type: mongoose.Schema.Types.Decimal128,
     },
     privateScore: {
         type: mongoose.Schema.Types.Decimal128
