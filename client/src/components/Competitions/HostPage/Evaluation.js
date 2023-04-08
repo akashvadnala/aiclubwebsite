@@ -25,12 +25,12 @@ const Evaluation = ({ props }) => {
   const { logged_in } = useContext(Context);
   const [privateDataSet, setPrivateDataSet] = useState(null);
   const [publicDataSet, setPublicDataSet] = useState(null);
-
+// console.log(privateDataSet && privateDataSet.name.split(".").pop())
   const uploadDataSet = async () => {
     try {
       if (privateDataSet) {
         let data = new FormData();
-        data.append("privateDataSet", privateDataSet, `${props.c._id}-privateDataSet`);
+        data.append("privateDataSet", privateDataSet, `${props.c._id}-privateDataSet.${privateDataSet.name.split(".").pop()}`);
         await axios.put(`${SERVER_URL}/uploadPrivateDataset/${props.c._id}`,
           data,
           { withCredentials: true })
@@ -41,7 +41,7 @@ const Evaluation = ({ props }) => {
       }
       if (publicDataSet) {
         let data = new FormData();
-        data.append("publicDataSet", publicDataSet, `${props.c._id}-publicDataSet`);
+        data.append("publicDataSet", publicDataSet, `${props.c._id}-publicDataSet.${publicDataSet.name.split(".").pop()}`);
         await axios.put(`${SERVER_URL}/uploadPublicDataSet/${props.c._id}`,
           data,
           { withCredentials: true })

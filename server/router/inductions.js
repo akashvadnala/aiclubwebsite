@@ -164,7 +164,8 @@ router.route("/submitCompeteFile").post(upload.single("competeFile"), async (req
   const userSubmission = new UserSubmission({
     compete: req.body.compete,
     team: req.body.team,
-    googleDrivePath: url
+    googleDrivePath: url,
+    localFilePath: `submissions/${name}`
   });
   await userSubmission.save();
   
