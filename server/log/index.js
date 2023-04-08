@@ -1,6 +1,6 @@
 const { createLogger, transports, format } = require("winston");
 
-const config = require("../config");
+const config = require("../Config");
 
 const loggerFormat = format.printf((info) => {
   let formatObject = `${info.level || "-"} ${info.timestamp || "-"} ${"-"} ${
