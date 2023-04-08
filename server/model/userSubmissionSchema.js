@@ -12,9 +12,11 @@ const userSubmissionSchema = new mongoose.Schema({
     },
     publicScore: {
         type: mongoose.Schema.Types.Decimal128,
+        default:0
     },
     privateScore: {
-        type: mongoose.Schema.Types.Decimal128
+        type: mongoose.Schema.Types.Decimal128,
+        default:0
     },
     localFilePath: {
         type: String

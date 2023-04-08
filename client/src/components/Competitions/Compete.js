@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Leaderboard from "./Leaderboard";
+import MySubmissions from "./MySubmissions";
 import Overview from "./Overview";
 import Register from "./Register";
 import Error from "../Error";
@@ -21,7 +22,7 @@ const Compete = () => {
     path = "overview";
   }
   const { user, logged_in } = useContext(Context);
-  const [page, setPage] = useState(null);
+  const [page, setPage] = useState(<Error />);
   const [title, setTitle] = useState("");
   const [load, setLoad] = useState(0);
 
@@ -42,9 +43,8 @@ const Compete = () => {
           access = true;
         }
       }
-      setParameters({ ...parameters, path:path, access: access, c: data.data, username: username });
+      setParameters({ ...parameters, path: path, access: access, c: data.data, username: username });
       setTitle(data.data.title);
-      setLoad(1);
     }).catch(err => {
       setLoad(-1);
     });
@@ -55,34 +55,39 @@ const Compete = () => {
     switch (path) {
       case undefined:
         setPage(<Overview props={parameters} />);
+        setLoad(1);
         break;
       case "overview":
         setPage(<Overview props={parameters} />);
+        setLoad(1);
         break;
       case "host":
         setPage(<Host props={parameters} />);
+        setLoad(1);
         break;
       case "leaderboard":
         setPage(<Leaderboard props={parameters} />);
+        setLoad(1);
         break;
-      case "submissions":
-        setPage(<Submissions props={parameters} />);
-        break;
-      case "register":
-        setPage(<Register c={parameters.c} />);
+      case "mysubmissions":
+        setPage(<MySubmissions props={parameters} />);
+        setLoad(1);
         break;
       default:
         setPage(<Error />)
+        setLoad(1);
         break;
     }
   };
 
   useEffect(() => {
-    getCompete();
+    if (spath && path) {
+      getCompete();
+    }
   }, [logged_in, spath, path]);
 
   useEffect(() => {
-    if(parameters.c){
+    if (parameters.c) {
       getPage();
     }
   }, [parameters]);

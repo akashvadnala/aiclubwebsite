@@ -114,7 +114,6 @@ const InductionsHeader = ({ props }) => {
               }
             });
         });
-      document.getElementById("modalClose").click();
     } catch (err) {
       showAlert(err.response.data.error, "danger");
       console.log(err);
@@ -203,7 +202,7 @@ const InductionsHeader = ({ props }) => {
                         </button>
 
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                          <NavLink className="dropdown-item" to="/sfd" aria-current="page">Action</NavLink><hr />
+                          <NavLink className="dropdown-item" to={`/competitions/${props.c.url}/mysubmissions`} aria-current="page">My Submissions</NavLink><hr />
                           <NavLink className="dropdown-item" to="/sffcsdd" aria-current="page">Another action</NavLink><hr />
                           <NavLink className="dropdown-item" to="/safdcx" aria-current="page">Something else here</NavLink>
                         </div>
