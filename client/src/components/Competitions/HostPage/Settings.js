@@ -252,7 +252,7 @@ const Settings = ({ props }) => {
                         selected={new Date(compete.CompetitionStart)}
                         onChange={(date) => setCompeteStartDate(date)}
                         showTimeSelect
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         // filterTime={filterPassedTime}
                         dateFormat="MMMM d, yyyy h:mm aa"
                       />
@@ -268,7 +268,7 @@ const Settings = ({ props }) => {
                         selected={new Date(compete.CompetitionEnd)}
                         onChange={(date) => setCompeteEndDate(date)}
                         showTimeSelect
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         // filterTime={filterPassedTime}
                         dateFormat="MMMM d, yyyy h:mm aa"
                       />

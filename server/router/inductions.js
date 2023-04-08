@@ -4,6 +4,7 @@ const multer = require('multer');
 const Competitions = require("../model/competitionSchema");
 const UserSubmission = require("../model/userSubmissionSchema");
 const Leaderboard = require("../model/leaderBoardSchema");
+const competeAuthenticate = require("../middleware/competeAuthenticate");
 const Team = require("../model/teamSchema");
 const CompeteUser = require("../model/competeTeamSchema");
 const authenticate = require("../middleware/authenticate");
@@ -168,6 +169,9 @@ router.route("/submitCompeteFile").post(upload.single("competeFile"), async (req
     localFilePath: `submissions/${name}`
   });
   await userSubmission.save();
+  const lb = await Leaderboard.findOne({compete:req.body.compete,team:req.body.team});
+  lb.numSubmissions +=1;
+  await lb.save();
   
   const task = celery.createTask("tasks.run_preprocess");
   task.applyAsync([userSubmission._id]);
@@ -178,6 +182,15 @@ router.route("/submitCompeteFile").post(upload.single("competeFile"), async (req
     }
 });
   res.status(200).json();
+})
+
+router.route("/getMySubmissions/:competeid/:userid").get(competeAuthenticate,async (req,res)=>{
+  try{
+    const userSubmissions = await UserSubmission.find({compete:req.params.competeid,team:req.params.userid}).sort({createdAt:-1});
+    res.status(200).json(userSubmissions);
+  }catch(err){
+    res.status(400).json(); 
+  }
 })
 
 router.route("/editOverview/:id").put(authenticate, async (req, res) => {
