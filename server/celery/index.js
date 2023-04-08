@@ -2,7 +2,7 @@ const celery = require("celery-node");
 
 const logger = require("../log");
 
-const config = require("../config");
+const config = require("../Config");
 
 const client = celery.createClient(
   config.CELERY_BROKER_URL,
