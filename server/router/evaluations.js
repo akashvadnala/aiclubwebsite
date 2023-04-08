@@ -23,6 +23,7 @@ var storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.route("/uploadPrivateDataset/:competeid").put(authenticate, upload.single("privateDataSet"), async (req, res) => {
+    console.log('file',req.file)
     const file = req.file.path;
     const name = req.file.filename;
     const mimeType = req.file.mimetype;

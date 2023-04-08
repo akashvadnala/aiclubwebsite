@@ -4,3 +4,6 @@
 **/volume
 **/__pycache__/
 **/venv/
+**/datasets/
+**/submissions/
+**/EvaluationFiles/
