@@ -3,6 +3,7 @@ const router = express.Router();
 const Blog = require("../model/BlogSchema");
 const Team = require("../model/teamSchema");
 const authenticate = require("../middleware/authenticate");
+const {generalMail} = require("../controllers/mail")
 
 router.route("/updateBlog/:id").put(authenticate, async (req, res) => {
   try {
@@ -20,6 +21,7 @@ router.route("/updateBlog/:id").put(authenticate, async (req, res) => {
 });
 
 router.route("/updateblogPublicStatus/:url").put(authenticate, async (req, res) => {
+  console.log("updateblogPublicStatus called");
   try {
     const { url } = req.params;
     const updatedBlog = await Blog.findOne({ url: url });
@@ -28,7 +30,7 @@ router.route("/updateblogPublicStatus/:url").put(authenticate, async (req, res) 
     }
     updatedBlog.public = req.body.public;
     updatedBlog.save();
-    console.log("blog status Updated");
+    
     res.status(200).json({ msg: "Public status updated" });
   } catch (err) {
     res.status(500).json({ error: "Problem at server" });
@@ -36,17 +38,50 @@ router.route("/updateblogPublicStatus/:url").put(authenticate, async (req, res) 
 });
 
 router.route("/updateblogApprovalStatus/:url").put(authenticate, async (req, res) => {
+
   try {
     const { url } = req.params;
     const updatedBlog = await Blog.findOne({ url: url });
     if (!updatedBlog) {
       res.status(404).json({ error: "Blog not found" });
     }
-    updatedBlog.approvalStatus = req.body.approvalStatus;
-    updatedBlog.public = req.body.public;
+    
+    let toaddress = "";
+    let subject = "";
+    let body = "";
+    const user = await Team.findById(updatedBlog.authorName);
+
+    if(req.body.approvalStatus=="pending"){
+      updatedBlog.approvalStatus = req.body.approvalStatus;
+      subject = "New Blog - Submitted"
+      body = `Hi ${user.firstname} ${user.lastname} \n This mail is to inform you that your blog post titled "${updatedBlog.title}" has been Submitted for admin approval. 
+       \n\n Regards\nAI Club`;
+    }
+    else{
+      updatedBlog.approvalStatus = req.body.approvalStatus;
+      updatedBlog.public = req.body.public;
+
+      if(req.body.approvalStatus=="Approved"){
+        subject = "New Blog - Approved"
+        body = `Hi ${user.firstname} ${user.lastname} \n This mail is to inform you that your blog post titled "${updatedBlog.title}" has been Accepted by the admin. 
+       \n\n Regards\nAI Club`;
+      }
+      else if(req.body.approvalStatus=="Rejected"){
+        subject = "New Blog - Rejected"
+        body = `Hi ${user.firstname} ${user.lastname} \n This mail is to inform you that your blog post titled "${updatedBlog.title}" has been rejected by the admin. 
+        \n Please contact admin/Secretary for furthur details. \n\n Regards\nAI Club`;
+      }
+      
+    }
     updatedBlog.save();
+    toaddress = user.email;
+
+    generalMail(toaddress,subject,body);
+    console.log("blog status Updated");
+
     res.status(200).json({ msg: "Approval status updated" });
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
