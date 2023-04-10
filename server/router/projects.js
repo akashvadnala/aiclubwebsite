@@ -183,7 +183,7 @@ router.route("/getProject/:url").get(async (req, res) => {
       let auth = [];
       await Promise.all(
         authors.map(async (user) => {
-          const author = await Team.findById(user).select("firstname lastname photo description");
+          const author = await Team.findById(user).select("firstname lastname photo position profession");
           auth.push(author);
         })
       );

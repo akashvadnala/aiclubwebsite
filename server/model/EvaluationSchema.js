@@ -12,7 +12,10 @@ const evaluationSchema = new mongoose.Schema(
         },
         code: {
             type: String
-        }
+        },
+        localFilePath: {
+            type: String
+        },
     },
 );
 

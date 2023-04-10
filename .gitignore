@@ -2,3 +2,9 @@
 **/config.env
 **/uploads
 **/volume
+**/__pycache__/
+**/venv/
+**/datasets/
+**/submissions/
+**/EvaluationFiles/
+**/.env

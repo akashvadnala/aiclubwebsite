@@ -29,7 +29,7 @@ router.route('/getAllPhotos').get(async (req,res)=>{
 router.route('/addPhoto').post(authenticate,async (req,res)=> {
     try {
         const photo = req.body;
-        console.log(photo);
+        // console.log(photo);
         const newPhoto = new Photo(photo);
         await newPhoto.save();
         console.log(`Image uploaded sucessfully`);

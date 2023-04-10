@@ -15,7 +15,7 @@ class GDriveFileUpload extends FileUpload {
     this.drive = google.drive({ version: "v3", auth });
   }
 
-  async uploadFile({ name, file, mimeType }) {
+  async uploadFile({ name, file, mimeType, folder_id }) {
     const media = {
       mimeType,
       body:  fs.createReadStream(file),
@@ -23,7 +23,7 @@ class GDriveFileUpload extends FileUpload {
 
     const resource = {
       name,
-      'parents': ["1ts7i4H312mc57Z-zwdfbDaAcv_8mb8Le"],
+      'parents': [folder_id],
     };
 
     try {

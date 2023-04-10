@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "../../EditableStuff/Config";
+import LeaderboardSpace from "./LeaderboardSpace";
+
 const Leaderboard = ({ props }) => {
   const [lb, setLB] = useState([]);
-  const [count, setCount] = useState(1);
   const getLeaderboard = async () => {
     try {
       axios.get(`${SERVER_URL}/getLeaderboard/${props.c._id}`)
         .then(data => {
-          if (data.status === 200) {
-            setLB(data.data);
-          }
+          setLB(data.data);
         });
     } catch (err) {
       console.log(err);
@@ -29,17 +28,20 @@ const Leaderboard = ({ props }) => {
                 <h4 className="m-0">Leaderboard</h4>
               </div>
               <div className="col-sm-4 text-end">
+                <button className="btn btn-sm text-primary" onClick={()=>{getLeaderboard()}}>
+                  Refresh
+                </button>
                 {props.access ?
                   <>
-                    <button className='btn btn-dark btn-sm mx-1' >Public</button>
-                    <button className='btn btn-dark btn-sm mx-1' >Private</button>
+                    <button className='btn btn-dark btn-sm ml-2' >Public</button>
+                    <button className='btn btn-dark btn-sm ml-2' >Private</button>
                   </>
                   :
                   null
                 }
               </div>
             </div>
-            <div className="px-3">
+            <div className="border-top px-3">
               <table className="table table-striped">
                 <thead className="">
                   <tr>
@@ -54,13 +56,15 @@ const Leaderboard = ({ props }) => {
                   {
                     lb.map((l, index) => {
                       return (
-                        <tr>
-                          <th scope="row">{index + 1}</th>
-                          <th>{l.name}</th>
-                          <th>{l.score}</th>
-                          <th>{l.submissions}</th>
-                          <th>{l.last}</th>
-                        </tr>
+                        // <tr>
+                        //   <th scope="row">{index + 1}</th>
+                        //   {/* <th>{names[index]}</th> */}
+                        //   <th>{l.team}</th>
+                        //   <th>{l.maxPublicScore['$numberDecimal'].toLocaleString()}</th>
+                        //   <th>{l.numSubmissions}</th>
+                        //   <th>{l.updatedAt}</th>
+                        // </tr>
+                        <LeaderboardSpace l={l} index={index} />
                       )
                     })
                   }

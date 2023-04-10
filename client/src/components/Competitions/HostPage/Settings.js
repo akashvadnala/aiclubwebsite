@@ -129,7 +129,7 @@ const Settings = ({ props }) => {
         const data = new FormData();
         data.append("photo", Img);
 
-        await axios.post(`${SERVER_URL}/imgdelete`,
+        await axios.delete(`${SERVER_URL}/imgdelete`,
           { 'url': compete.headerPhoto },
           {
             withCredentials: true,
@@ -252,7 +252,7 @@ const Settings = ({ props }) => {
                         selected={new Date(compete.CompetitionStart)}
                         onChange={(date) => setCompeteStartDate(date)}
                         showTimeSelect
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         // filterTime={filterPassedTime}
                         dateFormat="MMMM d, yyyy h:mm aa"
                       />
@@ -268,7 +268,7 @@ const Settings = ({ props }) => {
                         selected={new Date(compete.CompetitionEnd)}
                         onChange={(date) => setCompeteEndDate(date)}
                         showTimeSelect
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         // filterTime={filterPassedTime}
                         dateFormat="MMMM d, yyyy h:mm aa"
                       />

@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
-
+const multer = require('multer');
 const Competitions = require("../model/competitionSchema");
-const Leaderboard = require("../model/leaderboardSchema");
+const UserSubmission = require("../model/userSubmissionSchema");
+const Leaderboard = require("../model/leaderBoardSchema");
+const competeAuthenticate = require("../middleware/competeAuthenticate");
 const Team = require("../model/teamSchema");
 const CompeteUser = require("../model/competeTeamSchema");
 const authenticate = require("../middleware/authenticate");
+const celery = require("../celery");
+const logger = require("../log");
+const fs = require('fs');
+const Config = require('../Config');
 
 router.route("/getCompete/:url").get(async (req, res) => {
   const { url } = req.params;
@@ -51,11 +57,12 @@ router.route("/addcompetitions").post(authenticate, async (req, res) => {
 router.route('/updateCompetetion/:id').put(authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("serverSide Id",id, req.body);
+    console.log("serverSide Id", id, req.body);
     const updateddata = await Competitions.findByIdAndUpdate(id, req.body, {
       new: true
     });
-
+    const task = celery.createTask("tasks.generateFile");
+    task.applyAsync([updateddata.evaluation]);
     console.log('Competition Updated!');
     res.status(200).json();
   } catch (err) {
@@ -91,24 +98,16 @@ router.route("/getDraftCompeteNames/:id").get(async (req, res) => {
   }
 });
 
-
-// router.route("/isJoined/:url/:username").get(async (req, res) => {
-//   const { url, username } = req.params;
-//   let joined = false;
-//   try {
-//     const team = await Team.findOne({ username: username });
-//     if (team) {
-//       if (team.competitions.indexOf(url) > -1) {
-//         joined = true;
-//       }
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-//   return res.status(200).json(joined);
-// });
-
-// Join Competition
+router.route("/isJoined/:competeid/:userid").get(async (req, res) => {
+  const { competeid, userid } = req.params;
+  try {
+    let leaderboard = await Leaderboard.findOne({ compete: competeid, team: userid });
+    return res.status(200).json(leaderboard ? true : false);
+  }
+  catch (err) {
+    return res.status(400).json({ error: "Something went wrong!" })
+  }
+});
 
 router.route("/joinCompete").post(async (req, res) => {
   try {
@@ -126,6 +125,74 @@ router.route("/joinCompete").post(async (req, res) => {
   }
 });
 
+router.route("/joinCompeteAsUser/:competeid/:userid").put(async (req, res) => {
+  const { competeid, userid } = req.params;
+  let leaderboard = await Leaderboard.findOne({ compete: competeid, team: userid });
+  if (!leaderboard) {
+    leaderboard = new Leaderboard({
+      compete: competeid,
+      team: userid
+    })
+    await leaderboard.save();
+    let compete = await Competitions.findById(competeid);
+    compete.participantCount += 1;
+    await compete.save();
+  }
+  res.status(200).json();
+})
+
+
+const { InitFileUpload } = require('../file_upload');
+const fileUpload = InitFileUpload();
+
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'EvaluationFiles')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+router.route("/submitCompeteFile").post(upload.single("competeFile"), async (req, res) => {
+  const file = req.file.path;
+  const name = req.file.filename;
+  const mimeType = req.file.mimetype;
+  const folder_id = Config.COMPETITION_DRIVE_FILE_ID;
+  const key = await fileUpload.uploadFile({ name, file, mimeType, folder_id });
+  const url = fileUpload.getUrl(key);
+  const userSubmission = new UserSubmission({
+    compete: req.body.compete,
+    team: req.body.team,
+    googleDrivePath: url,
+    localFilePath: `submissions/${name}`
+  });
+  await userSubmission.save();
+  const lb = await Leaderboard.findOne({compete:req.body.compete,team:req.body.team});
+  lb.numSubmissions +=1;
+  await lb.save();
+  
+  const task = celery.createTask("tasks.run_preprocess");
+  task.applyAsync([userSubmission._id]);
+  fs.unlink(file, (err) => {
+    if (err) {
+        console.error(err)
+        return
+    }
+});
+  res.status(200).json();
+})
+
+router.route("/getMySubmissions/:competeid/:userid").get(competeAuthenticate,async (req,res)=>{
+  try{
+    const userSubmissions = await UserSubmission.find({compete:req.params.competeid,team:req.params.userid}).sort({createdAt:-1});
+    res.status(200).json(userSubmissions);
+  }catch(err){
+    res.status(400).json(); 
+  }
+})
 
 router.route("/editOverview/:id").put(authenticate, async (req, res) => {
   const { id } = req.params;
@@ -142,8 +209,9 @@ router.route("/deleteCompete/:id").post(async (req, res) => {
   const compete = await Competitions.findById(id);
   if (compete) {
     const competeid = compete._id;
+    await Leaderboard.deleteMany({ compete: competeid });
+    await UserSubmission.deleteMany({ compete: competeid });
     await Competitions.findByIdAndDelete(id);
-    await Leaderboard.findOneAndDelete({ compete: competeid });
     return res
       .status(200)
       .json({ message: "Competition Deleted Successfully!" });

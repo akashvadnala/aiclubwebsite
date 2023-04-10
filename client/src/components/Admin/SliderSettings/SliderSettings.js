@@ -119,7 +119,7 @@ const SliderSettings = () => {
         try {
             setEdit(1);
             if (OldImg) {
-                await axios.post(`${SERVER_URL}/imgdelete`,
+                await axios.delete(`${SERVER_URL}/imgdelete`,
                     {
                         'url': OldImg
                     },
@@ -166,7 +166,7 @@ const SliderSettings = () => {
         const confirmed = window.confirm(`Are you sure to delete the slider '${title}'?`);
         if (confirmed) {
             try {
-                await axios.post(`${SERVER_URL}/imgdelete`,
+                await axios.delete(`${SERVER_URL}/imgdelete`,
                     {
                         'url': photo
                     },

@@ -81,17 +81,16 @@ const AllPhotos = () => {
           withCredentials: true
 
         });
+        setCanDelete(false);
+        setSelectedImages([]);
+      getAllPhotos();
 
-
-      console.log("data");
-      console.log(response);
       showAlert("Image Deleted Successfully", "success");
-      console.log("deleted Successfull");
     } catch (error) {
       console.log(error);
       window.alert('Error while deleting images please try again');
     }
-    window.location.reload(true);
+    setDel(false);
   }
 
   useEffect(() => {
@@ -115,7 +114,7 @@ const AllPhotos = () => {
     try {
       const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
       imageurl = img.data;
-      console.log("final image", imageurl);
+      // console.log("final image", imageurl);
       const { width, height } = await getImageSize(imageurl);
       let imageDetails = {
         imgurl: imageurl,
@@ -133,14 +132,16 @@ const AllPhotos = () => {
           withCredentials: true,
         }
       );
-
+      getAllPhotos();
+      setImage("");
+      setCaption("");
+      document.getElementById("modalClose").click();
       showAlert("Image Uploaded Successfully", "success");
     } catch (err) {
       console.log("photoerr", err);
       showAlert("Image Upload failed", "danger");
     }
-
-    window.location.reload(true);
+    setAdd(false);
   };
 
 
@@ -199,6 +200,7 @@ const AllPhotos = () => {
                       name="submit"
                       className="btn btn-sm btn-danger ms-2"
                       onClick={handleDelete}
+                      disabled={del}
                     >
                       {del ? (
                         <>
@@ -269,7 +271,7 @@ const AllPhotos = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">
+            <div className="modal-body text-center">
               <form onSubmit={postImage} method="POST">
                 <div className="modalform">
                   <input
@@ -300,6 +302,7 @@ const AllPhotos = () => {
                   name="submit"
                   id="submit"
                   className="btn btn-primary"
+                  disabled={add}
                 >
                   {add ? (
                     <>
@@ -310,10 +313,9 @@ const AllPhotos = () => {
                     "Upload"
                   )}
                 </button>
-                {/* <div className="modal-footer">
-                      <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Upload</button>
-                    </div> */}
               </form>
+              <button type="reset" id="modalClose" className="btn btn-sm" data-bs-dismiss="modal" hidden>Close</button>
+
             </div>
           </div>
         </div>

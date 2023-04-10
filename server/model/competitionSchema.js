@@ -13,19 +13,19 @@ const competitionSchema = new mongoose.Schema(
     subtitle: {
       type: String,
     },
-    overview:{
+    overview: {
       type: String,
       default: "Enter competition overview here"
     },
-    dataset:{
+    dataset: {
       type: String,
       default: "Enter Dataset related information here Eg. Dataset Name, Kaggle Dataset Links, Google Drive Links etc.."
     },
-    rules:{
+    rules: {
       type: String,
       default: "Enter competition rules here"
     },
-    evaluation:{
+    evaluation: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Evaluations",
       default: null
@@ -62,6 +62,18 @@ const competitionSchema = new mongoose.Schema(
     CompetitionEnd: {
       type: Date,
     },
+    publicDataSetPath: {
+      type: String
+    },
+    publicDataSetUrl: {
+      type: String
+    },
+    privateDataSetPath: {
+      type: String
+    },
+    privateDataSetUrl: {
+      type: String
+    }
   },
   { timestamps: true }
 );

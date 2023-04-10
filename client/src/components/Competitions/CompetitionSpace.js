@@ -13,8 +13,8 @@ const CompetitionSpace = ({competition}) => {
     var s = {
       day: 86400, // feel free to add your own row
       hour: 3600,
-      minute: 60,
-      second: 1,
+      min: 60,
+      sec: 1,
     };
     var r = {};
     if (present.getTime() < start.getTime()) {
