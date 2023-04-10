@@ -31,19 +31,50 @@ def connect_to_db(url):
     return db
 
 
-def get_dataset(db_conn, competionId):
+def get_competition(db_conn, competionId):
     competition = db_conn.competitions.find_one({"_id": ObjectId(competionId)})
     if competition is None:
         raise ValueError(
             "Could not find an application with the given application_id")
     return competition
 
+
 def get_submission(db_conn, usersubmissionId):
-    submission = db_conn.usersubmissions.find_one({"_id": ObjectId(usersubmissionId)})
+    submission = db_conn.usersubmissions.find_one(
+        {"_id": ObjectId(usersubmissionId)})
     if submission is None:
         raise ValueError(
             "Could not find an application with the given application_id")
     return submission
+
+
+def get_evaluation(db_conn, evaluationId):
+    evaluation = db_conn.evaluations.find_one({"_id": ObjectId(evaluationId)})
+    if evaluation is None:
+        raise ValueError(
+            "Could not find an application with the given application_id")
+    return evaluation
+
+
+def saveScores(db_conn, usersubmissionId, competeId, teamId, publicScore, privateScore):
+    submission = db_conn.usersubmissions
+    submission.find_one_and_update(
+        {"_id": ObjectId(usersubmissionId)}, {
+            "$set": {"publicScore": publicScore, "privateScore": privateScore}}
+    )
+    allUserSubmissions = db_conn.usersubmissions.find(
+        {"compete": ObjectId(competeId), "team": ObjectId(teamId)})
+    publicScoreList = []
+    privateScoreList = []
+    for userSubmission in allUserSubmissions:
+        publicScoreList.append(float(userSubmission["publicScore"]))
+        privateScoreList.append(float(userSubmission["privateScore"]))
+    maxPublicScore = max(publicScoreList)
+    maxPrivateScore = max(privateScoreList)
+    db_conn.leaderboards.find_one_and_update(
+        {"compete": ObjectId(competeId), "team": ObjectId(teamId)}, {
+            "$set": {"maxPublicScore": maxPublicScore, "maxPrivateScore": maxPrivateScore}}
+    )
 
 
 def deleteGdriveFile(key):
@@ -55,7 +86,7 @@ def deleteGdriveFile(key):
 
 
 def downloadFile(file_id, fileDir):
-    basedir = fileDir.split("/")[0] + "/"
+    basedir = os.path.join(*fileDir.split("/")[:-1]) + "/"
     try:
         if not os.path.exists(basedir):
             os.mkdir(basedir)
@@ -102,17 +133,15 @@ def extract_zip(path, r_path="sample/"):
     return files
 
 
-def delete_resume_local(path):
+def deleteLocalFile(path):
     if os.path.exists(path):
-
         if os.path.isdir(path):
             os.rmdir(path)
 
         elif os.path.isfile(path):
             os.remove(path)
-        print("Local copy of data deleted from {}".format(path))
+        print("Local data deleted from {}".format(path))
     else:
         raise FileNotFoundError(
             "The File/Folder you are trying to remove does not exist! Please try a different path!"
         )
-    pass

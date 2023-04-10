@@ -93,7 +93,8 @@ const Evaluation = ({ props }) => {
           {
             name: evaluation.name,
             description: evaluation.description,
-            code: evaluation.code
+            code: evaluation.code,
+            localFilePath: `/celery_tasks/EvaluationFiles/${evaluation.name}.py`
           },
           {
             withCredentials: true,

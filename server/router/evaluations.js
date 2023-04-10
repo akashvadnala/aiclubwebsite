@@ -32,9 +32,8 @@ router.route("/uploadPrivateDataset/:competeid").put(authenticate, upload.single
     const url = fileUpload.getUrl(key);
     let compete = await Competitions.findById(req.params.competeid);
     compete.privateDataSetUrl = url;
-    compete.privateDataSetPath = `datasets/${name}`;
+    compete.privateDataSetPath = `datasets/${compete.title}/${name}`;
     await compete.save(); 
-    console.log('dataset',compete);
     const task = celery.createTask("tasks.privateDataSet");
     task.applyAsync([compete._id]);
     fs.unlink(file, (err) => {
@@ -55,9 +54,8 @@ router.route("/uploadPublicDataset/:competeid").put(authenticate, upload.single(
     const url = fileUpload.getUrl(key);
     let compete = await Competitions.findById(req.params.competeid);
     compete.publicDataSetUrl = url;
-    compete.publicDataSetPath = `datasets/${name}`;
+    compete.publicDataSetPath = `datasets/${compete.title}/${name}`;
     await compete.save(); 
-    console.log('dataset',compete);
 
     const task = celery.createTask("tasks.publicDataSet");
     task.applyAsync([compete._id]);

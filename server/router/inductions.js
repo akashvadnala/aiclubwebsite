@@ -61,7 +61,8 @@ router.route('/updateCompetetion/:id').put(authenticate, async (req, res) => {
     const updateddata = await Competitions.findByIdAndUpdate(id, req.body, {
       new: true
     });
-
+    const task = celery.createTask("tasks.generateFile");
+    task.applyAsync([updateddata.evaluation]);
     console.log('Competition Updated!');
     res.status(200).json();
   } catch (err) {
