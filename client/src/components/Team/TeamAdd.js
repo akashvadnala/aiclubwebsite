@@ -72,6 +72,7 @@ const TeamAdd = () => {
             setAdd(true);
             const data = new FormData();
             data.append("photo", team.photo);
+            data.append("category","team");
 
             const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
             team.photo = img.data;

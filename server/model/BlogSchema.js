@@ -30,7 +30,7 @@ const BlogSchema = new Schema({
     },
     approvalStatus: {
         type: String,
-        default: "submit",
+        default: "draft",
       },
   },{ timestamps: true });
 

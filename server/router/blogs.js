@@ -9,8 +9,7 @@ router.route("/updateBlog/:id").put(authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const blogdata = req.body;
-    blogdata.url = blogdata.url.trim().replace(/\s+/g, '-').toLowerCase();
-    const updatedBlog = await Blog.findByIdAndUpdate(id, blogdata, {
+    await Blog.findByIdAndUpdate(id, blogdata, {
       new: true,
     });
     console.log("Blog Updated");
@@ -29,7 +28,8 @@ router.route("/updateblogPublicStatus/:url").put(authenticate, async (req, res) 
       res.status(404).json({ error: "Blog not found" });
     }
     updatedBlog.public = req.body.public;
-    updatedBlog.save();
+    updatedBlog.approvalStatus = req.body.approvalStatus;
+    await updatedBlog.save();
     
     res.status(200).json({ msg: "Public status updated" });
   } catch (err) {
@@ -51,7 +51,7 @@ router.route("/updateblogApprovalStatus/:url").put(authenticate, async (req, res
     let body = "";
     const user = await Team.findById(updatedBlog.authorName);
 
-    if(req.body.approvalStatus=="pending"){
+    if(req.body.approvalStatus=="Pending"){
       updatedBlog.approvalStatus = req.body.approvalStatus;
       subject = "New Blog - Submitted"
       body = `Hi ${user.firstname} ${user.lastname} \n This mail is to inform you that your blog post titled "${updatedBlog.title}" has been Submitted for admin approval. 
@@ -149,9 +149,9 @@ router.route("/getsixBlogs").get(async (req, res) => {
   }
 });
 
-router.route("/getpendingBlogApprovals").get(async (req, res) => {
+router.route("/getPendingBlogApprovals").get(async (req, res) => {
   try {
-    const blogData = await Blog.find({ approvalStatus: "pending" }).sort({ createdAt: -1 });
+    const blogData = await Blog.find({ approvalStatus: "Pending" }).sort({ createdAt: -1 });
     res.status(200).json(blogData);
   } catch (error) {
     res.status(500).json({ error: "Problem at server" });
