@@ -111,6 +111,7 @@ const EditBlog = () => {
       if (Img) {
         const data = new FormData();
         data.append("photo", Img);
+        data.append("category","blogs");
 
         await axios.put(`${SERVER_URL}/imgdelete`,
           { 'url': post.cover },

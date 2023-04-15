@@ -111,6 +111,7 @@ const AddEvent = () => {
       setAdd(true);
       const data = new FormData();
       data.append("photo", event.poster);
+      data.append("category","events");
       const img = await axios.post(`${SERVER_URL}/imgupload`, data, {
         withCredentials: true,
       });

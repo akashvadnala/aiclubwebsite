@@ -13,12 +13,6 @@ router.route('/').get((req, res) => {
     res.send(`Hello world from the server router js`);
 });
 
-// const mime = require("mime-types");
-// const { Readable } = require("stream");
-
-// const { google } = require('googleapis');
-
-
 const { InitFileUpload } = require('../file_upload');
 const fileUpload = InitFileUpload();
 
@@ -36,7 +30,33 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
     const file = req.file.path;
     const name = req.file.filename;
     const mimeType = req.file.mimetype;
-    const folder_id = Config.DRIVE_FILE_ID;
+    const category = req.body.category;
+    let folder_id = Config.GALLERY_DRIVE_FILE_ID;
+    switch (category) {
+        case "team":
+            folder_id = Config.TEAM_DRIVE_FILE_ID;
+            break;
+        case "gallery":
+            folder_id = Config.GALLERY_DRIVE_FILE_ID;
+            break;
+        case "blogs":
+            folder_id = Config.BLOGS_DRIVE_FILE_ID;
+            break;
+        case "projects":
+            folder_id = Config.PROJECTS_DRIVE_FILE_ID;
+            break;
+        case "events":
+            folder_id = Config.EVENTS_DRIVE_FILE_ID;
+            break;
+        case "sliders":
+            folder_id = Config.SLIDERS_DRIVE_FILE_ID;
+            break;
+        case "competitions":
+            folder_id = Config.COMPETITION_DRIVE_FILE_ID;
+            break;
+        default:
+            folder_id = Config.DRIVE_FILE_ID;
+    }
     try {
         const key = await fileUpload.uploadFile({ name, file, mimeType, folder_id });
         const url = fileUpload.getUrl(key);
@@ -57,7 +77,6 @@ router.route('/imgdelete').put(authenticate, async (req, res) => {
     try {
         const url = req.body.url;
         const key = url.split('=')[2];
-
         await fileUpload.deleteFile(key);
         res.status(200).json({ msg: "Image deleted sucessfully" });
     } catch (err) {

@@ -128,8 +128,9 @@ const Settings = ({ props }) => {
       if (Img) {
         const data = new FormData();
         data.append("photo", Img);
+        data.append("category","competitions");
 
-        await axios.delete(`${SERVER_URL}/imgdelete`,
+        await axios.put(`${SERVER_URL}/imgdelete`,
           { 'url': compete.headerPhoto },
           {
             withCredentials: true,

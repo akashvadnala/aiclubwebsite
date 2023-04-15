@@ -182,7 +182,7 @@ const EditProject = () => {
       setAdd(true);
 
       if (Img) {
-        await axios.delete(`${SERVER_URL}/imgdelete`,
+        await axios.put(`${SERVER_URL}/imgdelete`,
           { url: proj.cover },
           {
             withCredentials: true,
@@ -192,6 +192,7 @@ const EditProject = () => {
 
         const data = new FormData();
         data.append("photo", Img);
+        data.append("category","projects");
         const img = await axios.post(`${SERVER_URL}/imgupload`, data, {
           withCredentials: true,
         });

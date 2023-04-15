@@ -68,7 +68,7 @@ const ProjectDisplay = () => {
           `Are you sure to delete the project ${project.title}?`
         );
         if (confirmed) {
-          await axios.delete(`${SERVER_URL}/imgdelete`,
+          await axios.put(`${SERVER_URL}/imgdelete`,
             { url: project.cover },
             {
               withCredentials: true,

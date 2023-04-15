@@ -82,6 +82,7 @@ const SliderSettings = () => {
             setAdd(1);
             const data = new FormData();
             data.append("photo", xSlider.photo);
+            data.append("category","sliders");
             const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
             xSlider.photo = img.data;
 
@@ -119,7 +120,7 @@ const SliderSettings = () => {
         try {
             setEdit(1);
             if (OldImg) {
-                await axios.delete(`${SERVER_URL}/imgdelete`,
+                await axios.put(`${SERVER_URL}/imgdelete`,
                     {
                         'url': OldImg
                     },
@@ -130,6 +131,7 @@ const SliderSettings = () => {
 
                 const data = new FormData();
                 data.append("photo", xSlider.photo);
+                data.append("category","sliders");
 
                 const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
                 xSlider.photo = img.data;
@@ -166,7 +168,7 @@ const SliderSettings = () => {
         const confirmed = window.confirm(`Are you sure to delete the slider '${title}'?`);
         if (confirmed) {
             try {
-                await axios.delete(`${SERVER_URL}/imgdelete`,
+                await axios.put(`${SERVER_URL}/imgdelete`,
                     {
                         'url': photo
                     },

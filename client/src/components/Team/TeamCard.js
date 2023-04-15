@@ -13,7 +13,7 @@ function TeamCard({ team, isadmin, isdelete }) {
         `Are you sure to delete the user ${username}?`
       );
       if (confirmed) {
-        await axios.delete(`${SERVER_URL}/imgdelete`,
+        await axios.put(`${SERVER_URL}/imgdelete`,
           { url: team.photo },
           {
             withCredentials: true,

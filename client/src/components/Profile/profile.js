@@ -117,8 +117,9 @@ const Profile = () => {
             if (Img) {
                 const data = new FormData();
                 data.append("photo", Img);
+                data.append("category","team");
 
-                await axios.delete(`${SERVER_URL}/imgdelete`,
+                await axios.put(`${SERVER_URL}/imgdelete`,
                     { 'url': team.photo },
                     {
                         withCredentials: true,

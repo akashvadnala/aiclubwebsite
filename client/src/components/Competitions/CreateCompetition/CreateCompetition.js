@@ -139,6 +139,7 @@ const CreateCompetition = () => {
       setAdd(true);
       const data = new FormData();
       data.append("photo", compete.headerPhoto);
+      data.append("category","competitions");
       const img = await axios.post(`${SERVER_URL}/imgupload`, data, {
         withCredentials: true,
       });

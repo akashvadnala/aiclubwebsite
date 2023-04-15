@@ -117,22 +117,18 @@ const BlogDisplay = () => {
   const deleteBlog = async (status) => {
     if (status) {
       try {
-        const confirmed = window.confirm(
-          `Are you sure to delete the blog ${blog.title}?`
+        await axios.put(`${SERVER_URL}/imgdelete`,
+          { 'url': blog.cover },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
         );
-        if (confirmed) {
-          await axios.delete(`${SERVER_URL}/imgdelete`,
-            { url: blog.cover },
-            {
-              withCredentials: true,
-              headers: { "Content-Type": "application/json" },
-            }
-          );
-          const res = await axios.delete(`${SERVER_URL}/blogs/deleteBlog/${blog._id}`, { withCredentials: true });
-          showAlert("Blog deleted successfully", "success");
-          navigate("/myblogs");
-        }
+        const res = await axios.delete(`${SERVER_URL}/blogs/deleteBlog/${blog._id}`, { withCredentials: true });
+        showAlert("Blog deleted successfully", "success");
+        navigate("/myblogs");
       } catch (error) {
+        console.log(error);
         showAlert("Blog Deletion failed", "danger");
       }
     }
