@@ -113,7 +113,8 @@ const EditBlog = () => {
         const photoname = Date.now() + Img.name;
         data.append("name", photoname);
         data.append("photo", Img);
-        await axios.delete(`${SERVER_URL}/imgdelete`,
+        data.append("category","blogs");
+        await axios.put(`${SERVER_URL}/imgdelete`,
           { 'url': post.cover },
           {
             headers: { "Content-Type": "application/json" },

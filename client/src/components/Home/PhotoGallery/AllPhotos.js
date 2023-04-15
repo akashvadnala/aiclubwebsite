@@ -81,8 +81,8 @@ const AllPhotos = () => {
           withCredentials: true
 
         });
-        setCanDelete(false);
-        setSelectedImages([]);
+      setCanDelete(false);
+      setSelectedImages([]);
       getAllPhotos();
 
       showAlert("Image Deleted Successfully", "success");
@@ -109,12 +109,12 @@ const AllPhotos = () => {
     setAdd(true);
     const data = new FormData();
     data.append("photo", image);
+    data.append("category", "gallery");
     let imageurl;
 
     try {
       const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
       imageurl = img.data;
-      // console.log("final image", imageurl);
       const { width, height } = await getImageSize(imageurl);
       let imageDetails = {
         imgurl: imageurl,
@@ -122,7 +122,6 @@ const AllPhotos = () => {
         width: width,
         height: height,
       };
-      // console.log("ImageDetails ", imageDetails);
 
       await axios.post(
         `${SERVER_URL}/gallery/addPhoto`,

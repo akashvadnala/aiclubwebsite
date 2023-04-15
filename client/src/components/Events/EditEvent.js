@@ -130,6 +130,7 @@ const EditEvent = () => {
     if (typeof event.poster !== "string") {
       data.append("name", photoname);
       data.append("photo", event.poster);
+      data.append("category","events");
 
       try {
         axios.delete(
