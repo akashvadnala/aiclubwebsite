@@ -40,9 +40,9 @@ const EditBlog = () => {
       }
     } catch (err) {
       console.log(err);
-      navigate('/blogs');
     }
   };
+  console.log('post',post)
   useEffect(() => {
     if (logged_in === 1) {
       if (url) {
@@ -105,27 +105,26 @@ const EditBlog = () => {
     e.preventDefault();
     try {
       if (url !== post.url) {
-        const blogExist = await axios.get(`${SERVER_URL}/blogs/canAddBlog/${post.url}`);
+        await axios.get(`${SERVER_URL}/blogs/isBlogUrlExist/${post.url}`);
       }
       setAdd(true);
       if (Img) {
         const data = new FormData();
-        const photoname = Date.now() + Img.name;
-        data.append("name", photoname);
         data.append("photo", Img);
         data.append("category","blogs");
+
         await axios.put(`${SERVER_URL}/imgdelete`,
           { 'url': post.cover },
           {
-            headers: { "Content-Type": "application/json" },
             withCredentials: true,
+            headers: { "Content-Type": "application/json" },
           });
         const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
         post.cover = img.data;
 
       }
       
-      const postdata = await axios.put(
+      await axios.put(
         `${SERVER_URL}/blogs/updateBlog/${post._id}`,
         post,
         {
@@ -133,7 +132,6 @@ const EditBlog = () => {
           withCredentials: true,
         }
       );
-      setAdd(false);
       showAlert("Saved as Draft!", "success");
       setPreview(true);
 
@@ -141,6 +139,7 @@ const EditBlog = () => {
       showAlert(`${err.response.data.error}`, "danger");
       // navigate('/myblogs');
     }
+    setAdd(false);
 
   };
   return (
@@ -332,7 +331,7 @@ const EditBlog = () => {
                         name="submit"
                         id="submit"
                         className="btn btn-primary my-3"
-                        onClick={() => { setpost({ ...post, approvalStatus: "submit", public: false }); }}
+                        onClick={() => { setpost({ ...post, approvalStatus: "Draft", public: false }); }}
                       >
                         Save as Draft
                       </button>

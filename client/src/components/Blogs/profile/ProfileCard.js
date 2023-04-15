@@ -4,7 +4,7 @@ import "./ProfileCard.css";
 const ProfileCard = (props) => {
   return (
     <div className="ProfileCard">
-      <div className="container mt-4 mb-4 p-3 d-flex justify-content-center">
+      <div className="container mb-4 d-flex justify-content-center">
         <div className="card p-4">
           <div className=" image d-flex flex-column justify-content-center align-items-center">
             <button className="btn">
@@ -16,16 +16,10 @@ const ProfileCard = (props) => {
                 width="120"
               />
             </button>
-            <span className="name mt-3">
-              {props.a.firstname} {props.a.lastname}
-            </span>
-            <div className="text mt-1">
-              <span>{props.a.position}</span>
-            </div>
-            <div className="text mt-2">
-              <span>{props.a.profession}</span>
-            </div>
-            <div className=" px-2 rounded date py-1">
+            <div className="name mt-2">{props.a.firstname} {props.a.lastname}</div>
+            <div className="text mt-1">{props.a.position}</div>
+            <div className="text mt-1">{props.a.profession}</div>
+            <div className="p-2 rounded date mt-3">
               <div className="d-flex justify-content-evenly">
                 <a href={`mailto:${props.a.email}`}>
                   <i

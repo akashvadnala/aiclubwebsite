@@ -443,7 +443,15 @@ const ProjectDisplay = () => {
                     )}
                   </div>
                 )}
-                {proj.tags && (
+              </div>
+              <JoditEditor
+                name="content"
+                className="mt-4"
+                ref={editor}
+                value={proj ? proj.content : ""}
+                config={editorPreviewConfig}
+              />
+              {proj.tags && (
                   <div className="blog-subCategory">
                     <div key={0}>
                       tags:
@@ -459,13 +467,6 @@ const ProjectDisplay = () => {
                     })}
                   </div>
                 )}
-              </div>
-              <JoditEditor
-                name="content"
-                ref={editor}
-                value={proj ? proj.content : ""}
-                config={editorPreviewConfig}
-              />
             </div>
             <div className="col-lg-4">
               {authors.map((a, i) => {
