@@ -11,8 +11,14 @@ body,input{
 
 }
 
+
 html {
   overflow-y: scroll;
+}
+
+.no-downmark .dropdown-toggle::after{
+  border: 0 !important;
+  margin: 0 !important;
 }
 
 .right-panel{
@@ -33,7 +39,7 @@ html {
 }
 
 p{
-  font-size: 0.9rem;
+  font-size: 1rem;
   margin-bottom: 0.3rem !important;
 }
 
@@ -47,6 +53,14 @@ p{
 
 hr{
   margin: 3px 0 3px !important;
+}
+
+.a-hover-underline{
+  color: #333 !important;
+}
+
+.a-hover-underline:hover{
+  text-decoration: underline;
 }
 
 .loading-container{

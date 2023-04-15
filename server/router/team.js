@@ -40,7 +40,6 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
     try {
         const key = await fileUpload.uploadFile({ name, file, mimeType, folder_id });
         const url = fileUpload.getUrl(key);
-        // console.log('url',url);
         fs.unlink(file, (err) => {
             if (err) {
                 console.error(err)
@@ -54,7 +53,7 @@ router.route('/imgupload').post(multer({ storage }).single('photo'), async (req,
     }
 });
 
-router.route('/imgdelete').delete(authenticate, async (req, res) => {
+router.route('/imgdelete').put(authenticate, async (req, res) => {
     try {
         const url = req.body.url;
         const key = url.split('=')[2];

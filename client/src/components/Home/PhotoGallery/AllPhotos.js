@@ -114,7 +114,7 @@ const AllPhotos = () => {
     try {
       const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
       imageurl = img.data;
-      // console.log("final image", imageurl);
+      console.log("final image", imageurl);
       const { width, height } = await getImageSize(imageurl);
       let imageDetails = {
         imgurl: imageurl,
@@ -122,7 +122,7 @@ const AllPhotos = () => {
         width: width,
         height: height,
       };
-      // console.log("ImageDetails ", imageDetails);
+      console.log("ImageDetails ", imageDetails);
 
       await axios.post(
         `${SERVER_URL}/gallery/addPhoto`,
