@@ -25,6 +25,8 @@ def run_preprocess(submission_id):
     key = url.split("=")[-1]
     downloadFile(key,localpath)
     deleteGdriveFile(key)
+    if localpath[-4:] == ".zip":
+        localpath = extract_zip(localpath)
     compete = get_competition(db, competeId)
     evaluation = get_evaluation(db, compete["evaluation"])
     privateDatalocalpath = compete["privateDataSetPath"]
@@ -64,12 +66,14 @@ def privateDataSet(competeid):
     key = url.split("=")[-1]
     downloadFile(key,localpath)
     deleteGdriveFile(key)
+    if localpath[-4:] == ".zip":
+        localpath = extract_zip(localpath)
     d = getDirTree("datasets/"+str(compete["title"]))
     tree = {'name':'datasets',
             'type':'folder',
             'items':[d]}
     jsonTree = json.dumps(tree)
-    data = {"DataSetTree": jsonTree}
+    data = {"DataSetTree": jsonTree, "privateDataSetPath":localpath}
     updateCompetition(db, competeid, data)
     
 @app.task(name="tasks.publicDataSet")
@@ -81,12 +85,14 @@ def publicDataSet(competeid):
     key = url.split("=")[-1]
     downloadFile(key,localpath)
     deleteGdriveFile(key)
+    if localpath[-4:] == ".zip":
+        localpath = extract_zip(localpath)
     d = getDirTree("datasets/"+str(compete["title"]))
     tree = {'name':'datasets',
             'type':'folder',
             'items':[d]}
     jsonTree = json.dumps(tree)
-    data = {"DataSetTree": jsonTree}
+    data = {"DataSetTree": jsonTree, "publicDataSetPath":localpath}
     updateCompetition(db, competeid, data)
 
 @app.task(name="tasks.sandBoxSubmission")
@@ -98,12 +104,14 @@ def sandBoxSubmission(competeid):
     key = url.split("=")[-1]
     downloadFile(key,localpath)
     deleteGdriveFile(key)
+    if localpath[-4:] == ".zip":
+        localpath = extract_zip(localpath)
     d = getDirTree("submissions/"+str(compete["title"]))
     tree = {'name':'submissions',
             'type':'folder',
             'items':[d]}
     jsonTree = json.dumps(tree)
-    data = {"SubmissionTree": jsonTree}
+    data = {"SubmissionTree": jsonTree, "sandBoxSubmissionPath":localpath}
     updateCompetition(db, competeid, data)
     deleteLocalFile(localpath)
 

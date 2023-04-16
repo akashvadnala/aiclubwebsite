@@ -1,6 +1,7 @@
 import pymongo
 from bson.objectid import ObjectId
 import json
+import shutil
 import requests
 import json
 import os
@@ -97,7 +98,7 @@ def downloadFile(file_id, fileDir):
         if not os.path.exists(basedir):
             os.mkdir(basedir)
     except Exception:
-        os.mkdir(basedir)
+        os.makedirs(basedir)
     info = json.loads(GOOGLE_KEY)
     credentials = service_account.Credentials.from_service_account_info(info)
     DRIVE = build('drive', 'v3', credentials=credentials)
@@ -114,35 +115,27 @@ def downloadFile(file_id, fileDir):
     print("{} saved to {}".format(fileDir.split("/")[-1], fileDir))
 
 
-def extract_zip(path, r_path="sample/"):
+def extract_zip(path):
+    basedir = path[:-4] + str("/")
     try:
-        if not os.path.exists(r_path):
-            os.mkdir(r_path)
+        if not os.path.exists(basedir):
+            os.mkdir(basedir)
     except Exception:
-        os.mkdir(r_path)
+        os.makedirs(basedir)
 
     print("Extracting Content!")
 
     zip = zipfile.ZipFile(path, "r")
-    zip.extractall(r_path)
-
+    zip.extractall(basedir)
     print("Files extracted successfully")
-
-    files = filter(lambda f: f.endswith(".pdf"), zip.namelist())
-
-    files = [
-        os.path.join(r_path, f)
-        for f in files
-        if filetype.guess(os.path.join(r_path, f)) == filetype.types[49]
-    ]
-
-    return files
+    deleteLocalFile(path)
+    return basedir
 
 
 def deleteLocalFile(path):
     if os.path.exists(path):
         if os.path.isdir(path):
-            os.rmdir(path)
+            shutil.rmtree(path, ignore_errors=False, onerror=None)
 
         elif os.path.isfile(path):
             os.remove(path)
