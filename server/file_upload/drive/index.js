@@ -25,6 +25,7 @@ class GDriveFileUpload extends FileUpload {
       name,
       'parents': [folder_id],
     };
+    console.log(folder_id)
 
     try {
       const res = await this.drive.files.create({

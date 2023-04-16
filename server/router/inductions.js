@@ -163,11 +163,12 @@ router.route("/submitCompeteFile").post(upload.single("competeFile"), async (req
   const folder_id = Config.COMPETITION_DRIVE_FILE_ID;
   const key = await fileUpload.uploadFile({ name, file, mimeType, folder_id });
   const url = fileUpload.getUrl(key);
+  const competition = await Competitions.findById(req.body.compete);
   const userSubmission = new UserSubmission({
     compete: req.body.compete,
     team: req.body.team,
     googleDrivePath: url,
-    localFilePath: `submissions/${name}`
+    localFilePath: `submissions/${competition.title}/${name}`
   });
   await userSubmission.save();
   const lb = await Leaderboard.findOne({compete:req.body.compete,team:req.body.team});
