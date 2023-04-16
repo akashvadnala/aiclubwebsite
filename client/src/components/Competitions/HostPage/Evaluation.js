@@ -9,9 +9,12 @@ import { alertContext } from '../../../Context/Alert';
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
+import Directory from "./Directory";
 
 const Evaluation = ({ props }) => {
   const [compete, setCompete] = useState(null);
+  const [files, setFiles] = useState(null);
+  const [submissionFiles, setSubmissionFiles] = useState(null);
   const [add, setAdd] = useState(false);
   const { showAlert } = useContext(alertContext);
   const [evaluation, setEvaluation] = useState({
@@ -25,7 +28,7 @@ const Evaluation = ({ props }) => {
   const { logged_in } = useContext(Context);
   const [privateDataSet, setPrivateDataSet] = useState(null);
   const [publicDataSet, setPublicDataSet] = useState(null);
-// console.log(privateDataSet && privateDataSet.name.split(".").pop())
+  const [sandBoxSubmission, setSandBoxSubmission] = useState(null);
   const uploadDataSet = async () => {
     try {
       if (privateDataSet) {
@@ -52,6 +55,25 @@ const Evaluation = ({ props }) => {
       }
     } catch (err) {
       console.log('dataseterr', err);
+      showAlert("Something went wrong!", "danger");
+    }
+  }
+
+  const uploadSandBoxSubmission = async () => {
+    try {
+      if (sandBoxSubmission) {
+        let data = new FormData();
+        data.append("sandBoxSubmission", sandBoxSubmission, `${props.c._id}-sandBoxSubmission.${sandBoxSubmission.name.split(".").pop()}`);
+        await axios.put(`${SERVER_URL}/uploadSandBoxSubmission/${props.c._id}`,
+          data,
+          { withCredentials: true })
+          .then(res => {
+            setSandBoxSubmission(null);
+            showAlert("SandBox Submission Submitted!", "success");
+          })
+      }
+    } catch (err) {
+      console.log('submissionerr', err);
       showAlert("Something went wrong!", "danger");
     }
   }
@@ -146,10 +168,15 @@ const Evaluation = ({ props }) => {
 
   useEffect(() => {
     setCompete(props.c);
-    getEvaluationMetric(props.c.evaluation)
+    if (props.c.DataSetTree) {
+      setFiles(JSON.parse(props.c.DataSetTree));
+    }
+    if (props.c.SubmissionTree) {
+      setSubmissionFiles(JSON.parse(props.c.SubmissionTree));
+    }
+    getEvaluationMetric(props.c.evaluation);
     getEvaluationMetrics();
   }, [logged_in, props]);
-
   return (
     <>
       {load === 0 ? <Loading /> : load === 1 ?
@@ -162,7 +189,7 @@ const Evaluation = ({ props }) => {
                   <h4>Datasets</h4>
                   <div className='private-dataset row mt-3'>
                     <div className="form-group align-items-center row">
-                      <label for='publicDataSet' className='col-sm-4 text-end'>Public Dataset :</label>
+                      <label htmlFor='publicDataSet' className='col-sm-4 text-end'>Public Dataset :</label>
                       <div className='col-sm-6'>
                         <input type='file' name="publicDataSet" onChange={(e) => { setPublicDataSet(e.target.files[0]) }} className="form-control" id='publicDataSet' aria-describedby='publicDataSet' />
                       </div>
@@ -170,7 +197,7 @@ const Evaluation = ({ props }) => {
                   </div>
                   <div className='public-dataset row mt-3'>
                     <div className="form-group align-items-center row">
-                      <label for='privateDataSet' className='col-sm-4 text-end'>Private Dataset :</label>
+                      <label htmlFor='privateDataSet' className='col-sm-4 text-end'>Private Dataset :</label>
                       <div className='col-sm-6'>
                         <input type='file' name="privateDataSet" onChange={(e) => { setPrivateDataSet(e.target.files[0]) }} className="form-control" id='privateDataSet' aria-describedby='privateDataSet' />
                       </div>
@@ -180,13 +207,28 @@ const Evaluation = ({ props }) => {
                     <button className='btn btn-primary' onClick={uploadDataSet}>Upload Datasets</button>
                   </div>
                 </div>
-
+                <div className="datasets mb-5">
+                  <h4>SandBox Submission</h4>
+                  <div className='sandbox-submission row mt-3'>
+                    <div className="form-group align-items-center row">
+                      <div className='col-sm-6'>
+                        <input type='file' name="sandboxSubmission" onChange={(e) => { setSandBoxSubmission(e.target.files[0]) }} className="form-control" id='sandboxSubmission' aria-describedby='sandboxSubmission' />
+                      </div>
+                    </div>
+                  </div>
+                  <div className='mt-3'>
+                    <button className='btn btn-primary' onClick={uploadSandBoxSubmission}>Submit</button>
+                  </div>
+                </div>
+                {files && <Directory files={files} />}
+                {submissionFiles && <Directory files={submissionFiles} />}
                 <h4>Evaluation Metric</h4>
                 <div className="text-secondary mt-3">
                   <ul>
                     <li>User submissions are evaluated by comparing their Submission file to the ground truth Solution file with respect to a chosen Scoring Metric.Each Scoring Metric will expect the Solution and Submission file to be in certain format.</li>
                     <li>To ensure that competitors cannot game the system, the solution file should be sampled into Public and Private. Public scores are shown on the public leaderboard, while only the private scores are used to determine the competition winner. The sampling should be done manually and upload two different files for both public and private data. </li>
                     <li>Ensure that each item in data should have a unique itentifier which can be taken as reference to write your evaluation code. Your evaluation logic should take submission file path, public solution data and private solution data as input and return both public and private scores.</li>
+                    <li>Make sure that the evaluation function should have a name "evaluate" which accepts three arguments as shown below.</li>
                   </ul>
                 </div>
                 <div className="form-group mt-3 row">
@@ -216,6 +258,21 @@ const Evaluation = ({ props }) => {
                     </div>
                   </div>
                 </div>
+                <div>publicDataSetPath : {!compete.publicDataSetPath ? "Upload public dataset to get an idea about publicDataSetPath" : compete.publicDataSetPath}</div>
+                <div>privateDataSetPath : {!compete.privateDataSetPath ? "Upload private dataset to get an idea about privateDataSetPath" : compete.privateDataSetPath}</div>
+                <div>submissionPath : {!compete.sandBoxSubmissionPath ? "Make a Sand Box Submission to get an idea about submissionPath" : compete.sandBoxSubmissionPath}</div>
+                <div>
+                  Example :
+                  <pre className='text-white bg-dark'>
+                    def evaluate(submissionPath,privateDataPath,publicDataPath):
+                    # Make sure that the evaluation function should have a name "evaluate" which accepts three arguments
+                    # Make sure that the evaluation function returns public score and private score. Ensure that the public score is returned first and private score next.
+
+                    return public_score, private_score
+                  </pre>
+                </div>
+
+
                 {((compete.evaluation !== "select") && (compete.evaluation !== null)) &&
                   <AceEditor
                     placeholder="Create a custom evaluation function which takes filepaths of both ground truth and submission file."

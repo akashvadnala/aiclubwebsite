@@ -23,6 +23,7 @@
         "react-dom": "^18.2.0",
         "react-helmet": "^6.1.0",
         "react-image-size": "^2.0.0",
+        "react-keyed-file-browser": "^1.14.0",
         "react-lazy-load-image-component": "^1.5.5",
         "react-photo-album": "^2.0.0",
         "react-responsive-carousel": "^3.2.23",

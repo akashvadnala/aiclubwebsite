@@ -68,6 +68,28 @@ router.route("/uploadPublicDataset/:competeid").put(authenticate, upload.single(
     res.status(200).json();
 })
 
+router.route("/uploadSandBoxSubmission/:competeid").put(authenticate, upload.single("sandBoxSubmission"), async (req, res) => {
+    const file = req.file.path;
+    const name = req.file.filename;
+    const mimeType = req.file.mimetype;
+    const folder_id = Config.COMPETITION_DRIVE_FILE_ID;
+    const key = await fileUpload.uploadFile({ name, file, mimeType, folder_id });
+    const url = fileUpload.getUrl(key);
+    let compete = await Competitions.findById(req.params.competeid);
+    compete.sandBoxSubmissionUrl = url;
+    compete.sandBoxSubmissionPath = `submissions/${compete.title}/${name}`;
+    await compete.save();
+    const task = celery.createTask("tasks.sandBoxSubmission");
+    task.applyAsync([compete._id]);
+    fs.unlink(file, (err) => {
+      if (err) {
+          console.error(err)
+          return
+      }
+    });  
+    res.status(200).json();
+})
+
 router.route("/addEvaluationMetric").post(authenticate, async (req, res) => {
     const name = req.body.name;
     if (!name) {

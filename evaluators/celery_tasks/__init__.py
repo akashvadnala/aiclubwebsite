@@ -1,5 +1,6 @@
 from celery import Celery
 import os
+import json
 from db_utils import *
 from time import sleep
 print("starting celery worker")
@@ -35,9 +36,6 @@ def run_preprocess(submission_id):
 def evaluate_submissions(evaluationFuncName,submissionPath, privateDataPath, publicDataPath):
     MODULE_NAME = "celery_tasks.EvaluationFiles."+str(evaluationFuncName)
     func = importlib.import_module(MODULE_NAME,".")
-    # submissionPath = "../" + submissionPath
-    # privateDataPath = "../" + privateDataPath
-    # publicDataPath = "../" + publicDataPath
     publicScore, privateScore = func.evaluate(submissionPath,privateDataPath,publicDataPath)
     return publicScore, privateScore
 
@@ -66,6 +64,13 @@ def privateDataSet(competeid):
     key = url.split("=")[-1]
     downloadFile(key,localpath)
     deleteGdriveFile(key)
+    d = getDirTree("datasets/"+str(compete["title"]))
+    tree = {'name':'datasets',
+            'type':'folder',
+            'items':[d]}
+    jsonTree = json.dumps(tree)
+    data = {"DataSetTree": jsonTree}
+    updateCompetition(db, competeid, data)
     
 @app.task(name="tasks.publicDataSet")
 def publicDataSet(competeid):
@@ -76,3 +81,38 @@ def publicDataSet(competeid):
     key = url.split("=")[-1]
     downloadFile(key,localpath)
     deleteGdriveFile(key)
+    d = getDirTree("datasets/"+str(compete["title"]))
+    tree = {'name':'datasets',
+            'type':'folder',
+            'items':[d]}
+    jsonTree = json.dumps(tree)
+    data = {"DataSetTree": jsonTree}
+    updateCompetition(db, competeid, data)
+
+@app.task(name="tasks.sandBoxSubmission")
+def sandBoxSubmission(competeid):
+    db = connect_to_db(DATABASE)
+    compete = get_competition(db, competeid)
+    url = compete["sandBoxSubmissionUrl"]
+    localpath = compete["sandBoxSubmissionPath"]
+    key = url.split("=")[-1]
+    downloadFile(key,localpath)
+    deleteGdriveFile(key)
+    d = getDirTree("submissions/"+str(compete["title"]))
+    tree = {'name':'submissions',
+            'type':'folder',
+            'items':[d]}
+    jsonTree = json.dumps(tree)
+    data = {"SubmissionTree": jsonTree}
+    updateCompetition(db, competeid, data)
+    deleteLocalFile(localpath)
+
+def getDirTree(path):
+    d = {'name': os.path.basename(path)}
+    if os.path.isdir(path):
+        d['type'] = "folder"
+        d['items'] = [getDirTree(os.path.join(path, x))
+                      for x in os.listdir(path)]
+    else:
+        d['type'] = "file"
+    return d

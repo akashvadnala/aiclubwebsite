@@ -73,7 +73,19 @@ const competitionSchema = new mongoose.Schema(
     },
     privateDataSetUrl: {
       type: String
-    }
+    },
+    sandBoxSubmissionPath: {
+      type: String
+    },
+    sandBoxSubmissionUrl: {
+      type: String
+    },
+    DataSetTree: {
+      type: String
+    },
+    SubmissionTree: {
+      type: String
+    },
   },
   { timestamps: true }
 );

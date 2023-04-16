@@ -23,6 +23,9 @@ const userSubmissionSchema = new mongoose.Schema({
     },
     googleDrivePath: {
         type: String
+    },
+    submissionLog: {
+        type: String
     }
 }, { timestamps: true });
 

@@ -55,6 +55,12 @@ def get_evaluation(db_conn, evaluationId):
             "Could not find an application with the given application_id")
     return evaluation
 
+def updateCompetition(db_conn, competeId, data):
+    compete = db_conn.competitions
+    compete.find_one_and_update(
+        {"_id": ObjectId(competeId)}, {
+            "$set": data}
+    )
 
 def saveScores(db_conn, usersubmissionId, competeId, teamId, publicScore, privateScore):
     submission = db_conn.usersubmissions
