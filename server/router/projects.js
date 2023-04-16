@@ -10,7 +10,6 @@ router.route("/updateProject/:id").put(authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const projectdata = req.body;
-    projectdata.url = projectdata.url.trim().replace(/\s+/g, '-').toLowerCase();
     const proj = await Project.findById(id);
     let removeAuthors = proj.authors;
     const updatedProj = await Project.findByIdAndUpdate(id, projectdata, {
@@ -46,6 +45,7 @@ router.route("/updateprojPublicStatus/:url").put(authenticate, async (req, res) 
     const { url } = req.params;
     const updatedProj = await Project.findOne({ url: url });
     updatedProj.public = req.body.public;
+    updatedProj.approvalStatus = req.body.approvalStatus;
     updatedProj.save();
     res.status(200).json();
   } catch (err) {
@@ -70,7 +70,7 @@ router.route("/updateprojApprovalStatus/:url").put(authenticate, async (req, res
 
       const user = await Team.findById(author_id);
 
-      if(req.body.approvalStatus=="pending"){
+      if(req.body.approvalStatus=="Pending"){
         
         subject = "New Project - Submitted"
         body = `Hi ${user.firstname} ${user.lastname} \n This mail is to inform you that your project titled "${updatedProj.title}" has been Submitted for admin approval. 
@@ -161,15 +161,15 @@ router.route("/getResearchPapers").get(async (req, res) => {
   res.status(200).json(projectData);
 });
 
-router.route("/getpendingProjApprovals").get(async (req, res) => {
-  const projectData = await Project.find({ approvalStatus: "pending" }).sort({
+router.route("/getPendingProjApprovals").get(async (req, res) => {
+  const projectData = await Project.find({ approvalStatus: "Pending" }).sort({
     createdAt: -1,
   });
   res.status(200).json(projectData);
 });
 
 router.route("/getProjectApprovals").get(async (req, res) => {
-  const projectData = await Project.find({ approvalStatus: "pending" }).sort({
+  const projectData = await Project.find({ approvalStatus: "Pending" }).sort({
     createdAt: -1,
   });
   res.status(200).json(projectData);
