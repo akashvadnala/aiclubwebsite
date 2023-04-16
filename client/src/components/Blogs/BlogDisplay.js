@@ -197,14 +197,17 @@ const BlogDisplay = () => {
                 <title>Blogs - AI Club</title>
               </Helmet>
               <div className="col-lg-8 px-5">
-                <div className="header align-center d-flex justify-content-between mb-2">
+                <div className="header d-flex justify-content-between mb-2">
                   <div>
-                    <div className="d-flex align-items-center">
-                      <div className="text-header">{blog.title}</div>
-                      {(edit || (user && user.isadmin)) && <div className="ml-2 px-2 rounded border text-secondary">{blog.approvalStatus}</div>}
+                    <div className="align-items-center">
+                      <div className="text-header">
+                        {blog.title}
+                        {(edit || (user && user.isadmin)) && <span style={{fontSize:"14px"}} className={`ml-2 px-2 align-middle text-light rounded bg-${blog.approvalStatus==="Pending"?"warning":blog.approvalStatus==="Approved"?"success":blog.approvalStatus==="Rejected"?"danger":"secondary"}`}>{blog.approvalStatus}</span>}
+                        </div>
+                      
                     </div>
                     <p className="blog-date">
-                      Published on {returnDDMMYYYY(blog.createdAt)}
+                      {blog.public?`Published on ${returnDDMMYYYY(blog.updatedAt)}`:`Created on ${returnDDMMYYYY(blog.createdAt)}`}
                     </p>
                   </div>
                   {(edit || (user && user.isadmin)) && (
@@ -339,14 +342,13 @@ const BlogDisplay = () => {
                   value={blog ? blog.content : ""}
                   config={editorPreviewConfig}
                 />
-                <div className="blog-subCategory mt-3">
-                  <div key={0}>tags:</div>
-                  {blog.tags.map((tag, i) => (<div key={i}> <Tag label={tag} /> </div>))}
+                <div className="d-flex mt-3 mb-5">
+                  {blog.tags.map((tag, i) => (<div key={i} className="bg-secondary text-light px-2 rounded">{tag}</div>))}
                 </div>
               </div>
               <div className="col-lg-4 mt-1">
                 <ProfileCard a={authordetails} />
-                <div className="my-4">
+                {/* <div className="my-4">
                   <div className="my-3"><p>Related Blogs</p></div>
                   <div className="d-flex py-2">
                     <div className="">
@@ -385,7 +387,7 @@ const BlogDisplay = () => {
                       <p className="text-secondary">{blog.authorName}</p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

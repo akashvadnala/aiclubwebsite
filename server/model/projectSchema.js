@@ -55,7 +55,7 @@ const projectSchema = new mongoose.Schema({
   },
   approvalStatus: {
     type: String,
-    default: "submit",
+    default: "Draft",
   }
 },{ timestamps: true });
 

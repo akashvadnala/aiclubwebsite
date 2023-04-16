@@ -589,7 +589,7 @@ const EditProject = () => {
                       onClick={() => {
                         setProj({
                           ...proj,
-                          approvalStatus: "submit",
+                          approvalStatus: "Draft",
                           public: false,
                         });
                       }}
