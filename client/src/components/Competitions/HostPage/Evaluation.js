@@ -18,6 +18,7 @@ const Evaluation = ({ props }) => {
   const [submissionFiles, setSubmissionFiles] = useState(null);
   const [add, setAdd] = useState(false);
   const { showAlert } = useContext(alertContext);
+  const [dataSetLoading, setDataSetLoading] = useState(false);
   const [evaluation, setEvaluation] = useState({
     _id: "",
     name: "",
@@ -39,6 +40,7 @@ const Evaluation = ({ props }) => {
   };
 
   const uploadDataSet = async () => {
+    setDataSetLoading(true);
     try {
       if (privateDataSet) {
         let data = new FormData();
@@ -50,6 +52,7 @@ const Evaluation = ({ props }) => {
             setPrivateDataSet(null);
             showAlert("Private Dataset Uploaded!", "success");
           })
+        setPrivateDataSet(null);
       }
       if (publicDataSet) {
         let data = new FormData();
@@ -61,11 +64,13 @@ const Evaluation = ({ props }) => {
             setPublicDataSet(null);
             showAlert("Public Dataset Uploaded!", "success");
           })
+        setPublicDataSet(null);
       }
     } catch (err) {
       console.log('dataseterr', err);
       showAlert("Something went wrong!", "danger");
     }
+    setDataSetLoading(false);
   }
 
   const uploadSandBoxSubmission = async () => {
@@ -228,10 +233,19 @@ const Evaluation = ({ props }) => {
                     </div>
                   </div>
                   <div className='mt-3'>
-                    <button className='btn btn-primary' onClick={uploadDataSet}>Upload Datasets</button>
+                    <button className='btn btn-primary' onClick={uploadDataSet} disabled={dataSetLoading}>
+                      {
+                        dataSetLoading ?
+                          <>
+                            Uploading <i className="fa fa-spinner fa-spin"></i>
+                          </>
+                          :
+                          <>Upload Datasets</>
+                      }
+                    </button>
                   </div>
                 </div>
-                <div className="datasets mb-5">
+                <div className="datasets">
                   <h4>SandBox Submission</h4>
                   <div className='sandbox-submission row mt-3'>
                     <div className="form-group align-items-center row">
@@ -244,10 +258,26 @@ const Evaluation = ({ props }) => {
                     <button className='btn btn-primary' onClick={uploadSandBoxSubmission}>Submit</button>
                   </div>
                 </div>
-                {files && <Directory files={files} />}
-                {submissionFiles && <Directory files={submissionFiles} />}
-                <h4>Evaluation Metric</h4>
-                <div className="text-secondary mt-3">
+                <div className='mt-5'>
+                  <strong>Note:</strong>
+                  <div>
+                  Datasets folder and Submissions folder present in same folder. So to get relative paths of files of datasets folder and submissions folder, upload datasets and sandbox submission files before writing evaluate code.
+                  </div>
+                  <div className='mt-3 border-bottom border-start border-end'>
+                    {files && <Directory files={files} order={1} />}
+                  </div>
+                  <div className='mt-3 border-bottom border-start border-end'>
+                    {submissionFiles && <Directory files={submissionFiles} order={1} />}
+                  </div>
+                </div>
+
+                <div className='mt-4'>
+                  <p>publicDataSetPath : <strong>{!compete.publicDataSetPath ? "Upload public dataset to get an idea about publicDataSetPath" : compete.publicDataSetPath}</strong></p>
+                  <p>privateDataSetPath : <strong>{!compete.privateDataSetPath ? "Upload private dataset to get an idea about privateDataSetPath" : compete.privateDataSetPath}</strong></p>
+                  <p>submissionPath : <strong>{!compete.sandBoxSubmissionPath ? "Make a Sand Box Submission to get an idea about submissionPath" : compete.sandBoxSubmissionPath}</strong></p>
+                </div>
+                <div className="mt-5">
+                  <h4>Evaluation Metric</h4>
                   <ul>
                     <li>User submissions are evaluated by comparing their Submission file to the ground truth Solution file with respect to a chosen Scoring Metric.Each Scoring Metric will expect the Solution and Submission file to be in certain format.</li>
                     <li>To ensure that competitors cannot game the system, the solution file should be sampled into Public and Private. Public scores are shown on the public leaderboard, while only the private scores are used to determine the competition winner. The sampling should be done manually and upload two different files for both public and private data. </li>
@@ -255,11 +285,11 @@ const Evaluation = ({ props }) => {
                     <li>Make sure that the evaluation function should have a name "evaluate" which accepts three arguments as shown below.</li>
                   </ul>
                 </div>
-                <div className="form-group mt-3 row">
-                  <label htmlFor="url" className="col-sm-2 mt-2 text-end">
+                <div className="form-group mt-4 d-flex">
+                  <label htmlFor="url" className="mt-2 text-end">
                     Scoring Metric :
                   </label>
-                  <div className="col-sm-10">
+                  <div>
                     <div className="form-group row align-items-center">
                       <div className="col col-9">
                         <select
@@ -282,30 +312,35 @@ const Evaluation = ({ props }) => {
                     </div>
                   </div>
                 </div>
-                <div>publicDataSetPath : {!compete.publicDataSetPath ? "Upload public dataset to get an idea about publicDataSetPath" : compete.publicDataSetPath}</div>
-                <div>privateDataSetPath : {!compete.privateDataSetPath ? "Upload private dataset to get an idea about privateDataSetPath" : compete.privateDataSetPath}</div>
-                <div>submissionPath : {!compete.sandBoxSubmissionPath ? "Make a Sand Box Submission to get an idea about submissionPath" : compete.sandBoxSubmissionPath}</div>
-                <div>
-                  Example :
-                  <pre className='text-white bg-dark'>
-                    def evaluate(submissionPath,privateDataPath,publicDataPath):
+                <div className='my-4'>
+                  Example Code:
+                  <div className='text-white bg-dark p-3 rounded'>
+                    <code className='text-light h6'>def evaluate(submissionPath,privateDataPath,publicDataPath):</code>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Your Evaluation Logic
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code className='text-light h6'>return public_score, private_score</code>
+                    <br />
+                    <br />
                     # Make sure that the evaluation function should have a name "evaluate" which accepts three arguments
+                    <br />
                     # Make sure that the evaluation function returns public score and private score. Ensure that the public score is returned first and private score next.
-
-                    return public_score, private_score
-                  </pre>
+                  </div>
                 </div>
 
 
                 {((compete.evaluation !== "select") && (compete.evaluation !== null)) &&
                   <AceEditor
-                    placeholder="Create a custom evaluation function which takes filepaths of both ground truth and submission file."
+                    // placeholder="Create a custom evaluation function which takes filepaths of both ground truth and submission file."
+                    placeholder='Follow the above given example code...'
                     mode="python"
                     theme="github"
                     name="blah2"
                     width="100%"
+                    // height="30px"
+                    className='rounded border'
                     onChange={(newValue) => { setEvaluation({ ...evaluation, code: newValue }) }}
-                    fontSize={20}
+                    fontSize={14}
                     showPrintMargin={false}
                     showGutter={true}
                     wrapEnabled={true}

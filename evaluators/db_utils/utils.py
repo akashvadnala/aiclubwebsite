@@ -108,10 +108,13 @@ def downloadFile(file_id, fileDir):
             deleteLocalFile(deletePath)
     info = json.loads(GOOGLE_KEY)
     credentials = service_account.Credentials.from_service_account_info(info)
+    print('cred',credentials)
     DRIVE = build('drive', 'v3', credentials=credentials)
     request = DRIVE.files().get_media(fileId=file_id)
+    print('req',request)
     fh = io.BytesIO()
     downloader = MediaIoBaseDownload(fh, request)
+    print('down',downloader)
     done = False
     while done is False:
         status, done = downloader.next_chunk()

@@ -11,7 +11,7 @@ const evaluationSchema = new mongoose.Schema(
             default: ""
         },
         code: {
-            type: String
+            type: String,
         },
         localFilePath: {
             type: String
