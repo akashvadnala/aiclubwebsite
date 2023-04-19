@@ -89,7 +89,7 @@ const competitionSchema = new mongoose.Schema(
       default: 0
     },
     sandBoxSubmissionLog: {
-        type: String
+      type: String
     },
     DataSetTree: {
       type: String
@@ -97,11 +97,19 @@ const competitionSchema = new mongoose.Schema(
     SubmissionTree: {
       type: String
     },
-    sandBoxJobStatus: {
+    sandBoxSubmissionStatus: {
       type: Boolean,
       default: false
     },
-    evaluationJobStatus: {
+    sandBoxStatus: {
+      type: Boolean,
+      default: false
+    },
+    publicStatus: {
+      type: Boolean,
+      default: false
+    },
+    privateStatus: {
       type: Boolean,
       default: false
     }
