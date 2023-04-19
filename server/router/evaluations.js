@@ -33,6 +33,7 @@ router.route("/uploadPrivateDataset/:competeid").put(authenticate, upload.single
     let compete = await Competitions.findById(req.params.competeid);
     compete.privateDataSetUrl = url;
     compete.privateDataSetPath = `datasets/${compete.title}/${name}`;
+    compete.privateStatus = true;
     await compete.save(); 
     const task = celery.createTask("tasks.privateDataSet");
     task.applyAsync([compete._id]);
@@ -55,6 +56,7 @@ router.route("/uploadPublicDataset/:competeid").put(authenticate, upload.single(
     let compete = await Competitions.findById(req.params.competeid);
     compete.publicDataSetUrl = url;
     compete.publicDataSetPath = `datasets/${compete.title}/${name}`;
+    compete.publicStatus = true;
     await compete.save(); 
 
     const task = celery.createTask("tasks.publicDataSet");
@@ -78,7 +80,7 @@ router.route("/uploadSandBoxSubmission/:competeid").put(authenticate, upload.sin
     let compete = await Competitions.findById(req.params.competeid);
     compete.sandBoxSubmissionUrl = url;
     compete.sandBoxSubmissionPath = `submissions/${compete.title}/${name}`;
-    compete.sandBoxJobStatus = true;
+    compete.sandBoxStatus = true;
     await compete.save();
     const task = celery.createTask("tasks.sandBoxSubmission");
     await task.applyAsync([compete._id]);

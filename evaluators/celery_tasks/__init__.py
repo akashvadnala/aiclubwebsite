@@ -5,7 +5,8 @@ from db_utils import *
 from time import sleep
 print("starting celery worker")
 import importlib
-import asyncio
+import traceback
+
 
 BROKER_URL = os.environ.get("BROKER_URL", "amqp://localhost")
 DATABASE = os.environ.get("DATABASE", 'mongodb://localhost:27017/')
@@ -32,8 +33,14 @@ def run_evaluation(submission_id):
     evaluation = get_evaluation(db, compete["evaluation"])
     privateDatalocalpath = compete["privateDataSetPath"]
     publicDatalocalpath = compete["publicDataSetPath"]
-    publicScore, privateScore = evaluate_submissions(evaluation["name"],localpath, privateDatalocalpath, publicDatalocalpath)
-    asyncio.run(saveScores(db, submission_id,competeId,teamId,publicScore, privateScore))
+    try:
+        publicScore, privateScore = evaluate_submissions(evaluation["name"],localpath, privateDatalocalpath, publicDatalocalpath)
+        error = ""
+    except Exception as e:
+        error = str(e)
+        publicScore = 0
+        privateScore = 0
+    saveScores(db, submission_id,competeId,teamId,publicScore, privateScore, error)
     deleteLocalFile(localpath)
 
 @app.task(name="tasks.run_sandBox_evaluation")
@@ -50,9 +57,15 @@ def run_sandBox_evaluation(competeid):
     evaluation = get_evaluation(db, compete["evaluation"])
     privateDatalocalpath = compete["privateDataSetPath"]
     publicDatalocalpath = compete["publicDataSetPath"]
-    publicScore, privateScore = evaluate_submissions(evaluation["name"],localpath, privateDatalocalpath, publicDatalocalpath)
-    data = {"sandBoxPublicScore": publicScore, "sandBoxPrivateScore":privateScore}
-    asyncio.run(updateCompetition(db, competeid, data))
+    try:
+        publicScore, privateScore = evaluate_submissions(evaluation["name"],localpath, privateDatalocalpath, publicDatalocalpath)
+        error = ""
+    except Exception as e:
+        error = str(traceback.format_exc())
+        publicScore = 0
+        privateScore = 0
+    data = {"sandBoxPublicScore": publicScore, "sandBoxPrivateScore":privateScore, "sandBoxSubmissionStatus":False, "sandBoxSubmissionLog":error}
+    updateCompetition(db, competeid, data)
     deleteLocalFile(localpath)
     return data
 
@@ -94,8 +107,8 @@ def privateDataSet(competeid):
             'type':'folder',
             'items':[d]}
     jsonTree = json.dumps(tree)
-    data = {"DataSetTree": jsonTree, "privateDataSetPath":localpath}
-    asyncio.run(updateCompetition(db, competeid, data))
+    data = {"DataSetTree": jsonTree, "privateDataSetPath":localpath, "privateStatus":False}
+    updateCompetition(db, competeid, data)
     
 @app.task(name="tasks.publicDataSet")
 def publicDataSet(competeid):
@@ -113,7 +126,7 @@ def publicDataSet(competeid):
             'type':'folder',
             'items':[d]}
     jsonTree = json.dumps(tree)
-    data = {"DataSetTree": jsonTree, "publicDataSetPath":localpath}
+    data = {"DataSetTree": jsonTree, "publicDataSetPath":localpath, "publicStatus":False}
     updateCompetition(db, competeid, data)
 
 @app.task(name="tasks.sandBoxSubmission")
@@ -132,7 +145,7 @@ def sandBoxSubmission(competeid):
             'type':'folder',
             'items':[d]}
     jsonTree = json.dumps(tree)
-    data = {"SubmissionTree": jsonTree, "sandBoxSubmissionPath":localpath, "sandBoxJobStatus":False}
+    data = {"SubmissionTree": jsonTree, "sandBoxSubmissionPath":localpath, "sandBoxStatus":False}
     updateCompetition(db, competeid, data)
     deleteLocalFile(localpath)
 

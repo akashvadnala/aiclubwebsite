@@ -234,6 +234,7 @@ const InductionsHeader = ({ props }) => {
                         // accept="image/*"
                         name="competeFile"
                         onChange={(e) => setCompeteFile(e.target.files[0])}
+                        onClick = {(e)=>{e.target.value = null}}
                         className="form-control rounded-pill py-2 px-4"
                         id='competeFile'
                         aria-describedby='competeFile'
