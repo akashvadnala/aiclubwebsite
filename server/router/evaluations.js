@@ -78,9 +78,10 @@ router.route("/uploadSandBoxSubmission/:competeid").put(authenticate, upload.sin
     let compete = await Competitions.findById(req.params.competeid);
     compete.sandBoxSubmissionUrl = url;
     compete.sandBoxSubmissionPath = `submissions/${compete.title}/${name}`;
+    compete.sandBoxJobStatus = true;
     await compete.save();
     const task = celery.createTask("tasks.sandBoxSubmission");
-    task.applyAsync([compete._id]);
+    await task.applyAsync([compete._id]);
     fs.unlink(file, (err) => {
       if (err) {
           console.error(err)

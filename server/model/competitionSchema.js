@@ -80,12 +80,31 @@ const competitionSchema = new mongoose.Schema(
     sandBoxSubmissionUrl: {
       type: String
     },
+    sandBoxPublicScore: {
+      type: mongoose.Schema.Types.Decimal128,
+      default: 0
+    },
+    sandBoxPrivateScore: {
+      type: mongoose.Schema.Types.Decimal128,
+      default: 0
+    },
+    sandBoxSubmissionLog: {
+        type: String
+    },
     DataSetTree: {
       type: String
     },
     SubmissionTree: {
       type: String
     },
+    sandBoxJobStatus: {
+      type: Boolean,
+      default: false
+    },
+    evaluationJobStatus: {
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );
