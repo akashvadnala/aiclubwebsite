@@ -99,6 +99,13 @@ def downloadFile(file_id, fileDir):
             os.mkdir(basedir)
     except Exception:
         os.makedirs(basedir)
+    fileName = fileDir.split("/")[-1]
+    fileStemName = fileName.split(".")[0]
+    fileslist = os.listdir(basedir)
+    for k in fileslist:
+        if fileStemName in k:
+            deletePath = basedir + str(k)
+            deleteLocalFile(deletePath)
     info = json.loads(GOOGLE_KEY)
     credentials = service_account.Credentials.from_service_account_info(info)
     print('cred',credentials)

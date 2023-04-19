@@ -23,6 +23,39 @@ router.route("/getCompete/:url").get(async (req, res) => {
   }
 });
 
+router.route("/getCompeteDetails/:id").get(async (req, res) => {
+  const { id } = req.params;
+  const data = await Competitions.findById(id);
+  if (data) {
+    res.status(200).json(data);
+  } else {
+    res.status(400).json();
+  }
+});
+
+router.route("/getSandBoxJobStatus/:id").get(async (req, res) => {
+  console.log("Pooling");
+  const { id } = req.params;
+  const data = await Competitions.findById(id);
+  if (data) {
+    const sandBoxJobStatus = data.sandBoxJobStatus;
+    res.status(200).json(sandBoxJobStatus);
+  } else {
+    res.status(400).json();
+  }
+});
+
+router.route("/getEvaluationJobStatus/:id").get(async (req, res) => {
+  const { id } = req.params;
+  const data = await Competitions.findById(id);
+  if (data) {
+    const evaluationJobStatus = data.evaluationJobStatus;
+    res.status(200).json(evaluationJobStatus);
+  } else {
+    res.status(400).json();
+  }
+});
+
 router.route("/isCompUrlExist/:url").get(async (req, res) => {
   const { url } = req.params;
   Competitions.findOne({ url: url }).then((data) => {
@@ -171,27 +204,52 @@ router.route("/submitCompeteFile").post(upload.single("competeFile"), async (req
     localFilePath: `submissions/${competition.title}/${name}`
   });
   await userSubmission.save();
-  const lb = await Leaderboard.findOne({compete:req.body.compete,team:req.body.team});
-  lb.numSubmissions +=1;
+  const lb = await Leaderboard.findOne({ compete: req.body.compete, team: req.body.team });
+  lb.numSubmissions += 1;
   await lb.save();
-  
-  const task = celery.createTask("tasks.run_preprocess");
+
+  const task = celery.createTask("tasks.run_evaluation");
   task.applyAsync([userSubmission._id]);
   fs.unlink(file, (err) => {
     if (err) {
-        console.error(err)
-        return
+      console.error(err)
+      return
     }
-});
+  });
   res.status(200).json();
 })
 
-router.route("/getMySubmissions/:competeid/:userid").get(competeAuthenticate,async (req,res)=>{
-  try{
-    const userSubmissions = await UserSubmission.find({compete:req.params.competeid,team:req.params.userid}).sort({createdAt:-1});
+router.route("/submitSandBoxFile").post(upload.single("sandBoxFile"), async (req, res) => {
+  const file = req.file.path;
+  const name = req.file.filename;
+  const mimeType = req.file.mimetype;
+  const folder_id = Config.COMPETITION_DRIVE_FILE_ID;
+  const key = await fileUpload.uploadFile({ name, file, mimeType, folder_id });
+  const url = fileUpload.getUrl(key);
+  const competition = await Competitions.findById(req.body.compete);
+  competition.sandBoxSubmissionUrl = url;
+  competition.sandBoxSubmissionPath = `submissions/${competition.title}/${name}`;
+  await competition.save();
+
+  const task = celery.createTask("tasks.run_sandBox_evaluation");
+  task.applyAsync([competition._id]);
+  fs.unlink(file, (err) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+  });
+  res.status(200).json();
+})
+
+
+
+router.route("/getMySubmissions/:competeid/:userid").get(competeAuthenticate, async (req, res) => {
+  try {
+    const userSubmissions = await UserSubmission.find({ compete: req.params.competeid, team: req.params.userid }).sort({ createdAt: -1 });
     res.status(200).json(userSubmissions);
-  }catch(err){
-    res.status(400).json(); 
+  } catch (err) {
+    res.status(400).json();
   }
 })
 

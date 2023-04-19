@@ -57,7 +57,7 @@ const Host = ({ props }) => {
     useEffect(() => {
         getPage();
     }, [hpath]);
-
+    console.log("Host.js",props.c);
     return (
         <>
             {load === 0 ? (

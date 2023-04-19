@@ -5,6 +5,7 @@ from db_utils import *
 from time import sleep
 print("starting celery worker")
 import importlib
+import asyncio
 
 BROKER_URL = os.environ.get("BROKER_URL", "amqp://localhost")
 DATABASE = os.environ.get("DATABASE", 'mongodb://localhost:27017/')
@@ -13,9 +14,9 @@ app = Celery(
     "tasks",
     broker=BROKER_URL,
 )
-        
-@app.task(name="tasks.run_preprocess")
-def run_preprocess(submission_id):
+
+@app.task(name="tasks.run_evaluation")
+def run_evaluation(submission_id):
     db = connect_to_db(DATABASE)
     submission = get_submission(db, submission_id)
     teamId = submission["team"]
@@ -32,8 +33,28 @@ def run_preprocess(submission_id):
     privateDatalocalpath = compete["privateDataSetPath"]
     publicDatalocalpath = compete["publicDataSetPath"]
     publicScore, privateScore = evaluate_submissions(evaluation["name"],localpath, privateDatalocalpath, publicDatalocalpath)
-    saveScores(db, submission_id,competeId,teamId,publicScore, privateScore)
+    asyncio.run(saveScores(db, submission_id,competeId,teamId,publicScore, privateScore))
     deleteLocalFile(localpath)
+
+@app.task(name="tasks.run_sandBox_evaluation")
+def run_sandBox_evaluation(competeid):
+    db = connect_to_db(DATABASE)
+    compete = get_competition(db, competeid)
+    url = compete["sandBoxSubmissionUrl"]
+    localpath = compete["sandBoxSubmissionPath"]
+    key = url.split("=")[-1]
+    downloadFile(key,localpath)
+    deleteGdriveFile(key)
+    if localpath[-4:] == ".zip":
+        localpath = extract_zip(localpath)
+    evaluation = get_evaluation(db, compete["evaluation"])
+    privateDatalocalpath = compete["privateDataSetPath"]
+    publicDatalocalpath = compete["publicDataSetPath"]
+    publicScore, privateScore = evaluate_submissions(evaluation["name"],localpath, privateDatalocalpath, publicDatalocalpath)
+    data = {"sandBoxPublicScore": publicScore, "sandBoxPrivateScore":privateScore}
+    asyncio.run(updateCompetition(db, competeid, data))
+    deleteLocalFile(localpath)
+    return data
 
 def evaluate_submissions(evaluationFuncName,submissionPath, privateDataPath, publicDataPath):
     MODULE_NAME = "celery_tasks.EvaluationFiles."+str(evaluationFuncName)
@@ -74,7 +95,7 @@ def privateDataSet(competeid):
             'items':[d]}
     jsonTree = json.dumps(tree)
     data = {"DataSetTree": jsonTree, "privateDataSetPath":localpath}
-    updateCompetition(db, competeid, data)
+    asyncio.run(updateCompetition(db, competeid, data))
     
 @app.task(name="tasks.publicDataSet")
 def publicDataSet(competeid):
@@ -111,7 +132,7 @@ def sandBoxSubmission(competeid):
             'type':'folder',
             'items':[d]}
     jsonTree = json.dumps(tree)
-    data = {"SubmissionTree": jsonTree, "sandBoxSubmissionPath":localpath}
+    data = {"SubmissionTree": jsonTree, "sandBoxSubmissionPath":localpath, "sandBoxJobStatus":False}
     updateCompetition(db, competeid, data)
     deleteLocalFile(localpath)
 

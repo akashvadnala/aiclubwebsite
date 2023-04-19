@@ -12,6 +12,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import Directory from "./Directory";
 
 const Evaluation = ({ props }) => {
+  let pollInterval;
   const [compete, setCompete] = useState(null);
   const [files, setFiles] = useState(null);
   const [submissionFiles, setSubmissionFiles] = useState(null);
@@ -30,6 +31,14 @@ const Evaluation = ({ props }) => {
   const [privateDataSet, setPrivateDataSet] = useState(null);
   const [publicDataSet, setPublicDataSet] = useState(null);
   const [sandBoxSubmission, setSandBoxSubmission] = useState(null);
+
+  const getCompete = async () => {
+    axios.get(`${SERVER_URL}/getCompeteDetails/${props.c._id}`).then((data) => {
+      console.log("After Pooling", data.data);
+      setCompete(data.data);
+    })
+  };
+
   const uploadDataSet = async () => {
     setDataSetLoading(true);
     try {
@@ -76,6 +85,14 @@ const Evaluation = ({ props }) => {
             setSandBoxSubmission(null);
             showAlert("SandBox Submission Submitted!", "success");
           })
+        pollInterval = setInterval(async () => {
+          await axios.get(`${SERVER_URL}/getSandBoxJobStatus/${props.c._id}`).then((data) => {
+            if (!data.sandBoxJobStatus) {
+              getCompete();
+              clearInterval(pollInterval);
+            }
+          })
+        }, 1000);
       }
     } catch (err) {
       console.log('submissionerr', err);
@@ -173,19 +190,22 @@ const Evaluation = ({ props }) => {
 
   useEffect(() => {
     setCompete(props.c);
-    try {
-      if (props.c.DataSetTree) {
-        setFiles(JSON.parse(props.c.DataSetTree));
-      }
-      if (props.c.SubmissionTree) {
-        setSubmissionFiles(JSON.parse(props.c.SubmissionTree));
-      }
-      getEvaluationMetric(props.c.evaluation);
-      getEvaluationMetrics();
-    } catch (err) {
-      console.log(err);
-    }
   }, [logged_in, props]);
+
+  useEffect(() => {
+    if (compete) {
+      console.log("Adookkati ",compete);
+      if (compete.DataSetTree) {
+        setFiles(JSON.parse(compete.DataSetTree));
+      }
+      if (compete.SubmissionTree) {
+        setSubmissionFiles(JSON.parse(compete.SubmissionTree));
+      }
+      getEvaluationMetric(compete.evaluation);
+      getEvaluationMetrics();
+    }
+  }, [compete]);
+
   return (
     <>
       {load === 0 ? <Loading /> : load === 1 ?
