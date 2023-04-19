@@ -39,7 +39,7 @@ html {
 }
 
 p{
-  font-size: 1rem;
+  font-size: 0.95rem;
   margin-bottom: 0.3rem !important;
 }
 
@@ -122,6 +122,10 @@ hr{
 
 .ml-2{
   margin-left: 10px !important;
+}
+
+.pl-2{
+  padding-left: 10px !important;
 }
 
 .text-header{

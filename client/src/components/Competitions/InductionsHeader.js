@@ -44,7 +44,8 @@ const InductionsHeader = ({ props }) => {
 
 
   const getCompeteUserData = async () => {
-    await axios.get(`${SERVER_URL}/getCompeteUserData`, { withCredentials: true })
+    try{
+      await axios.get(`${SERVER_URL}/getCompeteUserData`, { withCredentials: true })
       .then(async data => {
         setCompeteUser(data.data);
         if (data.data._id) {
@@ -54,6 +55,9 @@ const InductionsHeader = ({ props }) => {
             });
         }
       })
+    }catch(err){
+      console.log(err);
+    }
   }
   useEffect(() => {
     getCompeteUserData();
