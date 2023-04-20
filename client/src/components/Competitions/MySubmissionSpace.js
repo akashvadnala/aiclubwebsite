@@ -18,28 +18,22 @@ const MySubmissionSpace = ({ l, index }) => {
                 r[key] = Math.floor(d / s[key]);
                 d -= r[key] * s[key];
                 if (r[key] !== 0) {
-                    // if (r[key] === 1) {
-                    //     setUpdatedAt(`${r[key]} ${key.slice(0, -1)} ago`);
-                    // } else {
                     setUpdatedAt(`${r[key]} ${key} ago`);
-                    // }
                     return false;
                 }
                 return true;
             })
         }
     }, [l]);
+    console.log(l);
     return (
         <>
             <tr>
                 <th scope="row">{index + 1}</th>
-                {/* <th>{names[index]}</th> */}
-                {/* <th>{l.team}</th> */}
                 <th>{l.publicScore['$numberDecimal'].toLocaleString()}</th>
-                {/* <th>{l.numSubmissions}</th> */}
                 <th>{updatedAt}</th>
                 <th>{(l.submissionLog !== null) &&
-                    <h3 className="p-2" data-bs-toggle="modal" data-bs-target="#sandBoxSubmissionLog" type="button">{(l.submissionLog === "") ? <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check2-circle" viewBox="0 0 16 16" style={{ "color": "green" }}>
+                    <h3 className="p-2" data-bs-toggle="modal" data-bs-target={`#userSubmissionLog-${index}`} type="button">{(l.submissionLog === "") ? <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check2-circle" viewBox="0 0 16 16" style={{ "color": "green" }}>
                         <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z" />
                         <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z" />
                     </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16" style={{ "color": "red" }}>
@@ -48,6 +42,17 @@ const MySubmissionSpace = ({ l, index }) => {
                     </svg>}</h3>
                 }</th>
             </tr>
+            <div className="modal fade" id={`userSubmissionLog-${index}`} tabIndex="-1" aria-labelledby={`userSubmissionLog-${index} contained-modal-title-vcenter`} aria-hidden="true" >
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div className="modal-content p-5">
+                        <h4 className="text-center">Submission Log</h4>
+                        <div className="modal-body text-center">
+                            {l && (l.submissionLog === "" ? "Evaluation completed successfully" : l.submissionLog)}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

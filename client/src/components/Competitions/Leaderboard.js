@@ -9,7 +9,8 @@ const Leaderboard = ({ props }) => {
     try {
       axios.get(`${SERVER_URL}/getLeaderboard/${props.c._id}`)
         .then(data => {
-          setLB(data.data);
+          const filteredData = data.data.filter(lb => lb.numSubmissions > 0);
+          setLB(filteredData);
         });
     } catch (err) {
       console.log(err);
@@ -56,14 +57,6 @@ const Leaderboard = ({ props }) => {
                   {
                     lb.map((l, index) => {
                       return (
-                        // <tr>
-                        //   <th scope="row">{index + 1}</th>
-                        //   {/* <th>{names[index]}</th> */}
-                        //   <th>{l.team}</th>
-                        //   <th>{l.maxPublicScore['$numberDecimal'].toLocaleString()}</th>
-                        //   <th>{l.numSubmissions}</th>
-                        //   <th>{l.updatedAt}</th>
-                        // </tr>
                         <LeaderboardSpace l={l} index={index} />
                       )
                     })
