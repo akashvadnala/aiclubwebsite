@@ -44,18 +44,18 @@ const InductionsHeader = ({ props }) => {
 
 
   const getCompeteUserData = async () => {
-    try{
+    try {
       await axios.get(`${SERVER_URL}/getCompeteUserData`, { withCredentials: true })
-      .then(async data => {
-        setCompeteUser(data.data);
-        if (data.data._id) {
-          await axios.get(`${SERVER_URL}/isJoined/${props.c._id}/${data.data._id}`, { withCredentials: true })
-            .then(res => {
-              setIsUserJoined(res.data);
-            });
-        }
-      })
-    }catch(err){
+        .then(async data => {
+          setCompeteUser(data.data);
+          if (data.data._id) {
+            await axios.get(`${SERVER_URL}/isJoined/${props.c._id}/${data.data._id}`, { withCredentials: true })
+              .then(res => {
+                setIsUserJoined(res.data);
+              });
+          }
+        })
+    } catch (err) {
       console.log(err);
     }
   }
@@ -125,8 +125,7 @@ const InductionsHeader = ({ props }) => {
   };
 
   const joinCompeteAsUser = async () => {
-    // console.log('props',props.c._id)
-    await axios.put(`${SERVER_URL}/joinCompeteAsUser/${props.c._id}/${competeUser._id}`,{withCredentials:true});
+    await axios.put(`${SERVER_URL}/joinCompeteAsUser/${props.c._id}/${competeUser._id}`, { withCredentials: true });
     setIsUserJoined(true);
     setParticipantCount(participantCount + 1);
     showAlert("Joined Competition Successfully!", "success");
@@ -135,24 +134,28 @@ const InductionsHeader = ({ props }) => {
 
   const submitCompete = async (e) => {
     e.preventDefault();
-    setSubmitLoading(true);
-    const data = new FormData();
-    data.append("competeFile", competeFile, `${Date.now()}-${competeUser.username}-${competeFile.name}`);
-    data.append("compete", props.c._id);
-    data.append("team", competeUser._id);
-    console.log('data', competeFile);
-    try {
-      await axios.post(`${SERVER_URL}/submitCompeteFile`, data,{withCredentials:true})
-        .then(res => {
-          document.getElementById("submitModalClose").click();
-          setCompeteFile("");
-          showAlert('File submitted successfully. Evaluation may take sometime..', "success");
-        })
-    } catch (err) {
-      showAlert("Something went wrong!", "danger");
-      console.log(err);
+    if (competeFile) {
+      setSubmitLoading(true);
+      const data = new FormData();
+      data.append("competeFile", competeFile, `${Date.now()}-${competeUser.username}-${competeFile.name}`);
+      data.append("compete", props.c._id);
+      data.append("team", competeUser._id);
+      try {
+        await axios.post(`${SERVER_URL}/submitCompeteFile`, data, { withCredentials: true })
+          .then(res => {
+            document.getElementById("submitModalClose").click();
+            setCompeteFile(null);
+            showAlert('File submitted successfully. Evaluation may take sometime..', "success");
+          })
+      } catch (err) {
+        showAlert("Something went wrong!", "danger");
+        console.log(err);
+      }
+      setSubmitLoading(false);
     }
-    setSubmitLoading(false);
+    else {
+      showAlert("Please Select File..", "danger");
+    }
   }
 
   return (
@@ -234,6 +237,7 @@ const InductionsHeader = ({ props }) => {
                         // accept="image/*"
                         name="competeFile"
                         onChange={(e) => setCompeteFile(e.target.files[0])}
+                        onClick={(e) => { e.target.value = null }}
                         className="form-control rounded-pill py-2 px-4"
                         id='competeFile'
                         aria-describedby='competeFile'

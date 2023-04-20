@@ -43,7 +43,7 @@ const PhotoGallery = ({photos}) => {
 
   return (
     <div className="gallery-container py-5 adjust" style={{background:"#f6f6f6"}}>
-      <h3 className="pb-3 text-center">Image Gallery</h3>
+      <h3 className="pb-3 text-center">IMAGE GALLERY</h3>
       <PhotoAlbum
         layout="rows"
         photos={photos}
