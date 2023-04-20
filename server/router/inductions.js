@@ -33,24 +33,47 @@ router.route("/getCompeteDetails/:id").get(async (req, res) => {
   }
 });
 
-router.route("/getSandBoxJobStatus/:id").get(async (req, res) => {
-  console.log("Pooling");
+router.route("/getSandBoxSubmissionStatus/:id").get(async (req, res) => {
   const { id } = req.params;
   const data = await Competitions.findById(id);
   if (data) {
-    const sandBoxJobStatus = data.sandBoxJobStatus;
-    res.status(200).json(sandBoxJobStatus);
+    const sandBoxSubmissionStatus = data.sandBoxSubmissionStatus;
+    res.status(200).json(sandBoxSubmissionStatus);
   } else {
     res.status(400).json();
   }
 });
 
-router.route("/getEvaluationJobStatus/:id").get(async (req, res) => {
+
+router.route("/getSandBoxStatus/:id").get(async (req, res) => {
   const { id } = req.params;
   const data = await Competitions.findById(id);
   if (data) {
-    const evaluationJobStatus = data.evaluationJobStatus;
-    res.status(200).json(evaluationJobStatus);
+    const sandBoxStatus = data.sandBoxStatus;
+    res.status(200).json(sandBoxStatus);
+  } else {
+    res.status(400).json();
+  }
+});
+
+router.route("/getPublicStatus/:id").get(async (req, res) => {
+  const { id } = req.params;
+  const data = await Competitions.findById(id);
+  if (data) {
+    const publicStatus = data.publicStatus;
+    res.status(200).json(publicStatus);
+  } else {
+    res.status(400).json();
+  }
+});
+
+
+router.route("/getPrivateStatus/:id").get(async (req, res) => {
+  const { id } = req.params;
+  const data = await Competitions.findById(id);
+  if (data) {
+    const privateStatus = data.privateStatus;
+    res.status(200).json(privateStatus);
   } else {
     res.status(400).json();
   }
@@ -229,6 +252,7 @@ router.route("/submitSandBoxFile").post(upload.single("sandBoxFile"), async (req
   const competition = await Competitions.findById(req.body.compete);
   competition.sandBoxSubmissionUrl = url;
   competition.sandBoxSubmissionPath = `submissions/${competition.title}/${name}`;
+  competition.sandBoxSubmissionStatus = true;
   await competition.save();
 
   const task = celery.createTask("tasks.run_sandBox_evaluation");

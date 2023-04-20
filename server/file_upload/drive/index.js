@@ -25,7 +25,6 @@ class GDriveFileUpload extends FileUpload {
       name,
       'parents': [folder_id],
     };
-    console.log(folder_id)
 
     try {
       const res = await this.drive.files.create({
@@ -33,7 +32,6 @@ class GDriveFileUpload extends FileUpload {
         media,
         field: "id",
       });
-      // console.log('dataid',res.data);
       return res.data.id;
     } catch (err) {
       throw new Error(`error uploading file to drive: ${err}`);

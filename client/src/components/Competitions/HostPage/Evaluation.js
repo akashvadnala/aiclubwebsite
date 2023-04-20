@@ -33,8 +33,7 @@ const Evaluation = ({ props }) => {
   const [sandBoxSubmission, setSandBoxSubmission] = useState(null);
 
   const getCompete = async () => {
-    axios.get(`${SERVER_URL}/getCompeteDetails/${props.c._id}`).then((data) => {
-      console.log("After Pooling", data.data);
+    await axios.get(`${SERVER_URL}/getCompeteDetails/${props.c._id}`).then((data) => {
       setCompete(data.data);
     })
   };
@@ -52,7 +51,14 @@ const Evaluation = ({ props }) => {
             setPrivateDataSet(null);
             showAlert("Private Dataset Uploaded!", "success");
           })
-        setPrivateDataSet(null);
+        pollInterval = setInterval(async () => {
+          await axios.get(`${SERVER_URL}/getPrivateStatus/${props.c._id}`).then((data) => {
+            if (!data.data) {
+              getCompete();
+              clearInterval(pollInterval);
+            }
+          })
+        }, 1000);
       }
       if (publicDataSet) {
         let data = new FormData();
@@ -64,7 +70,14 @@ const Evaluation = ({ props }) => {
             setPublicDataSet(null);
             showAlert("Public Dataset Uploaded!", "success");
           })
-        setPublicDataSet(null);
+        pollInterval = setInterval(async () => {
+          await axios.get(`${SERVER_URL}/getPublicStatus/${props.c._id}`).then((data) => {
+            if (!data.data) {
+              getCompete();
+              clearInterval(pollInterval);
+            }
+          })
+        }, 1000);
       }
     } catch (err) {
       console.log('dataseterr', err);
@@ -86,8 +99,8 @@ const Evaluation = ({ props }) => {
             showAlert("SandBox Submission Submitted!", "success");
           })
         pollInterval = setInterval(async () => {
-          await axios.get(`${SERVER_URL}/getSandBoxJobStatus/${props.c._id}`).then((data) => {
-            if (!data.sandBoxJobStatus) {
+          await axios.get(`${SERVER_URL}/getSandBoxStatus/${props.c._id}`).then((data) => {
+            if (!data.data) {
               getCompete();
               clearInterval(pollInterval);
             }
@@ -194,7 +207,6 @@ const Evaluation = ({ props }) => {
 
   useEffect(() => {
     if (compete) {
-      console.log("Adookkati ",compete);
       if (compete.DataSetTree) {
         setFiles(JSON.parse(compete.DataSetTree));
       }
@@ -261,7 +273,7 @@ const Evaluation = ({ props }) => {
                 <div className='mt-5'>
                   <strong>Note:</strong>
                   <div>
-                  Datasets folder and Submissions folder present in same folder. So to get relative paths of files of datasets folder and submissions folder, upload datasets and sandbox submission files before writing evaluate code.
+                    Datasets folder and Submissions folder present in same folder. So to get relative paths of files of datasets folder and submissions folder, upload datasets and sandbox submission files before writing evaluate code.
                   </div>
                   <div className='mt-3 border-bottom border-start border-end'>
                     {files && <Directory files={files} order={1} />}

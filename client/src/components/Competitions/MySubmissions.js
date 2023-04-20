@@ -66,6 +66,7 @@ const MySubmissions = ({ props }) => {
                                         <th scope="col">Score</th>
                                         {/* <th scope="col">Submissions</th> */}
                                         <th scole="col">Last Submission</th>
+                                        <th scole="col">Submission Log</th>
                                     </tr>
                                 </thead>
                                 <tbody>

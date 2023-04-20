@@ -35,42 +35,41 @@ def connect_to_db(url):
 def get_competition(db_conn, competionId):
     competition = db_conn.competitions.find_one({"_id": ObjectId(competionId)})
     if competition is None:
-        raise ValueError(
-            "Could not find an application with the given application_id")
+        raise ValueError("Could not find an application with the given application_id")
     return competition
 
 
 def get_submission(db_conn, usersubmissionId):
-    submission = db_conn.usersubmissions.find_one(
-        {"_id": ObjectId(usersubmissionId)})
+    submission = db_conn.usersubmissions.find_one({"_id": ObjectId(usersubmissionId)})
     if submission is None:
-        raise ValueError(
-            "Could not find an application with the given application_id")
+        raise ValueError("Could not find an application with the given application_id")
     return submission
 
 
 def get_evaluation(db_conn, evaluationId):
     evaluation = db_conn.evaluations.find_one({"_id": ObjectId(evaluationId)})
     if evaluation is None:
-        raise ValueError(
-            "Could not find an application with the given application_id")
+        raise ValueError("Could not find an application with the given application_id")
     return evaluation
+
 
 def updateCompetition(db_conn, competeId, data):
     compete = db_conn.competitions
     compete.find_one_and_update(
-        {"_id": ObjectId(competeId)}, {
-            "$set": data}
+        {"_id": ObjectId(competeId)},
+        {"$set": data},
     )
 
-def saveScores(db_conn, usersubmissionId, competeId, teamId, publicScore, privateScore):
+
+def saveScores(db_conn, usersubmissionId, competeId, teamId, publicScore, privateScore, error):
     submission = db_conn.usersubmissions
     submission.find_one_and_update(
-        {"_id": ObjectId(usersubmissionId)}, {
-            "$set": {"publicScore": publicScore, "privateScore": privateScore}}
+        {"_id": ObjectId(usersubmissionId)},
+        {"$set": {"publicScore": publicScore, "privateScore": privateScore, "submissionLog":error}},
     )
     allUserSubmissions = db_conn.usersubmissions.find(
-        {"compete": ObjectId(competeId), "team": ObjectId(teamId)})
+        {"compete": ObjectId(competeId), "team": ObjectId(teamId)}
+    )
     publicScoreList = []
     privateScoreList = []
     for userSubmission in allUserSubmissions:
@@ -79,15 +78,20 @@ def saveScores(db_conn, usersubmissionId, competeId, teamId, publicScore, privat
     maxPublicScore = max(publicScoreList)
     maxPrivateScore = max(privateScoreList)
     db_conn.leaderboards.find_one_and_update(
-        {"compete": ObjectId(competeId), "team": ObjectId(teamId)}, {
-            "$set": {"maxPublicScore": maxPublicScore, "maxPrivateScore": maxPrivateScore}}
+        {"compete": ObjectId(competeId), "team": ObjectId(teamId)},
+        {
+            "$set": {
+                "maxPublicScore": maxPublicScore,
+                "maxPrivateScore": maxPrivateScore,
+            }
+        },
     )
 
 
 def deleteGdriveFile(key):
     info = json.loads(GOOGLE_KEY)
     credentials = service_account.Credentials.from_service_account_info(info)
-    DRIVE = build('drive', 'v3', credentials=credentials)
+    DRIVE = build("drive", "v3", credentials=credentials)
     file = DRIVE.files().delete(fileId=key).execute()
     print("File deleted from Gdrive successfully")
 
@@ -108,19 +112,16 @@ def downloadFile(file_id, fileDir):
             deleteLocalFile(deletePath)
     info = json.loads(GOOGLE_KEY)
     credentials = service_account.Credentials.from_service_account_info(info)
-    print('cred',credentials)
-    DRIVE = build('drive', 'v3', credentials=credentials)
+    DRIVE = build("drive", "v3", credentials=credentials)
     request = DRIVE.files().get_media(fileId=file_id)
-    print('req',request)
     fh = io.BytesIO()
     downloader = MediaIoBaseDownload(fh, request)
-    print('down',downloader)
     done = False
     while done is False:
         status, done = downloader.next_chunk()
         print("Download %d%%." % int(status.progress() * 100))
     fh.seek(0)
-    with open(fileDir, 'wb') as f:
+    with open(fileDir, "wb") as f:
         f.write(fh.read())
     print("{} saved to {}".format(fileDir.split("/")[-1], fileDir))
 
