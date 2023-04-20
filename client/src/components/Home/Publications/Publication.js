@@ -9,7 +9,7 @@ const Publications = ({ publications }) => {
 
       <div className="publications-container py-5 adjust" style={{background:"#f6f6f6"}}>
         <div className="row">
-          <h3 className="text-center pb-3">Publications</h3>
+          <h3 className="text-center pb-3">PUBLICATIONS</h3>
           <Carousel>
         {
           publications.map((publication)=>{

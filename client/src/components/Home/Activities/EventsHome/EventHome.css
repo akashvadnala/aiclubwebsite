@@ -13,23 +13,22 @@
     margin-right: 5px;
     padding: 0;
 }
+/* 
 .speakers{
     display: flex;
     justify-content: space-between;
-}
+} */
 
 
 .speakers > p{
     margin-bottom: 0;
 }
-
+/* 
 .speakers > a{
     max-height: 20px;
-}
+} */
 
 .event-title{
-    /* max-width: 75%; */
-    /* font-size: 0.85em; */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
