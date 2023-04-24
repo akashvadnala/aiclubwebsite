@@ -1,11 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "../../EditableStuff/Config";
 import LeaderboardSpace from "./LeaderboardSpace";
+import { alertContext } from "../../Context/Alert";
 
 const Leaderboard = ({ props }) => {
+
+  const { showAlert } = useContext(alertContext);
+  const [isCompeteEnd, SetIsCompeteEnd] = useState(false);
   const [lb, setLB] = useState([]);
+  const [privateLB, setPrivateLB] = useState(false);
+
+  const getIsCompeteEnd = async () => {
+    try {
+      await axios.get(`${SERVER_URL}/getIsCompeteEnd/${props.c._id}`)
+        .then((res) => {
+          SetIsCompeteEnd(res.data);
+        })
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const getLeaderboard = async () => {
+    setPrivateLB(false);
     try {
       axios.get(`${SERVER_URL}/getLeaderboard/${props.c._id}`)
         .then(data => {
@@ -15,9 +33,31 @@ const Leaderboard = ({ props }) => {
       console.log(err);
     }
   }
+
+  const getPrivateLeaderboard = async () => {
+    if (isCompeteEnd) {
+      setPrivateLB(true);
+      try {
+        axios.get(`${SERVER_URL}/getPrivateLeaderboard/${props.c._id}`)
+          .then(data => {
+            setLB(data.data);
+            console.log('private', data.data)
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    else {
+      showAlert("Private LeaderBoard availabe after the Competition Ends")
+    }
+  }
+
+
   useEffect(() => {
+    getIsCompeteEnd();
     getLeaderboard();
   }, [props]);
+
   return (
     <>
       {
@@ -25,17 +65,22 @@ const Leaderboard = ({ props }) => {
           <div className="card">
             <div className="row align-items-center p-3">
               <div className="col-sm-8">
-                <h4 className="m-0">Leaderboard</h4>
+                <h4 className="m-0">
+                {
+                    privateLB ?
+                      <>Private</>
+                      :
+                      <>Public</>
+                  }
+                  &nbsp;Leaderboard
+                </h4>
               </div>
               <div className="col-sm-4 text-end">
-                <button className="btn btn-sm text-primary" onClick={()=>{getLeaderboard()}}>
+                <button className="btn btn-sm text-primary" onClick={() => { privateLB ? getPrivateLeaderboard() : getLeaderboard() }}>
                   Refresh
                 </button>
-                {props.access ?
-                  <>
-                    <button className='btn btn-dark btn-sm ml-2' >Public</button>
-                    <button className='btn btn-dark btn-sm ml-2' >Private</button>
-                  </>
+                {(isCompeteEnd || props.access) ?
+                  <button className='btn btn-outline-dark btn-sm ml-2' onClick={privateLB ? getLeaderboard : getPrivateLeaderboard}>{privateLB ? "Public" : "Private"}</button>
                   :
                   null
                 }
@@ -47,7 +92,8 @@ const Leaderboard = ({ props }) => {
                   <tr>
                     <th scope="col">S.No.</th>
                     <th scope="col">Team Name</th>
-                    <th scope="col">Score</th>
+                    {privateLB && <th scope="col">Difference</th>}
+                    <th scope="col">{privateLB ? "Private" : "Public"} Score</th>
                     <th scope="col">Submissions</th>
                     <th scole="col">Last Submission</th>
                   </tr>
@@ -64,7 +110,7 @@ const Leaderboard = ({ props }) => {
                         //   <th>{l.numSubmissions}</th>
                         //   <th>{l.updatedAt}</th>
                         // </tr>
-                        <LeaderboardSpace l={l} index={index} />
+                        <LeaderboardSpace l={l} index={index} privateLB={privateLB} />
                       )
                     })
                   }
