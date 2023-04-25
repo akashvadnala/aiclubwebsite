@@ -49,7 +49,7 @@ const Leaderboard = ({ props }) => {
       }
     }
     else {
-      showAlert("Private LeaderBoard availabe after the Competition Ends")
+      showAlert("Private LeaderBoard availabe after the Competition Ends","danger")
     }
   }
 
