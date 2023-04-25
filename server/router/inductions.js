@@ -369,14 +369,17 @@ router.route("/editOverview/:id").put(authenticate, async (req, res) => {
   res.status(200).json();
 });
 
-router.route("/deleteCompete/:id").post(async (req, res) => {
+router.route("/deleteCompete/:id").put(async (req, res) => {
   const { id } = req.params;
   const compete = await Competitions.findById(id);
   if (compete) {
     const competeid = compete._id;
     await Leaderboard.deleteMany({ compete: competeid });
     await UserSubmission.deleteMany({ compete: competeid });
-    await Competitions.findByIdAndDelete(id);
+    await CompeteUser.deleteMany({ compete: competeid });
+    const task = celery.createTask("tasks.deleteCompetition");
+    task.applyAsync([competeid]);
+    
     return res
       .status(200)
       .json({ message: "Competition Deleted Successfully!" });

@@ -155,13 +155,19 @@ const Settings = ({ props }) => {
   const deleteCompete = async () => {
     const confirmed = window.confirm(`Are you sure to delete the competition ${props.c.title}?`);
     if (confirmed) {
-      const res = await axios.post(`${SERVER_URL}/deleteCompete/${props.c._id}`);
-      if (res.status === 200) {
-        console.log('Compeition Deleted');
+      try {
+        await axios.put(`${SERVER_URL}/imgdelete`,
+          { 'url': compete.headerPhoto },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        await axios.put(`${SERVER_URL}/deleteCompete/${props.c._id}`);
         navigate('/');
-      }
-      else {
-        console.log('Competition Cannot be Deleted');
+      } catch (error) {
+        console.log(error);
+        showAlert("Competition Deletion failed", "danger");
       }
     }
   }

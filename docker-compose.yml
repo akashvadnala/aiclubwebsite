@@ -1,6 +1,11 @@
 version: '3'
 
 services:  
+  rabbit:
+      container_name: evaluator_rabbit
+      image: rabbitmq:latest
+      expose:
+        - 5672
   client:
     restart: always
     build:
@@ -14,6 +19,17 @@ services:
       - server
     networks:
       - mern-network
+
+  celery:
+    container_name: evaluator_celery
+    build: ./evaluators
+    env_file: ./evaluators/.env
+    volumes:
+      - ./evaluators/celery_tasks/EvaluationFiles:/app/celery_tasks/EvaluationFiles 
+      - ./evaluators/datasets:/app/datasets
+      - ./evaluators/submissions:/app/submissions  
+    depends_on:
+      - rabbit
 
   server:
     restart: always
@@ -29,6 +45,8 @@ services:
       - /app/node_modules/
     depends_on:
       - mongodb
+      - rabbit
+      - celery
     networks:
       - mern-network
 
