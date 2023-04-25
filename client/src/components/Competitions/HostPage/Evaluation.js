@@ -19,6 +19,7 @@ const Evaluation = ({ props }) => {
   const [add, setAdd] = useState(false);
   const { showAlert } = useContext(alertContext);
   const [dataSetLoading, setDataSetLoading] = useState(false);
+  const [sandBoxLoading, setSandBoxLoading] = useState(false);
   const [evaluation, setEvaluation] = useState({
     _id: "",
     name: "",
@@ -87,6 +88,7 @@ const Evaluation = ({ props }) => {
   }
 
   const uploadSandBoxSubmission = async () => {
+    setSandBoxLoading(true);
     try {
       if (sandBoxSubmission) {
         let data = new FormData();
@@ -111,6 +113,7 @@ const Evaluation = ({ props }) => {
       console.log('submissionerr', err);
       showAlert("Something went wrong!", "danger");
     }
+    setSandBoxLoading(false);
   }
 
   const getEvaluationMetrics = () => {
@@ -230,17 +233,17 @@ const Evaluation = ({ props }) => {
                   <h4>Datasets</h4>
                   <div className='private-dataset row mt-3'>
                     <div className="form-group align-items-center row">
-                      <label htmlFor='publicDataSet' className='col-sm-4 text-end'>Public Dataset :</label>
+                      <label htmlFor='publicDataSet' className='col-sm-4 text-start text-sm-end'>Public Dataset :</label>
                       <div className='col-sm-6'>
-                        <input type='file' name="publicDataSet" onChange={(e) => { setPublicDataSet(e.target.files[0]) }} className="form-control" id='publicDataSet' aria-describedby='publicDataSet' />
+                        <input type='file' name="publicDataSet" onChange={(e) => { setPublicDataSet(e.target.files[0]) }} onClick={(e) => { e.target.value = null }} className="form-control" id='publicDataSet' aria-describedby='publicDataSet' />
                       </div>
                     </div>
                   </div>
                   <div className='public-dataset row mt-3'>
                     <div className="form-group align-items-center row">
-                      <label htmlFor='privateDataSet' className='col-sm-4 text-end'>Private Dataset :</label>
+                      <label htmlFor='privateDataSet' className='col-sm-4 text-start text-sm-end'>Private Dataset :</label>
                       <div className='col-sm-6'>
-                        <input type='file' name="privateDataSet" onChange={(e) => { setPrivateDataSet(e.target.files[0]) }} className="form-control" id='privateDataSet' aria-describedby='privateDataSet' />
+                        <input type='file' name="privateDataSet" onChange={(e) => { setPrivateDataSet(e.target.files[0]) }} onClick={(e) => { e.target.value = null }} className="form-control" id='privateDataSet' aria-describedby='privateDataSet' />
                       </div>
                     </div>
                   </div>
@@ -259,19 +262,31 @@ const Evaluation = ({ props }) => {
                 </div>
                 <div className="datasets">
                   <h4>SandBox Submission</h4>
-                  <div className='sandbox-submission row mt-3'>
-                    <div className="form-group align-items-center row">
-                      <div className='col-sm-6'>
-                        <input type='file' name="sandboxSubmission" onChange={(e) => { setSandBoxSubmission(e.target.files[0]) }} className="form-control" id='sandboxSubmission' aria-describedby='sandboxSubmission' />
+                  <div className='sandbox-submission mt-3 text-center row'>
+                    <div className='col-sm-2 col-md-3'></div>
+                    <div className="form-group col-sm-8 col-md-6">
+                      <div>
+                        <input type='file' name="sandboxSubmission" onChange={(e) => { setSandBoxSubmission(e.target.files[0]) }} onClick={(e) => { e.target.value = null }} className="form-control" id='sandboxSubmission' aria-describedby='sandboxSubmission' />
                       </div>
                     </div>
+                    <div className='col-sm-2 col-md-3'></div>
                   </div>
                   <div className='mt-3'>
-                    <button className='btn btn-primary' onClick={uploadSandBoxSubmission}>Submit</button>
+                    <button className='btn btn-primary' onClick={uploadSandBoxSubmission} disabled={sandBoxLoading}>
+                      {
+                        sandBoxLoading ?
+                          <>
+                            Uploading <i className="fa fa-spinner fa-spin"></i>
+                          </>
+                          :
+                          <>Upload</>
+                      }
+                    </button>
                   </div>
                 </div>
                 <div className='mt-5'>
-                  <strong>Note:</strong>
+                  <h4>Relative Paths</h4>
+                  <strong className='mt-3'>Note:</strong>
                   <div>
                     Datasets folder and Submissions folder present in same folder. So to get relative paths of files of datasets folder and submissions folder, upload datasets and sandbox submission files before writing evaluate code.
                   </div>

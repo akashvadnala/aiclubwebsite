@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 const ProjectsHome = ({projects}) => {
   return (
       <div className='projects-home-container'>
-        <h4 className='header'>Projects</h4>
+        <h4 className='header'>PROJECTS</h4>
           {
             projects && projects.map((project)=>{
               return(

@@ -22,11 +22,11 @@ const ProjectCardHome = ({project}) => {
   return (
         <div className='project-card-home-container mt-3'>
           <div class='title-box'>
-            <h5 className='project-title'>{project.title}</h5>
+            <h5 className='project-title'><NavLink to={`/projects/${project.url}`} className="text-dark">{project.title}</NavLink></h5>
           </div>
-          <div className='speakers'>
+          <div className='speakers text-secondary'>
             <p>by {names} </p>
-            <NavLink to={`/projects/${project.url}`}><p>Learn More<span className='small'> ❯</span></p></NavLink>
+            {/* <NavLink to={`/projects/${project.url}`}><p>Learn More<span className='small'> ❯</span></p></NavLink> */}
           </div>
         </div>
   )

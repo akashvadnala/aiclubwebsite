@@ -9,7 +9,7 @@ import Loading from '../Loading';
 import Settings from './HostPage/Settings';
 import Evaluation from './HostPage/Evaluation';
 import SandBoxSubbmission from './HostPage/SandBoxSubbmission';
-import AllSubbmission from './HostPage/AllSubbmission';
+import AllSubmissions from './HostPage/AllSubmissions';
 import HostHeader from './HostPage/HostHeader';
 
 const Host = ({ props }) => {
@@ -40,7 +40,7 @@ const Host = ({ props }) => {
                 setPage(<SandBoxSubbmission props={props} />);
                 break;
             case "allsubmissions":
-                setPage(<AllSubbmission props={props} />);
+                setPage(<AllSubmissions props={props} />);
                 break;
             default:
                 setPage(<Error />)

@@ -6,7 +6,7 @@ const EventsHome = ({events}) => {
 
     return (
             <div className='events-home-container'>
-                <h4 className='header'>Events</h4>
+                <h4 className='header'>EVENTS</h4>
                 {
                   events && events.map((event,i)=>{
                     return(
