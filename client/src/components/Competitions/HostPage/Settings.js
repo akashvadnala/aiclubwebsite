@@ -44,7 +44,6 @@ const Settings = ({ props }) => {
       setLoad(-1);
     }
   };
-
   useEffect(() => {
     setCompete(props.c);
     getTeams();
@@ -294,12 +293,7 @@ const Settings = ({ props }) => {
                             </div>
                             <div className="col col-3">
                               {user._id !== t.id && t.id !== props.c.creator && (
-                                <input
-                                  type="reset"
-                                  className="btn btn-danger"
-                                  onClick={() => removeXAccess(t.id)}
-                                  value="Remove"
-                                />
+                                <input type="reset" className="btn btn-danger" onClick={() => removeXAccess(t.id)} value="Remove" />
                               )}
                             </div>
                           </div>
@@ -368,6 +362,24 @@ const Settings = ({ props }) => {
                     <div className="col-sm-2">Maximum Daily Submissions :</div>
                     <div className="col-sm-10">
                       <input className="form-control" type="text" id="number" value={`${compete.submissionLimit}`} style={{ width: "75px" }} onChange={(e) => setCompete({ ...compete, submissionLimit: e.target.value })} />
+                    </div>
+                  </div>
+                  <div className="form-group row mt-3 align-items-center">
+                    <div className="col-sm-2">.</div>
+                    <div className="col-sm-10 form-check">
+                      <input
+                        type="checkbox"
+                        name="public"
+                        checked={compete.public}
+                        onChange={(e) => {
+                          setCompete({ ...compete, public: e.target.checked });
+                        }}
+                        className="form-check-input"
+                        id="public"
+                      />
+                      <label className="form-check-label" htmlFor="public">
+                        Public
+                      </label>
                     </div>
                   </div>
                   <div className=" ">

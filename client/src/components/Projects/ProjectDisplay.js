@@ -64,30 +64,22 @@ const ProjectDisplay = () => {
     }
   }, [logged_in, url]);
 
-  useEffect(() => {
-
-  }, [user, proj])
-
   const deleteProject = async (status) => {
     try {
       if (status) {
-        const confirmed = window.confirm(
-          `Are you sure to delete the project ${project.title}?`
+        await axios.put(`${SERVER_URL}/imgdelete`,
+          { url: proj.cover },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
         );
-        if (confirmed) {
-          await axios.put(`${SERVER_URL}/imgdelete`,
-            { url: project.cover },
-            {
-              withCredentials: true,
-              headers: { "Content-Type": "application/json" },
-            }
-          );
-          const res = await axios.delete(`${SERVER_URL}/deleteProject/${proj._id}`, { withCredentials: true });
-          showAlert("Project deleted successfully", "success");
-          navigate("/projects");
-        }
+        const res = await axios.delete(`${SERVER_URL}/deleteProject/${proj._id}`, { withCredentials: true });
+        showAlert("Project deleted successfully", "success");
+        navigate("/projects");
       }
     } catch (err) {
+      console.log(err);
       showAlert(err.response.data.error, "danger");
     }
 

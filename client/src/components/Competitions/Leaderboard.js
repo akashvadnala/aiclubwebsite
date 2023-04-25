@@ -24,9 +24,15 @@ const Leaderboard = ({ props }) => {
 
   const getLeaderboard = async () => {
     setPrivateLB(false);
+    setLB([]);
     try {
       axios.get(`${SERVER_URL}/getLeaderboard/${props.c._id}`)
         .then(data => {
+          let lb_ = data.data;
+          console.log('before', lb_);
+          lb_.sort((a, b) => { a.maxPublicScore > b.maxPublicScore ? 1 : a.maxPublicScore < b.maxPublicScore ? -1 : 0 })  
+          setLB(lb_);
+          console.log('after', lb_);
           const filteredData = data.data.filter(lb => lb.numSubmissions > 0);
           setLB(filteredData);
         });
@@ -38,6 +44,7 @@ const Leaderboard = ({ props }) => {
   const getPrivateLeaderboard = async () => {
     if (isCompeteEnd) {
       setPrivateLB(true);
+      setLB([]);
       try {
         axios.get(`${SERVER_URL}/getPrivateLeaderboard/${props.c._id}`)
           .then(data => {
@@ -67,7 +74,7 @@ const Leaderboard = ({ props }) => {
             <div className="row align-items-center p-3">
               <div className="col-sm-8">
                 <h4 className="m-0">
-                {
+                  {
                     privateLB ?
                       <>Private</>
                       :

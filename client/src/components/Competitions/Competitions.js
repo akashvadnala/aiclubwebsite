@@ -136,9 +136,8 @@ const Competitions = () => {
                         Hello {competeUser.name}
                       </button>
                       <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <button className="dropdown-item" onClick={Logout} aria-current="page">Logout</button><hr />
-                        <NavLink className="dropdown-item" to="/sffcsdd" aria-current="page">Another action</NavLink><hr />
-                        <NavLink className="dropdown-item" to="/safdcx" aria-current="page">Something else here</NavLink>
+                        <NavLink className="dropdown-item" to="/mycompetitions" aria-current="page">My Competitions</NavLink><hr />
+                        <button className="dropdown-item" onClick={Logout} aria-current="page">Logout</button>
                       </div>
                     </div>
                   </>
