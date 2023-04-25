@@ -16,11 +16,6 @@ from googleapiclient.http import MediaIoBaseDownload
 
 config = dotenv_values(".env")
 GOOGLE_KEY = config["GOOGLE_KEY"]
-try:
-    SERVER_URL = config["SERVER_URL"]
-except:
-    SERVER_URL = "http://localhost:5000"
-
 
 def connect_to_db(url):
     try:

@@ -90,6 +90,14 @@ def generateFile(evaluationId):
     f = open(localpath, "w")
     f.write(evaluation["code"])
     f.close()
+
+@app.task(name="tasks.deleteCompetition")
+def deleteCompetition(competeid):
+    db = connect_to_db(DATABASE)
+    compete = get_competition(db, competeid)
+    datasetLocalPath = "datasets/" + str(compete["title"]) + "/"
+    deleteLocalFile(datasetLocalPath)
+    db.competitions.delete_one({'_id': ObjectId(competeid)})
     
 @app.task(name="tasks.privateDataSet")
 def privateDataSet(competeid):
