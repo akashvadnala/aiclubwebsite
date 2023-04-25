@@ -18,28 +18,22 @@ const MySubmissionSpace = ({ l, index }) => {
                 r[key] = Math.floor(d / s[key]);
                 d -= r[key] * s[key];
                 if (r[key] !== 0) {
-                    // if (r[key] === 1) {
-                    //     setUpdatedAt(`${r[key]} ${key.slice(0, -1)} ago`);
-                    // } else {
                     setUpdatedAt(`${r[key]} ${key} ago`);
-                    // }
                     return false;
                 }
                 return true;
             })
         }
     }, [l]);
+    console.log(l);
     return (
         <>
             <tr>
                 <th scope="row">{index + 1}</th>
-                {/* <th>{names[index]}</th> */}
-                {/* <th>{l.team}</th> */}
                 <th>{l.publicScore['$numberDecimal'].toLocaleString()}</th>
-                {/* <th>{l.numSubmissions}</th> */}
                 <th>{updatedAt}</th>
                 <th>{(l.submissionLog !== null) &&
-                    <div data-bs-toggle="modal" data-bs-target="#sandBoxSubmissionLog" type="button">
+                    <div data-bs-toggle="modal" data-bs-target={`#userSubmissionLog-${index}`} type="button">
                         {
                             (l.submissionLog === "") ?
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-check2-circle" viewBox="0 0 16 16" style={{ "color": "green" }}>
@@ -55,6 +49,16 @@ const MySubmissionSpace = ({ l, index }) => {
                     </div>
                 }</th>
             </tr>
+            <div className="modal fade" id={`userSubmissionLog-${index}`} tabIndex="-1" aria-labelledby={`userSubmissionLog-${index} contained-modal-title-vcenter`} aria-hidden="true" >
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div className="modal-content p-5">
+                        <h4 className="text-center">Submission Log</h4>
+                        <div className="modal-body text-center">
+                            {l && (l.submissionLog === "" ? "Evaluation completed successfully" : l.submissionLog)}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

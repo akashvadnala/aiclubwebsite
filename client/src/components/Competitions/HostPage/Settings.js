@@ -16,7 +16,6 @@ const Settings = ({ props }) => {
   const { showAlert } = useContext(alertContext);
   const [load, setLoad] = useState(0);
   const [xaccess, setXAccess] = useState("");
-  const [msg, setMsg] = useState(null);
   const [add, setAdd] = useState(false);
   const [teams, setTeams] = useState([]);
   const [accessTeams, setAccessTeams] = useState([]);
@@ -45,7 +44,6 @@ const Settings = ({ props }) => {
       setLoad(-1);
     }
   };
-  
   useEffect(() => {
     setCompete(props.c);
     getTeams();
@@ -93,11 +91,11 @@ const Settings = ({ props }) => {
     setCompete({ ...compete, CompetitionEnd: date });
   };
 
-  // const filterPassedTime = (time) => {
-  //   const currentDate = new Date();
-  //   const selectedDate = new Date(time);
-  //   return currentDate.getTime() < selectedDate.getTime();
-  // };
+  const filterPassedTime = (time) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(time);
+    return currentDate.getTime() < selectedDate.getTime();
+  };
 
   let name, value;
   const handleInputs = (e) => {
@@ -253,8 +251,8 @@ const Settings = ({ props }) => {
                         selected={new Date(compete.CompetitionStart)}
                         onChange={(date) => setCompeteStartDate(date)}
                         showTimeSelect
-                        // minDate={new Date()}
-                        // filterTime={filterPassedTime}
+                        minDate={new Date()}
+                        filterTime={filterPassedTime}
                         dateFormat="MMMM d, yyyy h:mm aa"
                       />
                     </div>
@@ -269,8 +267,8 @@ const Settings = ({ props }) => {
                         selected={new Date(compete.CompetitionEnd)}
                         onChange={(date) => setCompeteEndDate(date)}
                         showTimeSelect
-                        // minDate={new Date()}
-                        // filterTime={filterPassedTime}
+                        minDate={new Date()}
+                        filterTime={filterPassedTime}
                         dateFormat="MMMM d, yyyy h:mm aa"
                       />
                     </div>

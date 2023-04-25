@@ -104,11 +104,11 @@ const CreateCompetition = () => {
     setCompete({ ...compete, CompetitionEnd: date });
   };
 
-  // const filterPassedTime = (time) => {
-  //   const currentDate = new Date();
-  //   const selectedDate = new Date(time);
-  //   return currentDate.getTime() < selectedDate.getTime();
-  // };
+  const filterPassedTime = (time) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(time);
+    return currentDate.getTime() < selectedDate.getTime();
+  };
 
   let name, value;
   const handleInputs = (e) => {
@@ -247,7 +247,7 @@ const CreateCompetition = () => {
                     onChange={(date) => setCompeteStartDate(date)}
                     showTimeSelect
                     minDate={new Date()}
-                    // filterTime={filterPassedTime}
+                    filterTime={filterPassedTime}
                     dateFormat="MMMM d, yyyy h:mm aa"
                   />
                 </div>
@@ -263,7 +263,7 @@ const CreateCompetition = () => {
                     onChange={(date) => setCompeteEndDate(date)}
                     showTimeSelect
                     minDate={new Date()}
-                    // filterTime={filterPassedTime}
+                    filterTime={filterPassedTime}
                     dateFormat="MMMM d, yyyy h:mm aa"
                   />
                 </div>

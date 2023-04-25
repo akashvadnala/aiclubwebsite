@@ -33,6 +33,8 @@ const Leaderboard = ({ props }) => {
           lb_.sort((a, b) => { a.maxPublicScore > b.maxPublicScore ? 1 : a.maxPublicScore < b.maxPublicScore ? -1 : 0 })  
           setLB(lb_);
           console.log('after', lb_);
+          const filteredData = data.data.filter(lb => lb.numSubmissions > 0);
+          setLB(filteredData);
         });
     } catch (err) {
       console.log(err);
@@ -54,7 +56,7 @@ const Leaderboard = ({ props }) => {
       }
     }
     else {
-      showAlert("Private LeaderBoard availabe after the Competition Ends")
+      showAlert("Private LeaderBoard availabe after the Competition Ends","danger")
     }
   }
 
@@ -108,15 +110,7 @@ const Leaderboard = ({ props }) => {
                   {
                     lb.map((l, index) => {
                       return (
-                        // <tr>
-                        //   <th scope="row">{index + 1}</th>
-                        //   {/* <th>{names[index]}</th> */}
-                        //   <th>{l.team}</th>
-                        //   <th>{l.maxPublicScore['$numberDecimal'].toLocaleString()}</th>
-                        //   <th>{l.numSubmissions}</th>
-                        //   <th>{l.updatedAt}</th>
-                        // </tr>
-                        <LeaderboardSpace l={l} index={index} privateLB={privateLB} />
+                        <LeaderboardSpace l={l} index={index} privateLB={privateLB} key={index}/>
                       )
                     })
                   }

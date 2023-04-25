@@ -33,6 +33,64 @@ router.route("/getCompeteDetails/:id").get(async (req, res) => {
   }
 });
 
+router.route("/getPublishingApproval/:id").get(async (req, res) => {
+  const { id } = req.params;
+  const data = await Competitions.findById(id);
+  var approval = true;
+  var msg;
+  if (data.url === "") {
+    approval = false;
+    msg = "URL can't be empty";
+    res.status(200).json({ msg: msg, approval: approval });
+  }
+  if (data.title === "") {
+    approval = false;
+    msg = "Title can't be empty";
+    res.status(200).json({ msg: msg, approval: approval });
+  }
+  if (data.overview === "Enter competition overview here") {
+    approval = false;
+    msg = "Please edit Overview to give more information about this competition";
+    res.status(200).json({ msg: msg, approval: approval });
+  }
+  if (data.evaluation === null) {
+    approval = false;
+    msg = "Please select an evaluation metric or create a custom evaluation metric";
+    res.status(200).json({ msg: msg, approval: approval });
+  }
+  if (data.publicDataSetPath === null) {
+    approval = false;
+    msg = "Please upload Public Test Dataset";
+    res.status(200).json({ msg: msg, approval: approval });
+  }
+  if (data.privateDataSetPath === null) {
+    approval = false;
+    msg = "Please upload Private Test Dataset";
+    res.status(200).json({ msg: msg, approval: approval });
+  }
+  if (data.sandBoxSubmissionPath === null) {
+    approval = false;
+    msg = "Please upload a sandbox submission";
+    res.status(200).json({ msg: msg, approval: approval });
+  }
+  if (data.sandBoxSubmissionLog !== null) {
+    if (data.sandBoxSubmissionLog !== "") {
+      approval = false;
+      msg = "SandBox Submission should pass without errors";
+      res.status(200).json({ msg: msg, approval: approval });
+    }
+  }
+  else {
+    approval = false;
+    msg = "Please make a sandbox submission";
+    res.status(200).json({ msg: msg, approval: approval });
+  }
+  msg = "All requirements satisfied";
+  if (approval) {
+    res.status(200).json({ msg: msg, approval: approval });
+  }
+});
+
 router.route("/getSandBoxSubmissionStatus/:id").get(async (req, res) => {
   const { id } = req.params;
   const data = await Competitions.findById(id);
@@ -113,13 +171,28 @@ router.route("/addcompetitions").post(authenticate, async (req, res) => {
 router.route('/updateCompetetion/:id').put(authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("serverSide Id", id, req.body);
     const updateddata = await Competitions.findByIdAndUpdate(id, req.body, {
       new: true
     });
-    const task = celery.createTask("tasks.generateFile");
-    task.applyAsync([updateddata.evaluation]);
+    if (updateddata.evaluation) {
+      const task = celery.createTask("tasks.generateFile");
+      task.applyAsync([updateddata.evaluation]);
+    }
+
     console.log('Competition Updated!');
+    res.status(200).json();
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: "Somthing went wrong!" });
+  }
+})
+
+router.route('/publishCompetetion/:id').put(authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateddata = await Competitions.findById(id);
+    updateddata.public = req.body.public;
+    await updateddata.save();
     res.status(200).json();
   } catch (err) {
     console.log(err);
@@ -136,7 +209,6 @@ router.route("/getDraftCompeteNames/:id").get(async (req, res) => {
   const { id } = req.params;
   const team = await Team.findById(id);
   let competitions = [];
-  console.log(team.competitionsAccess);
   if (team) {
     await Promise.all(
       team.competitionsAccess.map(async (competition_id) => {
@@ -144,7 +216,6 @@ router.route("/getDraftCompeteNames/:id").get(async (req, res) => {
           _id: competition_id,
           public: false,
         });
-        console.log(c);
         if (c) {
           competitions.push(c);
         }
@@ -295,7 +366,6 @@ router.route("/editOverview/:id").put(authenticate, async (req, res) => {
   let compete = await Competitions.findById(id);
   compete.overview = overview;
   await compete.save();
-  console.log(compete);
   res.status(200).json();
 });
 
