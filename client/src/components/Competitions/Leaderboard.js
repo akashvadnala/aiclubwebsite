@@ -57,7 +57,7 @@ const Leaderboard = ({ props }) => {
                   {
                     lb.map((l, index) => {
                       return (
-                        <LeaderboardSpace l={l} index={index} />
+                        <LeaderboardSpace l={l} index={index} key={index}/>
                       )
                     })
                   }

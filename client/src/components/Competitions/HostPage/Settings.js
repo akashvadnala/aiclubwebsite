@@ -16,7 +16,6 @@ const Settings = ({ props }) => {
   const { showAlert } = useContext(alertContext);
   const [load, setLoad] = useState(0);
   const [xaccess, setXAccess] = useState("");
-  const [msg, setMsg] = useState(null);
   const [add, setAdd] = useState(false);
   const [teams, setTeams] = useState([]);
   const [accessTeams, setAccessTeams] = useState([]);
@@ -45,7 +44,7 @@ const Settings = ({ props }) => {
       setLoad(-1);
     }
   };
-  console.log('props', props)
+
   useEffect(() => {
     setCompete(props.c);
     getTeams();
@@ -93,11 +92,11 @@ const Settings = ({ props }) => {
     setCompete({ ...compete, CompetitionEnd: date });
   };
 
-  // const filterPassedTime = (time) => {
-  //   const currentDate = new Date();
-  //   const selectedDate = new Date(time);
-  //   return currentDate.getTime() < selectedDate.getTime();
-  // };
+  const filterPassedTime = (time) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(time);
+    return currentDate.getTime() < selectedDate.getTime();
+  };
 
   let name, value;
   const handleInputs = (e) => {
@@ -128,7 +127,7 @@ const Settings = ({ props }) => {
       if (Img) {
         const data = new FormData();
         data.append("photo", Img);
-        data.append("category","competitions");
+        data.append("category", "competitions");
 
         await axios.put(`${SERVER_URL}/imgdelete`,
           { 'url': compete.headerPhoto },
@@ -253,8 +252,8 @@ const Settings = ({ props }) => {
                         selected={new Date(compete.CompetitionStart)}
                         onChange={(date) => setCompeteStartDate(date)}
                         showTimeSelect
-                        // minDate={new Date()}
-                        // filterTime={filterPassedTime}
+                        minDate={new Date()}
+                        filterTime={filterPassedTime}
                         dateFormat="MMMM d, yyyy h:mm aa"
                       />
                     </div>
@@ -269,8 +268,8 @@ const Settings = ({ props }) => {
                         selected={new Date(compete.CompetitionEnd)}
                         onChange={(date) => setCompeteEndDate(date)}
                         showTimeSelect
-                        // minDate={new Date()}
-                        // filterTime={filterPassedTime}
+                        minDate={new Date()}
+                        filterTime={filterPassedTime}
                         dateFormat="MMMM d, yyyy h:mm aa"
                       />
                     </div>
@@ -368,25 +367,7 @@ const Settings = ({ props }) => {
                   <div className="form-group row mt-3 align-items-center">
                     <div className="col-sm-2">Maximum Daily Submissions :</div>
                     <div className="col-sm-10">
-                      <input className="form-control" type="text" id="number" value={`${compete.submissionLimit}`} style={{ width: "75px" }} onChange={(e) => setCompete({ ...compete, submissionLimit: e.target.value })}/>
-                    </div>
-                  </div>
-                  <div className="form-group row mt-3 align-items-center">
-                    <div className="col-sm-2">.</div>
-                    <div className="col-sm-10 form-check">
-                      <input
-                        type="checkbox"
-                        name="public"
-                        checked={compete.public}
-                        onChange={(e) => {
-                          setCompete({ ...compete, public: e.target.checked });
-                        }}
-                        className="form-check-input"
-                        id="public"
-                      />
-                      <label className="form-check-label" htmlFor="public">
-                        Public
-                      </label>
+                      <input className="form-control" type="text" id="number" value={`${compete.submissionLimit}`} style={{ width: "75px" }} onChange={(e) => setCompete({ ...compete, submissionLimit: e.target.value })} />
                     </div>
                   </div>
                   <div className=" ">

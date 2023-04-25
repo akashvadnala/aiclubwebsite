@@ -49,7 +49,6 @@ const MySubmissionSpace = ({ l, index }) => {
                         <div className="modal-body text-center">
                             {l && (l.submissionLog === "" ? "Evaluation completed successfully" : l.submissionLog)}
                         </div>
-
                     </div>
                 </div>
             </div>
