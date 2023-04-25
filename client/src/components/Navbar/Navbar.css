@@ -91,10 +91,6 @@ ul {
     font-weight: 400;
 }
 
-.navbar-expand-lg .navbar-nav .dropdown-menu {
-    background: rgba(255, 255, 255, .7) !important;
-    backdrop-filter: blur(20px) !important;
-}
 
 @media (min-width: 100px) {
     .modal-dialog {

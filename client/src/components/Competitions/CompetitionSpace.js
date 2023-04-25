@@ -11,7 +11,7 @@ const CompetitionSpace = ({competition}) => {
     let start = new Date(competition.CompetitionStart);
     let end = new Date(competition.CompetitionEnd);
     var s = {
-      day: 86400, // feel free to add your own row
+      days: 86400, // feel free to add your own row
       hour: 3600,
       min: 60,
       sec: 1,

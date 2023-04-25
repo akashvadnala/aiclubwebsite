@@ -1,6 +1,9 @@
+import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { SERVER_URL } from '../../EditableStuff/Config';
 import { Context } from '../../Context/Context';
+import { alertContext } from "../../Context/Alert";
 import Error from '../Error';
 import Loading from '../Loading';
 import Settings from './HostPage/Settings';
@@ -16,7 +19,9 @@ const Host = ({ props }) => {
         hpath = "settings";
     }
 
+    const { showAlert } = useContext(alertContext);
     const { logged_in } = useContext(Context);
+    const [compete, setCompete] = useState(null);
     const [page, setPage] = useState(null);
     const [load, setLoad] = useState(0);
 
@@ -43,7 +48,33 @@ const Host = ({ props }) => {
         }
     };
 
+    const publishCompetetion = async () => {
+        setCompete({ ...compete, public: !compete.public })
+        await axios.put(`${SERVER_URL}/publishCompetetion/${props.c._id}`,
+            {
+                public: !compete.public
+            },
+            {
+                headers: { "Content-Type": "application/json" },
+                withCredentials: true
+            }
+        );
+        if (!compete.public) {
+            showAlert("Competition published Successfully!", "success");
+        } else {
+            showAlert("Competition made Private Successfully!", "success");
+        }
+
+    }
+
+    const getPublishingApproval = async () => {
+        const data = await axios.get(`${SERVER_URL}/getPublishingApproval/${props.c._id}`)
+        showAlert(data.data.msg, data.data.approval ? "success" : "danger");
+        return data.data.approval
+    }
+
     useEffect(() => {
+        setCompete(props.c);
         if (props.access !== null) {
             if (props.access === true) {
                 setLoad(1);
@@ -57,7 +88,6 @@ const Host = ({ props }) => {
     useEffect(() => {
         getPage();
     }, [hpath]);
-    console.log("Host.js",props.c);
     return (
         <>
             {load === 0 ? (
@@ -66,8 +96,19 @@ const Host = ({ props }) => {
                 page ? (
                     <div className='host-container py-2'>
                         <div className='card'>
-                            <div className='border-bottom p-3'>
-                                <h4 className='m-0'>Host Controls</h4>
+                            <div className='border-bottom row justify-content-between p-3'>
+                                <h4 className='col-2 m-0'>Host Controls</h4>
+                                <button className='col-2 m-0 btn btn-sm btn-outline-dark' onClick={async() => {
+                                    if (!compete.public) {
+                                        var approval = await getPublishingApproval();
+                                        if (approval) {
+                                            publishCompetetion();
+                                        }
+                                    }
+                                    else {
+                                        publishCompetetion();
+                                    }
+                                }}>{compete.public ? "Make Private" : "Publish Competition"}</button>
                             </div>
                             <div className='card-body pt-0 pb-0'>
                                 <div className="row">

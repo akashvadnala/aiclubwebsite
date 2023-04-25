@@ -18,11 +18,7 @@ const LeaderboardSpace = ({ l, index, privateLB }) => {
                 r[key] = Math.floor(d / s[key]);
                 d -= r[key] * s[key];
                 if (r[key] !== 0) {
-                    // if (r[key] === 1) {
-                    //     setUpdatedAt(`${r[key]} ${key.slice(0, -1)} ago`);
-                    // } else {
                     setUpdatedAt(`${r[key]} ${key} ago`);
-                    // }
                     return false;
                 }
                 return true;
@@ -33,7 +29,6 @@ const LeaderboardSpace = ({ l, index, privateLB }) => {
         <>
             <tr>
                 <th scope="row">{index + 1}</th>
-                {/* <th>{names[index]}</th> */}
                 <th>{l.team}</th>
                 {privateLB && <th style={{ verticalAlign: "middle" }}>
                     {l.difference > 0 ? <>
