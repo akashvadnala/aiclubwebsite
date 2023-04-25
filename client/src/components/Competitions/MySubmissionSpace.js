@@ -33,7 +33,7 @@ const MySubmissionSpace = ({ l, index }) => {
                 <th>{l.publicScore['$numberDecimal'].toLocaleString()}</th>
                 <th>{updatedAt}</th>
                 <th>{(l.submissionLog !== null) &&
-                    <div data-bs-toggle="modal" data-bs-target="#sandBoxSubmissionLog" type="button">
+                    <div data-bs-toggle="modal" data-bs-target={`#userSubmissionLog-${index}`} type="button">
                         {
                             (l.submissionLog === "") ?
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-check2-circle" viewBox="0 0 16 16" style={{ "color": "green" }}>
