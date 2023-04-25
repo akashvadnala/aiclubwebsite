@@ -134,28 +134,44 @@ const InductionsHeader = ({ props }) => {
 
   const submitCompete = async (e) => {
     e.preventDefault();
-    if (competeFile) {
-      setSubmitLoading(true);
-      const data = new FormData();
-      data.append("competeFile", competeFile, `${Date.now()}-${competeUser.username}-${competeFile.name}`);
-      data.append("compete", props.c._id);
-      data.append("team", competeUser._id);
-      try {
-        await axios.post(`${SERVER_URL}/submitCompeteFile`, data, { withCredentials: true })
-          .then(res => {
-            document.getElementById("submitModalClose").click();
-            setCompeteFile(null);
-            showAlert('File submitted successfully. Evaluation may take sometime..', "success");
-          })
-      } catch (err) {
-        showAlert("Something went wrong!", "danger");
-        console.log(err);
+    try {
+      const today = Date.now();
+      const start = new Date(props.c.CompetitionStart).getTime();
+      const end = new Date(props.c.CompetitionEnd).getTime();
+      if (today < start) {
+        showAlert("Competition Not Yet Started!", "success");
       }
-      setSubmitLoading(false);
+      else if (end < today) {
+        showAlert("Competition has Ended!", "danger");
+      }
+      else {
+        if (competeFile) {
+          await axios.get(`${SERVER_URL}/isSubmissionExceeded/${props.c._id}/${competeUser._id}`);
+          setSubmitLoading(true);
+          const data = new FormData();
+          data.append("competeFile", competeFile, `${Date.now()}-${competeUser.username}-${competeFile.name}`);
+          data.append("compete", props.c._id);
+          data.append("team", competeUser._id);
+          try {
+            await axios.post(`${SERVER_URL}/submitCompeteFile`, data, { withCredentials: true })
+              .then(res => {
+                document.getElementById("submitModalClose").click();
+                setCompeteFile(null);
+                showAlert('File submitted successfully. Evaluation may take sometime..', "success");
+              })
+          } catch (err) {
+            showAlert("Something went wrong!", "danger");
+            console.log(err);
+          }
+        }
+        else {
+          showAlert("Please Select File..", "danger");
+        }
+      }
+    } catch (err) {
+      showAlert(err.response.data, "danger");
     }
-    else {
-      showAlert("Please Select File..", "danger");
-    }
+    setSubmitLoading(false);
   }
 
   return (
@@ -209,9 +225,7 @@ const InductionsHeader = ({ props }) => {
                         </button>
 
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                          <NavLink className="dropdown-item" to={`/competitions/${props.c.url}/mysubmissions`} aria-current="page">My Submissions</NavLink><hr />
-                          <NavLink className="dropdown-item" to="/sffcsdd" aria-current="page">Another action</NavLink><hr />
-                          <NavLink className="dropdown-item" to="/safdcx" aria-current="page">Something else here</NavLink>
+                          <NavLink className="dropdown-item" to={`/competitions/${props.c.url}/mysubmissions`} aria-current="page">My Submissions</NavLink>
                         </div>
                       </div>
                     </>

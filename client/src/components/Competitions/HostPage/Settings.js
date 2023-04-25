@@ -45,7 +45,7 @@ const Settings = ({ props }) => {
       setLoad(-1);
     }
   };
-  console.log('props', props)
+  
   useEffect(() => {
     setCompete(props.c);
     getTeams();
@@ -128,7 +128,7 @@ const Settings = ({ props }) => {
       if (Img) {
         const data = new FormData();
         data.append("photo", Img);
-        data.append("category","competitions");
+        data.append("category", "competitions");
 
         await axios.put(`${SERVER_URL}/imgdelete`,
           { 'url': compete.headerPhoto },
@@ -295,12 +295,7 @@ const Settings = ({ props }) => {
                             </div>
                             <div className="col col-3">
                               {user._id !== t.id && t.id !== props.c.creator && (
-                                <input
-                                  type="reset"
-                                  className="btn btn-danger"
-                                  onClick={() => removeXAccess(t.id)}
-                                  value="Remove"
-                                />
+                                <input type="reset" className="btn btn-danger" onClick={() => removeXAccess(t.id)} value="Remove" />
                               )}
                             </div>
                           </div>
@@ -368,7 +363,7 @@ const Settings = ({ props }) => {
                   <div className="form-group row mt-3 align-items-center">
                     <div className="col-sm-2">Maximum Daily Submissions :</div>
                     <div className="col-sm-10">
-                      <input className="form-control" type="text" id="number" value={`${compete.submissionLimit}`} style={{ width: "75px" }} onChange={(e) => setCompete({ ...compete, submissionLimit: e.target.value })}/>
+                      <input className="form-control" type="text" id="number" value={`${compete.submissionLimit}`} style={{ width: "75px" }} onChange={(e) => setCompete({ ...compete, submissionLimit: e.target.value })} />
                     </div>
                   </div>
                   <div className="form-group row mt-3 align-items-center">

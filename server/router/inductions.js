@@ -212,6 +212,18 @@ var storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+router.route("/isSubmissionExceeded/:competeid/:userid").get(async (req,res)=>{
+  const { competeid, userid } = req.params;
+  const submissions = await UserSubmission.find({compete:competeid,team:userid});
+  const compete = await Competitions.findById(competeid);
+  if(submissions.length<compete.submissionLimit){
+    res.status(200).json();
+  }
+  else{
+    res.status(400).json("Submission Limit is Over for today!");
+  }
+})
+
 router.route("/submitCompeteFile").post(upload.single("competeFile"), async (req, res) => {
   const file = req.file.path;
   const name = req.file.filename;

@@ -7,14 +7,14 @@ const Leaderboard = require('../model/leaderBoardSchema');
 
 router.route('/getLeaderboard/:id').get(async (req, res) => {
     try {
-        const lb = await Leaderboard.find({ compete: req.params.id }).sort({ numSubmissions: -1 });;
+        const lb = await Leaderboard.find({ compete: req.params.id, numSubmissions: { $gt: 0 } }).sort({ 'maxPublicScore': -1 });
         let names = [];
         await Promise.all(
             lb.map(async ({ team, maxPublicScore, numSubmissions, updatedAt }) => {
-                if (numSubmissions > 0) {
-                    const user = await CompeteTeam.findById(team);
-                    names.push({ team: user.name, score: maxPublicScore, numSubmissions: numSubmissions, updatedAt: updatedAt });
-                }
+                // if (numSubmissions > 0) {
+                const user = await CompeteTeam.findById(team);
+                names.push({ team: user.name, score: maxPublicScore, numSubmissions: numSubmissions, updatedAt: updatedAt });
+                // }
 
             })
         )
@@ -28,8 +28,8 @@ router.route('/getLeaderboard/:id').get(async (req, res) => {
 
 router.route('/getPrivateLeaderboard/:id').get(async (req, res) => {
     try {
-        const lbprivate = await Leaderboard.find({ compete: req.params.id }).sort({ maxPrivateScore: -1 });
-        const lbpublic = await Leaderboard.find({ compete: req.params.id }).sort({ maxPublicScore: -1 });
+        const lbprivate = await Leaderboard.find({ compete: req.params.id, numSubmissions: { $gt: 0 } }).sort({ maxPrivateScore: -1 });
+        const lbpublic = await Leaderboard.find({ compete: req.params.id, numSubmissions: { $gt: 0 } }).sort({ maxPublicScore: -1 });
         let data = [];
         await Promise.all(
             lbprivate.map(async ({ _id, team, maxPrivateScore, numSubmissions, updatedAt }, index) => {
