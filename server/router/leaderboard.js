@@ -7,7 +7,7 @@ const Leaderboard = require('../model/leaderBoardSchema');
 
 router.route('/getLeaderboard/:id').get(async (req, res) => {
     try {
-        const lb = await Leaderboard.find({ compete: req.params.id, numSubmissions: { $gt: 0 } }).sort({ 'maxPublicScore': -1 });
+        const lb = await Leaderboard.find({ compete: req.params.id, numSubmissions: { $gt: 0 } }).sort({ maxPublicScore: -1 });
         let names = [];
         await Promise.all(
             lb.map(async ({ team, maxPublicScore, numSubmissions, updatedAt }) => {
