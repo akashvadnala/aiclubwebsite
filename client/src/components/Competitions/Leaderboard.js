@@ -30,7 +30,7 @@ const Leaderboard = ({ props }) => {
         .then(data => {
           let lb_ = data.data;
           console.log('before', lb_);
-          lb_.sort((a, b) => { a.maxPublicScore > b.maxPublicScore ? 1 : a.maxPublicScore < b.maxPublicScore ? -1 : 0 })  
+          // lb_.sort((a, b) => { return a.maxPublicScore > b.maxPublicScore ? 1 : a.maxPublicScore < b.maxPublicScore ? -1 : 0 })  
           setLB(lb_);
           console.log('after', lb_);
           const filteredData = data.data.filter(lb => lb.numSubmissions > 0);
