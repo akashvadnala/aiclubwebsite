@@ -1,0 +1,29 @@
+# Render manifest to deploy the backend service from the `server/` folder
+# Note: do NOT commit secrets here. Add DB credentials and other secrets in the Render dashboard as environment variables.
+services:
+  - type: web
+    name: aiclub-backend
+    env: node
+    plan: starter
+    branch: main
+    # root tells Render which subdirectory contains the service
+    root: server
+    # Install only production deps (use `npm ci` if lockfile is present) and keep log output minimal
+    buildCommand: npm ci --prefix server
+    # Use the project's start script inside server/ (server/package.json defines "start": "nodemon app.js").
+    # For production, you may want to change this to "node app.js" or update package.json to use a start that doesn't rely on nodemon.
+    startCommand: npm run start --prefix server
+    envVars:
+      - key: PORT
+        value: "5000"
+      - key: NODE_ENV
+        value: "production"
+    autoDeploy: true
+    # Optional: increase instance count or disk if needed
+    # instances: 1
+    # disk: 1024
+
+# Reminder: Add the following environment variables in Render's dashboard or as a secrets file (do not store them in the repo):
+# - DATABASE (MongoDB connection string)
+# - MONGO_INITDB_ROOT_USERNAME, MONGO_INITDB_ROOT_PASSWORD (if applicable)
+# - CLIENT_URL, SECRET_KEY, EMAIL, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, REDIRECT_URI, GOOGLE_KEY, etc.
