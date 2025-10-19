@@ -34,7 +34,7 @@ services:
   server:
     restart: always
     ports:
-      - 465:465
+      - 5000:5000
     build:
       context: ./server
       dockerfile: Dockerfile

@@ -2,7 +2,8 @@ module.exports = {
     PORT: process.env.PORT || 5000,
     CLIENT_URL: process.env.CLIENT_URL || "http://localhost:3000",
     SERVER_URL: process.env.SERVER_URL || "http://localhost:5000/api/v1",
-    DATABASE: process.env.DATABASE || 'mongodb://localhost:27017/aiclub',
+    // prefer MONGODB_URI (for Atlas or remote) falling back to DATABASE or local
+    DATABASE: process.env.MONGODB_URI || process.env.DATABASE || 'mongodb://localhost:27017/aiclub',
     CELERY_BROKER_URL: process.env.CELERY_BROKER_URL || "amqp://localhost",
     LOG_LEVEL: process.env.LOG_LEVEL || "debug",
     DRIVE_FILE_ID : process.env.DRIVE_FILE_ID || "1ts7i4H312mc57Z-zwdfbDaAcv_8mb8Le",
