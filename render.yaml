@@ -6,8 +6,6 @@ services:
     env: node
     plan: starter
     branch: main
-    # root tells Render which subdirectory contains the service
-    root: server
     # Install only production deps (use `npm ci` if lockfile is present) and keep log output minimal
     buildCommand: npm ci --prefix server
     # Use the project's start script inside server/ (server/package.json defines "start": "nodemon app.js").
