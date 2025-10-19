@@ -84,12 +84,12 @@ const TeamUpdate = () => {
                 data.append("photo", Img);
                 data.append("category","team");
 
-                await axios.put(`${SERVER_URL}/imgdelete`,
-                    { 'url': team.photo },
-                    {
-                        withCredentials: true,
-                        headers: { "Content-Type": "application/json" },
-                    });
+                // await axios.put(`${SERVER_URL}/imgdelete`,
+                //     { 'url': team.photo },
+                //     {
+                //         withCredentials: true,
+                //         headers: { "Content-Type": "application/json" },
+                //     });
 
                 const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
                 // server now returns { id, url } for uploads — use the url string for team.photo
