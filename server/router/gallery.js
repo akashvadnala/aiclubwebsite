@@ -56,6 +56,14 @@ router.route('/deleteImages').delete(authenticate,async (req,res)=>{
     // console.log("keys: ",keys);
     try {
         await Promise.all(keys.map(async (key)=>{
+            // try deleting from Image collection first (if present)
+            try {
+                const Image = require('../model/imageSchema');
+                const deleted = await Image.findByIdAndDelete(key);
+                if (deleted) return true;
+            } catch (e) {
+                // ignore — proceed to fileUpload
+            }
             return await fileUpload.deleteFile(key);
         }))
     } catch (error) {

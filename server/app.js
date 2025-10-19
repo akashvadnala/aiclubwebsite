@@ -8,6 +8,18 @@ const path = require('path');
 dotenv.config({ path:'./config.env' });
 const Config = require('./Config');
 
+// ensure runtime static folders exist (prevents ENOENT on startup when uploads are empty)
+const fs = require('fs');
+const ensureDir = (p) => {
+    try {
+        if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
+    } catch (e) {
+        console.error('failed to create dir', p, e);
+    }
+};
+ensureDir(path.resolve('uploads'));
+ensureDir(path.resolve('EvaluationFiles'));
+
 // require('./db/conn');
 const connectDB = require('./db/conn');
 

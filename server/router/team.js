@@ -81,16 +81,32 @@ router.route('/getimg/:id').get(async (req, res) => {
 router.route('/imgdelete').put(authenticate, async (req, res) => {
     try {
         const imageId = req.body.url;
-        
-        // Delete image from database
-        // const deletedImage = await Image.findByIdAndDelete(imageId);
-        
-        // if (!deletedImage) {
-        //     return res.status(404).json({ error: "Image not found" });
-        // }
-        
-        console.log('Image deleted from database:', imageId);
-        res.status(200).json({ msg: "Image deleted successfully" });
+        // imageId may be a full url or just an id. Try to extract id if a URL was provided
+        let key = imageId;
+        try {
+            const parts = (imageId || '').split('/');
+            const possible = parts[parts.length - 1];
+            if (possible) key = possible;
+        } catch (e) {
+            // fallback to provided value
+        }
+
+        // First try deleting from Image collection (small images stored as Buffer)
+        const deletedImage = await Image.findByIdAndDelete(key);
+        if (deletedImage) {
+            console.log('Deleted Image document:', key);
+            return res.status(200).json({ msg: 'Image deleted successfully' });
+        }
+
+        // Not found in Image collection — try GridFS via fileUpload implementation
+        try {
+            await fileUpload.deleteFile(key);
+            console.log('Deleted GridFS file:', key);
+            return res.status(200).json({ msg: 'Image deleted successfully' });
+        } catch (err) {
+            console.error('Error deleting image:', err);
+            return res.status(404).json({ error: 'Image not found' });
+        }
     } catch (err) {
         console.error('Error deleting image:', err);
         res.status(400).json({ error: `Error while deleting image: ${err}` });
