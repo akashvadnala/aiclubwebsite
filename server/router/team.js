@@ -80,33 +80,71 @@ router.route('/getimg/:id').get(async (req, res) => {
 
 router.route('/imgdelete').put(authenticate, async (req, res) => {
     try {
-        const imageId = req.body.url;
-        // imageId may be a full url or just an id. Try to extract id if a URL was provided
-        let key = imageId;
+        const imageUrlOrId = (req.body.url || '').toString();
+
+        // Helper to test if a string is a 24-char hex ObjectId
+        const isObjectId = (s) => /^[a-fA-F0-9]{24}$/.test(s);
+
+        // Normalize input: if it's a URL containing /getimg/<id> or has query param id=..., extract that id
+        let key = imageUrlOrId;
         try {
-            const parts = (imageId || '').split('/');
-            const possible = parts[parts.length - 1];
-            if (possible) key = possible;
+            // try URL parsing first
+            const parsed = new URL(imageUrlOrId);
+            // if path ends with an id (e.g., /getimg/<id>)
+            const pathParts = parsed.pathname.split('/').filter(Boolean);
+            if (pathParts.length) {
+                const last = pathParts[pathParts.length - 1];
+                if (last) key = last;
+            }
+            // if query param 'id' exists (common in Google Drive links), prefer that
+            if (parsed.searchParams && parsed.searchParams.get('id')) {
+                key = parsed.searchParams.get('id');
+            }
         } catch (e) {
-            // fallback to provided value
+            // not a full URL — try to extract id=... or d/<id> patterns from partial strings
+            const idMatch = imageUrlOrId.match(/[?&]id=([^&]+)/) || imageUrlOrId.match(/\bid=([^&]+)/);
+            if (idMatch && idMatch[1]) {
+                key = idMatch[1];
+            } else {
+                // try Google Drive /d/<id>/ style
+                const dMatch = imageUrlOrId.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                if (dMatch && dMatch[1]) {
+                    key = dMatch[1];
+                } else {
+                    try {
+                        const parts = imageUrlOrId.split('/');
+                        const possible = parts[parts.length - 1];
+                        if (possible) key = possible;
+                    } catch (ee) {
+                        key = imageUrlOrId;
+                    }
+                }
+            }
         }
 
-        // First try deleting from Image collection (small images stored as Buffer)
-        const deletedImage = await Image.findByIdAndDelete(key);
-        if (deletedImage) {
-            console.log('Deleted Image document:', key);
-            return res.status(200).json({ msg: 'Image deleted successfully' });
+        // If key looks like a Mongo ObjectId, attempt deletion from Image collection first
+        if (isObjectId(key)) {
+            const deletedImage = await Image.findByIdAndDelete(key);
+            if (deletedImage) {
+                console.log('Deleted Image document:', key);
+                return res.status(200).json({ msg: 'Image deleted successfully' });
+            }
+
+            // If not found in Image collection, try GridFS deletion using the same ObjectId
+            try {
+                await fileUpload.deleteFile(key);
+                console.log('Deleted GridFS file:', key);
+                return res.status(200).json({ msg: 'Image deleted successfully' });
+            } catch (err) {
+                console.error('Error deleting GridFS file:', err);
+                return res.status(404).json({ error: 'Image not found' });
+            }
         }
 
-        // Not found in Image collection — try GridFS via fileUpload implementation
-        try {
-            await fileUpload.deleteFile(key);
-            console.log('Deleted GridFS file:', key);
-            return res.status(200).json({ msg: 'Image deleted successfully' });
-        } catch (err) {
-            console.error('Error deleting image:', err);
-            return res.status(404).json({ error: 'Image not found' });
-        }
+        // Key doesn't look like an ObjectId — probably an external URL (Google Drive, S3, etc.).
+        // We do not attempt DB deletion for external URLs. Return success to avoid failing client flows.
+        console.log('imgdelete called with non-ObjectId key, skipping DB deletion:', key);
+        return res.status(200).json({ msg: 'External image - no server-side deletion attempted' });
     } catch (err) {
         console.error('Error deleting image:', err);
         res.status(400).json({ error: `Error while deleting image: ${err}` });

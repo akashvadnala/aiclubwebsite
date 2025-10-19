@@ -84,10 +84,11 @@ const SliderSettings = () => {
             data.append("photo", xSlider.photo);
             data.append("category","sliders");
             const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
-            xSlider.photo = img.data;
+            // do not mutate state directly; create payload with uploaded photo url
+            const payload = { ...xSlider, photo: img.data };
 
             await axios.post(`${SERVER_URL}/addSlider`,
-                xSlider,
+                payload,
                 {
                     withCredentials: true,
                     headers: { "Content-Type": "application/json" }
@@ -98,7 +99,6 @@ const SliderSettings = () => {
             console.log(`${xSlider.title} is Added`);
             setAdd(0);
             setXSlider({
-                ...xSlider,
                 photo: "",
                 title: "",
                 caption1: "",
@@ -119,36 +119,26 @@ const SliderSettings = () => {
         e.preventDefault();
         try {
             setEdit(1);
+            // prepare payload for update. If OldImg is set then a new file was selected
+            let payload = { ...xSlider };
             if (OldImg) {
-                await axios.put(`${SERVER_URL}/imgdelete`,
-                    {
-                        'url': OldImg
-                    },
-                    {
-                        withCredentials: true,
-                        headers: { "Content-Type": "application/json" },
-                    });
+                // delete old image (OldImg may be a url or id)
+                await axios.put(`${SERVER_URL}/imgdelete`, { url: OldImg }, { withCredentials: true, headers: { "Content-Type": "application/json" } });
 
                 const data = new FormData();
                 data.append("photo", xSlider.photo);
                 data.append("category","sliders");
 
                 const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
-                xSlider.photo = img.data;
+                payload = { ...payload, photo: img.data };
                 setOldImg(null);
             }
-            await axios.put(`${SERVER_URL}/updateSlider/${xSlider._id}`,
-                xSlider,
-                {
-                    withCredentials: true,
-                    headers: { "Content-Type": "application/json" }
-                }
-            );
+
+            await axios.put(`${SERVER_URL}/updateSlider/${xSlider._id}`, payload, { withCredentials: true, headers: { "Content-Type": "application/json" } });
             getSlides();
             document.getElementById("modalClose").click();
             setEdit(0);
             setXSlider({
-                ...xSlider,
                 photo: "",
                 title: "",
                 caption1: "",
@@ -161,22 +151,18 @@ const SliderSettings = () => {
         } catch (err) {
             console.log('err', err);
         }
-        setAdd(0);
+        // ensure edit flag is cleared above; no need to touch add flag here
     }
 
     const deleteSlider = async (id, photo, title) => {
         const confirmed = window.confirm(`Are you sure to delete the slider '${title}'?`);
         if (confirmed) {
             try {
-                await axios.put(`${SERVER_URL}/imgdelete`,
-                    {
-                        'url': photo
-                    },
-                    {
-                        withCredentials: true,
-                        headers: { "Content-Type": "application/json" },
-                    });
-                await axios.delete(`${SERVER_URL}/deleteSlider/${id}`, { withCredentials: true })
+                // only attempt to delete image if a photo value is present
+                if (photo) {
+                    await axios.put(`${SERVER_URL}/imgdelete`, { url: photo }, { withCredentials: true, headers: { "Content-Type": "application/json" } });
+                }
+                await axios.delete(`${SERVER_URL}/deleteSlider/${id}`, { withCredentials: true });
                 getSlides();
             } catch (err) {
                 console.log(err);
