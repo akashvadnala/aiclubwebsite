@@ -5,6 +5,7 @@ const multer = require('multer');
 const authenticate = require('../middleware/authenticate');
 const Team = require('../model/teamSchema');
 const File = require('../model/fileSchema');
+const Image = require('../model/imageSchema');
 const { newuserMail } = require('../controllers/mail');
 const Config = require('../Config');
 const fs = require('fs');
@@ -28,59 +29,71 @@ const storage = multer.diskStorage({
 
 router.route('/imgupload').post(multer({ storage }).single('photo'), async (req, res) => {
     try {
-        const file = req.file.path;
-        const name = req.file.filename;
-        const mimeType = req.file.mimetype;
-        const category = req.body.category;
-        let folder_id = Config.GALLERY_DRIVE_FILE_ID;
-        switch (category) {
-            case "team":
-                folder_id = Config.TEAM_DRIVE_FILE_ID;
-                break;
-            case "gallery":
-                folder_id = Config.GALLERY_DRIVE_FILE_ID;
-                break;
-            case "blogs":
-                folder_id = Config.BLOGS_DRIVE_FILE_ID;
-                break;
-            case "projects":
-                folder_id = Config.PROJECTS_DRIVE_FILE_ID;
-                break;
-            case "events":
-                folder_id = Config.EVENTS_DRIVE_FILE_ID;
-                break;
-            case "sliders":
-                folder_id = Config.SLIDERS_DRIVE_FILE_ID;
-                break;
-            case "competitions":
-                folder_id = Config.COMPETITION_DRIVE_FILE_ID;
-                break;
-            default:
-                folder_id = Config.DRIVE_FILE_ID;
-        }
-        const key = await fileUpload.uploadFile({ name, file, mimeType, folder_id });
-        const url = fileUpload.getUrl(key);
-        fs.unlink(file, (err) => {
+    // proceed with saving uploaded file to DB and returning accessible URL
+        const { originalname, mimetype, path } = req.file;
+        
+        // Read the file and convert to buffer
+        const fileBuffer = fs.readFileSync(path);
+        
+        // Create image document with buffer data
+        const image = new Image({
+            filename: originalname,
+            contentType: mimetype,
+            data: fileBuffer
+        });
+        
+        await image.save();
+        
+        // Delete the temporary file
+        fs.unlink(path, (err) => {
             if (err) {
-                console.error(err)
-                return
+                console.error('Error deleting temp file:', err);
             }
         });
-        res.status(200).json(url);
+        
+    console.log('Image uploaded to database with ID:', image._id);
+    // return absolute URL so client can use it directly as img src
+    const url = `${Config.SERVER_URL.replace(/\/$/, '')}/getimg/${image._id}`;
+    // return URL string (most clients expect img.data to be a URL string)
+    res.status(200).json(url);
     } catch (err) {
-        console.log(err)
+        console.log('Error uploading image:', err);
         res.status(400).json({ error: "Something went wrong!" });
+    }
+});
+
+router.route('/getimg/:id').get(async (req, res) => {
+    try {
+        const image = await Image.findById(req.params.id);
+        if (!image) {
+            return res.status(404).json({ message: 'Image not found' });
+        }
+        
+        // Set content type and send image buffer
+        res.set('Content-Type', image.contentType);
+        res.send(image.data);
+    } catch (error) {
+        console.error('Error retrieving image:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 
 router.route('/imgdelete').put(authenticate, async (req, res) => {
     try {
-        const url = req.body.url;
-        const key = url.split('=')[2];
-        await fileUpload.deleteFile(key);
-        res.status(200).json({ msg: "Image deleted sucessfully" });
+        const imageId = req.body.url;
+        
+        // Delete image from database
+        // const deletedImage = await Image.findByIdAndDelete(imageId);
+        
+        // if (!deletedImage) {
+        //     return res.status(404).json({ error: "Image not found" });
+        // }
+        
+        console.log('Image deleted from database:', imageId);
+        res.status(200).json({ msg: "Image deleted successfully" });
     } catch (err) {
-        res.status(400).json({ error: "Error while deleting Images" })
+        console.error('Error deleting image:', err);
+        res.status(400).json({ error: `Error while deleting image: ${err}` });
     }
 });
 
@@ -292,5 +305,3 @@ router.route('/team/delete/:id').delete(authenticate, async (req, res) => {
 })
 
 module.exports = router;
-
-

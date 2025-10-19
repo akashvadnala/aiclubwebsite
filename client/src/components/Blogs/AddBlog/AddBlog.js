@@ -85,6 +85,7 @@ const AddBlog = () => {
       data.append("category","blogs");
       const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
       post.cover = img.data;
+      console.log("imgdata:",img.data)
       const blogdata = await axios.post(`${SERVER_URL}/blogs/addBlog`, post, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true

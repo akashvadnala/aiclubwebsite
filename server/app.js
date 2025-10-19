@@ -38,6 +38,7 @@ app.use("/api/v1/",require('./router/about'));
 app.use("/api/v1/",require('./router/evaluations'));
 app.use('/api/v1/events',require('./router/events'));
 app.use('/api/v1/gallery',require('./router/gallery'));
+app.use('/api/v1/file', require('./router/files'));
 // app.use("/api/v1/",require('./router/subscribe'));
 app.use("/api/v1/",require('./router/slider'));
 

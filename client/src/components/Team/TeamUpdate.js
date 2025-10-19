@@ -92,7 +92,8 @@ const TeamUpdate = () => {
                     });
 
                 const img = await axios.post(`${SERVER_URL}/imgupload`, data, { withCredentials: true });
-                team.photo = img.data;
+                // server now returns { id, url } for uploads — use the url string for team.photo
+                team.photo = (img.data && img.data.url) ? img.data.url : img.data;
             }
             if (team.year > y) {
                 team.year = y;
@@ -185,7 +186,7 @@ const TeamUpdate = () => {
                                 forms.map((f) => {
                                     return (
                                         <div className="form-group my-3 row">
-                                            <label for={f.id} className='col-sm-2 text-end'>{f.des} :</label>
+                                            <label htmlFor={f.id} className='col-sm-2 text-end'>{f.des} :</label>
                                             <div className='col-sm-10'>
                                                 <input type={f.type} name={f.id} value={f.val} onChange={handleInputs} className="form-control" id={f.id} aria-describedby={f.id} placeholder={`Enter ${f.des}`} required={f.req} />
                                             </div>
@@ -194,7 +195,7 @@ const TeamUpdate = () => {
                                 })
                             }
                             <div className="form-group my-3 row">
-                                <label for='photo' className='col-sm-2 text-end'>Upload Photo :</label>
+                                <label htmlFor='photo' className='col-sm-2 text-end'>Upload Photo :</label>
                                 <div className='col-sm-10'>
                                     <input type='file' accept=".png, .jpg, .jpeg" name='photo' onChange={handlePhoto} className="form-control" id='photo' aria-describedby='photo' />
                                 </div>
@@ -209,20 +210,20 @@ const TeamUpdate = () => {
                                     <>
                                         <div className="form-group form-check my-3">
                                             <input type="checkbox" checked={team.isadmin} name="isadmin" onChange={handleCheck} className="form-check-input" id="admin" />
-                                            <label className="form-check-label" for="admin">Make Admin</label>
+                                            <label className="form-check-label" htmlFor="admin">Make Admin</label>
                                         </div>
                                         <div className="form-group form-check my-3">
                                             <input type="checkbox" checked={team.ismember} name="ismember" onChange={handleCheck} className="form-check-input" id="member" />
-                                            <label className="form-check-label" for="member">Make Member</label>
+                                            <label className="form-check-label" htmlFor="member">Make Member</label>
                                         </div>
                                         <div className="form-group form-check my-3">
                                             <input type="checkbox" checked={team.isalumni} name="isalumni" onChange={handleCheck} className="form-check-input" id="alumni" />
-                                            <label className="form-check-label" for="alumni">Make Alumni</label>
+                                            <label className="form-check-label" htmlFor="alumni">Make Alumni</label>
                                         </div>
                                         {
                                             team.isalumni ?
                                                 <div className="form-group my-3 row">
-                                                    <label for="year" className='col-sm-2 text-end'>Year of Alumni :</label>
+                                                    <label htmlFor="year" className='col-sm-2 text-end'>Year of Alumni :</label>
                                                     <div className='col-sm-10'>
                                                         <input type="text" name="year" value={team.year} onChange={handleInputs} className="form-control" id="year" aria-describedby="year" placeholder={`Enter Year of Alumni`} required />
                                                     </div>

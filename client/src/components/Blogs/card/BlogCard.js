@@ -16,6 +16,31 @@ const Blogitem = ({ blog }) => {
       "https://pbwebdev.co.uk/wp-content/uploads/2018/12/blogs.jpg";
   };
 
+  
+  const [imageSrc, setImageSrc] = useState(null);
+
+  useEffect(() => {
+    // blog.cover may be either:
+    // - an absolute URL string returned by /imgupload (e.g. http://.../getimg/<id>)
+    // - a raw image id stored in DB (e.g. <id>)
+    // Handle both: if it's an absolute URL, use it directly; otherwise build the server getimg URL.
+    try {
+      if (!blog || !blog.cover) {
+        setImageSrc(null);
+        return;
+      }
+      console.log("blogcover:", blog.cover);
+      if (typeof blog.cover === 'string' && (blog.cover.startsWith('http://') || blog.cover.startsWith('https://'))) {
+        setImageSrc(blog.cover);
+      } else {
+        // treat as id
+        setImageSrc(`${SERVER_URL.replace(/\/$/, '')}/getimg/${blog.cover}`);
+      }
+    } catch (error) {
+      console.error('Error preparing image src:', error);
+    }
+  }, [blog]);
+
   const [names, setNames] = useState("");
   const getFirstLastNameForBlogs = async () => {
     axios.get(`${SERVER_URL}/blogs/getFirstLastNameForBlogs/${blog.url}`)
@@ -36,11 +61,9 @@ const Blogitem = ({ blog }) => {
     <div className="my-3 blogcard-container">
       <div className="card text-center">
         <img
-          onError={addDefaultSrc}
+          // onError={addDefaultSrc}
           src={
-            !blog.cover
-              ? "https://pbwebdev.co.uk/wp-content/uploads/2018/12/blogs.jpg"
-              : blog.cover
+            imageSrc
           }
           alt="blog"
           className="card-img-top"

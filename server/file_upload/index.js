@@ -1,8 +1,9 @@
 const FileUpload = require("./base");
-const GDriveFileUpload = require("./drive");
+// prefer DB-backed uploader
+const DBFileUpload = require("./db");
 
 const InitFileUpload = () => {
-  return new GDriveFileUpload();
+  return new DBFileUpload();
 };
 
 module.exports = {

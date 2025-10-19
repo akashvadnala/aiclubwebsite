@@ -1,5 +1,5 @@
 # Use the alpine image 
-FROM node:latest as builder
+FROM node:16.18.0 as builder
 
 # Set the workdir 
 WORKDIR /app

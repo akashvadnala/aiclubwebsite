@@ -43,15 +43,21 @@ router.route('/addPhoto').post(authenticate,async (req,res)=> {
 router.route('/deleteImages').delete(authenticate,async (req,res)=>{
     const urls = req.body.urls;
     // console.log("urls: ",req.body);
-
+    // extract id either from full url (/api/v1/file/:id) or if client sends direct id
     const keys = urls.map((url)=>{
-        return url.split('=')[2];
+        try {
+            const parts = url.split('/');
+            const id = parts[parts.length-1];
+            return id;
+        } catch (e) {
+            return url;
+        }
     })
     // console.log("keys: ",keys);
     try {
-        const stats = keys.map(async (key)=>{
+        await Promise.all(keys.map(async (key)=>{
             return await fileUpload.deleteFile(key);
-        })
+        }))
     } catch (error) {
         console.log(error);
     }
